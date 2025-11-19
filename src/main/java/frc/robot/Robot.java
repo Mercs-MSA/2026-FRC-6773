@@ -4,98 +4,183 @@
 
 package frc.robot;
 
-import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.cameraserver.CameraServer;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.utils.math.AllianceFlipUtil;
 
-/**
- * The methods in this class are called automatically corresponding to each mode, as described in
- * the TimedRobot documentation. If you change the name of this class or the package after creating
- * this project, you must also update the Main.java file in the project.
- */
-public class Robot extends TimedRobot {
-  private Command m_autonomousCommand;
+import org.littletonrobotics.junction.LoggedRobot;
+import org.littletonrobotics.junction.Logger;
+import org.littletonrobotics.junction.networktables.NT4Publisher;
+import org.littletonrobotics.junction.wpilog.WPILOGWriter;
+import org.w3c.dom.events.MutationEvent;
+import org.littletonrobotics.junction.wpilog.WPILOGReader;
 
-  private final RobotContainer m_robotContainer;
+import au.grapplerobotics.CanBridge;
 
-  /**
-   * This function is run when the robot is first started up and should be used for any
-   * initialization code.
-   */
-  public Robot() {
-    // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
-    // autonomous chooser on the dashboard.
-    m_robotContainer = new RobotContainer();
-  }
+import org.littletonrobotics.junction.LogFileUtil;
+import com.ctre.phoenix6.SignalLogger;
+import com.pathplanner.lib.commands.PathfindingCommand;
 
-  /**
-   * This function is called every 20 ms, no matter the mode. Use this for items like diagnostics
-   * that you want ran during disabled, autonomous, teleoperated and test.
-   *
-   * <p>This runs after the mode specific periodic functions, but before LiveWindow and
-   * SmartDashboard integrated updating.
-   */
-  @Override
-  public void robotPeriodic() {
-    // Runs the Scheduler.  This is responsible for polling buttons, adding newly-scheduled
-    // commands, running already-scheduled commands, removing finished or interrupted commands,
-    // and running subsystem periodic() methods.  This must be called from the robot's periodic
-    // block in order for anything in the Command-based framework to work.
-    CommandScheduler.getInstance().run();
-  }
 
-  /** This function is called once each time the robot enters Disabled mode. */
-  @Override
-  public void disabledInit() {}
+public class Robot extends LoggedRobot {
+    private Command mAutonomousCommand;
+    private Command mTeleopCommand;
 
-  @Override
-  public void disabledPeriodic() {}
+    private RobotContainer mRobotContainer;
+    
 
-  /** This autonomous runs the autonomous command selected by your {@link RobotContainer} class. */
-  @Override
-  public void autonomousInit() {
-    m_autonomousCommand = m_robotContainer.getAutonomousCommand();
+    // ==================== Robot Power On ====================
+    @Override
+    public void robotInit() {
+        CanBridge.runTCP();
+      
+        /* Metadata can be set before data receiving is set-up */
+        Logger.recordMetadata("ProjectName", BuildConstants.MAVEN_NAME);
+        Logger.recordMetadata("BuildDate", BuildConstants.BUILD_DATE);
+        Logger.recordMetadata("GitSHA", BuildConstants.GIT_SHA);
+        Logger.recordMetadata("GitDate", BuildConstants.GIT_DATE);
+        Logger.recordMetadata("GitBranch", BuildConstants.GIT_BRANCH);
+        switch (BuildConstants.DIRTY) {
+            case 0:
+                Logger.recordMetadata("GitDirty", "All changes committed");
+                break;
+            case 1:
+                Logger.recordMetadata("GitDirty", "Uncomitted changes");
+                break;
+            default:
+                Logger.recordMetadata("GitDirty", "Unknown");
+                break;
+        }
 
-    // schedule the autonomous command (example)
-    if (m_autonomousCommand != null) {
-      m_autonomousCommand.schedule();
+        SignalLogger.setPath("/U/logs");
+        SignalLogger.enableAutoLogging(true);
+        SignalLogger.start();
+        //SignalLogger.stop();
+
+        switch (Constants.kCurrentMode) {
+            case REAL:
+                Logger.addDataReceiver(new WPILOGWriter());
+                Logger.addDataReceiver(new NT4Publisher());
+                // SignalLogger.setPath("/U/logs");
+                // SignalLogger.enableAutoLogging(false);
+                // SignalLogger.stop();
+                break;
+            case SIM:
+                Logger.addDataReceiver(new NT4Publisher());
+                break;
+
+            case REPLAY:
+                setUseTiming(false); // Run as fast as possible
+                String logPath = LogFileUtil.findReplayLog();
+                Logger.setReplaySource(new WPILOGReader(logPath));
+                Logger.addDataReceiver(new WPILOGWriter(LogFileUtil.addPathSuffix(logPath, "_sim")));
+                break;
+        }
+
+
+        
+        Logger.start();
+        // SignalLogger.stop();
+
+        mRobotContainer = new RobotContainer();
+        CameraServer.startAutomaticCapture();
+        PathfindingCommand.warmupCommand().schedule();
+
+        mRobotContainer.setGyroInit();
     }
-  }
 
-  /** This function is called periodically during autonomous. */
-  @Override
-  public void autonomousPeriodic() {}
+    @Override
+    public void robotPeriodic() {
+        CommandScheduler.getInstance().run();
 
-  @Override
-  public void teleopInit() {
-    // This makes sure that the autonomous stops running when
-    // teleop starts running. If you want the autonomous to
-    // continue until interrupted by another command, remove
-    // this line or comment it out.
-    if (m_autonomousCommand != null) {
-      m_autonomousCommand.cancel();
+        // Some visualizers need to interop and share data between one another
+        // periodically, thus this method must be called periodically
+        //mRobotContainer.getTeleopEventLoop().poll();
+
+        Logger.recordOutput("Position/CurrPoseCoord", mRobotContainer.getPoseArr());
+        
+        SmartDashboard.putData("Field/GoalField", mRobotContainer.goalPoseField);
+        mRobotContainer.currPoseField.setRobotPose(mRobotContainer.getCurrPose());
+        SmartDashboard.putData("Field/CurrPoseField", mRobotContainer.currPoseField);
+        SmartDashboard.putNumber("Game/Time", DriverStation.getMatchTime());
     }
-  }
 
-  /** This function is called periodically during operator control. */
-  @Override
-  public void teleopPeriodic() {}
+    // ==================== Disabled ====================
+    @Override
+    public void disabledInit() {
 
-  @Override
-  public void testInit() {
-    // Cancels all running commands at the start of test mode.
-    CommandScheduler.getInstance().cancelAll();
-  }
+    }
 
-  /** This function is called periodically during test mode. */
-  @Override
-  public void testPeriodic() {}
+    @Override
+    public void disabledPeriodic() {
+        //Logger.recordOutput("Field/TestPose", new Pose2d(FieldConstants.testPoseX.getAsDouble(), FieldConstants.testPoseY.getAsDouble(), Rotation2d.fromDegrees(FieldConstants.testPoseRotation.getAsDouble())));
+        // mRobotContainer.setIntakeBrakeMode();
+        mRobotContainer.setDriveBrakeMode();
+    }
 
-  /** This function is called once when the robot is first started up. */
-  @Override
-  public void simulationInit() {}
+    @Override
+    public void disabledExit() {
+    }
 
-  /** This function is called periodically whilst in simulation. */
-  @Override
-  public void simulationPeriodic() {}
+    // ==================== Autonomous ====================
+    @Override
+    public void autonomousInit() {
+        // mRobotContainer.setGyroInit();
+        mAutonomousCommand = mRobotContainer.getAutonomousCommand();
+
+        if (mAutonomousCommand != null) {
+            mAutonomousCommand.schedule();
+        }
+    }
+
+    @Override
+    public void autonomousPeriodic() {
+    }
+
+    @Override
+    public void autonomousExit() {
+        mRobotContainer.getAutonomousExit();
+    }
+
+    // ==================== Teleop ====================
+    @Override
+    public void teleopInit() {
+        if (mAutonomousCommand != null) {
+            mAutonomousCommand.cancel();
+        }
+        mTeleopCommand = mRobotContainer.getTeleopCommand();
+        if (mTeleopCommand != null) {
+            mTeleopCommand.schedule();
+        }
+
+        mRobotContainer.getTeleopEventLoop().poll();
+    }
+
+    @Override
+    public void teleopPeriodic() {
+        mRobotContainer.getTeleopEventLoop().poll();
+    }
+
+    @Override
+    public void teleopExit() {
+    }
+
+    // ==================== Test ====================
+    @Override
+    public void testInit() {
+        CommandScheduler.getInstance().cancelAll();
+    }
+
+    @Override
+    public void testPeriodic() {
+    }
+
+    @Override
+    public void testExit() {
+    }
 }
