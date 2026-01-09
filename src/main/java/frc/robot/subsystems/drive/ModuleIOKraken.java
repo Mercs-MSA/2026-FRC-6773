@@ -212,7 +212,7 @@ public class ModuleIOKraken implements ModuleIO {
     public void setDriveVelocity(double velocityMPS, double feedforward) {
         /* Uses FOC PID with a arbitrary FF on the with Slot 0 gains */
         driveMotor.setControl(driveControl
-            .withVelocity((velocityMPS / kWheelCircumferenceMeters)) //TODO: THIS MIGHT BE THE PROBLEM!!!!  Understanding Mechanism Rotations vs Rotor Rotations
+            .withVelocity((velocityMPS / kWheelCircumferenceMeters) * DriveConstants.kDriveMotorGearing) //TODO: THIS MIGHT BE THE PROBLEM!!!!  Understanding Mechanism Rotations vs Rotor Rotations
             .withFeedForward(feedforward));
     }
 
