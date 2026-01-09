@@ -68,10 +68,6 @@ public class Module {
             if(amperageFeedforward != null) {
                 double ffOutput = driveFF.calculate(velocitySetpointMPS, amperageFeedforward);
 
-                Logger.recordOutput("Drive/"+kModuleName+"/VelocitySetpointMPS", velocitySetpointMPS);
-
-                // Logger.recordOutput("Drive/"+kModuleName+"/Velocity error", Math.abs(velocitySetpointMPS -));
-
                 Logger.recordOutput("Drive/"+kModuleName+"/AmperageFeedforward", amperageFeedforward);
                 Logger.recordOutput("Drive/"+kModuleName+"/ffOutput", ffOutput);
 

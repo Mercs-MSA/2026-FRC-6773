@@ -142,7 +142,7 @@ public class RobotContainer {
         createAutos();
         speedChooser = new LoggedDashboardChooser<Double>("Teleop/Acceleration Chooser");
         speedChooser.addDefaultOption("NORMAL", 1.0);
-        speedChooser.addOption("SLOW", 1.0);
+        speedChooser.addOption("SLOW", 0.7);
         
         bChooser = new LoggedDashboardChooser<NeutralModeValue>("Drive/BrakeModeChooser");
         bChooser.addDefaultOption("BRAKE", NeutralModeValue.Brake);
@@ -155,9 +155,9 @@ public class RobotContainer {
 
         // Pass subsystems to classes that need them for configuration
         robotDrive.acceptJoystickInputs(
-            () -> - driverController.getLeftY(),
-            () -> - driverController.getLeftX(),
-            () -> driverController.getRightX() * (Constants.kCurrentMode == Mode.SIM ? -1 : 1),
+            () -> - Math.copySign(driverController.getLeftY() * driverController.getLeftY(), driverController.getLeftY()) * speedChooser.get(),
+            () -> - Math.copySign(driverController.getLeftX() * driverController.getLeftX(), driverController.getLeftX()) * speedChooser.get(),
+            () -> driverController.getRightX() * speedChooser.get().doubleValue() * (Constants.kCurrentMode == Mode.SIM ? -1 : 1),
             () -> driverController.getHID().getPOV());
 
 
