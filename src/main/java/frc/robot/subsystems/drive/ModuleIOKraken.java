@@ -7,6 +7,7 @@ import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.controls.TorqueCurrentFOC;
 import com.ctre.phoenix6.controls.VelocityTorqueCurrentFOC;
+import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
@@ -33,7 +34,7 @@ import com.ctre.phoenix6.configs.Slot0Configs;
 
 public class ModuleIOKraken implements ModuleIO {
     private TalonFX driveMotor;
-    private VelocityTorqueCurrentFOC driveControl = new VelocityTorqueCurrentFOC(0.0);
+    private VelocityVoltage driveControl = new VelocityVoltage(0.0);
     private VoltageOut driveVoltageControl = new VoltageOut(0.0);
     private double driveAppliedVolts = 0.0;
 
@@ -73,16 +74,17 @@ public class ModuleIOKraken implements ModuleIO {
         driveConfig.CurrentLimits.SupplyCurrentLimit = kDriveSupplyAmpLimit;
 
         // foc
-        driveConfig.TorqueCurrent.PeakForwardTorqueCurrent = 80.0;
-        driveConfig.TorqueCurrent.PeakReverseTorqueCurrent = -80.0;
-        driveConfig.ClosedLoopRamps.TorqueClosedLoopRampPeriod = 0.02;
+        // driveConfig.TorqueCurrent.PeakForwardTorqueCurrent = 80.0;
+        // driveConfig.TorqueCurrent.PeakReverseTorqueCurrent = -80.0;
+        // driveConfig.ClosedLoopRamps.TorqueClosedLoopRampPeriod = 0.02;
 
         driveConfig.Voltage.PeakForwardVoltage = kPeakVoltage;
         driveConfig.Voltage.PeakReverseVoltage = -kPeakVoltage;
         driveConfig.MotorOutput.NeutralMode = DriveConstants.kNeutralVal;
         driveConfig.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
         driveConfig.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.RotorSensor;
-        driveConfig.Feedback.SensorToMechanismRatio = kDriveMotorGearing / kWheelCircumferenceMeters;
+        // driveConfig.Feedback.SensorToMechanismRatio = kDriveMotorGearing / kWheelCircumferenceMeters;
+        driveConfig.Feedback.SensorToMechanismRatio = kDriveMotorGearing;
 
         driveConfig.Slot0.kP = kModuleControllerConfigs.driveController().getP();
         driveConfig.Slot0.kI = kModuleControllerConfigs.driveController().getI();
@@ -162,8 +164,9 @@ public class ModuleIOKraken implements ModuleIO {
                 driveStatorCurrent,
                 driveTorqueCurrent,
                 driveTempCelsius).isOK();
+
         inputs.drivePositionM = (drivePositionM.getValueAsDouble());
-        inputs.driveVelocityMPS = (driveVelocityMPS.getValueAsDouble());
+        inputs.driveVelocityMPS = (driveVelocityMPS.getValueAsDouble()  * DriveConstants.kWheelCircumferenceMeters);
         inputs.driveAppliedVolts = driveAppliedVolts;
         inputs.driveMotorVolts = driveVoltage.getValueAsDouble();
         inputs.driveSupplyCurrentAmps = driveSupplyCurrent.getValueAsDouble();
@@ -209,7 +212,7 @@ public class ModuleIOKraken implements ModuleIO {
     public void setDriveVelocity(double velocityMPS, double feedforward) {
         /* Uses FOC PID with a arbitrary FF on the with Slot 0 gains */
         driveMotor.setControl(driveControl
-            .withVelocity(velocityMPS)
+            .withVelocity((velocityMPS / kWheelCircumferenceMeters)) //TODO: THIS MIGHT BE THE PROBLEM!!!!  Understanding Mechanism Rotations vs Rotor Rotations
             .withFeedForward(feedforward));
     }
 
@@ -257,6 +260,7 @@ public class ModuleIOKraken implements ModuleIO {
         azimuthMotor.getConfigurator().apply(slotConfig);
     }
 
+    
     public void setNeutralMode(NeutralModeValue neutralMode) {
         driveMotor.setNeutralMode(neutralMode);
     }
