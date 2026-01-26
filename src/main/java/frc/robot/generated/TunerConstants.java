@@ -38,7 +38,6 @@ public class TunerConstants {
           .withKP(45)
           .withKI(0)
           .withKD(0.5)
-          
           .withKS(0)
           .withKV(0.124); // TODO: Make pidf tunablenumbers in
 

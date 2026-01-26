@@ -165,6 +165,19 @@ public class RobotContainer {
                 () -> -controller.getLeftX(),
                 () -> Rotation2d.kZero));
 
+    controller
+        .leftBumper()
+        .whileTrue(
+            DriveCommands.joystickDriveAtAngle(
+                drive,
+                () -> -controller.getLeftY(),
+                () -> -controller.getLeftX(),
+                () ->
+                    drive.interpolateAngle(
+                        new Pose2d(
+                            drive.getPose().getX(), drive.getPose().getY(), Rotation2d.kZero),
+                        new Pose2d(4.626, 4.028, Rotation2d.kZero))));
+
     // Switch to X pattern when X button is pressed
     controller.x().onTrue(Commands.runOnce(drive::stopWithX, drive));
 

@@ -347,6 +347,13 @@ public class Drive extends SubsystemBase {
     return getMaxLinearSpeedMetersPerSec() / DRIVE_BASE_RADIUS;
   }
 
+  public Rotation2d interpolateAngle(Pose2d pose1, Pose2d pose2) {
+    return pose2
+        .getTranslation()
+        .minus(pose1.getTranslation()) // Vector from point1 to point2
+        .getAngle();
+  }
+
   /** Returns an array of module translations. */
   public static Translation2d[] getModuleTranslations() {
     return new Translation2d[] {
