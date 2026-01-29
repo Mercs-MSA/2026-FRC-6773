@@ -37,7 +37,6 @@ import frc.robot.subsystems.intake.IntakeConstants.IntakePivotTalonFXConfigurati
 
 public class IntakePivotIOTalonFX implements IntakePivotIO {
   private final TalonFX kMotor;
-  private final CANcoder kCANCoder;
 
   private TalonFXConfiguration motorConfiguration = new TalonFXConfiguration();
   private CANcoderConfiguration canCoderConfiguration = new CANcoderConfiguration();
@@ -65,13 +64,7 @@ public class IntakePivotIOTalonFX implements IntakePivotIO {
     double statusSignalUpdateFrequency) {
 
     kMotor = new TalonFX(hardware.motorId(), canbus);
-    kCANCoder = new CANcoder(42); //TODO: Device ID
 
-
-    // Apply configurations
-    canCoderConfiguration.MagnetSensor.SensorDirection = SensorDirectionValue.CounterClockwise_Positive;
-    canCoderConfiguration.MagnetSensor.MagnetOffset = 0.265625;
-    kCANCoder.getConfigurator().apply(canCoderConfiguration);
 
     motorConfiguration.Slot0.kP = gains.p();
     motorConfiguration.Slot0.kI = gains.i();

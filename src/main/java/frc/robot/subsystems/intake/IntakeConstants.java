@@ -18,8 +18,7 @@ public class IntakeConstants {
 
   public record IntakeRollerHardware(
     int motorId,
-    double gearing,
-    int intakeBeamBreakIO
+    double gearing
     ) {}
 
   public record IntakePivotGains(
@@ -94,34 +93,10 @@ public class IntakeConstants {
   public static final double kStatusSignalUpdateFrequencyHz = 100.0;
 
   public static final IntakeRollerHardware kRollerMotorHardware = new IntakeRollerHardware(
-    43, // Motor CAN ID
-    2.0 /1.0, // Gearing
-    1
+      42, // Motor CAN ID
+      18.0 / 24.0 // Gearing
     ); 
 
-//   public static final IntakeMotorConfiguration kIntakeMotorConfiguration = new IntakeMotorConfiguration(
-//     false, 
-//     true, 
-//     true, 
-//     60.0, 
-//     45.0, 
-//     12.0,
-//     -12.0,
-//     NeutralModeValue.Brake);
-
-//   public static final SparkConfiguration kIntakeSparkConfiguration = new SparkConfiguration(
-//     false,
-//     60,
-//     80,
-//     IdleMode.kCoast);
-
-//   public static final SensorConfiguration kSensorConfiguration = new SensorConfiguration(
-//     57, // Sensor CAN ID
-//     40, // Sensor detection threshold distance meters (detection distance)
-//     8, // Region of interest SPADs starting x-coordinate
-//     8, // Region of interest SPADs starting y-coordinate
-//     16, // Total region of interest width
-//     16); // Totral region of interest height
     
   public static final SimulationConfiguration kIntakeRollerSimulationConfiguration = new SimulationConfiguration(
     DCMotor.getKrakenX60(1), 
@@ -134,7 +109,7 @@ public class IntakeConstants {
 
   public static final Rotation2d kPivotPositionTolerance = Rotation2d.fromRotations(0.01);
   
-  public static final double kPivotGearing = (23.0 / 1.0) * (64.0 / 12.0); //TODO Check this value
+  public static final double kPivotGearing = 1.0/3.0; //TODO Check this value
 
   public static final double kRollerIntakingVoltage = 3.75;
 
@@ -147,16 +122,17 @@ public class IntakeConstants {
   public static final IntakePivotGains kPivotGains =  
     switch (Constants.currentMode) {
       case REAL -> new IntakePivotGains(
-        50.0,
+        5.0,
         0.0,
-        0.77,
+        0.0,
         1,
         2,
         20,
-        0.2,
+        0.0,
         0.0,
         0.0, 
-        -0.4); 
+        -0.4
+        ); 
       case SIM -> new IntakePivotGains(
         550.0,
         0.0,
