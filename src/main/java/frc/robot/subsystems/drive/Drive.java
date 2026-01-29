@@ -290,7 +290,7 @@ public class Drive extends SubsystemBase {
 
   /** Returns the measured chassis speeds of the robot. */
   @AutoLogOutput(key = "SwerveChassisSpeeds/Measured")
-  private ChassisSpeeds getChassisSpeeds() {
+  public ChassisSpeeds getChassisSpeeds() {
     return kinematics.toChassisSpeeds(getModuleStates());
   }
 
@@ -353,6 +353,22 @@ public class Drive extends SubsystemBase {
         .minus(pose1.getTranslation()) // Vector from point1 to point2
         .getAngle();
   }
+
+  // public Command followPath(PathPlannerPath path, PPHolonomicDriveController drivePID) {
+  //   return new FollowPathCommand(
+  //           path,
+  //           this::getPose,
+  //           this::getChassisSpeeds,
+  //           (speeds, ff) -> {
+  //               ppDesiredSpeeds = speeds;
+  //               pathPlanningFF = ff;
+  //           },
+  //           drivePID,
+  //           PP_CONFIG,
+  //           () -> DriverStation.getAlliance().isPresent() &&
+  //               DriverStation.getAlliance().get() == Alliance.Red,
+  //           this);
+  // }
 
   /** Returns an array of module translations. */
   public static Translation2d[] getModuleTranslations() {

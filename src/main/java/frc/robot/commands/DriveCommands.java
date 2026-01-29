@@ -31,8 +31,8 @@ import java.util.function.DoubleSupplier;
 import java.util.function.Supplier;
 
 public class DriveCommands {
-  private static final double DEADBAND = 0.4;
-  private static final double ANGLE_KP = 15.0;
+  private static final double DEADBAND = 0.1;
+  private static final double ANGLE_KP = 5.0;
   private static final double ANGLE_KD = 0.2;
   private static final double ANGLE_MAX_VELOCITY = 8.0;
   private static final double ANGLE_MAX_ACCELERATION = 20.0;
@@ -60,6 +60,51 @@ public class DriveCommands {
   /**
    * Field relative drive command using two joysticks (controlling linear and angular velocities).
    */
+  public static Command joystickDriveXLock(
+      Drive drive,
+      DoubleSupplier xSupplier,
+      DoubleSupplier ySupplier,
+      DoubleSupplier omegaSupplier) {
+    return Commands.run(
+        () -> {
+          ChassisSpeeds chassisSpeeds = drive.getChassisSpeeds();
+          double linearChassisVelocity =
+              Math.hypot(chassisSpeeds.vxMetersPerSecond, chassisSpeeds.vyMetersPerSecond);
+          double angularChassisVelocity = Math.abs(chassisSpeeds.omegaRadiansPerSecond);
+
+          if (linearChassisVelocity < 0.05
+              && angularChassisVelocity < 0.1) { // Thresholds in m/s and rad/s
+            drive.stopWithX();
+          }
+          // Get linear velocity
+          Translation2d linearVelocity =
+              getLinearVelocityFromJoysticks(xSupplier.getAsDouble(), ySupplier.getAsDouble());
+
+          // Apply rotation deadband
+          double omega = MathUtil.applyDeadband(omegaSupplier.getAsDouble(), DEADBAND);
+
+          // Square rotation value for more precise control
+          omega = Math.copySign(omega * omega, omega);
+
+          // Convert to field relative speeds & send command
+          ChassisSpeeds speeds =
+              new ChassisSpeeds(
+                  linearVelocity.getX() * drive.getMaxLinearSpeedMetersPerSec(),
+                  linearVelocity.getY() * drive.getMaxLinearSpeedMetersPerSec(),
+                  omega * drive.getMaxAngularSpeedRadPerSec());
+          boolean isFlipped =
+              DriverStation.getAlliance().isPresent()
+                  && DriverStation.getAlliance().get() == Alliance.Red;
+          drive.runVelocity(
+              ChassisSpeeds.fromFieldRelativeSpeeds(
+                  speeds,
+                  isFlipped
+                      ? drive.getRotation().plus(new Rotation2d(Math.PI))
+                      : drive.getRotation()));
+        },
+        drive);
+  }
+
   public static Command joystickDrive(
       Drive drive,
       DoubleSupplier xSupplier,

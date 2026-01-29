@@ -18,6 +18,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
+import frc.robot.commands.AutonCommands;
 import frc.robot.commands.DriveCommands;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.drive.Drive;
@@ -44,6 +45,8 @@ public class RobotContainer {
 
   // Controller
   private final CommandXboxController controller = new CommandXboxController(0);
+
+  private final AutonCommands autonCommands;
 
   // Dashboard inputs
   private final LoggedDashboardChooser<Command> autoChooser;
@@ -116,9 +119,13 @@ public class RobotContainer {
         vision = new Vision(drive::addVisionMeasurement, new VisionIO() {}, new VisionIO() {});
         break;
     }
+    autonCommands = new AutonCommands(drive);
 
     // Set up auto routines
     autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
+
+    autoChooser.addOption("Test Path", autonCommands.getPathCommand("TuningPath"));
+    autoChooser.addOption("Center Bump Path", autonCommands.getAutonomousSequence("CENTER"));
 
     // Set up SysId routines
     autoChooser.addOption(
@@ -149,11 +156,13 @@ public class RobotContainer {
   private void configureButtonBindings() {
     // Default command, normal field-relative drive
     drive.setDefaultCommand(
-        DriveCommands.joystickDrive(
+        DriveCommands.joystickDriveXLock(
             drive,
             () -> -controller.getLeftY(),
             () -> -controller.getLeftX(),
             () -> -controller.getRightX()));
+
+    // controller.axisLessThan(4, )
 
     // Lock to 0° when A button is held
     controller
@@ -173,10 +182,12 @@ public class RobotContainer {
                 () -> -controller.getLeftY(),
                 () -> -controller.getLeftX(),
                 () ->
-                    drive.interpolateAngle(
-                        new Pose2d(
-                            drive.getPose().getX(), drive.getPose().getY(), Rotation2d.kZero),
-                        new Pose2d(4.626, 4.028, Rotation2d.kZero))));
+                    drive
+                        .interpolateAngle(
+                            new Pose2d(
+                                drive.getPose().getX(), drive.getPose().getY(), Rotation2d.kZero),
+                            new Pose2d(4.626, 4.028, Rotation2d.kZero))
+                        .plus(new Rotation2d(Math.PI))));
 
     // Switch to X pattern when X button is pressed
     controller.x().onTrue(Commands.runOnce(drive::stopWithX, drive));
