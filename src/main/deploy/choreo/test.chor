@@ -76,7 +76,7 @@
  },
  "generationFeatures":[],
  "codegen":{
-  "root":"..\\C:\\Users\\armaa\\Documents\\GitHub\\2026-FRC-6773\\src\\main\\deploy\\choreo",
+  "root":"..\\..\\java\\frc\\robot\\ChoreoFiles",
   "genVars":true,
   "genTrajData":true,
   "useChoreoLib":true

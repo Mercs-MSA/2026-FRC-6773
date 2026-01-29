@@ -1,6 +1,6 @@
 {
  "name":"TuningPath",
- "version":1,
+ "version":3,
  "snapshot":{
   "waypoints":[
     {"x":3.58073353767395, "y":4.0, "heading":3.141592653589793, "intervals":24, "split":false, "fixTranslation":true, "fixHeading":true, "overrideIntervals":false},
