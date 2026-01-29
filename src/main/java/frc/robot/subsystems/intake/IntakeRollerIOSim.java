@@ -1,4 +1,3 @@
-
 package frc.robot.subsystems.intake;
 
 import edu.wpi.first.math.MathUtil;
@@ -14,13 +13,13 @@ public class IntakeRollerIOSim implements IntakeRollerIO {
 
   private double appliedVoltage = 0.0;
 
-  public IntakeRollerIOSim(double loopPeriodSec, IntakeRollerHardware hardware, SimulationConfiguration configuration) {
-    kIntake = new DCMotorSim(
-      LinearSystemId.createDCMotorSystem(
-        configuration.motorType(), 
-        configuration.measurementStdDevs(), 
-        hardware.gearing()), 
-      configuration.motorType());
+  public IntakeRollerIOSim(
+      double loopPeriodSec, IntakeRollerHardware hardware, SimulationConfiguration configuration) {
+    kIntake =
+        new DCMotorSim(
+            LinearSystemId.createDCMotorSystem(
+                configuration.motorType(), configuration.measurementStdDevs(), hardware.gearing()),
+            configuration.motorType());
 
     kLoopPeriodSec = loopPeriodSec;
   }

@@ -4,9 +4,8 @@
 
 package frc.robot.subsystems.intake;
 
-import org.littletonrobotics.junction.AutoLog;
-
 import edu.wpi.first.math.geometry.Rotation2d;
+import org.littletonrobotics.junction.AutoLog;
 
 /** The 2 bar intake subsystem's hardware interface */
 public interface IntakePivotIO {
@@ -24,7 +23,7 @@ public interface IntakePivotIO {
 
   /**
    * Write data from the hardware to the inputs object
-   * 
+   *
    * @param inputs The inputs object
    */
   public default void updateInputs(IntakePivotIOInputs inputs) {}
@@ -35,20 +34,20 @@ public interface IntakePivotIO {
   public default void setVoltage(double volts) {}
 
   /**
-   * @param goalPosition The desired angular position for the pivot to be 
-   *                     set to. Runs using internal MotionMagic
+   * @param goalPosition The desired angular position for the pivot to be set to. Runs using
+   *     internal MotionMagic
    */
   public default void setPosition(Rotation2d goalPosition) {}
 
-  /** 
-   * Commands the hardware to stop. When using TalonFX, this commands the
-   * motors to a Neutral control
+  /**
+   * Commands the hardware to stop. When using TalonFX, this commands the motors to a Neutral
+   * control
    */
   public default void stop() {}
 
   /**
    * Updates the gains of the feedback and feedforward
-   * 
+   *
    * @param p
    * @param i
    * @param d
@@ -57,25 +56,23 @@ public interface IntakePivotIO {
    * @param v
    * @param a
    */
-  public default void setGains(double p, double i, double d, double s, double g, double v, double a) {}
+  public default void setGains(
+      double p, double i, double d, double s, double g, double v, double a) {}
 
   /**
-   * Updates the gains of the profile. Note that profiled pid control is 
-   * called "MotionMagic" by CTRE
-   * 
-   * @param maxVelocity The maximum achieveable velocity of the motor in 
-   *                    meters per second
-   * @param maxAcceleration The maximum achieveable acceleration of the motor 
-   *                        in meters per second squared
+   * Updates the gains of the profile. Note that profiled pid control is called "MotionMagic" by
+   * CTRE
+   *
+   * @param maxVelocity The maximum achieveable velocity of the motor in meters per second
+   * @param maxAcceleration The maximum achieveable acceleration of the motor in meters per second
+   *     squared
    */
   public default void setMotionMagicConstraints(double maxVelocity, double maxAcceleration) {}
 
-
   /**
-   * Enables brake or coast on the motor, only on the real motors. Useful 
-   * since we usually keep them on brake, but may want to set them to coast 
-   * when disabled
-   * 
+   * Enables brake or coast on the motor, only on the real motors. Useful since we usually keep them
+   * on brake, but may want to set them to coast when disabled
+   *
    * @param enableBrake
    */
   public default void setBrakeMode(boolean enableBrake) {}

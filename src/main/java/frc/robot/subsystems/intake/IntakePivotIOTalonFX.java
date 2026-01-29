@@ -4,7 +4,6 @@
 
 package frc.robot.subsystems.intake;
 
-
 import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.configs.CANcoderConfiguration;
@@ -15,16 +14,13 @@ import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.controls.NeutralOut;
 import com.ctre.phoenix6.controls.VoltageOut;
-import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
 import com.ctre.phoenix6.signals.GravityTypeValue;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.MotorAlignmentValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
-import com.ctre.phoenix6.signals.SensorDirectionValue;
 import com.ctre.phoenix6.signals.StaticFeedforwardSignValue;
-
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.AngularVelocity;
@@ -41,7 +37,6 @@ public class IntakePivotIOTalonFX implements IntakePivotIO {
   private TalonFXConfiguration motorConfiguration = new TalonFXConfiguration();
   private CANcoderConfiguration canCoderConfiguration = new CANcoderConfiguration();
 
-
   // Motor data we wish to log
   private StatusSignal<Angle> positionRotations;
   private StatusSignal<AngularVelocity> velocityRotationsPerSec;
@@ -57,14 +52,13 @@ public class IntakePivotIOTalonFX implements IntakePivotIO {
   private final MotionMagicVoltage kPositionControl = new MotionMagicVoltage(0.0);
 
   public IntakePivotIOTalonFX(
-    String canbus,
-    IntakePivotHardware hardware,
-    IntakePivotTalonFXConfiguration configuration,
-    IntakePivotGains gains, //0.261
-    double statusSignalUpdateFrequency) {
+      String canbus,
+      IntakePivotHardware hardware,
+      IntakePivotTalonFXConfiguration configuration,
+      IntakePivotGains gains, // 0.261
+      double statusSignalUpdateFrequency) {
 
     kMotor = new TalonFX(hardware.motorId(), canbus);
-
 
     motorConfiguration.Slot0.kP = gains.p();
     motorConfiguration.Slot0.kI = gains.i();
@@ -73,16 +67,19 @@ public class IntakePivotIOTalonFX implements IntakePivotIO {
     motorConfiguration.Slot0.kV = gains.v();
     motorConfiguration.Slot0.kA = gains.a();
     motorConfiguration.Slot0.kG = gains.g();
-    motorConfiguration.MotionMagic.MotionMagicCruiseVelocity = gains.maxVelocityRotationsPerSecond();
-    motorConfiguration.MotionMagic.MotionMagicAcceleration = gains.maxAccelerationRotationsPerSecondSquared();
+    motorConfiguration.MotionMagic.MotionMagicCruiseVelocity =
+        gains.maxVelocityRotationsPerSecond();
+    motorConfiguration.MotionMagic.MotionMagicAcceleration =
+        gains.maxAccelerationRotationsPerSecondSquared();
     motorConfiguration.MotionMagic.MotionMagicJerk = gains.jerkRotationsPerSecondCubed();
 
     motorConfiguration.Slot1.kG = gains.g();
 
-
-    motorConfiguration.CurrentLimits.SupplyCurrentLimitEnable = configuration.enableSupplyCurrentLimit();
+    motorConfiguration.CurrentLimits.SupplyCurrentLimitEnable =
+        configuration.enableSupplyCurrentLimit();
     motorConfiguration.CurrentLimits.SupplyCurrentLimit = configuration.supplyCurrentLimitAmps();
-    motorConfiguration.CurrentLimits.StatorCurrentLimitEnable = configuration.enableStatorCurrentLimit();
+    motorConfiguration.CurrentLimits.StatorCurrentLimitEnable =
+        configuration.enableStatorCurrentLimit();
     motorConfiguration.CurrentLimits.StatorCurrentLimit = configuration.statorCurrentLimitAmps();
     motorConfiguration.Voltage.PeakForwardVoltage = configuration.peakForwardVoltage();
     motorConfiguration.Voltage.PeakReverseVoltage = configuration.peakReverseVoltage();
@@ -90,25 +87,21 @@ public class IntakePivotIOTalonFX implements IntakePivotIO {
     motorConfiguration.Slot0.StaticFeedforwardSign = StaticFeedforwardSignValue.UseClosedLoopSign;
 
     motorConfiguration.MotorOutput.NeutralMode = configuration.neutralMode();
-    motorConfiguration.MotorOutput.Inverted = 
-      configuration.invert() 
-        ? InvertedValue.CounterClockwise_Positive 
-        : InvertedValue.Clockwise_Positive;
-
+    motorConfiguration.MotorOutput.Inverted =
+        configuration.invert()
+            ? InvertedValue.CounterClockwise_Positive
+            : InvertedValue.Clockwise_Positive;
 
     motorConfiguration.Feedback.SensorToMechanismRatio = hardware.gearing();
     motorConfiguration.Feedback.RotorToSensorRatio = 1.0;
-    
+
     // Rotor sensor is the built-in sensor
-    //motorConfiguration.Feedback.FeedbackRemoteSensorID = kCANCoder.getDeviceID();
+    // motorConfiguration.Feedback.FeedbackRemoteSensorID = kCANCoder.getDeviceID();
     motorConfiguration.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.RotorSensor;
 
-    
     // Enable to true because arm
     motorConfiguration.ClosedLoopGeneral.ContinuousWrap = true;
-    
-    
-        
+
     // // Reset position on startup
     // kMotor.setPosition(Rotation2d.fromDegrees(64.331).getRotations()); //UPDATE VALUES
 
@@ -120,57 +113,64 @@ public class IntakePivotIOTalonFX implements IntakePivotIO {
     statorCurrentAmps = kMotor.getStatorCurrent();
     temperatureCelsius = kMotor.getDeviceTemp();
 
-    BaseStatusSignal.setUpdateFrequencyForAll(statusSignalUpdateFrequency,
-      positionRotations,
-      velocityRotationsPerSec,
-      appliedVolts,
-      supplyCurrentAmps,
-      supplyCurrentAmps,
-      statorCurrentAmps,
-      temperatureCelsius);
+    BaseStatusSignal.setUpdateFrequencyForAll(
+        statusSignalUpdateFrequency,
+        positionRotations,
+        velocityRotationsPerSec,
+        appliedVolts,
+        supplyCurrentAmps,
+        supplyCurrentAmps,
+        statorCurrentAmps,
+        temperatureCelsius);
 
     // Optimize the CANBus utilization by explicitly telling all CAN signals we
     // are not using to simply not be sent over the CANBus
-   // kMotor.optimizeBusUtilization(0.0, 1.0);
-   kMotor.getConfigurator().apply(motorConfiguration, 1);
+    // kMotor.optimizeBusUtilization(0.0, 1.0);
+    kMotor.getConfigurator().apply(motorConfiguration, 1);
   }
 
   public IntakePivotIOTalonFX(
-    IntakePivotHardware hardware,
-    IntakePivotTalonFXConfiguration configuration,
-    IntakePivotGains gains,
-    double statusSignalUpdateFrequency) {
+      IntakePivotHardware hardware,
+      IntakePivotTalonFXConfiguration configuration,
+      IntakePivotGains gains,
+      double statusSignalUpdateFrequency) {
 
     // Assumes the rio is the CANBus
     this("rio", hardware, configuration, gains, statusSignalUpdateFrequency);
   }
 
   public IntakePivotIOTalonFX(
-    String canbus,
-    IntakePivotHardware hardware,
-    IntakePivotTalonFXConfiguration configuration,
-    IntakePivotGains gains,
-    double statusSignalUpdateFrequency,
-    int leadMotorId,
-    boolean opposeLeadMotorDirection) {
+      String canbus,
+      IntakePivotHardware hardware,
+      IntakePivotTalonFXConfiguration configuration,
+      IntakePivotGains gains,
+      double statusSignalUpdateFrequency,
+      int leadMotorId,
+      boolean opposeLeadMotorDirection) {
 
     this(canbus, hardware, configuration, gains, statusSignalUpdateFrequency);
-    kMotor.setControl(new Follower(leadMotorId, opposeLeadMotorDirection ? MotorAlignmentValue.Opposed : MotorAlignmentValue.Aligned));
+    kMotor.setControl(
+        new Follower(
+            leadMotorId,
+            opposeLeadMotorDirection ? MotorAlignmentValue.Opposed : MotorAlignmentValue.Aligned));
   }
 
   @Override
   public void updateInputs(IntakePivotIOInputs inputs) {
-    inputs.isMotorConnected = BaseStatusSignal.refreshAll(
-      positionRotations,
-      velocityRotationsPerSec,
-      appliedVolts,
-      supplyCurrentAmps,
-      supplyCurrentAmps,
-      statorCurrentAmps,
-      temperatureCelsius).isOK();
+    inputs.isMotorConnected =
+        BaseStatusSignal.refreshAll(
+                positionRotations,
+                velocityRotationsPerSec,
+                appliedVolts,
+                supplyCurrentAmps,
+                supplyCurrentAmps,
+                statorCurrentAmps,
+                temperatureCelsius)
+            .isOK();
 
-    inputs.position =  Rotation2d.fromRotations(positionRotations.getValueAsDouble());
-    inputs.velocityUnitsPerSec = Rotation2d.fromRotations(velocityRotationsPerSec.getValueAsDouble());
+    inputs.position = Rotation2d.fromRotations(positionRotations.getValueAsDouble());
+    inputs.velocityUnitsPerSec =
+        Rotation2d.fromRotations(velocityRotationsPerSec.getValueAsDouble());
     inputs.appliedVoltage = appliedVolts.getValueAsDouble();
     inputs.supplyCurrentAmps = supplyCurrentAmps.getValueAsDouble();
     inputs.statorCurrentAmps = statorCurrentAmps.getValueAsDouble();
@@ -185,14 +185,11 @@ public class IntakePivotIOTalonFX implements IntakePivotIO {
   @Override
   public void setPosition(Rotation2d goalPosition) {
     kMotor.setControl(kPositionControl.withPosition(goalPosition.getRotations()).withSlot(0));
-
   }
 
-  public void setNeutralMode(NeutralModeValue value){
+  public void setNeutralMode(NeutralModeValue value) {
     kMotor.setNeutralMode(value);
   }
-
-  
 
   @Override
   public void stop() {
@@ -232,8 +229,8 @@ public class IntakePivotIOTalonFX implements IntakePivotIO {
 
   @Override
   public void setBrakeMode(boolean enableBrake) {
-    NeutralModeValue newMode = enableBrake ? NeutralModeValue.Brake: NeutralModeValue.Coast;
-    if(currentMode != newMode){
+    NeutralModeValue newMode = enableBrake ? NeutralModeValue.Brake : NeutralModeValue.Coast;
+    if (currentMode != newMode) {
       kMotor.setNeutralMode(newMode);
       currentMode = newMode;
     }

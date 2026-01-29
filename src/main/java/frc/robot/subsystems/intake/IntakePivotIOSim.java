@@ -4,8 +4,6 @@
 
 package frc.robot.subsystems.intake;
 
-import org.littletonrobotics.junction.Logger;
-
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.controller.PIDController;
@@ -15,19 +13,20 @@ import edu.wpi.first.wpilibj.simulation.SingleJointedArmSim;
 import frc.robot.subsystems.intake.IntakeConstants.IntakePivotGains;
 import frc.robot.subsystems.intake.IntakeConstants.IntakePivotHardware;
 import frc.robot.subsystems.intake.IntakeConstants.IntakePivotSimulationConfiguration;
+import org.littletonrobotics.junction.Logger;
 
 public class IntakePivotIOSim implements IntakePivotIO {
   private final double kLoopPeriodSec;
 
   private final SingleJointedArmSim kPivot;
 
-  // Create and use the feedback and feedforware controllers in here since we 
+  // Create and use the feedback and feedforware controllers in here since we
   // are using the internal motor controllers
   private TrapezoidProfile kProfile;
 
   private final PIDController kFeedback;
 
-  // Feedforward still a constant, but we have to reinstantiate the model in 
+  // Feedforward still a constant, but we have to reinstantiate the model in
   // order to change the gains
   private ArmFeedforward kFeedforward;
 
@@ -43,33 +42,35 @@ public class IntakePivotIOSim implements IntakePivotIO {
   private boolean closedLoopControl = false;
 
   public IntakePivotIOSim(
-    double loopPeriodSec,
-    IntakePivotHardware hardware,
-    IntakePivotSimulationConfiguration configuration, 
-    IntakePivotGains gains) {
+      double loopPeriodSec,
+      IntakePivotHardware hardware,
+      IntakePivotSimulationConfiguration configuration,
+      IntakePivotGains gains) {
 
     kLoopPeriodSec = loopPeriodSec;
 
-    kPivot = new SingleJointedArmSim(
-      configuration.motorType(),
-      hardware.gearing(),
-      configuration.momentOfInertiaJKgMetersSquared(),
-      configuration.ligamentLengthMeters(),
-      configuration.minPosition().getRadians(),
-      configuration.maxPosition().getRadians(), 
-      configuration.simulateGravity(), 
-      configuration.initialPosition().getRadians(), 
-      configuration.measurementStdDevs(),
-      configuration.measurementStdDevs());
+    kPivot =
+        new SingleJointedArmSim(
+            configuration.motorType(),
+            hardware.gearing(),
+            configuration.momentOfInertiaJKgMetersSquared(),
+            configuration.ligamentLengthMeters(),
+            configuration.minPosition().getRadians(),
+            configuration.maxPosition().getRadians(),
+            configuration.simulateGravity(),
+            configuration.initialPosition().getRadians(),
+            configuration.measurementStdDevs(),
+            configuration.measurementStdDevs());
 
-    kProfile = new TrapezoidProfile(new TrapezoidProfile.Constraints(
-      gains.maxVelocityRotationsPerSecond(), 
-      gains.maxAccelerationRotationsPerSecondSquared()));
+    kProfile =
+        new TrapezoidProfile(
+            new TrapezoidProfile.Constraints(
+                gains.maxVelocityRotationsPerSecond(),
+                gains.maxAccelerationRotationsPerSecondSquared()));
 
     kFeedback = new PIDController(gains.p(), gains.i(), gains.d());
 
-    kFeedforward = 
-      new ArmFeedforward(gains.s(), gains.g(), gains.v(), gains.a());
+    kFeedforward = new ArmFeedforward(gains.s(), gains.g(), gains.v(), gains.a());
   }
 
   @Override
@@ -97,9 +98,9 @@ public class IntakePivotIOSim implements IntakePivotIO {
 
   @Override
   public void setPosition(Rotation2d goalPosition) {
-    // Check if we weren't in closed loop, if we weren't reset the motion 
-    // profile. Recall that the profile should be reset before each major 
-    // movement of the mechanism. We don't need this logic in the real IO 
+    // Check if we weren't in closed loop, if we weren't reset the motion
+    // profile. Recall that the profile should be reset before each major
+    // movement of the mechanism. We don't need this logic in the real IO
     // since it's handled by the controller
     if (!closedLoopControl) {
       feedbackNeedsReset = true;
@@ -132,15 +133,14 @@ public class IntakePivotIOSim implements IntakePivotIO {
   }
 
   @Override
-  public void setGains(double p, double i, double d, double s, double g, double v, double a)  {
+  public void setGains(double p, double i, double d, double s, double g, double v, double a) {
     kFeedback.setPID(p, i, d);
     kFeedforward = new ArmFeedforward(s, g, v, a);
   }
 
   @Override
   public void setMotionMagicConstraints(double maxVelocity, double maxAcceleration) {
-    kProfile = new TrapezoidProfile(
-      new TrapezoidProfile.Constraints(maxVelocity, maxAcceleration));
+    kProfile = new TrapezoidProfile(new TrapezoidProfile.Constraints(maxVelocity, maxAcceleration));
   }
 
   @Override

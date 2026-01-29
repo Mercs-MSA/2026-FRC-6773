@@ -13,6 +13,12 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.commands.AutonCommands;
+import frc.robot.commands.TeleopCommands;
+import frc.robot.subsystems.intake.Intake;
+import frc.robot.subsystems.intake.IntakeConstants;
+import frc.robot.subsystems.intake.IntakePivotIOTalonFX;
+import frc.robot.subsystems.intake.IntakeRollerIOTalonFX;
+
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 /**
@@ -23,12 +29,12 @@ import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
  */
 public class RobotContainer {
   // Subsystems
-
+  private Intake intake;
   // Controller
   private final CommandXboxController controller = new CommandXboxController(0);
 
   private final AutonCommands autonCommands;
-
+  private final TeleopCommands teleopCommands;
   // Dashboard inputs
   private final LoggedDashboardChooser<Command> autoChooser;
 
@@ -37,6 +43,16 @@ public class RobotContainer {
     switch (Constants.currentMode) {
       case REAL:
         // Real robot, instantiate hardware IO implementations
+        intake = new Intake(
+                    new IntakePivotIOTalonFX(
+                        IntakeConstants.kPivotMotorHardware,
+                        IntakeConstants.kPivotMotorConfiguration,
+                        IntakeConstants.kPivotGains,
+                        IntakeConstants.kStatusSignalUpdateFrequencyHz),
+                    new IntakeRollerIOTalonFX(
+                        IntakeConstants.kRollerMotorHardware,
+                        IntakeConstants.kRollerMotorConfiguration,
+                        IntakeConstants.kStatusSignalUpdateFrequencyHz));
         break;
 
       case SIM:
@@ -47,6 +63,7 @@ public class RobotContainer {
         // Replayed robot, disable IO implementations
         break;
     }
+    teleopCommands = new TeleopCommands(intake, controller);
     autonCommands = new AutonCommands();
 
     // Set up auto routines
@@ -64,6 +81,7 @@ public class RobotContainer {
    */
   private void configureButtonBindings() {
     // Default command, normal field-relative drive
+    controller.leftTrigger().onTrue(teleopCommands.runIntakeFloorPickup()).onFalse(teleopCommands.runIntakeStow());
 
   }
 

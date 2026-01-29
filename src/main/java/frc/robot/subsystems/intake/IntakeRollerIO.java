@@ -6,7 +6,6 @@ package frc.robot.subsystems.intake;
 
 import org.littletonrobotics.junction.AutoLog;
 
-
 /** The 2 bar intake subsystem's hardware interface */
 public interface IntakeRollerIO {
   @AutoLog
@@ -24,7 +23,7 @@ public interface IntakeRollerIO {
 
   /**
    * Write data from the hardware to the inputs object
-   * 
+   *
    * @param inputs The inputs object
    */
   public default void updateInputs(IntakeRollerIOInputs inputs) {}
@@ -34,16 +33,15 @@ public interface IntakeRollerIO {
    */
   public default void setVoltage(double volts) {}
 
-
-  /** 
-   * Commands the hardware to stop. When using TalonFX, this commands the
-   * motors to a Neutral control
+  /**
+   * Commands the hardware to stop. When using TalonFX, this commands the motors to a Neutral
+   * control
    */
   public default void stop() {}
 
   /**
    * Updates the gains of the feedback and feedforward
-   * 
+   *
    * @param p
    * @param i
    * @param d
@@ -53,14 +51,11 @@ public interface IntakeRollerIO {
    * @param a
    */
 
-
   /**
-   * Enables brake or coast on the motor, only on the real motors. Useful 
-   * since we usually keep them on brake, but may want to set them to coast 
-   * when disabled
-   * 
+   * Enables brake or coast on the motor, only on the real motors. Useful since we usually keep them
+   * on brake, but may want to set them to coast when disabled
+   *
    * @param enableBrake
    */
   public default void setBrakeMode(boolean enableBrake) {}
-
 }
