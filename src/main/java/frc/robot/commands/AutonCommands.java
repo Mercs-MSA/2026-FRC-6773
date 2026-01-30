@@ -36,7 +36,6 @@ public class AutonCommands {
     try {
       // Load the path you want to follow using its name in the GUI
       PathPlannerPath path = PathPlannerPath.fromChoreoTrajectory(pathName);
-      ChoreoTraj.Bump.asAutoTraj(null).cmd(); 
       
       // Create a path following command using AutoBuilder. This will also trigger event markers.
       return AutoBuilder.followPath(path);
