@@ -1,10 +1,10 @@
-package frc.robot.subsystems.indexer;
+package frc.robot.subsystems.Spindexer;
 
 import org.littletonrobotics.junction.AutoLog;
 
-public abstract interface IndexerIO {
+public abstract interface SpindexerIO {
   @AutoLog
-  public class IndexerIOInputs {
+  public class SpindexerIOInputs {
     public boolean isMotorConnected = false;
 
     public double velocityRotPerSec = 0.0;
@@ -21,7 +21,7 @@ public abstract interface IndexerIO {
    *
    * @param inputs The inputs object
    */
-  public void updateInputs(IndexerIOInputs inputs);
+  public void updateInputs(SpindexerIOInputs inputs);
 
   /**
    * @param velocity The velocity that should be applied to the motor
@@ -45,8 +45,6 @@ public abstract interface IndexerIO {
   public default void setBrakeMode(boolean enableBrake) {}
   ;
 
-  /**
-   * Returns the velocity of the motor in RPS as a double.
-   */
+  /** Returns the velocity of the motor in RPS as a double. */
   public double getVelocity();
 }

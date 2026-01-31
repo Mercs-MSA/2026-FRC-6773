@@ -1,12 +1,12 @@
-package frc.robot.subsystems.indexer;
+package frc.robot.subsystems.Spindexer;
 
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.math.system.plant.DCMotor;
 
-public class IndexerConstants {
-  public record IndexerHardware(int motorId, double gearing) {}
+public class SpindexerConstants {
+  public record SpindexerHardware(int motorId, double gearing) {}
 
-  // public record IndexerGains(
+  // public record SpindexerGains(
   //     // Feedback control
   //     double p,
   //     double i,
@@ -21,7 +21,7 @@ public class IndexerConstants {
   //     double a,
   //     double g) {}
 
-  public record IndexerTalonFXConfiguration(
+  public record SpindexerTalonFXConfiguration(
       boolean invert,
       boolean enableStatorCurrentLimit,
       boolean enableSupplyCurrentLimit,
@@ -31,7 +31,7 @@ public class IndexerConstants {
       double peakReverseVoltage,
       NeutralModeValue neutralMode) {}
 
-  public record IndexerSimulationConfiguration(DCMotor motorType, double measurementStdDevs) {}
+  public record SpindexerSimulationConfiguration(DCMotor motorType, double measurementStdDevs) {}
 
   /**
    * See this comment and documentation about the units if x, y, w, h
@@ -41,34 +41,26 @@ public class IndexerConstants {
   public record SensorConfiguration(
       int sensorId, double detectionThresholdMilimeters, int x, int y, int w, int h) {}
 
-  public record SimulationConfiguration(DCMotor motorType, double measurementStdDevs) {}
 
   /* Intake constants */
 
   /** The frequency that telemetry form the motor is pushed to the CANBus */
   public static final double kStatusSignalUpdateFrequencyHz = 100.0;
 
-  public static final IndexerHardware kIndexerHardware =
-      new IndexerHardware(
+  public static final SpindexerHardware kSpindexerHardware =
+      new SpindexerHardware(
           42, // TODO: CAN ID
           18.0 / 24.0 // TODO: GEARING
           );
 
-  public static final SimulationConfiguration kIndexerSimulationConfiguration =
-      new SimulationConfiguration(DCMotor.getKrakenX60(1), 0.0002);
-
-  /* Pivot constants */
-
   public static final double kGearing = 1.0 / 3.0; // TODO Check this value
 
-  public static final double kRollerIntakingVoltage = 3.75;
+  public record SpindexerGains(double p, double i, double d, double v, double s) {}
 
-  public static final double kRollerStowVoltage = 1;
+  public static final SpindexerGains kSpindexerGains = new SpindexerGains(1, 1, 1, 1, 1); //TODO: FIX THIS IT'S BAD
 
-  public record IndexerGains(double p, double i, double d, double v, double s) {}
-
-  public static final IndexerTalonFXConfiguration kMotorConfiguration =
-      new IndexerTalonFXConfiguration(
+  public static final SpindexerTalonFXConfiguration kSpindexerConfiguration =
+      new SpindexerTalonFXConfiguration(
           false, // Invert
           true, // Enable stator current limiting
           true, // Enable supply current limiting
@@ -78,8 +70,8 @@ public class IndexerConstants {
           -12.0, // Peak reverse voltage
           NeutralModeValue.Brake); // Idle mode
 
-  public static final IndexerSimulationConfiguration kPivotSimulationConfiguration =
-      new IndexerSimulationConfiguration(
+  public static final SpindexerSimulationConfiguration kSpindexerSimulationConfiguration =
+      new SpindexerSimulationConfiguration(
           DCMotor.getKrakenX60(1), // Motor type and count
           0.002); // Std devs
 
