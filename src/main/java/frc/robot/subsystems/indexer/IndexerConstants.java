@@ -38,7 +38,6 @@ public class IndexerConstants {
 
     public record IndexerSimulationConfiguration(
         DCMotor motorType,
-        Rotation2d initialPosition,
         double measurementStdDevs) {}
 
     /**
@@ -58,8 +57,8 @@ public class IndexerConstants {
 
     public static final IndexerHardware kIndexerHardware =
         new IndexerHardware(
-            42, // Motor CAN ID
-            18.0 / 24.0 // Gearing
+            42, // TODO: CAN ID
+            18.0 / 24.0 // TODO: GEARING
             );
 
     public static final SimulationConfiguration kIndexerSimulationConfiguration =
@@ -67,12 +66,7 @@ public class IndexerConstants {
 
     /* Pivot constants */
 
-    public static final Rotation2d kMinPivotPosition = Rotation2d.fromRotations(-0.29);
-    public static final Rotation2d kMaxPivotPosition = Rotation2d.fromRotations(0.1);
-
-    public static final Rotation2d kPivotPositionTolerance = Rotation2d.fromRotations(0.01);
-
-    public static final double kPivotGearing = 1.0 / 3.0; // TODO Check this value
+    public static final double kGearing = 1.0 / 3.0; // TODO Check this value
 
     public static final double kRollerIntakingVoltage = 3.75;
 
@@ -92,7 +86,6 @@ public class IndexerConstants {
     public static final IndexerSimulationConfiguration kPivotSimulationConfiguration =
         new IndexerSimulationConfiguration(
             DCMotor.getKrakenX60(1), // Motor type and count
-            new Rotation2d(), // Initial position
             0.002); // Std devs
 
     // public static final PivotVisualizerConfiguration kPivotVisualizerConfiguration =
