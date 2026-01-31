@@ -21,103 +21,109 @@ import frc.robot.subsystems.indexer.IndexerConstants.IndexerTalonFXConfiguration
 import frc.robot.subsystems.indexer.IndexerIO.IndexerIOInputs;
 
 public class IndexerIOTalonFX implements IndexerIO {
-  private final TalonFX kMotor;
+    private final TalonFX kMotor;
 
-  private TalonFXConfiguration motorconfig = new TalonFXConfiguration();
+    private TalonFXConfiguration motorconfig = new TalonFXConfiguration();
 
-  // logged data for roller:
-  private StatusSignal<AngularVelocity> velocityRotPerSec;
-  private StatusSignal<Current> supplyAmps;
-  private StatusSignal<Current> statorAmps;
-  private StatusSignal<Voltage> appliedVolts;
-  private StatusSignal<Temperature> temperatureCelsius;
+    // logged data for roller:
+    private StatusSignal<AngularVelocity> velocityRotPerSec;
+    private StatusSignal<Current> supplyAmps;
+    private StatusSignal<Current> statorAmps;
+    private StatusSignal<Voltage> appliedVolts;
+    private StatusSignal<Temperature> temperatureCelsius;
 
-  private final VoltageOut kVoltageControl = new VoltageOut(0.0);
+    private final VoltageOut kVoltageControl = new VoltageOut(0.0);
 
-  public IndexerIOTalonFX(
-      String canbus,
-      IndexerHardware hardware,
-      IndexerTalonFXConfiguration config,
-      IndexerGains gains,
-      double statusSignalUpdateFrequency) {
-    kMotor = new TalonFX(hardware.motorId(), canbus);
+    public IndexerIOTalonFX(
+        String canbus,
+        IndexerHardware hardware,
+        IndexerTalonFXConfiguration config,
+        IndexerGains gains,
+        double statusSignalUpdateFrequency) {
+      kMotor = new TalonFX(hardware.motorId(), canbus);
 
-    motorconfig.CurrentLimits.SupplyCurrentLimitEnable = config.enableSupplyCurrentLimit();
-    motorconfig.CurrentLimits.SupplyCurrentLimit = config.supplyCurrentLimitAmps();
-    motorconfig.CurrentLimits.StatorCurrentLimitEnable = config.enableStatorCurrentLimit();
-    motorconfig.CurrentLimits.StatorCurrentLimit = config.statorCurrentLimitAmps();
-    motorconfig.Voltage.PeakForwardVoltage = config.peakForwardVoltage();
-    motorconfig.Voltage.PeakReverseVoltage = config.peakReverseVoltage();
-    motorconfig.MotorOutput.Inverted =
-        config.invert()
-            ? InvertedValue.CounterClockwise_Positive
-            : InvertedValue.Clockwise_Positive;
-    motorconfig.MotorOutput.NeutralMode = config.neutralMode();
-    motorconfig.Slot0 =
-        new Slot0Configs()
-            .withKP(gains.p())
-            .withKI(gains.i())
-            .withKD(gains.d())
-            .withKV(gains.v())
-            .withKS(gains.s());
-    velocityRotPerSec = kMotor.getVelocity();
-    appliedVolts = kMotor.getMotorVoltage();
-    supplyAmps = kMotor.getSupplyCurrent();
-    statorAmps = kMotor.getStatorCurrent();
-    temperatureCelsius = kMotor.getDeviceTemp();
+      motorconfig.CurrentLimits.SupplyCurrentLimitEnable = config.enableSupplyCurrentLimit();
+      motorconfig.CurrentLimits.SupplyCurrentLimit = config.supplyCurrentLimitAmps();
+      motorconfig.CurrentLimits.StatorCurrentLimitEnable = config.enableStatorCurrentLimit();
+      motorconfig.CurrentLimits.StatorCurrentLimit = config.statorCurrentLimitAmps();
+      motorconfig.Voltage.PeakForwardVoltage = config.peakForwardVoltage();
+      motorconfig.Voltage.PeakReverseVoltage = config.peakReverseVoltage();
+      motorconfig.MotorOutput.Inverted =
+          config.invert()
+              ? InvertedValue.CounterClockwise_Positive
+              : InvertedValue.Clockwise_Positive;
+      motorconfig.MotorOutput.NeutralMode = config.neutralMode();
+      motorconfig.Slot0 =
+          new Slot0Configs()
+              .withKP(gains.p())
+              .withKI(gains.i())
+              .withKD(gains.d())
+              .withKV(gains.v())
+              .withKS(gains.s());
+      velocityRotPerSec = kMotor.getVelocity();
+      appliedVolts = kMotor.getMotorVoltage();
+      supplyAmps = kMotor.getSupplyCurrent();
+      statorAmps = kMotor.getStatorCurrent();
+      temperatureCelsius = kMotor.getDeviceTemp();
 
-    BaseStatusSignal.setUpdateFrequencyForAll(
-        statusSignalUpdateFrequency,
-        velocityRotPerSec,
-        appliedVolts,
-        supplyAmps,
-        supplyAmps,
-        statorAmps,
-        temperatureCelsius);
+      BaseStatusSignal.setUpdateFrequencyForAll(
+          statusSignalUpdateFrequency,
+          velocityRotPerSec,
+          appliedVolts,
+          supplyAmps,
+          supplyAmps,
+          statorAmps,
+          temperatureCelsius);
 
-    kMotor.optimizeBusUtilization(0.0, 1.0); // TODO: What is this?
-  }
+      kMotor.optimizeBusUtilization(0.0, 1.0); // TODO: What is this?
+    }
 
-  public IndexerIOTalonFX(
-      IndexerHardware hardware,
-      IndexerTalonFXConfiguration config,
-      IndexerGains gains,
-      double statusSignalUpdateFrequency) {
+    public IndexerIOTalonFX(
+        IndexerHardware hardware,
+        IndexerTalonFXConfiguration config,
+        IndexerGains gains,
+        double statusSignalUpdateFrequency) {
 
-    // Assumes the rio is the CANBus
-    this("rio", hardware, config, gains, statusSignalUpdateFrequency);
-  }
+      // Assumes the rio is the CANBus
+      this("rio", hardware, config, gains, statusSignalUpdateFrequency);
+    }
 
-  public void updateInputs(IndexerIOInputs inputs) {
-    inputs.isMotorConnected =
-        BaseStatusSignal.refreshAll(
-                velocityRotPerSec, appliedVolts, supplyAmps, statorAmps, temperatureCelsius)
-            .isOK();
+    public void updateInputs(IndexerIOInputs inputs) {
+      inputs.isMotorConnected =
+          BaseStatusSignal.refreshAll(
+                  velocityRotPerSec, appliedVolts, supplyAmps, statorAmps, temperatureCelsius)
+              .isOK();
 
-    inputs.velocityRotPerSec = velocityRotPerSec.getValueAsDouble();
-    inputs.appliedVoltage = appliedVolts.getValueAsDouble();
-    inputs.supplyCurrentAmps = supplyAmps.getValueAsDouble();
-    inputs.statorCurrentAmps = statorAmps.getValueAsDouble();
-    inputs.temperatureCelsius = temperatureCelsius.getValueAsDouble();
-  }
+      inputs.velocityRotPerSec = velocityRotPerSec.getValueAsDouble();
+      inputs.appliedVoltage = appliedVolts.getValueAsDouble();
+      inputs.supplyCurrentAmps = supplyAmps.getValueAsDouble();
+      inputs.statorCurrentAmps = statorAmps.getValueAsDouble();
+      inputs.temperatureCelsius = temperatureCelsius.getValueAsDouble();
+    }
 
-  @Override
-  public void setVoltage(double volts) {
-    kMotor.setControl(kVoltageControl.withOutput(MathUtil.clamp(volts, -12, 12)));
-  }
+    @Override
+    public void setVoltage(double volts) {
+      kMotor.setControl(kVoltageControl.withOutput(MathUtil.clamp(volts, -12, 12)));
+    }
 
-  @Override
-  public void stop() {
-    kMotor.setControl(new NeutralOut());
-  }
+    @Override
+    public void stop() {
+      kMotor.setControl(new NeutralOut());
+    }
 
-  @Override
-  public void setBrakeMode(boolean enableBrake) {
-    kMotor.setNeutralMode(enableBrake ? NeutralModeValue.Brake : NeutralModeValue.Coast);
-  }
+    @Override
+    public void setBrakeMode(boolean enableBrake) {
+      kMotor.setNeutralMode(enableBrake ? NeutralModeValue.Brake : NeutralModeValue.Coast);
+    }
 
-  @Override
-  public void setVelocity(double velocity) {
-    kMotor.setControl(new VelocityVoltage(velocity));
-  }
+    @Override
+    public void setVelocity(double velocity) {
+      kMotor.setControl(new VelocityVoltage(velocity));
+    }
+
+    @Override
+    public double getVelocity() {
+      return kMotor.getVelocity().getValueAsDouble();
+    }
+
 }

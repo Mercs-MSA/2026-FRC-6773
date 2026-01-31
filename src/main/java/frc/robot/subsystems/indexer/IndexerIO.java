@@ -44,4 +44,9 @@ public abstract interface IndexerIO {
    */
   public default void setBrakeMode(boolean enableBrake) {}
   ;
+
+  /**
+   * Returns the velocity of the motor in RPS as a double.
+   */
+  public double getVelocity();
 }
