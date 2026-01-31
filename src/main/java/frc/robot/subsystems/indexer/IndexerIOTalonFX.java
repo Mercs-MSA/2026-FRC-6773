@@ -36,7 +36,7 @@ public class IndexerIOTalonFX implements IndexerIO{
       IndexerHardware hardware,
       IndexerTalonFXConfiguration config,
       double statusSignalUpdateFrequency) {
-    kMotor = new TalonFX(IndexerConstants.motorId, canbus);
+    kMotor = new TalonFX(hardware.motorId(), canbus);
 
     motorconfig.CurrentLimits.SupplyCurrentLimitEnable =
         config.enableSupplyCurrentLimit();
