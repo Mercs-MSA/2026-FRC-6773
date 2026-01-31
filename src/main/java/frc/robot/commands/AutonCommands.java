@@ -9,12 +9,10 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.ChoreoFiles.*;
-import frc.robot.subsystems.drive.Drive;
 import java.util.Optional;
 
 public class AutonCommands {
 
-  public Drive kRobotDrive;
 
   private boolean stopRollers = false;
   private boolean stopPivot = false;
@@ -28,8 +26,7 @@ public class AutonCommands {
   //     // kClimb = climb;
   // }
 
-  public AutonCommands(Drive robotDrive) {
-    this.kRobotDrive = robotDrive;
+  public AutonCommands() {
   }
 
   public Command getPathCommand(String pathName) {
