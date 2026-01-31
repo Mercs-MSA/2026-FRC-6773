@@ -1,6 +1,8 @@
 package frc.robot.subsystems.Spindexer;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
+import frc.robot.Constants.Mode;
 import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.Logger;
 
@@ -8,6 +10,7 @@ public class Spindexer extends SubsystemBase {
 
   private final SpindexerIO kSpindexerHardware;
   private final SpindexerIOInputsAutoLogged kSpindexerInputs = new SpindexerIOInputsAutoLogged();
+  private double constantVel = 0.0;
 
   public Spindexer(SpindexerIO kSpindexerIO) {
     this.kSpindexerHardware = kSpindexerIO;
@@ -17,9 +20,21 @@ public class Spindexer extends SubsystemBase {
   public void periodic() {
     kSpindexerHardware.updateInputs(kSpindexerInputs);
     Logger.processInputs("Spindexer/Inputs", kSpindexerInputs);
+
+    if (Constants.currentMode == Mode.SIM) {
+      constantSetVel(constantVel);
+    }
   }
 
   public void setVelocity(double velocity) {
+    constantVel = velocity;
+    kSpindexerHardware.setVelocity(velocity);
+    if (Constants.currentMode == Mode.SIM && constantVel != 0) {
+      constantVel = velocity;
+    }
+  }
+
+  private void constantSetVel(double velocity) {
     kSpindexerHardware.setVelocity(velocity);
   }
 
@@ -30,5 +45,6 @@ public class Spindexer extends SubsystemBase {
 
   public void stopSpindexer() {
     kSpindexerHardware.stop();
+    constantVel = 0;
   }
 }

@@ -41,7 +41,6 @@ public class SpindexerConstants {
   public record SensorConfiguration(
       int sensorId, double detectionThresholdMilimeters, int x, int y, int w, int h) {}
 
-
   /* Intake constants */
 
   /** The frequency that telemetry form the motor is pushed to the CANBus */
@@ -57,7 +56,11 @@ public class SpindexerConstants {
 
   public record SpindexerGains(double p, double i, double d, double v, double s) {}
 
-  public static final SpindexerGains kSpindexerGains = new SpindexerGains(1, 1, 1, 1, 1); //TODO: FIX THIS IT'S BAD
+  public static final SpindexerGains kSpindexerGains =
+      new SpindexerGains(1, 1, 1, 1, 1); // TODO: FIX THIS IT'S BAD
+
+  public static final SpindexerGains kSimulationSpindexerGains =
+      new SpindexerGains(0.1, 0, 0, 0.1, 0.1);
 
   public static final SpindexerTalonFXConfiguration kSpindexerConfiguration =
       new SpindexerTalonFXConfiguration(

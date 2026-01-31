@@ -57,11 +57,11 @@ public class SpindexerIOSim implements SpindexerIO {
 
   @Override
   public void setVelocity(double velocity) {
-    kMotor.setAngularVelocity(velocity);
+    kMotor.setAngularVelocity(velocity * 2 * Math.PI);
   }
 
   @Override
   public double getVelocity() {
-    return kMotor.getAngularVelocityRPM() * 60;
+    return kMotor.getAngularVelocityRPM() / 60;
   }
 }

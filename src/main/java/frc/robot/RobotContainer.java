@@ -7,7 +7,6 @@
 
 package frc.robot;
 
-import com.pathplanner.lib.auto.AutoBuilder;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -15,12 +14,10 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.commands.AutonCommands;
 import frc.robot.commands.TeleopCommands;
+import frc.robot.subsystems.Spindexer.Spindexer;
 import frc.robot.subsystems.Spindexer.SpindexerConstants;
 import frc.robot.subsystems.Spindexer.SpindexerIOSim;
 import frc.robot.subsystems.Spindexer.SpindexerIOTalonFX;
-import frc.robot.subsystems.Spindexer.Spindexer;
-
-import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -36,7 +33,7 @@ public class RobotContainer {
   private final CommandXboxController controller = new CommandXboxController(0);
 
   private final AutonCommands autonCommands;
-    private final TeleopCommands teleopCommands;
+  private final TeleopCommands teleopCommands;
   // Dashboard inputs
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -56,14 +53,13 @@ public class RobotContainer {
         // Please see the AdvantageKit template documentation for more information:
         // https://docs.advantagekit.org/getting-started/template-projects/talonfx-swerve-template#custom-module-implementations
         //
-        spindexer = new Spindexer(
-            new SpindexerIOTalonFX(
-                SpindexerConstants.kSpindexerHardware,
-                SpindexerConstants.kSpindexerConfiguration,
-                SpindexerConstants.kSpindexerGains,
-                SpindexerConstants.kStatusSignalUpdateFrequencyHz)
-            );
-        
+        spindexer =
+            new Spindexer(
+                new SpindexerIOTalonFX(
+                    SpindexerConstants.kSpindexerHardware,
+                    SpindexerConstants.kSpindexerConfiguration,
+                    SpindexerConstants.kSpindexerGains,
+                    SpindexerConstants.kStatusSignalUpdateFrequencyHz));
 
         break;
 
@@ -75,14 +71,13 @@ public class RobotContainer {
         //         drive::addVisionMeasurement,
         //         new VisionIOLimelight(camera0Name, robotToCamera0, drive::getPose),
         //         new VisionIOPhotonVisionSim(camera1Name, robotToCamera1, drive::getPose));
-        spindexer = new Spindexer(
-            new SpindexerIOSim(
-                0.01,
-                SpindexerConstants.kSpindexerHardware,
-                SpindexerConstants.kSpindexerGains,
-                SpindexerConstants.kSpindexerSimulationConfiguration
-            )
-            );
+        spindexer =
+            new Spindexer(
+                new SpindexerIOSim(
+                    0.01,
+                    SpindexerConstants.kSpindexerHardware,
+                    SpindexerConstants.kSimulationSpindexerGains,
+                    SpindexerConstants.kSpindexerSimulationConfiguration));
 
         break;
 
@@ -93,7 +88,6 @@ public class RobotContainer {
     }
     autonCommands = new AutonCommands();
     teleopCommands = new TeleopCommands(spindexer);
-
 
     // Configure the button bindings
     configureButtonBindings();
@@ -111,8 +105,7 @@ public class RobotContainer {
     // controller.axisLessThan(4, )
 
     controller.a().onTrue(teleopCommands.spin(5)).onFalse(teleopCommands.stop());
-    controller.b().onTrue(teleopCommands.spin(0)).onFalse(teleopCommands.stop());
-
+    controller.b().onTrue(teleopCommands.spin(7.5)).onFalse(teleopCommands.stop());
   }
 
   /**

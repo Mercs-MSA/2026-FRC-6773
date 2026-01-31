@@ -10,22 +10,23 @@ public class TeleopCommands {
 
   private Spindexer mIndexer;
 
-  public TeleopCommands(Spindexer indexer)
-  {
+  public TeleopCommands(Spindexer indexer) {
     mIndexer = indexer;
   }
 
   public Command spin(double vel) {
-    return Commands.runOnce(() -> {
-      mIndexer.setVelocity(vel);
-    }, mIndexer);
+    return Commands.runOnce(
+        () -> {
+          mIndexer.setVelocity(vel);
+        },
+        mIndexer);
   }
 
-  public Command stop()
-  {
-    return Commands.runOnce(() ->
-    {
-      mIndexer.stopSpindexer();
-    }, mIndexer);
+  public Command stop() {
+    return Commands.runOnce(
+        () -> {
+          mIndexer.stopSpindexer();
+        },
+        mIndexer);
   }
 }
