@@ -2,22 +2,25 @@ package frc.robot.subsystems.indexer;
 
 import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.StatusSignal;
+import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.NeutralOut;
+import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.Current;
 import edu.wpi.first.units.measure.Temperature;
 import edu.wpi.first.units.measure.Voltage;
+import frc.robot.subsystems.indexer.IndexerConstants.IndexerGains;
 import frc.robot.subsystems.indexer.IndexerConstants.IndexerHardware;
 import frc.robot.subsystems.indexer.IndexerConstants.IndexerTalonFXConfiguration;
 import frc.robot.subsystems.indexer.IndexerIO.IndexerIOInputs;
 
-
-public class IndexerIOTalonFX implements IndexerIO{
+public class IndexerIOTalonFX implements IndexerIO {
   private final TalonFX kMotor;
 
   private TalonFXConfiguration motorconfig = new TalonFXConfiguration();
@@ -35,14 +38,13 @@ public class IndexerIOTalonFX implements IndexerIO{
       String canbus,
       IndexerHardware hardware,
       IndexerTalonFXConfiguration config,
+      IndexerGains gains,
       double statusSignalUpdateFrequency) {
     kMotor = new TalonFX(hardware.motorId(), canbus);
 
-    motorconfig.CurrentLimits.SupplyCurrentLimitEnable =
-        config.enableSupplyCurrentLimit();
+    motorconfig.CurrentLimits.SupplyCurrentLimitEnable = config.enableSupplyCurrentLimit();
     motorconfig.CurrentLimits.SupplyCurrentLimit = config.supplyCurrentLimitAmps();
-    motorconfig.CurrentLimits.StatorCurrentLimitEnable =
-        config.enableStatorCurrentLimit();
+    motorconfig.CurrentLimits.StatorCurrentLimitEnable = config.enableStatorCurrentLimit();
     motorconfig.CurrentLimits.StatorCurrentLimit = config.statorCurrentLimitAmps();
     motorconfig.Voltage.PeakForwardVoltage = config.peakForwardVoltage();
     motorconfig.Voltage.PeakReverseVoltage = config.peakReverseVoltage();
@@ -51,7 +53,13 @@ public class IndexerIOTalonFX implements IndexerIO{
             ? InvertedValue.CounterClockwise_Positive
             : InvertedValue.Clockwise_Positive;
     motorconfig.MotorOutput.NeutralMode = config.neutralMode();
-
+    motorconfig.Slot0 =
+        new Slot0Configs()
+            .withKP(gains.p())
+            .withKI(gains.i())
+            .withKD(gains.d())
+            .withKV(gains.v())
+            .withKS(gains.s());
     velocityRotPerSec = kMotor.getVelocity();
     appliedVolts = kMotor.getMotorVoltage();
     supplyAmps = kMotor.getSupplyCurrent();
@@ -73,10 +81,11 @@ public class IndexerIOTalonFX implements IndexerIO{
   public IndexerIOTalonFX(
       IndexerHardware hardware,
       IndexerTalonFXConfiguration config,
+      IndexerGains gains,
       double statusSignalUpdateFrequency) {
 
     // Assumes the rio is the CANBus
-    this("rio", hardware, config, statusSignalUpdateFrequency);
+    this("rio", hardware, config, gains, statusSignalUpdateFrequency);
   }
 
   public void updateInputs(IndexerIOInputs inputs) {
@@ -94,7 +103,7 @@ public class IndexerIOTalonFX implements IndexerIO{
 
   @Override
   public void setVoltage(double volts) {
-    kMotor.setControl(kVoltageControl.withOutput(volts));
+    kMotor.setControl(kVoltageControl.withOutput(MathUtil.clamp(volts, -12, 12)));
   }
 
   @Override
@@ -105,5 +114,10 @@ public class IndexerIOTalonFX implements IndexerIO{
   @Override
   public void setBrakeMode(boolean enableBrake) {
     kMotor.setNeutralMode(enableBrake ? NeutralModeValue.Brake : NeutralModeValue.Coast);
+  }
+
+  @Override
+  public void setVelocity(double velocity) {
+    kMotor.setControl(new VelocityVoltage(velocity));
   }
 }
