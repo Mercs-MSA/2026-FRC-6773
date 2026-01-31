@@ -4,7 +4,7 @@ import org.littletonrobotics.junction.AutoLog;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 
-public interface IndexerIO {
+public abstract interface IndexerIO {
     @AutoLog
     public class IndexerIOInputs
     {
@@ -23,24 +23,24 @@ public interface IndexerIO {
      *
      * @param inputs The inputs object
      */
-    public default void updateInputs(IndexerIOInputs inputs) {}
+    public void updateInputs(IndexerIOInputs inputs);
 
     /**
      * @param volts The voltage that should be applied to the motor from -12 to 12
      */
-    public default void setVoltage(double volts) {}
+    public void setVoltage(double volts);
 
     /**
      * @param goalPosition The desired angular position for the pivot to be set to. Runs using
      *     internal MotionMagic
      */
-    public default void setPosition(Rotation2d goalPosition) {}
+    public void setPosition(Rotation2d goalPosition);
 
     /**
      * Commands the hardware to stop. When using TalonFX, this commands the motors to a Neutral
      * control
      */
-    public default void stop() {}
+    public void stop();
 
     /**
      * Updates the gains of the feedback and feedforward
@@ -53,8 +53,8 @@ public interface IndexerIO {
      * @param v
      * @param a
      */
-    public default void setGains(
-        double p, double i, double d, double s, double g, double v, double a) {}
+    public void setGains(
+        double p, double i, double d, double s, double g, double v, double a);
 
     /**
      * Updates the gains of the profile. Note that profiled pid control is called "MotionMagic" by
@@ -64,7 +64,7 @@ public interface IndexerIO {
      * @param maxAcceleration The maximum achieveable acceleration of the motor in meters per second
      *     squared
      */
-    public default void setMotionMagicConstraints(double maxVelocity, double maxAcceleration) {}
+    public void setMotionMagicConstraints(double maxVelocity, double maxAcceleration);
 
     /**
      * Enables brake or coast on the motor, only on the real motors. Useful since we usually keep them
@@ -72,9 +72,9 @@ public interface IndexerIO {
      *
      * @param enableBrake
      */
-    public default void setBrakeMode(boolean enableBrake) {}
+    public void setBrakeMode(boolean enableBrake);
 
     /** Reset the relative encoder to 0 */
-    public default void resetPosition() {}
+    public void resetPosition();
     
 }
