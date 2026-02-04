@@ -1,4 +1,4 @@
-package frc.robot.subsystems.Spindexer;
+package frc.robot.subsystems.spindexer;
 
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.math.system.plant.DCMotor;

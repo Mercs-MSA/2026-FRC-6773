@@ -1,11 +1,11 @@
-package frc.robot.subsystems.Spindexer;
+package frc.robot.subsystems.spindexer;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.system.plant.LinearSystemId;
 import edu.wpi.first.wpilibj.simulation.DCMotorSim;
-import frc.robot.subsystems.Spindexer.SpindexerConstants.SpindexerGains;
-import frc.robot.subsystems.Spindexer.SpindexerConstants.SpindexerHardware;
-import frc.robot.subsystems.Spindexer.SpindexerConstants.SpindexerSimulationConfiguration;
+import frc.robot.subsystems.spindexer.SpindexerConstants.SpindexerGains;
+import frc.robot.subsystems.spindexer.SpindexerConstants.SpindexerHardware;
+import frc.robot.subsystems.spindexer.SpindexerConstants.SpindexerSimulationConfiguration;
 
 public class SpindexerIOSim implements SpindexerIO {
   private final double kLoopPeriodSec;

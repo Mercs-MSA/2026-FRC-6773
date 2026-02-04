@@ -14,10 +14,10 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.commands.AutonCommands;
 import frc.robot.commands.TeleopCommands;
-import frc.robot.subsystems.Spindexer.Spindexer;
-import frc.robot.subsystems.Spindexer.SpindexerConstants;
-import frc.robot.subsystems.Spindexer.SpindexerIOSim;
-import frc.robot.subsystems.Spindexer.SpindexerIOTalonFX;
+import frc.robot.subsystems.spindexer.Spindexer;
+import frc.robot.subsystems.spindexer.SpindexerConstants;
+import frc.robot.subsystems.spindexer.SpindexerIOSim;
+import frc.robot.subsystems.spindexer.SpindexerIOTalonFX;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -116,4 +116,5 @@ public class RobotContainer {
   public Command getAutonomousCommand() {
     return Commands.none();
   }
+
 }
