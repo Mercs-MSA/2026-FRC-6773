@@ -1,4 +1,4 @@
-package frc.robot.subsystems.Spindexer;
+package frc.robot.subsystems.transfer;
 
 import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.StatusSignal;
@@ -15,13 +15,12 @@ import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.Current;
 import edu.wpi.first.units.measure.Temperature;
 import edu.wpi.first.units.measure.Voltage;
-import frc.robot.subsystems.Spindexer.SpindexerConstants.SpindexerGains;
-import frc.robot.subsystems.Spindexer.SpindexerConstants.SpindexerHardware;
-import frc.robot.subsystems.Spindexer.SpindexerConstants.SpindexerTalonFXConfiguration;
-import frc.robot.subsystems.Spindexer.SpindexerIO.SpindexerIOInputs;
+import frc.robot.subsystems.transfer.TransferConstants.TransferGains;
+import frc.robot.subsystems.transfer.TransferConstants.TransferTalonFXConfiguration;
+import frc.robot.subsystems.transfer.TransferConstants.KickerHardware;
 
-public class SpindexerIOTalonFX implements SpindexerIO {
-  private final TalonFX kMotor;
+public class KickerIOTalonFX implements TransferIO {
+  private final TalonFX kicker;
 
   private TalonFXConfiguration motorconfig = new TalonFXConfiguration();
 
@@ -34,13 +33,13 @@ public class SpindexerIOTalonFX implements SpindexerIO {
 
   private final VoltageOut kVoltageControl = new VoltageOut(0.0);
 
-  public SpindexerIOTalonFX(
+  public KickerIOTalonFX(
       String canbus,
-      SpindexerHardware hardware,
-      SpindexerTalonFXConfiguration config,
-      SpindexerGains gains,
+      KickerHardware kickerHardware,
+      TransferTalonFXConfiguration config,
+      TransferGains gains,
       double statusSignalUpdateFrequency) {
-    kMotor = new TalonFX(hardware.motorId(), canbus);
+    kicker = new TalonFX(kickerHardware.motorId(), canbus);
 
     motorconfig.CurrentLimits.SupplyCurrentLimitEnable = config.enableSupplyCurrentLimit();
     motorconfig.CurrentLimits.SupplyCurrentLimit = config.supplyCurrentLimitAmps();
@@ -60,11 +59,11 @@ public class SpindexerIOTalonFX implements SpindexerIO {
             .withKD(gains.d())
             .withKV(gains.v())
             .withKS(gains.s());
-    velocityRotPerSec = kMotor.getVelocity();
-    appliedVolts = kMotor.getMotorVoltage();
-    supplyAmps = kMotor.getSupplyCurrent();
-    statorAmps = kMotor.getStatorCurrent();
-    temperatureCelsius = kMotor.getDeviceTemp();
+    velocityRotPerSec = kicker.getVelocity();
+    appliedVolts = kicker.getMotorVoltage();
+    supplyAmps = kicker.getSupplyCurrent();
+    statorAmps = kicker.getStatorCurrent();
+    temperatureCelsius = kicker.getDeviceTemp();
 
     BaseStatusSignal.setUpdateFrequencyForAll(
         statusSignalUpdateFrequency,
@@ -75,20 +74,20 @@ public class SpindexerIOTalonFX implements SpindexerIO {
         statorAmps,
         temperatureCelsius);
 
-    kMotor.optimizeBusUtilization(0.0, 1.0); // TODO: What is this?
+    kicker.optimizeBusUtilization(0.0, 1.0);
   }
 
-  public SpindexerIOTalonFX(
-      SpindexerHardware hardware,
-      SpindexerTalonFXConfiguration config,
-      SpindexerGains gains,
+  public KickerIOTalonFX(
+      KickerHardware kickerhardware,
+      TransferTalonFXConfiguration config,
+      TransferGains gains,
       double statusSignalUpdateFrequency) {
 
     // Assumes the rio is the CANBus
-    this("rio", hardware, config, gains, statusSignalUpdateFrequency);
+    this("rio", kickerhardware, config, gains, statusSignalUpdateFrequency);
   }
 
-  public void updateInputs(SpindexerIOInputs inputs) {
+  public void updateInputs(TransferIOInputs inputs) {
     inputs.isMotorConnected =
         BaseStatusSignal.refreshAll(
                 velocityRotPerSec, appliedVolts, supplyAmps, statorAmps, temperatureCelsius)
@@ -103,26 +102,26 @@ public class SpindexerIOTalonFX implements SpindexerIO {
 
   @Override
   public void setVoltage(double volts) {
-    kMotor.setControl(kVoltageControl.withOutput(MathUtil.clamp(volts, -12, 12)));
+    kicker.setControl(kVoltageControl.withOutput(MathUtil.clamp(volts, -12, 12)));
   }
 
   @Override
   public void stop() {
-    kMotor.setControl(new NeutralOut());
+    kicker.setControl(new NeutralOut());
   }
 
   @Override
   public void setBrakeMode(boolean enableBrake) {
-    kMotor.setNeutralMode(enableBrake ? NeutralModeValue.Brake : NeutralModeValue.Coast);
+    kicker.setNeutralMode(enableBrake ? NeutralModeValue.Brake : NeutralModeValue.Coast);
   }
 
   @Override
   public void setVelocity(double velocity) {
-    kMotor.setControl(new VelocityVoltage(velocity));
+    kicker.setControl(new VelocityVoltage(velocity));
   }
 
   @Override
   public double getVelocity() {
-    return kMotor.getVelocity().getValueAsDouble();
+    return kicker.getVelocity().getValueAsDouble();
   }
 }

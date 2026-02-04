@@ -14,10 +14,6 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.commands.AutonCommands;
 import frc.robot.commands.TeleopCommands;
-import frc.robot.subsystems.Spindexer.Spindexer;
-import frc.robot.subsystems.Spindexer.SpindexerConstants;
-import frc.robot.subsystems.Spindexer.SpindexerIOSim;
-import frc.robot.subsystems.Spindexer.SpindexerIOTalonFX;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -26,8 +22,7 @@ import frc.robot.subsystems.Spindexer.SpindexerIOTalonFX;
  * subsystems, commands, and button mappings) should be declared here.
  */
 public class RobotContainer {
-  // Subsystems
-  private final Spindexer spindexer;
+
 
   // Controller
   private final CommandXboxController controller = new CommandXboxController(0);
@@ -53,41 +48,24 @@ public class RobotContainer {
         // Please see the AdvantageKit template documentation for more information:
         // https://docs.advantagekit.org/getting-started/template-projects/talonfx-swerve-template#custom-module-implementations
         //
-        spindexer =
-            new Spindexer(
-                new SpindexerIOTalonFX(
-                    SpindexerConstants.kSpindexerHardware,
-                    SpindexerConstants.kSpindexerConfiguration,
-                    SpindexerConstants.kSpindexerGains,
-                    SpindexerConstants.kStatusSignalUpdateFrequencyHz));
+
 
         break;
 
       case SIM:
         // Sim robot, instantiate physics sim IO implementations
 
-        // vision =
-        //     new Vision(
-        //         drive::addVisionMeasurement,
-        //         new VisionIOLimelight(camera0Name, robotToCamera0, drive::getPose),
-        //         new VisionIOPhotonVisionSim(camera1Name, robotToCamera1, drive::getPose));
-        spindexer =
-            new Spindexer(
-                new SpindexerIOSim(
-                    0.01,
-                    SpindexerConstants.kSpindexerHardware,
-                    SpindexerConstants.kSimulationSpindexerGains,
-                    SpindexerConstants.kSpindexerSimulationConfiguration));
+
 
         break;
 
       default:
         // Replayed robot, disable IO implementations
-        spindexer = new Spindexer(new SpindexerIOSim(0, null, null, null));
+
         break;
     }
     autonCommands = new AutonCommands();
-    teleopCommands = new TeleopCommands(spindexer);
+    teleopCommands = new TeleopCommands();
 
     // Configure the button bindings
     configureButtonBindings();
@@ -104,8 +82,6 @@ public class RobotContainer {
 
     // controller.axisLessThan(4, )
 
-    controller.a().onTrue(teleopCommands.spin(5)).onFalse(teleopCommands.stop());
-    controller.b().onTrue(teleopCommands.spin(7.5)).onFalse(teleopCommands.stop());
   }
 
   /**

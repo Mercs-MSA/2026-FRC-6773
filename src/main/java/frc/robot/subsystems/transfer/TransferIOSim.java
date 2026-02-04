@@ -1,24 +1,24 @@
-package frc.robot.subsystems.Spindexer;
+package frc.robot.subsystems.transfer;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.system.plant.LinearSystemId;
 import edu.wpi.first.wpilibj.simulation.DCMotorSim;
-import frc.robot.subsystems.Spindexer.SpindexerConstants.SpindexerGains;
-import frc.robot.subsystems.Spindexer.SpindexerConstants.SpindexerHardware;
-import frc.robot.subsystems.Spindexer.SpindexerConstants.SpindexerSimulationConfiguration;
+import frc.robot.subsystems.transfer.TransferConstants.TransferGains;
+import frc.robot.subsystems.transfer.TransferConstants.flywheelHardware;
+import frc.robot.subsystems.transfer.TransferConstants.TransferSimulationConfiguration;
 
-public class SpindexerIOSim implements SpindexerIO {
+public class TransferIOSim implements TransferIO { //TODO: Add kicker motor
   private final double kLoopPeriodSec;
 
   private final DCMotorSim kMotor;
 
   private double appliedVoltage = 0.0;
 
-  public SpindexerIOSim(
+  public TransferIOSim(
       double loopPeriodSec,
-      SpindexerHardware hardware,
-      SpindexerGains gains,
-      SpindexerSimulationConfiguration configuration) {
+      flywheelHardware hardware,
+      TransferGains gains,
+      TransferSimulationConfiguration configuration) {
 
     kLoopPeriodSec = loopPeriodSec;
 
@@ -30,14 +30,13 @@ public class SpindexerIOSim implements SpindexerIO {
   }
 
   @Override
-  public void updateInputs(SpindexerIOInputs inputs) {
+  public void updateInputs(TransferIOInputs inputs) {
     kMotor.update(kLoopPeriodSec);
 
     inputs.isMotorConnected = true;
 
     inputs.velocityRotPerSec = kMotor.getAngularVelocityRadPerSec() / (Math.PI * 2);
     inputs.appliedVoltage = appliedVoltage;
-    // These are 0 cause we don't care about these in simulation
     inputs.supplyCurrentAmps = 0.0;
     inputs.statorCurrentAmps = 0.0;
     inputs.temperatureCelsius = 0.0;

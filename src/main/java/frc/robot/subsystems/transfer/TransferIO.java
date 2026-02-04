@@ -1,10 +1,10 @@
-package frc.robot.subsystems.Spindexer;
+package frc.robot.subsystems.transfer;
 
 import org.littletonrobotics.junction.AutoLog;
 
-public abstract interface SpindexerIO {
+public abstract interface TransferIO {   //
   @AutoLog
-  public class SpindexerIOInputs {
+  public class TransferIOInputs {
     public boolean isMotorConnected = false;
 
     public double velocityRotPerSec = 0.0;
@@ -13,15 +13,15 @@ public abstract interface SpindexerIO {
     public double statorCurrentAmps = 0.0;
     public double temperatureCelsius = 0.0;
 
-    public boolean beambreakBroken = false;
+    public boolean isBroken = false;
   }
 
   /**
-   * Write data from the hardware to the inputs object
+   * Write data from the hardware to the inputs object 
    *
    * @param inputs The inputs object
    */
-  public void updateInputs(SpindexerIOInputs inputs);
+  public void updateInputs(TransferIOInputs inputs);
 
   /**
    * @param velocity The velocity that should be applied to the motor
