@@ -16,11 +16,11 @@ import edu.wpi.first.units.measure.Current;
 import edu.wpi.first.units.measure.Temperature;
 import edu.wpi.first.units.measure.Voltage;
 import frc.robot.subsystems.transfer.TransferConstants.TransferGains;
-import frc.robot.subsystems.transfer.TransferConstants.flywheelHardware;
+import frc.robot.subsystems.transfer.TransferConstants.TransferHardware;
 import frc.robot.subsystems.transfer.TransferConstants.TransferTalonFXConfiguration;
 
-public class FlywheelIOTalonFX implements TransferIO {
-  private final TalonFX flywheel;
+public class RegulatorIOTalonFX implements TransferIO {
+  private final TalonFX regulator;
 
   private TalonFXConfiguration motorconfig = new TalonFXConfiguration();
 
@@ -33,13 +33,13 @@ public class FlywheelIOTalonFX implements TransferIO {
 
   private final VoltageOut kVoltageControl = new VoltageOut(0.0);
 
-  public FlywheelIOTalonFX(
+  public RegulatorIOTalonFX(
       String canbus,
-      flywheelHardware flywheelHardware,
+      TransferHardware regulatorHardware,
       TransferTalonFXConfiguration config,
       TransferGains gains,
       double statusSignalUpdateFrequency) {
-    flywheel = new TalonFX(flywheelHardware.motorId(), canbus);
+    regulator = new TalonFX(regulatorHardware.motorId(), canbus);
 
     motorconfig.CurrentLimits.SupplyCurrentLimitEnable = config.enableSupplyCurrentLimit();
     motorconfig.CurrentLimits.SupplyCurrentLimit = config.supplyCurrentLimitAmps();
@@ -59,11 +59,11 @@ public class FlywheelIOTalonFX implements TransferIO {
             .withKD(gains.d())
             .withKV(gains.v())
             .withKS(gains.s());
-    velocityRotPerSec = flywheel.getVelocity();
-    appliedVolts = flywheel.getMotorVoltage();
-    supplyAmps = flywheel.getSupplyCurrent();
-    statorAmps = flywheel.getStatorCurrent();
-    temperatureCelsius = flywheel.getDeviceTemp();
+    velocityRotPerSec = regulator.getVelocity();
+    appliedVolts = regulator.getMotorVoltage();
+    supplyAmps = regulator.getSupplyCurrent();
+    statorAmps = regulator.getStatorCurrent();
+    temperatureCelsius = regulator.getDeviceTemp();
 
     BaseStatusSignal.setUpdateFrequencyForAll(
         statusSignalUpdateFrequency,
@@ -74,17 +74,17 @@ public class FlywheelIOTalonFX implements TransferIO {
         statorAmps,
         temperatureCelsius);
 
-    flywheel.optimizeBusUtilization(0.0, 1.0);
+    regulator.optimizeBusUtilization(0.0, 1.0);
   }
 
-  public FlywheelIOTalonFX(
-      flywheelHardware flywheelhardware,
+  public RegulatorIOTalonFX(
+      TransferHardware regulatorhardware,
       TransferTalonFXConfiguration config,
       TransferGains gains,
       double statusSignalUpdateFrequency) {
 
     // Assumes the rio is the CANBus
-    this("rio", flywheelhardware, config, gains, statusSignalUpdateFrequency);
+    this("rio", regulatorhardware, config, gains, statusSignalUpdateFrequency);
   }
 
   public void updateInputs(TransferIOInputs inputs) {
@@ -102,26 +102,26 @@ public class FlywheelIOTalonFX implements TransferIO {
 
   @Override
   public void setVoltage(double volts) {
-    flywheel.setControl(kVoltageControl.withOutput(MathUtil.clamp(volts, -12, 12)));
+    regulator.setControl(kVoltageControl.withOutput(MathUtil.clamp(volts, -12, 12)));
   }
 
   @Override
   public void stop() {
-    flywheel.setControl(new NeutralOut());
+    regulator.setControl(new NeutralOut());
   }
 
   @Override
   public void setBrakeMode(boolean enableBrake) {
-    flywheel.setNeutralMode(enableBrake ? NeutralModeValue.Brake : NeutralModeValue.Coast);
+    regulator.setNeutralMode(enableBrake ? NeutralModeValue.Brake : NeutralModeValue.Coast);
   }
 
   @Override
   public void setVelocity(double velocity) {
-    flywheel.setControl(new VelocityVoltage(velocity));
+    regulator.setControl(new VelocityVoltage(velocity));
   }
 
   @Override
   public double getVelocity() {
-    return flywheel.getVelocity().getValueAsDouble();
+    return regulator.getVelocity().getValueAsDouble();
   }
 }

@@ -14,6 +14,12 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.commands.AutonCommands;
 import frc.robot.commands.TeleopCommands;
+import frc.robot.subsystems.transfer.KickerIOTalonFX;
+import frc.robot.subsystems.transfer.RegulatorIOTalonFX;
+import frc.robot.subsystems.transfer.Transfer;
+import frc.robot.subsystems.transfer.TransferConstants;
+import frc.robot.subsystems.transfer.TransferIO;
+import frc.robot.subsystems.transfer.TransferIOSim;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -23,7 +29,7 @@ import frc.robot.commands.TeleopCommands;
  */
 public class RobotContainer {
 
-
+  private final Transfer transfer;
   // Controller
   private final CommandXboxController controller = new CommandXboxController(0);
 
@@ -48,24 +54,42 @@ public class RobotContainer {
         // Please see the AdvantageKit template documentation for more information:
         // https://docs.advantagekit.org/getting-started/template-projects/talonfx-swerve-template#custom-module-implementations
         //
-
+        transfer = new Transfer(
+          new KickerIOTalonFX(
+            TransferConstants.kTransferKickerHardware,
+            TransferConstants.kTransferConfiguration,
+            TransferConstants.kStatusSignalUpdateFrequencyHz),
+          new RegulatorIOTalonFX(
+            TransferConstants.kTransferRegulatorHardware,
+            TransferConstants.kTransferConfiguration,
+            TransferConstants.kRegulatorGains,
+            TransferConstants.kStatusSignalUpdateFrequencyHz));
 
         break;
 
       case SIM:
         // Sim robot, instantiate physics sim IO implementations
-
-
-
+        transfer = new Transfer(
+          new TransferIOSim(
+            0.02, 
+            TransferConstants.kTransferKickerHardware, 
+            TransferConstants.kSimulationRegulatorGains, 
+            TransferConstants.kTransferSimulationConfiguration),
+          new TransferIOSim(
+            0.02, 
+            TransferConstants.kTransferRegulatorHardware, 
+            TransferConstants.kSimulationRegulatorGains, 
+            TransferConstants.kTransferSimulationConfiguration));
         break;
 
       default:
         // Replayed robot, disable IO implementations
+        transfer = new Transfer(null, null);
 
         break;
     }
     autonCommands = new AutonCommands();
-    teleopCommands = new TeleopCommands();
+    teleopCommands = new TeleopCommands(transfer);
 
     // Configure the button bindings
     configureButtonBindings();
@@ -81,6 +105,8 @@ public class RobotContainer {
     // Default command, normal field-relative drive
 
     // controller.axisLessThan(4, )
+    controller.a().onTrue(teleopCommands.startTransfer(10));
+    controller.b().onTrue(teleopCommands.stopKicker());
 
   }
 

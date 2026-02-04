@@ -16,8 +16,8 @@ import edu.wpi.first.units.measure.Current;
 import edu.wpi.first.units.measure.Temperature;
 import edu.wpi.first.units.measure.Voltage;
 import frc.robot.subsystems.transfer.TransferConstants.TransferGains;
+import frc.robot.subsystems.transfer.TransferConstants.TransferHardware;
 import frc.robot.subsystems.transfer.TransferConstants.TransferTalonFXConfiguration;
-import frc.robot.subsystems.transfer.TransferConstants.KickerHardware;
 
 public class KickerIOTalonFX implements TransferIO {
   private final TalonFX kicker;
@@ -35,9 +35,8 @@ public class KickerIOTalonFX implements TransferIO {
 
   public KickerIOTalonFX(
       String canbus,
-      KickerHardware kickerHardware,
+      TransferHardware kickerHardware,
       TransferTalonFXConfiguration config,
-      TransferGains gains,
       double statusSignalUpdateFrequency) {
     kicker = new TalonFX(kickerHardware.motorId(), canbus);
 
@@ -52,13 +51,6 @@ public class KickerIOTalonFX implements TransferIO {
             ? InvertedValue.CounterClockwise_Positive
             : InvertedValue.Clockwise_Positive;
     motorconfig.MotorOutput.NeutralMode = config.neutralMode();
-    motorconfig.Slot0 =
-        new Slot0Configs()
-            .withKP(gains.p())
-            .withKI(gains.i())
-            .withKD(gains.d())
-            .withKV(gains.v())
-            .withKS(gains.s());
     velocityRotPerSec = kicker.getVelocity();
     appliedVolts = kicker.getMotorVoltage();
     supplyAmps = kicker.getSupplyCurrent();
@@ -78,13 +70,12 @@ public class KickerIOTalonFX implements TransferIO {
   }
 
   public KickerIOTalonFX(
-      KickerHardware kickerhardware,
+      TransferHardware kickerhardware,
       TransferTalonFXConfiguration config,
-      TransferGains gains,
       double statusSignalUpdateFrequency) {
 
     // Assumes the rio is the CANBus
-    this("rio", kickerhardware, config, gains, statusSignalUpdateFrequency);
+    this("rio", kickerhardware, config, statusSignalUpdateFrequency);
   }
 
   public void updateInputs(TransferIOInputs inputs) {
@@ -113,15 +104,5 @@ public class KickerIOTalonFX implements TransferIO {
   @Override
   public void setBrakeMode(boolean enableBrake) {
     kicker.setNeutralMode(enableBrake ? NeutralModeValue.Brake : NeutralModeValue.Coast);
-  }
-
-  @Override
-  public void setVelocity(double velocity) {
-    kicker.setControl(new VelocityVoltage(velocity));
-  }
-
-  @Override
-  public double getVelocity() {
-    return kicker.getVelocity().getValueAsDouble();
   }
 }

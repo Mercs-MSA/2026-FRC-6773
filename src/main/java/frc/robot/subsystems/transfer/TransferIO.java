@@ -26,7 +26,7 @@ public abstract interface TransferIO {   //
   /**
    * @param velocity The velocity that should be applied to the motor
    */
-  public void setVelocity(double velocity);
+  public default void setVelocity(double velocity) {};
 
   public void setVoltage(double voltage);
 
@@ -46,5 +46,5 @@ public abstract interface TransferIO {   //
   ;
 
   /** Returns the velocity of the motor in RPS as a double. */
-  public double getVelocity();
+  public default double getVelocity() {return -1.0;};
 }

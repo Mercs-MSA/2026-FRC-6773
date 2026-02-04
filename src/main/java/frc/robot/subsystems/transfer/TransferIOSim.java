@@ -4,7 +4,7 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.system.plant.LinearSystemId;
 import edu.wpi.first.wpilibj.simulation.DCMotorSim;
 import frc.robot.subsystems.transfer.TransferConstants.TransferGains;
-import frc.robot.subsystems.transfer.TransferConstants.flywheelHardware;
+import frc.robot.subsystems.transfer.TransferConstants.TransferHardware;
 import frc.robot.subsystems.transfer.TransferConstants.TransferSimulationConfiguration;
 
 public class TransferIOSim implements TransferIO { //TODO: Add kicker motor
@@ -16,7 +16,7 @@ public class TransferIOSim implements TransferIO { //TODO: Add kicker motor
 
   public TransferIOSim(
       double loopPeriodSec,
-      flywheelHardware hardware,
+      TransferHardware hardware,
       TransferGains gains,
       TransferSimulationConfiguration configuration) {
 
