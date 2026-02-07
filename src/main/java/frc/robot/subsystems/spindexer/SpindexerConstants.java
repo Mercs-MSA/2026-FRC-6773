@@ -48,7 +48,7 @@ public class SpindexerConstants {
 
   public static final SpindexerHardware kSpindexerHardware =
       new SpindexerHardware(
-          42, // TODO: CAN ID
+          43, // TODO: CAN ID
           18.0 / 24.0 // TODO: GEARING
           );
 
