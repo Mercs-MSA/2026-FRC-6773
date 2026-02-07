@@ -9,8 +9,6 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.commands.AutonCommands;
 import frc.robot.commands.TeleopCommands;
@@ -23,6 +21,13 @@ import frc.robot.subsystems.transfer.RegulatorIOTalonFX;
 import frc.robot.subsystems.transfer.Transfer;
 import frc.robot.subsystems.transfer.TransferConstants;
 import frc.robot.subsystems.transfer.TransferIOSim;
+import frc.robot.commands.TeleopCommands;
+import frc.robot.subsystems.intake.Intake;
+import frc.robot.subsystems.intake.IntakeConstants;
+import frc.robot.subsystems.intake.IntakePivotIOSim;
+import frc.robot.subsystems.intake.IntakePivotIOTalonFX;
+import frc.robot.subsystems.intake.IntakeRollerIOSim;
+import frc.robot.subsystems.intake.IntakeRollerIOTalonFX;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -35,6 +40,7 @@ public class RobotContainer {
   private final Spindexer spindexer;
   private final Transfer transfer;
 
+  private Intake intake;
   // Controller
   private final CommandXboxController controller = new CommandXboxController(0);
 
@@ -46,6 +52,17 @@ public class RobotContainer {
     switch (Constants.currentMode) {
       case REAL:
         // Real robot, instantiate hardware IO implementations
+        intake =
+            new Intake(
+                new IntakePivotIOTalonFX(
+                    IntakeConstants.kPivotMotorHardware,
+                    IntakeConstants.kPivotMotorConfiguration,
+                    IntakeConstants.kPivotGains,
+                    IntakeConstants.kStatusSignalUpdateFrequencyHz),
+                new IntakeRollerIOTalonFX(
+                    IntakeConstants.kRollerMotorHardware,
+                    IntakeConstants.kRollerMotorConfiguration,
+                    IntakeConstants.kStatusSignalUpdateFrequencyHz));
         // ModuleIOTalonFX is intended for modules with TalonFX drive, TalonFX turn, and
         // a CANcode
 
@@ -81,6 +98,17 @@ public class RobotContainer {
         break;
 
       case SIM:
+        intake =
+            new Intake(
+                new IntakePivotIOSim(
+                    0.02,
+                    IntakeConstants.kPivotMotorHardware,
+                    IntakeConstants.kPivotSimulationConfiguration,
+                    IntakeConstants.kPivotGains),
+                new IntakeRollerIOSim(
+                    0.02,
+                    IntakeConstants.kRollerMotorHardware,
+                    IntakeConstants.kIntakeRollerSimulationConfiguration));
         // Sim robot, instantiate physics sim IO implementations
 
         // vision =
@@ -131,6 +159,10 @@ public class RobotContainer {
    */
   private void configureButtonBindings() {
     // Default command, normal field-relative drive
+    controller
+        .leftTrigger()
+        .onTrue(teleopCommands.runIntakeFloorPickup())
+        .onFalse(teleopCommands.runIntakeStow());
 
     // controller.axisLessThan(4, )
 
