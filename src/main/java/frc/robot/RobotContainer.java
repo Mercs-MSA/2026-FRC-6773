@@ -18,6 +18,11 @@ import frc.robot.subsystems.spindexer.Spindexer;
 import frc.robot.subsystems.spindexer.SpindexerConstants;
 import frc.robot.subsystems.spindexer.SpindexerIOSim;
 import frc.robot.subsystems.spindexer.SpindexerIOTalonFX;
+import frc.robot.subsystems.transfer.KickerIOTalonFX;
+import frc.robot.subsystems.transfer.RegulatorIOTalonFX;
+import frc.robot.subsystems.transfer.Transfer;
+import frc.robot.subsystems.transfer.TransferConstants;
+import frc.robot.subsystems.transfer.TransferIOSim;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -28,6 +33,7 @@ import frc.robot.subsystems.spindexer.SpindexerIOTalonFX;
 public class RobotContainer {
   // Subsystems
   private final Spindexer spindexer;
+  private final Transfer transfer;
 
   // Controller
   private final CommandXboxController controller = new CommandXboxController(0);
@@ -61,6 +67,17 @@ public class RobotContainer {
                     SpindexerConstants.kSpindexerGains,
                     SpindexerConstants.kStatusSignalUpdateFrequencyHz));
 
+        transfer =
+            new Transfer(
+                new KickerIOTalonFX(
+                    TransferConstants.kTransferKickerHardware,
+                    TransferConstants.kTransferConfiguration,
+                    TransferConstants.kStatusSignalUpdateFrequencyHz),
+                new RegulatorIOTalonFX(
+                    TransferConstants.kTransferRegulatorHardware,
+                    TransferConstants.kTransferConfiguration,
+                    TransferConstants.kRegulatorGains,
+                    TransferConstants.kStatusSignalUpdateFrequencyHz));
         break;
 
       case SIM:
@@ -78,16 +95,29 @@ public class RobotContainer {
                     SpindexerConstants.kSpindexerHardware,
                     SpindexerConstants.kSimulationSpindexerGains,
                     SpindexerConstants.kSpindexerSimulationConfiguration));
+        transfer =
+            new Transfer(
+                new TransferIOSim(
+                    0.02,
+                    TransferConstants.kTransferKickerHardware,
+                    TransferConstants.kSimulationRegulatorGains,
+                    TransferConstants.kTransferSimulationConfiguration),
+                new TransferIOSim(
+                    0.02,
+                    TransferConstants.kTransferRegulatorHardware,
+                    TransferConstants.kSimulationRegulatorGains,
+                    TransferConstants.kTransferSimulationConfiguration));
 
         break;
 
       default:
         // Replayed robot, disable IO implementations
+        transfer = new Transfer(null, null);
         spindexer = new Spindexer(new SpindexerIOSim(0, null, null, null));
         break;
     }
     autonCommands = new AutonCommands();
-    teleopCommands = new TeleopCommands(spindexer);
+    teleopCommands = new TeleopCommands(spindexer, transfer);
 
     // Configure the button bindings
     configureButtonBindings();
@@ -106,6 +136,8 @@ public class RobotContainer {
 
     controller.a().onTrue(teleopCommands.spin(5)).onFalse(teleopCommands.stop());
     controller.b().onTrue(teleopCommands.spin(7.5)).onFalse(teleopCommands.stop());
+    controller.x().onTrue(teleopCommands.startTransfer(10));
+    controller.y().onTrue(teleopCommands.stopKicker());
   }
 
   /**
