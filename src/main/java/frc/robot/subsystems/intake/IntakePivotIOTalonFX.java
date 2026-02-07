@@ -32,207 +32,207 @@ import frc.robot.subsystems.intake.IntakeConstants.IntakePivotHardware;
 import frc.robot.subsystems.intake.IntakeConstants.IntakePivotTalonFXConfiguration;
 
 public class IntakePivotIOTalonFX implements IntakePivotIO {
-  private final TalonFX kMotor;
+	private final TalonFX kMotor;
 
-  private TalonFXConfiguration motorConfiguration = new TalonFXConfiguration();
-  private CANcoderConfiguration canCoderConfiguration = new CANcoderConfiguration();
+	private TalonFXConfiguration motorConfiguration = new TalonFXConfiguration();
+	private CANcoderConfiguration canCoderConfiguration = new CANcoderConfiguration();
 
-  // Motor data we wish to log
-  private StatusSignal<Angle> positionRotations;
-  private StatusSignal<AngularVelocity> velocityRotationsPerSec;
-  private StatusSignal<Voltage> appliedVolts;
-  private StatusSignal<Current> supplyCurrentAmps;
-  private StatusSignal<Current> statorCurrentAmps;
-  private StatusSignal<Temperature> temperatureCelsius;
+	// Motor data we wish to log
+	private StatusSignal<Angle> positionRotations;
+	private StatusSignal<AngularVelocity> velocityRotationsPerSec;
+	private StatusSignal<Voltage> appliedVolts;
+	private StatusSignal<Current> supplyCurrentAmps;
+	private StatusSignal<Current> statorCurrentAmps;
+	private StatusSignal<Temperature> temperatureCelsius;
 
-  private NeutralModeValue currentMode = NeutralModeValue.Brake;
+	private NeutralModeValue currentMode = NeutralModeValue.Brake;
 
-  // Control modes
-  private final VoltageOut kVoltageControl = new VoltageOut(0.0);
-  private final MotionMagicVoltage kPositionControl = new MotionMagicVoltage(0.0);
+	// Control modes
+	private final VoltageOut kVoltageControl = new VoltageOut(0.0);
+	private final MotionMagicVoltage kPositionControl = new MotionMagicVoltage(0.0);
 
-  public IntakePivotIOTalonFX(
-      String canbus,
-      IntakePivotHardware hardware,
-      IntakePivotTalonFXConfiguration configuration,
-      IntakePivotGains gains, // 0.261
-      double statusSignalUpdateFrequency) {
+	public IntakePivotIOTalonFX(
+		String canbus,
+		IntakePivotHardware hardware,
+		IntakePivotTalonFXConfiguration configuration,
+		IntakePivotGains gains, // 0.261
+		double statusSignalUpdateFrequency) {
 
-    kMotor = new TalonFX(hardware.motorId(), canbus);
+		kMotor = new TalonFX(hardware.motorId(), canbus);
 
-    motorConfiguration.Slot0.kP = gains.p();
-    motorConfiguration.Slot0.kI = gains.i();
-    motorConfiguration.Slot0.kD = gains.d();
-    motorConfiguration.Slot0.kS = gains.s();
-    motorConfiguration.Slot0.kV = gains.v();
-    motorConfiguration.Slot0.kA = gains.a();
-    motorConfiguration.Slot0.kG = gains.g();
-    motorConfiguration.MotionMagic.MotionMagicCruiseVelocity =
-        gains.maxVelocityRotationsPerSecond();
-    motorConfiguration.MotionMagic.MotionMagicAcceleration =
-        gains.maxAccelerationRotationsPerSecondSquared();
-    motorConfiguration.MotionMagic.MotionMagicJerk = gains.jerkRotationsPerSecondCubed();
+		motorConfiguration.Slot0.kP = gains.p();
+		motorConfiguration.Slot0.kI = gains.i();
+		motorConfiguration.Slot0.kD = gains.d();
+		motorConfiguration.Slot0.kS = gains.s();
+		motorConfiguration.Slot0.kV = gains.v();
+		motorConfiguration.Slot0.kA = gains.a();
+		motorConfiguration.Slot0.kG = gains.g();
+		motorConfiguration.MotionMagic.MotionMagicCruiseVelocity =
+			gains.maxVelocityRotationsPerSecond();
+		motorConfiguration.MotionMagic.MotionMagicAcceleration =
+			gains.maxAccelerationRotationsPerSecondSquared();
+		motorConfiguration.MotionMagic.MotionMagicJerk = gains.jerkRotationsPerSecondCubed();
 
-    motorConfiguration.Slot1.kG = gains.g();
+		motorConfiguration.Slot1.kG = gains.g();
 
-    motorConfiguration.CurrentLimits.SupplyCurrentLimitEnable =
-        configuration.enableSupplyCurrentLimit();
-    motorConfiguration.CurrentLimits.SupplyCurrentLimit = configuration.supplyCurrentLimitAmps();
-    motorConfiguration.CurrentLimits.StatorCurrentLimitEnable =
-        configuration.enableStatorCurrentLimit();
-    motorConfiguration.CurrentLimits.StatorCurrentLimit = configuration.statorCurrentLimitAmps();
-    motorConfiguration.Voltage.PeakForwardVoltage = configuration.peakForwardVoltage();
-    motorConfiguration.Voltage.PeakReverseVoltage = configuration.peakReverseVoltage();
-    motorConfiguration.Slot0.GravityType = GravityTypeValue.Arm_Cosine;
-    motorConfiguration.Slot0.StaticFeedforwardSign = StaticFeedforwardSignValue.UseClosedLoopSign;
+		motorConfiguration.CurrentLimits.SupplyCurrentLimitEnable =
+			configuration.enableSupplyCurrentLimit();
+		motorConfiguration.CurrentLimits.SupplyCurrentLimit = configuration.supplyCurrentLimitAmps();
+		motorConfiguration.CurrentLimits.StatorCurrentLimitEnable =
+			configuration.enableStatorCurrentLimit();
+		motorConfiguration.CurrentLimits.StatorCurrentLimit = configuration.statorCurrentLimitAmps();
+		motorConfiguration.Voltage.PeakForwardVoltage = configuration.peakForwardVoltage();
+		motorConfiguration.Voltage.PeakReverseVoltage = configuration.peakReverseVoltage();
+		motorConfiguration.Slot0.GravityType = GravityTypeValue.Arm_Cosine;
+		motorConfiguration.Slot0.StaticFeedforwardSign = StaticFeedforwardSignValue.UseClosedLoopSign;
 
-    motorConfiguration.MotorOutput.NeutralMode = configuration.neutralMode();
-    motorConfiguration.MotorOutput.Inverted =
-        configuration.invert()
-            ? InvertedValue.CounterClockwise_Positive
-            : InvertedValue.Clockwise_Positive;
+		motorConfiguration.MotorOutput.NeutralMode = configuration.neutralMode();
+		motorConfiguration.MotorOutput.Inverted =
+			configuration.invert()
+				? InvertedValue.CounterClockwise_Positive
+				: InvertedValue.Clockwise_Positive;
 
-    motorConfiguration.Feedback.SensorToMechanismRatio = hardware.gearing();
-    motorConfiguration.Feedback.RotorToSensorRatio = 1.0;
+		motorConfiguration.Feedback.SensorToMechanismRatio = hardware.gearing();
+		motorConfiguration.Feedback.RotorToSensorRatio = 1.0;
 
-    // Rotor sensor is the built-in sensor
-    // motorConfiguration.Feedback.FeedbackRemoteSensorID = kCANCoder.getDeviceID();
-    motorConfiguration.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.RotorSensor;
+		// Rotor sensor is the built-in sensor
+		// motorConfiguration.Feedback.FeedbackRemoteSensorID = kCANCoder.getDeviceID();
+		motorConfiguration.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.RotorSensor;
 
-    // Enable to true because arm
-    motorConfiguration.ClosedLoopGeneral.ContinuousWrap = true;
+		// Enable to true because arm
+		motorConfiguration.ClosedLoopGeneral.ContinuousWrap = true;
 
-    // // Reset position on startup
-    // kMotor.setPosition(Rotation2d.fromDegrees(64.331).getRotations()); //UPDATE VALUES
+		// // Reset position on startup
+		// kMotor.setPosition(Rotation2d.fromDegrees(64.331).getRotations()); //UPDATE VALUES
 
-    // Get status signals from the motor controller
-    positionRotations = kMotor.getPosition();
-    velocityRotationsPerSec = kMotor.getVelocity();
-    appliedVolts = kMotor.getMotorVoltage();
-    supplyCurrentAmps = kMotor.getSupplyCurrent();
-    statorCurrentAmps = kMotor.getStatorCurrent();
-    temperatureCelsius = kMotor.getDeviceTemp();
+		// Get status signals from the motor controller
+		positionRotations = kMotor.getPosition();
+		velocityRotationsPerSec = kMotor.getVelocity();
+		appliedVolts = kMotor.getMotorVoltage();
+		supplyCurrentAmps = kMotor.getSupplyCurrent();
+		statorCurrentAmps = kMotor.getStatorCurrent();
+		temperatureCelsius = kMotor.getDeviceTemp();
 
-    BaseStatusSignal.setUpdateFrequencyForAll(
-        statusSignalUpdateFrequency,
-        positionRotations,
-        velocityRotationsPerSec,
-        appliedVolts,
-        supplyCurrentAmps,
-        supplyCurrentAmps,
-        statorCurrentAmps,
-        temperatureCelsius);
+		BaseStatusSignal.setUpdateFrequencyForAll(
+			statusSignalUpdateFrequency,
+			positionRotations,
+			velocityRotationsPerSec,
+			appliedVolts,
+			supplyCurrentAmps,
+			supplyCurrentAmps,
+			statorCurrentAmps,
+			temperatureCelsius);
 
-    // Optimize the CANBus utilization by explicitly telling all CAN signals we
-    // are not using to simply not be sent over the CANBus
-    // kMotor.optimizeBusUtilization(0.0, 1.0);
-    kMotor.getConfigurator().apply(motorConfiguration, 1);
-  }
+		// Optimize the CANBus utilization by explicitly telling all CAN signals we
+		// are not using to simply not be sent over the CANBus
+		// kMotor.optimizeBusUtilization(0.0, 1.0);
+		kMotor.getConfigurator().apply(motorConfiguration, 1);
+	}
 
-  public IntakePivotIOTalonFX(
-      IntakePivotHardware hardware,
-      IntakePivotTalonFXConfiguration configuration,
-      IntakePivotGains gains,
-      double statusSignalUpdateFrequency) {
+	public IntakePivotIOTalonFX(
+		IntakePivotHardware hardware,
+		IntakePivotTalonFXConfiguration configuration,
+		IntakePivotGains gains,
+		double statusSignalUpdateFrequency) {
 
-    // Assumes the rio is the CANBus
-    this("rio", hardware, configuration, gains, statusSignalUpdateFrequency);
-  }
+		// Assumes the rio is the CANBus
+		this("rio", hardware, configuration, gains, statusSignalUpdateFrequency);
+	}
 
-  public IntakePivotIOTalonFX(
-      String canbus,
-      IntakePivotHardware hardware,
-      IntakePivotTalonFXConfiguration configuration,
-      IntakePivotGains gains,
-      double statusSignalUpdateFrequency,
-      int leadMotorId,
-      boolean opposeLeadMotorDirection) {
+	public IntakePivotIOTalonFX(
+		String canbus,
+		IntakePivotHardware hardware,
+		IntakePivotTalonFXConfiguration configuration,
+		IntakePivotGains gains,
+		double statusSignalUpdateFrequency,
+		int leadMotorId,
+		boolean opposeLeadMotorDirection) {
 
-    this(canbus, hardware, configuration, gains, statusSignalUpdateFrequency);
-    kMotor.setControl(
-        new Follower(
-            leadMotorId,
-            opposeLeadMotorDirection ? MotorAlignmentValue.Opposed : MotorAlignmentValue.Aligned));
-  }
+		this(canbus, hardware, configuration, gains, statusSignalUpdateFrequency);
+		kMotor.setControl(
+			new Follower(
+				leadMotorId,
+				opposeLeadMotorDirection ? MotorAlignmentValue.Opposed : MotorAlignmentValue.Aligned));
+	}
 
-  @Override
-  public void updateInputs(IntakePivotIOInputs inputs) {
-    inputs.isMotorConnected =
-        BaseStatusSignal.refreshAll(
-                positionRotations,
-                velocityRotationsPerSec,
-                appliedVolts,
-                supplyCurrentAmps,
-                supplyCurrentAmps,
-                statorCurrentAmps,
-                temperatureCelsius)
-            .isOK();
+	@Override
+	public void updateInputs(IntakePivotIOInputs inputs) {
+		inputs.isMotorConnected =
+			BaseStatusSignal.refreshAll(
+					positionRotations,
+					velocityRotationsPerSec,
+					appliedVolts,
+					supplyCurrentAmps,
+					supplyCurrentAmps,
+					statorCurrentAmps,
+					temperatureCelsius)
+				.isOK();
 
-    inputs.position = Rotation2d.fromRotations(positionRotations.getValueAsDouble());
-    inputs.velocityUnitsPerSec =
-        Rotation2d.fromRotations(velocityRotationsPerSec.getValueAsDouble());
-    inputs.appliedVoltage = appliedVolts.getValueAsDouble();
-    inputs.supplyCurrentAmps = supplyCurrentAmps.getValueAsDouble();
-    inputs.statorCurrentAmps = statorCurrentAmps.getValueAsDouble();
-    inputs.temperatureCelsius = temperatureCelsius.getValueAsDouble();
-  }
+		inputs.position = Rotation2d.fromRotations(positionRotations.getValueAsDouble());
+		inputs.velocityUnitsPerSec =
+			Rotation2d.fromRotations(velocityRotationsPerSec.getValueAsDouble());
+		inputs.appliedVoltage = appliedVolts.getValueAsDouble();
+		inputs.supplyCurrentAmps = supplyCurrentAmps.getValueAsDouble();
+		inputs.statorCurrentAmps = statorCurrentAmps.getValueAsDouble();
+		inputs.temperatureCelsius = temperatureCelsius.getValueAsDouble();
+	}
 
-  @Override
-  public void setVoltage(double volts) {
-    kMotor.setControl(kVoltageControl.withOutput(volts));
-  }
+	@Override
+	public void setVoltage(double volts) {
+		kMotor.setControl(kVoltageControl.withOutput(volts));
+	}
 
-  @Override
-  public void setPosition(Rotation2d goalPosition) {
-    kMotor.setControl(kPositionControl.withPosition(goalPosition.getRotations()).withSlot(0));
-  }
+	@Override
+	public void setPosition(Rotation2d goalPosition) {
+		kMotor.setControl(kPositionControl.withPosition(goalPosition.getRotations()).withSlot(0));
+	}
 
-  public void setNeutralMode(NeutralModeValue value) {
-    kMotor.setNeutralMode(value);
-  }
+	public void setNeutralMode(NeutralModeValue value) {
+		kMotor.setNeutralMode(value);
+	}
 
-  @Override
-  public void stop() {
-    kMotor.setControl(new NeutralOut());
-  }
+	@Override
+	public void stop() {
+		kMotor.setControl(new NeutralOut());
+	}
 
-  @Override
-  public void resetPosition() {
-    kMotor.setPosition(0.0);
-  }
+	@Override
+	public void resetPosition() {
+		kMotor.setPosition(0.0);
+	}
 
-  @Override
-  public void setGains(double p, double i, double d, double s, double g, double v, double a) {
-    var slotConfiguration = new Slot0Configs();
+	@Override
+	public void setGains(double p, double i, double d, double s, double g, double v, double a) {
+		var slotConfiguration = new Slot0Configs();
 
-    slotConfiguration.kP = p;
-    slotConfiguration.kI = i;
-    slotConfiguration.kD = d;
-    slotConfiguration.kS = s;
-    slotConfiguration.kG = g;
-    slotConfiguration.kV = v;
-    slotConfiguration.kA = a;
+		slotConfiguration.kP = p;
+		slotConfiguration.kI = i;
+		slotConfiguration.kD = d;
+		slotConfiguration.kS = s;
+		slotConfiguration.kG = g;
+		slotConfiguration.kV = v;
+		slotConfiguration.kA = a;
 
-    kMotor.getConfigurator().apply((slotConfiguration));
-  }
+		kMotor.getConfigurator().apply((slotConfiguration));
+	}
 
-  @Override
-  public void setMotionMagicConstraints(double maxVelocity, double maxAcceleration) {
-    var motionMagicConfiguration = new MotionMagicConfigs();
+	@Override
+	public void setMotionMagicConstraints(double maxVelocity, double maxAcceleration) {
+		var motionMagicConfiguration = new MotionMagicConfigs();
 
-    motionMagicConfiguration.MotionMagicCruiseVelocity = maxVelocity;
-    motionMagicConfiguration.MotionMagicAcceleration = maxAcceleration;
-    motionMagicConfiguration.MotionMagicJerk = 10.0 * maxAcceleration;
+		motionMagicConfiguration.MotionMagicCruiseVelocity = maxVelocity;
+		motionMagicConfiguration.MotionMagicAcceleration = maxAcceleration;
+		motionMagicConfiguration.MotionMagicJerk = 10.0 * maxAcceleration;
 
-    kMotor.getConfigurator().apply(motionMagicConfiguration);
-  }
+		kMotor.getConfigurator().apply(motionMagicConfiguration);
+	}
 
-  @Override
-  public void setBrakeMode(boolean enableBrake) {
-    NeutralModeValue newMode = enableBrake ? NeutralModeValue.Brake : NeutralModeValue.Coast;
-    if (currentMode != newMode) {
-      kMotor.setNeutralMode(newMode);
-      currentMode = newMode;
-    }
-  }
+	@Override
+	public void setBrakeMode(boolean enableBrake) {
+		NeutralModeValue newMode = enableBrake ? NeutralModeValue.Brake : NeutralModeValue.Coast;
+		if (currentMode != newMode) {
+		kMotor.setNeutralMode(newMode);
+		currentMode = newMode;
+		}
+	}
 }
