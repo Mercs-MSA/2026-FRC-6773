@@ -19,8 +19,6 @@ public class TeleopCommands {
   private Spindexer mIndexer;
   private Transfer mTransfer;
 
-  ShooterState shooterState;
-
   public TeleopCommands(Spindexer indexer, Transfer transfer) {
     mIndexer = indexer;
     mTransfer = transfer;
@@ -28,14 +26,13 @@ public class TeleopCommands {
 
   public Command startShooting() {
     return Commands.runOnce(
-            () -> {
-              mTransfer.startTransfer(12);
-            })
-        .andThen(whileShooting());
+        () -> {
+          mTransfer.startTransfer(12);
+        });
   }
 
   public Command whileShooting() {
-    return Commands.runOnce(
+    return Commands.run(
         () -> {
           mIndexer.setState(mTransfer.getState());
         });
@@ -77,6 +74,7 @@ public class TeleopCommands {
     return Commands.runOnce(
         () -> {
           mTransfer.stopTransfer();
+          mIndexer.setState(ShooterState.INACTIVE);
         },
         mTransfer);
   }

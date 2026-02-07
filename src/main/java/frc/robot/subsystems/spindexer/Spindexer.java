@@ -25,11 +25,6 @@ public class Spindexer extends SubsystemBase {
       case INACTIVE:
         stopSpindexer();
         break;
-
-      case SPINUP:
-        stopSpindexer();
-        break;
-
       case SCORE:
         setVelocity(12.0);
         break;
@@ -60,6 +55,11 @@ public class Spindexer extends SubsystemBase {
     return kSpindexerHardware.getVelocity();
   }
 
+  @AutoLogOutput(key = "Spindexer/Outputs/StateVal")
+  public ShooterState getState() {
+    return this.shooterState;
+  }
+
   public void stopSpindexer() {
     kSpindexerHardware.stop();
     constantVel = 0;
@@ -67,9 +67,5 @@ public class Spindexer extends SubsystemBase {
 
   public void setState(ShooterState state) {
     shooterState = state;
-  }
-
-  public ShooterState getState(ShooterState state) {
-    return this.shooterState;
   }
 }
