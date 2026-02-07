@@ -7,7 +7,7 @@ import frc.robot.subsystems.transfer.TransferConstants.TransferGains;
 import frc.robot.subsystems.transfer.TransferConstants.TransferHardware;
 import frc.robot.subsystems.transfer.TransferConstants.TransferSimulationConfiguration;
 
-public class TransferIOSim implements TransferIO { //TODO: Add kicker motor
+public class TransferIOSim implements TransferIO { // TODO: Add kicker motor
   private final double kLoopPeriodSec;
 
   private final DCMotorSim kMotor;

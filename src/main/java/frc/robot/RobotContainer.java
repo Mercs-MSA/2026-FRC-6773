@@ -18,7 +18,6 @@ import frc.robot.subsystems.transfer.KickerIOTalonFX;
 import frc.robot.subsystems.transfer.RegulatorIOTalonFX;
 import frc.robot.subsystems.transfer.Transfer;
 import frc.robot.subsystems.transfer.TransferConstants;
-import frc.robot.subsystems.transfer.TransferIO;
 import frc.robot.subsystems.transfer.TransferIOSim;
 
 /**
@@ -54,32 +53,34 @@ public class RobotContainer {
         // Please see the AdvantageKit template documentation for more information:
         // https://docs.advantagekit.org/getting-started/template-projects/talonfx-swerve-template#custom-module-implementations
         //
-        transfer = new Transfer(
-          new KickerIOTalonFX(
-            TransferConstants.kTransferKickerHardware,
-            TransferConstants.kTransferConfiguration,
-            TransferConstants.kStatusSignalUpdateFrequencyHz),
-          new RegulatorIOTalonFX(
-            TransferConstants.kTransferRegulatorHardware,
-            TransferConstants.kTransferConfiguration,
-            TransferConstants.kRegulatorGains,
-            TransferConstants.kStatusSignalUpdateFrequencyHz));
+        transfer =
+            new Transfer(
+                new KickerIOTalonFX(
+                    TransferConstants.kTransferKickerHardware,
+                    TransferConstants.kTransferConfiguration,
+                    TransferConstants.kStatusSignalUpdateFrequencyHz),
+                new RegulatorIOTalonFX(
+                    TransferConstants.kTransferRegulatorHardware,
+                    TransferConstants.kTransferConfiguration,
+                    TransferConstants.kRegulatorGains,
+                    TransferConstants.kStatusSignalUpdateFrequencyHz));
 
         break;
 
       case SIM:
         // Sim robot, instantiate physics sim IO implementations
-        transfer = new Transfer(
-          new TransferIOSim(
-            0.02, 
-            TransferConstants.kTransferKickerHardware, 
-            TransferConstants.kSimulationRegulatorGains, 
-            TransferConstants.kTransferSimulationConfiguration),
-          new TransferIOSim(
-            0.02, 
-            TransferConstants.kTransferRegulatorHardware, 
-            TransferConstants.kSimulationRegulatorGains, 
-            TransferConstants.kTransferSimulationConfiguration));
+        transfer =
+            new Transfer(
+                new TransferIOSim(
+                    0.02,
+                    TransferConstants.kTransferKickerHardware,
+                    TransferConstants.kSimulationRegulatorGains,
+                    TransferConstants.kTransferSimulationConfiguration),
+                new TransferIOSim(
+                    0.02,
+                    TransferConstants.kTransferRegulatorHardware,
+                    TransferConstants.kSimulationRegulatorGains,
+                    TransferConstants.kTransferSimulationConfiguration));
         break;
 
       default:
@@ -107,7 +108,6 @@ public class RobotContainer {
     // controller.axisLessThan(4, )
     controller.a().onTrue(teleopCommands.startTransfer(10));
     controller.b().onTrue(teleopCommands.stopKicker());
-
   }
 
   /**

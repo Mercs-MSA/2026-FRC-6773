@@ -2,7 +2,7 @@ package frc.robot.subsystems.transfer;
 
 import org.littletonrobotics.junction.AutoLog;
 
-public abstract interface TransferIO {   //
+public abstract interface TransferIO { //
   @AutoLog
   public class TransferIOInputs {
     public boolean isMotorConnected = false;
@@ -17,7 +17,7 @@ public abstract interface TransferIO {   //
   }
 
   /**
-   * Write data from the hardware to the inputs object 
+   * Write data from the hardware to the inputs object
    *
    * @param inputs The inputs object
    */
@@ -26,7 +26,8 @@ public abstract interface TransferIO {   //
   /**
    * @param velocity The velocity that should be applied to the motor
    */
-  public default void setVelocity(double velocity) {};
+  public default void setVelocity(double velocity) {}
+  ;
 
   public void setVoltage(double voltage);
 
@@ -46,5 +47,8 @@ public abstract interface TransferIO {   //
   ;
 
   /** Returns the velocity of the motor in RPS as a double. */
-  public default double getVelocity() {return -1.0;};
+  public default double getVelocity() {
+    return -1.0;
+  }
+  ;
 }
