@@ -10,8 +10,6 @@ import java.util.Optional;
 
 public class AutonCommands {
 
-  private boolean stopRollers = false;
-  private boolean stopPivot = false;
 
   // public TeleopCommands(Elevator elevator, Intake intake, Manipulator manipulator,
   // CommandXboxController controller) {

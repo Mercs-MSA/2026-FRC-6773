@@ -102,4 +102,9 @@ public class KickerIOTalonFX implements TransferIO {
   public void setBrakeMode(boolean enableBrake) {
     kicker.setNeutralMode(enableBrake ? NeutralModeValue.Brake : NeutralModeValue.Coast);
   }
+
+  @Override
+  public double getVelocity() {
+    return kicker.getVelocity().getValueAsDouble();
+  }
 }

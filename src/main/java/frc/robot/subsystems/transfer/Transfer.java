@@ -1,13 +1,18 @@
 package frc.robot.subsystems.transfer;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import org.littletonrobotics.junction.AutoLogOutput;
+import org.littletonrobotics.junction.Logger;
+import org.littletonrobotics.junction.networktables.LoggedNetworkNumber;
 
 public class Transfer extends SubsystemBase {
   // Note that regular will be able to set velocity while kicker will only have setVoltage;
+  private TransferIOInputsAutoLogged kickerInputs = new TransferIOInputsAutoLogged();
   private TransferIO kicker;
   // Note that regular will be able to set velocity while kicker will only have setVoltage;
+  private TransferIOInputsAutoLogged regulatorInputs = new TransferIOInputsAutoLogged();
   private TransferIO regulator;
-
+  
   private double desiredShooterSpeed;
 
   public enum TransferState {
@@ -47,6 +52,11 @@ public class Transfer extends SubsystemBase {
       case FREEFORM:
         break;
     }
+
+    kicker.updateInputs(kickerInputs);
+    regulator.updateInputs(regulatorInputs);
+    Logger.processInputs("Transfer/Inputs/Regulator", regulatorInputs);
+    Logger.processInputs("Transfer/Inputs/Kicker", kickerInputs);
   }
 
   public void setRegulatorVelocity(double velocity) {
@@ -64,6 +74,10 @@ public class Transfer extends SubsystemBase {
     transferState = TransferState.SPEEDINGUP;
   }
 
+  public TransferState getState() {
+    return this.transferState;
+  }
+
   public void stopTransfer() {
     transferState = TransferState.STOW;
   }
@@ -75,5 +89,15 @@ public class Transfer extends SubsystemBase {
 
   public double desiredSpeed() {
     return desiredShooterSpeed * TransferConstants.kMinRegulatorVelocityScalar.getAsDouble();
+  }
+
+  @AutoLogOutput(key = "Transfer/Regulator/Velocity")
+  public double getRegulatorSpeed() {
+    return regulator.getVelocity();
+  }
+
+  @AutoLogOutput(key = "Transfer/Kicker/Velocity")
+  public double getKickerSpeed() {
+    return kicker.getVelocity();
   }
 }
