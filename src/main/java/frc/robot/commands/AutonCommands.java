@@ -2,8 +2,6 @@ package frc.robot.commands;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.path.PathPlannerPath;
-
-import choreo.auto.AutoTrajectory;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -36,7 +34,7 @@ public class AutonCommands {
     try {
       // Load the path you want to follow using its name in the GUI
       PathPlannerPath path = PathPlannerPath.fromChoreoTrajectory(pathName);
-      
+
       // Create a path following command using AutoBuilder. This will also trigger event markers.
       return AutoBuilder.followPath(path);
     } catch (Exception e) {
