@@ -1,4 +1,4 @@
-package frc.robot.subsystems.spindexe;
+package frc.robot.subsystems.spindexer;
 
 import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.StatusSignal;
@@ -15,10 +15,10 @@ import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.Current;
 import edu.wpi.first.units.measure.Temperature;
 import edu.wpi.first.units.measure.Voltage;
-import frc.robot.subsystems.spindexe.SpindexerConstants.SpindexerGains;
-import frc.robot.subsystems.spindexe.SpindexerConstants.SpindexerHardware;
-import frc.robot.subsystems.spindexe.SpindexerConstants.SpindexerTalonFXConfiguration;
-import frc.robot.subsystems.spindexe.SpindexerIO.SpindexerIOInputs;
+import frc.robot.subsystems.spindexer.SpindexerConstants.SpindexerGains;
+import frc.robot.subsystems.spindexer.SpindexerConstants.SpindexerHardware;
+import frc.robot.subsystems.spindexer.SpindexerConstants.SpindexerTalonFXConfiguration;
+import frc.robot.subsystems.spindexer.SpindexerIO.SpindexerIOInputs;
 
 public class SpindexerIOTalonFX implements SpindexerIO {
   private final TalonFX kMotor;

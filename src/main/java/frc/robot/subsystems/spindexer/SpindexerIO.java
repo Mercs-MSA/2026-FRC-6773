@@ -1,4 +1,4 @@
-package frc.robot.subsystems.spindexe;
+package frc.robot.subsystems.spindexer;
 
 import org.littletonrobotics.junction.AutoLog;
 
