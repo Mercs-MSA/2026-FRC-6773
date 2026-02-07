@@ -2,6 +2,7 @@ package frc.robot.subsystems.transfer;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.system.plant.LinearSystemId;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.simulation.DCMotorSim;
 import frc.robot.subsystems.transfer.TransferConstants.TransferGains;
 import frc.robot.subsystems.transfer.TransferConstants.TransferHardware;
@@ -56,7 +57,7 @@ public class TransferIOSim implements TransferIO { // TODO: Add kicker motor
 
   @Override
   public void setVelocity(double velocity) {
-    kMotor.setAngularVelocity(velocity * 2 * Math.PI);
+    kMotor.setAngularVelocity(Units.rotationsPerMinuteToRadiansPerSecond(velocity * 60));
   }
 
   @Override

@@ -138,6 +138,12 @@ public class RobotContainer {
     controller.b().onTrue(teleopCommands.spin(7.5)).onFalse(teleopCommands.stop());
     controller.x().onTrue(teleopCommands.startTransfer(10));
     controller.y().onTrue(teleopCommands.stopKicker());
+
+    controller
+        .rightTrigger(0.5)
+        .onTrue(teleopCommands.startShooting())
+        .whileTrue(teleopCommands.whileShooting())
+        .onFalse(teleopCommands.stopShooting());
   }
 
   /**

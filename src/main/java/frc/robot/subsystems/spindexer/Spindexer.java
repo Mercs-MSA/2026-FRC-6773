@@ -3,6 +3,7 @@ package frc.robot.subsystems.spindexer;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Constants.Mode;
+import frc.robot.commands.TeleopCommands.ShooterState;
 import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.Logger;
 
@@ -12,12 +13,28 @@ public class Spindexer extends SubsystemBase {
   private final SpindexerIOInputsAutoLogged kSpindexerInputs = new SpindexerIOInputsAutoLogged();
   private double constantVel = 0.0;
 
+  public ShooterState shooterState = ShooterState.INACTIVE;
+
   public Spindexer(SpindexerIO kSpindexerIO) {
     this.kSpindexerHardware = kSpindexerIO;
   }
 
   @Override
   public void periodic() {
+    switch (shooterState) {
+      case INACTIVE:
+        stopSpindexer();
+        break;
+
+      case SPINUP:
+        stopSpindexer();
+        break;
+
+      case SCORE:
+        setVelocity(12.0);
+        break;
+    }
+
     kSpindexerHardware.updateInputs(kSpindexerInputs);
     Logger.processInputs("Spindexer/Inputs", kSpindexerInputs);
 
@@ -46,5 +63,13 @@ public class Spindexer extends SubsystemBase {
   public void stopSpindexer() {
     kSpindexerHardware.stop();
     constantVel = 0;
+  }
+
+  public void setState(ShooterState state) {
+    shooterState = state;
+  }
+
+  public ShooterState getState(ShooterState state) {
+    return this.shooterState;
   }
 }

@@ -7,14 +7,46 @@ import frc.robot.subsystems.spindexer.Spindexer;
 import frc.robot.subsystems.transfer.Transfer;
 
 public class TeleopCommands {
+  public enum ShooterState {
+    INACTIVE, // This state still keeps the regulator
+    SPINUP, // This is the time needed to reach the desired flywheel velocity
+    SCORE // This starts the Spindexer and kicker
+    // Note that this state encompasses the Spindexer, Transfer and Shooter + constant tracking
+  }
+
   private CommandXboxController kController;
 
   private Spindexer mIndexer;
   private Transfer mTransfer;
 
+  ShooterState shooterState;
+
   public TeleopCommands(Spindexer indexer, Transfer transfer) {
     mIndexer = indexer;
     mTransfer = transfer;
+  }
+
+  public Command startShooting() {
+    return Commands.runOnce(
+            () -> {
+              mTransfer.startTransfer(12);
+            })
+        .andThen(whileShooting());
+  }
+
+  public Command whileShooting() {
+    return Commands.runOnce(
+        () -> {
+          mIndexer.setState(mTransfer.getState());
+        });
+  }
+
+  public Command stopShooting() {
+    return Commands.runOnce(
+        () -> {
+          mTransfer.stopTransfer();
+          mIndexer.setState(ShooterState.INACTIVE);
+        });
   }
 
   public Command spin(double vel) {
