@@ -49,13 +49,13 @@ public class TransferConstants {
 
   public static final TransferHardware kTransferRegulatorHardware =
       new TransferHardware(
-          67, // TODO: CAN ID
+          52,
           18.0 / 24.0 // TODO: GEARING
           );
 
   public static final TransferHardware kTransferKickerHardware =
       new TransferHardware(
-          41, // TODO: CAN ID
+          51,
           18.0 / 24.0 // TODO: GEARING
           );
 
