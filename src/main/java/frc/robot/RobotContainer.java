@@ -7,18 +7,17 @@
 
 package frc.robot;
 
-import com.pathplanner.lib.auto.AutoBuilder;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.commands.AutonCommands;
 import frc.robot.commands.TeleopCommands;
 import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.intake.IntakeConstants;
+import frc.robot.subsystems.intake.IntakePivotIOSim;
 import frc.robot.subsystems.intake.IntakePivotIOTalonFX;
+import frc.robot.subsystems.intake.IntakeRollerIOSim;
 import frc.robot.subsystems.intake.IntakeRollerIOTalonFX;
-import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -34,8 +33,6 @@ public class RobotContainer {
 
   private final AutonCommands autonCommands;
   private final TeleopCommands teleopCommands;
-  // Dashboard inputs
-  private final LoggedDashboardChooser<Command> autoChooser;
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -56,7 +53,17 @@ public class RobotContainer {
         break;
 
       case SIM:
-        // Sim robot, instantiate physics sim IO implementations
+        intake =
+            new Intake(
+                new IntakePivotIOSim(
+                    0.02,
+                    IntakeConstants.kPivotMotorHardware,
+                    IntakeConstants.kPivotSimulationConfiguration,
+                    IntakeConstants.kPivotGains),
+                new IntakeRollerIOSim(
+                    0.02,
+                    IntakeConstants.kRollerMotorHardware,
+                    IntakeConstants.kIntakeRollerSimulationConfiguration));
         break;
 
       default:
@@ -65,9 +72,6 @@ public class RobotContainer {
     }
     teleopCommands = new TeleopCommands(intake, controller);
     autonCommands = new AutonCommands();
-
-    // Set up auto routines
-    autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
 
     // Configure the button bindings
     configureButtonBindings();
@@ -85,14 +89,5 @@ public class RobotContainer {
         .leftTrigger()
         .onTrue(teleopCommands.runIntakeFloorPickup())
         .onFalse(teleopCommands.runIntakeStow());
-  }
-
-  /**
-   * Use this to pass the autonomous command to the main {@link Robot} class.
-   *
-   * @return the command to run in autonomous
-   */
-  public Command getAutonomousCommand() {
-    return autoChooser.get();
   }
 }

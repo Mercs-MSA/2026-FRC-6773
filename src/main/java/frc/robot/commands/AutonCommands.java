@@ -10,59 +10,59 @@ import java.util.Optional;
 
 public class AutonCommands {
 
-	private boolean stopRollers = false;
-	private boolean stopPivot = false;
+  private boolean stopRollers = false;
+  private boolean stopPivot = false;
 
-	// public TeleopCommands(Elevator elevator, Intake intake, Manipulator manipulator,
-	// CommandXboxController controller) {
-	//     kElevator = elevator;
-	//     kIntake = intake;
-	//     kManipulator = manipulator;
-	//     kController = controller;
-	//     // kClimb = climb;
-	// }
+  // public TeleopCommands(Elevator elevator, Intake intake, Manipulator manipulator,
+  // CommandXboxController controller) {
+  //     kElevator = elevator;
+  //     kIntake = intake;
+  //     kManipulator = manipulator;
+  //     kController = controller;
+  //     // kClimb = climb;
+  // }
 
-	public AutonCommands() {}
+  public AutonCommands() {}
 
-	public Command getPathCommand(String pathName) {
-		try {
-		// Load the path you want to follow using its name in the GUI
-		PathPlannerPath path = PathPlannerPath.fromChoreoTrajectory(pathName);
+  public Command getPathCommand(String pathName) {
+    try {
+      // Load the path you want to follow using its name in the GUI
+      PathPlannerPath path = PathPlannerPath.fromChoreoTrajectory(pathName);
 
-		// Create a path following command using AutoBuilder. This will also trigger event markers.
-		return AutoBuilder.followPath(path);
-		} catch (Exception e) {
-		DriverStation.reportError("Big oops: " + e.getMessage(), e.getStackTrace());
-		return Commands.none();
-		}
-	}
+      // Create a path following command using AutoBuilder. This will also trigger event markers.
+      return AutoBuilder.followPath(path);
+    } catch (Exception e) {
+      DriverStation.reportError("Big oops: " + e.getMessage(), e.getStackTrace());
+      return Commands.none();
+    }
+  }
 
-	public Optional<PathPlannerPath> getTraj(String pathName) {
-		try {
-		return Optional.of(PathPlannerPath.fromChoreoTrajectory(pathName));
-		} catch (Exception e) {
-		e.printStackTrace();
-		return Optional.empty();
-		}
-	}
+  public Optional<PathPlannerPath> getTraj(String pathName) {
+    try {
+      return Optional.of(PathPlannerPath.fromChoreoTrajectory(pathName));
+    } catch (Exception e) {
+      e.printStackTrace();
+      return Optional.empty();
+    }
+  }
 
-	public Command getAutonomousSequence(String startChoice) {
-		SequentialCommandGroup autonCommand = new SequentialCommandGroup();
+  public Command getAutonomousSequence(String startChoice) {
+    SequentialCommandGroup autonCommand = new SequentialCommandGroup();
 
-		switch (startChoice) {
-		case "CENTER":
-			autonCommand.addCommands(getPathCommand("Bump"));
-			break;
-		case "RIGHT":
-			break;
-		case "LEFT":
-			break;
-		default:
-			DriverStation.reportError("Big oops: Invalid Start Pos", false);
-			// Do nothing auton
-			break;
-		}
+    switch (startChoice) {
+      case "CENTER":
+        autonCommand.addCommands(getPathCommand("Bump"));
+        break;
+      case "RIGHT":
+        break;
+      case "LEFT":
+        break;
+      default:
+        DriverStation.reportError("Big oops: Invalid Start Pos", false);
+        // Do nothing auton
+        break;
+    }
 
-		return autonCommand;
-	}
+    return autonCommand;
+  }
 }
