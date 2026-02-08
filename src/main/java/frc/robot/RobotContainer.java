@@ -18,7 +18,6 @@ import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.intake.IntakeConstants;
 import frc.robot.subsystems.intake.IntakePivotIOTalonFX;
 import frc.robot.subsystems.intake.IntakeRollerIOTalonFX;
-
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 /**
@@ -42,18 +41,7 @@ public class RobotContainer {
   public RobotContainer() {
     switch (Constants.currentMode) {
       case REAL:
-        // Real robot, instantiate hardware IO implementations
-        intake = new Intake(
-                    new IntakePivotIOTalonFX(
-                        IntakeConstants.kPivotMotorHardware,
-                        IntakeConstants.kPivotMotorConfiguration,
-                        IntakeConstants.kPivotGains,
-                        IntakeConstants.kStatusSignalUpdateFrequencyHz),
-                    new IntakeRollerIOTalonFX(
-                        IntakeConstants.kRollerMotorHardware,
-                        IntakeConstants.kRollerMotorConfiguration,
-                        IntakeConstants.kStatusSignalUpdateFrequencyHz));
-        break;
+        // Real robot, instantiate hardware IO implementation
 
       case SIM:
         // Sim robot, instantiate physics sim IO implementations
@@ -63,7 +51,7 @@ public class RobotContainer {
         // Replayed robot, disable IO implementations
         break;
     }
-    teleopCommands = new TeleopCommands(intake, controller);
+    teleopCommands = new TeleopCommands();
     autonCommands = new AutonCommands();
 
     // Set up auto routines
@@ -81,8 +69,10 @@ public class RobotContainer {
    */
   private void configureButtonBindings() {
     // Default command, normal field-relative drive
-    controller.leftTrigger().onTrue(teleopCommands.runIntakeFloorPickup()).onFalse(teleopCommands.runIntakeStow());
-
+    controller
+        .leftTrigger()
+        .onTrue(teleopCommands.runIntakeFloorPickup())
+        .onFalse(teleopCommands.runIntakeStow());
   }
 
   /**

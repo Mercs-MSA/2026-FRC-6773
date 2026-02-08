@@ -2,7 +2,7 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.subsystems.intake;
+package frc.robot.subsystems.shooter;
 
 import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.StatusSignal;
@@ -27,12 +27,12 @@ import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.Current;
 import edu.wpi.first.units.measure.Temperature;
 import edu.wpi.first.units.measure.Voltage;
-import frc.robot.subsystems.intake.IntakeConstants.IntakePivotGains;
-import frc.robot.subsystems.intake.IntakeConstants.IntakePivotHardware;
-import frc.robot.subsystems.intake.IntakeConstants.IntakePivotTalonFXConfiguration;
+import frc.robot.subsystems.shooter.ShooterConstants.ShooterTurretHardware;
+import frc.robot.subsystems.shooter.ShooterConstants.TurretGains;
+import frc.robot.subsystems.shooter.ShooterConstants.TurretMotorConfiguration;
 
-public class IntakePivotIOTalonFX implements IntakePivotIO {
-  private final TalonFX kMotor;
+public class ShooterTurretIOTalonFX implements ShooterTurretIO {
+  private final TalonFX turretMotor;
 
   private TalonFXConfiguration motorConfiguration = new TalonFXConfiguration();
   private CANcoderConfiguration canCoderConfiguration = new CANcoderConfiguration();
@@ -51,14 +51,14 @@ public class IntakePivotIOTalonFX implements IntakePivotIO {
   private final VoltageOut kVoltageControl = new VoltageOut(0.0);
   private final MotionMagicVoltage kPositionControl = new MotionMagicVoltage(0.0);
 
-  public IntakePivotIOTalonFX(
+  public ShooterTurretIOTalonFX(
       String canbus,
-      IntakePivotHardware hardware,
-      IntakePivotTalonFXConfiguration configuration,
-      IntakePivotGains gains, // 0.261
+      ShooterTurretHardware hardware,
+      TurretMotorConfiguration configuration,
+      TurretGains gains, 
       double statusSignalUpdateFrequency) {
 
-    kMotor = new TalonFX(hardware.motorId(), canbus);
+    turretMotor = new TalonFX(hardware.turretMotorId(), canbus);
 
     motorConfiguration.Slot0.kP = gains.p();
     motorConfiguration.Slot0.kI = gains.i();
@@ -66,14 +66,11 @@ public class IntakePivotIOTalonFX implements IntakePivotIO {
     motorConfiguration.Slot0.kS = gains.s();
     motorConfiguration.Slot0.kV = gains.v();
     motorConfiguration.Slot0.kA = gains.a();
-    motorConfiguration.Slot0.kG = gains.g();
     motorConfiguration.MotionMagic.MotionMagicCruiseVelocity =
         gains.maxVelocityRotationsPerSecond();
     motorConfiguration.MotionMagic.MotionMagicAcceleration =
         gains.maxAccelerationRotationsPerSecondSquared();
     motorConfiguration.MotionMagic.MotionMagicJerk = gains.jerkRotationsPerSecondCubed();
-
-    motorConfiguration.Slot1.kG = gains.g();
 
     motorConfiguration.CurrentLimits.SupplyCurrentLimitEnable =
         configuration.enableSupplyCurrentLimit();
@@ -106,12 +103,12 @@ public class IntakePivotIOTalonFX implements IntakePivotIO {
     // kMotor.setPosition(Rotation2d.fromDegrees(64.331).getRotations()); //UPDATE VALUES
 
     // Get status signals from the motor controller
-    positionRotations = kMotor.getPosition();
-    velocityRotationsPerSec = kMotor.getVelocity();
-    appliedVolts = kMotor.getMotorVoltage();
-    supplyCurrentAmps = kMotor.getSupplyCurrent();
-    statorCurrentAmps = kMotor.getStatorCurrent();
-    temperatureCelsius = kMotor.getDeviceTemp();
+    positionRotations = turretMotor.getPosition();
+    velocityRotationsPerSec = turretMotor.getVelocity();
+    appliedVolts = turretMotor.getMotorVoltage();
+    supplyCurrentAmps = turretMotor.getSupplyCurrent();
+    statorCurrentAmps = turretMotor.getStatorCurrent();
+    temperatureCelsius = turretMotor.getDeviceTemp();
 
     BaseStatusSignal.setUpdateFrequencyForAll(
         statusSignalUpdateFrequency,
@@ -126,34 +123,20 @@ public class IntakePivotIOTalonFX implements IntakePivotIO {
     // Optimize the CANBus utilization by explicitly telling all CAN signals we
     // are not using to simply not be sent over the CANBus
     // kMotor.optimizeBusUtilization(0.0, 1.0);
-    kMotor.getConfigurator().apply(motorConfiguration, 1);
+    turretMotor.getConfigurator().apply(motorConfiguration, 1);
   }
 
-  public IntakePivotIOTalonFX(
-      IntakePivotHardware hardware,
-      IntakePivotTalonFXConfiguration configuration,
-      IntakePivotGains gains,
+  public ShooterTurretIOTalonFX(
+      ShooterTurretHardware hardware,
+      TurretMotorConfiguration configuration,
+      TurretGains gains,
       double statusSignalUpdateFrequency) {
 
     // Assumes the rio is the CANBus
     this("rio", hardware, configuration, gains, statusSignalUpdateFrequency);
   }
 
-  public IntakePivotIOTalonFX(
-      String canbus,
-      IntakePivotHardware hardware,
-      IntakePivotTalonFXConfiguration configuration,
-      IntakePivotGains gains,
-      double statusSignalUpdateFrequency,
-      int leadMotorId,
-      boolean opposeLeadMotorDirection) {
-
-    this(canbus, hardware, configuration, gains, statusSignalUpdateFrequency);
-    kMotor.setControl(
-        new Follower(
-            leadMotorId,
-            opposeLeadMotorDirection ? MotorAlignmentValue.Opposed : MotorAlignmentValue.Aligned));
-  }
+  
 
   @Override
   public void updateInputs(IntakePivotIOInputs inputs) {
@@ -179,41 +162,40 @@ public class IntakePivotIOTalonFX implements IntakePivotIO {
 
   @Override
   public void setVoltage(double volts) {
-    kMotor.setControl(kVoltageControl.withOutput(volts));
+    turretMotor.setControl(kVoltageControl.withOutput(volts));
   }
 
   @Override
   public void setPosition(Rotation2d goalPosition) {
-    kMotor.setControl(kPositionControl.withPosition(goalPosition.getRotations()).withSlot(0));
+    turretMotor.setControl(kPositionControl.withPosition(goalPosition.getRotations()).withSlot(0));
   }
 
   public void setNeutralMode(NeutralModeValue value) {
-    kMotor.setNeutralMode(value);
+    turretMotor.setNeutralMode(value);
   }
 
   @Override
   public void stop() {
-    kMotor.setControl(new NeutralOut());
+    turretMotor.setControl(new NeutralOut());
   }
 
   @Override
   public void resetPosition() {
-    kMotor.setPosition(0.0);
+    turretMotor.setPosition(0.0);
   }
 
   @Override
-  public void setGains(double p, double i, double d, double s, double g, double v, double a) {
+  public void setGains(double p, double i, double d, double s, double v, double a) {
     var slotConfiguration = new Slot0Configs();
 
     slotConfiguration.kP = p;
     slotConfiguration.kI = i;
     slotConfiguration.kD = d;
     slotConfiguration.kS = s;
-    slotConfiguration.kG = g;
     slotConfiguration.kV = v;
     slotConfiguration.kA = a;
 
-    kMotor.getConfigurator().apply((slotConfiguration));
+    turretMotor.getConfigurator().apply((slotConfiguration));
   }
 
   @Override
@@ -224,14 +206,14 @@ public class IntakePivotIOTalonFX implements IntakePivotIO {
     motionMagicConfiguration.MotionMagicAcceleration = maxAcceleration;
     motionMagicConfiguration.MotionMagicJerk = 10.0 * maxAcceleration;
 
-    kMotor.getConfigurator().apply(motionMagicConfiguration);
+    turretMotor.getConfigurator().apply(motionMagicConfiguration);
   }
 
   @Override
   public void setBrakeMode(boolean enableBrake) {
     NeutralModeValue newMode = enableBrake ? NeutralModeValue.Brake : NeutralModeValue.Coast;
     if (currentMode != newMode) {
-      kMotor.setNeutralMode(newMode);
+      turretMotor.setNeutralMode(newMode);
       currentMode = newMode;
     }
   }

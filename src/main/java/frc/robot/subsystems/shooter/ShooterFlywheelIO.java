@@ -2,23 +2,22 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.subsystems.intake;
+package frc.robot.subsystems.shooter;
 
 import org.littletonrobotics.junction.AutoLog;
 
 /** The 2 bar intake subsystem's hardware interface */
-public interface IntakeRollerIO {
+public interface ShooterFlywheelIO {
   @AutoLog
-  public static class IntakeRollerIOInputs {
+  public static class ShooterFlywheelIOInputs {
     public boolean isMotorConnected = false;
 
-    public double velocityRotPerSec = 0.0;
+    public double leftVelocityRotPerSec = 0.0;
+    public double rightVelocityRotPerSec = 0.0;
     public double appliedVoltage = 0.0;
     public double supplyCurrentAmps = 0.0;
     public double statorCurrentAmps = 0.0;
     public double temperatureCelsius = 0.0;
-
-    public boolean beambreakBroken = false;
   }
 
   /**
@@ -26,30 +25,20 @@ public interface IntakeRollerIO {
    *
    * @param inputs The inputs object
    */
-  public default void updateInputs(IntakeRollerIOInputs inputs) {}
+  public default void updateInputs(ShooterFlywheelIOInputs inputs) {}
 
   /**
    * @param volts The voltage that should be applied to the motor from -12 to 12
    */
   public default void setVoltage(double volts) {}
 
+  public default void setVelocityRPS(double velocity) {}
+
   /**
    * Commands the hardware to stop. When using TalonFX, this commands the motors to a Neutral
    * control
    */
   public default void stop() {}
-
-  /**
-   * Updates the gains of the feedback and feedforward
-   *
-   * @param p
-   * @param i
-   * @param d
-   * @param s
-   * @param g
-   * @param v
-   * @param a
-   */
 
   /**
    * Enables brake or coast on the motor, only on the real motors. Useful since we usually keep them

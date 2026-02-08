@@ -2,13 +2,13 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.subsystems.intake;
+package frc.robot.subsystems.shooter;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import org.littletonrobotics.junction.AutoLog;
 
 /** The 2 bar intake subsystem's hardware interface */
-public interface IntakePivotIO {
+public interface ShooterTurretIO {
   @AutoLog
   public static class IntakePivotIOInputs {
     public boolean isMotorConnected = false;
@@ -40,6 +40,12 @@ public interface IntakePivotIO {
   public default void setPosition(Rotation2d goalPosition) {}
 
   /**
+   * @param goalPosition The desired angular position for the pivot to be set to. Runs using
+   *     internal MotionMagic
+   */
+  public default void setPositionMM(Rotation2d goalPosition) {}
+
+  /**
    * Commands the hardware to stop. When using TalonFX, this commands the motors to a Neutral
    * control
    */
@@ -52,12 +58,11 @@ public interface IntakePivotIO {
    * @param i
    * @param d
    * @param s
-   * @param g
    * @param v
    * @param a
    */
   public default void setGains(
-      double p, double i, double d, double s, double g, double v, double a) {}
+      double p, double i, double d, double s, double v, double a) {}
 
   /**
    * Updates the gains of the profile. Note that profiled pid control is called "MotionMagic" by
