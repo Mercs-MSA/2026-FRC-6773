@@ -7,14 +7,13 @@ package frc.robot.subsystems.shooter;
 import edu.wpi.first.math.geometry.Rotation2d;
 import org.littletonrobotics.junction.AutoLog;
 
-/** The 2 bar intake subsystem's hardware interface */
 public interface ShooterTurretIO {
   @AutoLog
-  public static class IntakePivotIOInputs {
+  public static class ShooterTurretIOInputs {
     public boolean isMotorConnected = false;
 
     public Rotation2d position = new Rotation2d();
-    public Rotation2d velocityUnitsPerSec = new Rotation2d();
+    public double velocityRotPerSec = 0.0;
     public double appliedVoltage = 0.0;
     public double supplyCurrentAmps = 0.0;
     public double statorCurrentAmps = 0.0;
@@ -26,7 +25,7 @@ public interface ShooterTurretIO {
    *
    * @param inputs The inputs object
    */
-  public default void updateInputs(IntakePivotIOInputs inputs) {}
+  public default void updateInputs(ShooterTurretIOInputs inputs) {}
 
   /**
    * @param volts The voltage that should be applied to the motor from -12 to 12
@@ -39,11 +38,6 @@ public interface ShooterTurretIO {
    */
   public default void setPosition(Rotation2d goalPosition) {}
 
-  /**
-   * @param goalPosition The desired angular position for the pivot to be set to. Runs using
-   *     internal MotionMagic
-   */
-  public default void setPositionMM(Rotation2d goalPosition) {}
 
   /**
    * Commands the hardware to stop. When using TalonFX, this commands the motors to a Neutral

@@ -6,7 +6,6 @@ package frc.robot.subsystems.shooter;
 
 import org.littletonrobotics.junction.AutoLog;
 
-/** The 2 bar intake subsystem's hardware interface */
 public interface ShooterFlywheelIO {
   @AutoLog
   public static class ShooterFlywheelIOInputs {

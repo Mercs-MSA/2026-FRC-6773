@@ -139,7 +139,7 @@ public class ShooterTurretIOTalonFX implements ShooterTurretIO {
   
 
   @Override
-  public void updateInputs(IntakePivotIOInputs inputs) {
+  public void updateInputs(ShooterTurretIOInputs inputs) {
     inputs.isMotorConnected =
         BaseStatusSignal.refreshAll(
                 positionRotations,
@@ -152,8 +152,8 @@ public class ShooterTurretIOTalonFX implements ShooterTurretIO {
             .isOK();
 
     inputs.position = Rotation2d.fromRotations(positionRotations.getValueAsDouble());
-    inputs.velocityUnitsPerSec =
-        Rotation2d.fromRotations(velocityRotationsPerSec.getValueAsDouble());
+    inputs.velocityRotPerSec = velocityRotationsPerSec.getValueAsDouble();
+        // Rotation2d.fromRotations(velocityRotationsPerSec.getValueAsDouble());
     inputs.appliedVoltage = appliedVolts.getValueAsDouble();
     inputs.supplyCurrentAmps = supplyCurrentAmps.getValueAsDouble();
     inputs.statorCurrentAmps = statorCurrentAmps.getValueAsDouble();

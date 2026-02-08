@@ -2,6 +2,8 @@ package frc.robot.subsystems.shooter;
 
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
+import edu.wpi.first.math.system.plant.DCMotor;
+
 public class ShooterConstants {
 
     public record ShooterFlywheelHardware(
@@ -79,6 +81,11 @@ public class ShooterConstants {
       double peakForwardVoltage,
       double peakReverseVoltage,
       NeutralModeValue neutralMode) {}
+
+    public record SimulationConfiguration(
+      DCMotor motorType,
+      double measurementStdDevs
+    ) {}  
 
     public static final ShooterFlywheelHardware flywheelHardware = new ShooterFlywheelHardware(
         55,
