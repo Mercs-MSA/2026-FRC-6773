@@ -2,9 +2,9 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
-import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import frc.robot.subsystems.intake.Intake;
+import frc.robot.subsystems.intake.Intake.IntakeState;
 import frc.robot.subsystems.spindexer.Spindexer;
 import frc.robot.subsystems.transfer.Transfer;
 
@@ -18,10 +18,15 @@ public class TeleopCommands {
 
   private CommandXboxController controller;
   private Intake intake;
+  private Spindexer mIndexer;
+  private Transfer mTransfer;
 
-  public TeleopCommands(Intake intake, CommandXboxController controller) {
+  public TeleopCommands(
+      Intake intake, Spindexer indexer, Transfer transfer, CommandXboxController controller) {
     this.intake = intake;
     this.controller = controller;
+    mIndexer = indexer;
+    mTransfer = transfer;
     // kClimb = climb;
   }
 
@@ -43,14 +48,6 @@ public class TeleopCommands {
           intake.setBrakeMode(true);
         },
         intake);
-  }
-
-  private Spindexer mIndexer;
-  private Transfer mTransfer;
-
-  public TeleopCommands(Spindexer indexer, Transfer transfer) {
-    mIndexer = indexer;
-    mTransfer = transfer;
   }
 
   public Command startShooting() {

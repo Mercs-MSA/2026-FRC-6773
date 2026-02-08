@@ -32,22 +32,14 @@ public class Spindexer extends SubsystemBase {
 
     kSpindexerHardware.updateInputs(kSpindexerInputs);
     Logger.processInputs("Spindexer/Inputs", kSpindexerInputs);
-
-    if (Constants.currentMode == Mode.SIM) {
-      constantSetVel(constantVel);
-    }
   }
 
   public void setVelocity(double velocity) {
     constantVel = velocity;
-    kSpindexerHardware.setVelocity(velocity);
+    kSpindexerHardware.setVelocity(-1 * velocity);
     if (Constants.currentMode == Mode.SIM && constantVel != 0) {
       constantVel = velocity;
     }
-  }
-
-  private void constantSetVel(double velocity) {
-    kSpindexerHardware.setVelocity(velocity);
   }
 
   @AutoLogOutput(key = "Spindexer/Outputs/Velocity")
