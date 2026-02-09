@@ -4,6 +4,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.subsystems.intake.Intake;
+import frc.robot.subsystems.shooter.Shooter;
 import frc.robot.subsystems.spindexer.Spindexer;
 import frc.robot.subsystems.transfer.Transfer;
 
@@ -19,6 +20,7 @@ public class TeleopCommands {
   private Intake intake;
   private Spindexer mIndexer;
   private Transfer mTransfer;
+  private Shooter shooter;
 
   public TeleopCommands(
       Intake intake, Spindexer indexer, Transfer transfer, CommandXboxController controller) {
@@ -84,6 +86,8 @@ public class TeleopCommands {
   public Command startShoot() {
     return Commands.run(
         () -> {
+          mTransfer.setRegulatorVelocity(12);
+          shooter.setFlywheelVoltage(4);
           mTransfer.setRegulatorVoltage(10);
           // TODO: ADD SHOOTER
         });
