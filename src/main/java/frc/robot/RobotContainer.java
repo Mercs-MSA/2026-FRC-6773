@@ -20,6 +20,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.commands.AutonCommands;
 import frc.robot.commands.DriveCommands;
+import frc.robot.commands.TeleopCommands;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.drive.GyroIO;
@@ -27,6 +28,21 @@ import frc.robot.subsystems.drive.GyroIOPigeon2;
 import frc.robot.subsystems.drive.ModuleIO;
 import frc.robot.subsystems.drive.ModuleIOSim;
 import frc.robot.subsystems.drive.ModuleIOTalonFX;
+import frc.robot.subsystems.intake.Intake;
+import frc.robot.subsystems.intake.IntakeConstants;
+import frc.robot.subsystems.intake.IntakePivotIOSim;
+import frc.robot.subsystems.intake.IntakePivotIOTalonFX;
+import frc.robot.subsystems.intake.IntakeRollerIOSim;
+import frc.robot.subsystems.intake.IntakeRollerIOTalonFX;
+import frc.robot.subsystems.spindexer.Spindexer;
+import frc.robot.subsystems.spindexer.SpindexerConstants;
+import frc.robot.subsystems.spindexer.SpindexerIOSim;
+import frc.robot.subsystems.spindexer.SpindexerIOTalonFX;
+import frc.robot.subsystems.transfer.KickerIOTalonFX;
+import frc.robot.subsystems.transfer.RegulatorIOTalonFX;
+import frc.robot.subsystems.transfer.Transfer;
+import frc.robot.subsystems.transfer.TransferConstants;
+import frc.robot.subsystems.transfer.TransferIOSim;
 import frc.robot.subsystems.vision.Vision;
 import frc.robot.subsystems.vision.VisionIO;
 import frc.robot.subsystems.vision.VisionIOLimelight;
@@ -42,11 +58,15 @@ public class RobotContainer {
   // Subsystems
   private final Drive drive;
   private Vision vision; // make final once we figure out sim
+  private final Spindexer spindexer;
+  private final Transfer transfer;
+  private Intake intake;
 
   // Controller
   private final CommandXboxController controller = new CommandXboxController(0);
 
   private final AutonCommands autonCommands;
+  private final TeleopCommands teleopCommands;
 
   // Dashboard inputs
   private final LoggedDashboardChooser<Command> autoChooser;
@@ -65,29 +85,42 @@ public class RobotContainer {
                 new ModuleIOTalonFX(TunerConstants.FrontRight),
                 new ModuleIOTalonFX(TunerConstants.BackLeft),
                 new ModuleIOTalonFX(TunerConstants.BackRight));
-
-        // The ModuleIOTalonFXS implementation provides an example implementation for
-        // TalonFXS controller connected to a CANdi with a PWM encoder. The
-        // implementations
-        // of ModuleIOTalonFX, ModuleIOTalonFXS, and ModuleIOSpark (from the Spark
-        // swerve
-        // template) can be freely intermixed to support alternative hardware
-        // arrangements.
-        // Please see the AdvantageKit template documentation for more information:
-        // https://docs.advantagekit.org/getting-started/template-projects/talonfx-swerve-template#custom-module-implementations
-        //
-        // drive =
-        // new Drive(
-        // new GyroIOPigeon2(),
-        // new ModuleIOTalonFXS(TunerConstants.FrontLeft),
-        // new ModuleIOTalonFXS(TunerConstants.FrontRight),
-        // new ModuleIOTalonFXS(TunerConstants.BackLeft),
-        // new ModuleIOTalonFXS(TunerConstants.BackRight));
         vision =
             new Vision(
                 drive::addVisionMeasurement,
                 new VisionIOLimelight(camera0Name, drive::getRotation),
                 new VisionIOLimelight(camera1Name, drive::getRotation));
+        intake =
+            new Intake(
+                new IntakePivotIOTalonFX(
+                    IntakeConstants.kPivotMotorHardware,
+                    IntakeConstants.kPivotMotorConfiguration,
+                    IntakeConstants.kPivotGains,
+                    IntakeConstants.kStatusSignalUpdateFrequencyHz),
+                new IntakeRollerIOTalonFX(
+                    IntakeConstants.kRollerMotorHardware,
+                    IntakeConstants.kRollerMotorConfiguration,
+                    IntakeConstants.kStatusSignalUpdateFrequencyHz));
+
+        spindexer =
+            new Spindexer(
+                new SpindexerIOTalonFX(
+                    SpindexerConstants.kSpindexerHardware,
+                    SpindexerConstants.kSpindexerConfiguration,
+                    SpindexerConstants.kSpindexerGains,
+                    SpindexerConstants.kStatusSignalUpdateFrequencyHz));
+
+        transfer =
+            new Transfer(
+                new KickerIOTalonFX(
+                    TransferConstants.kTransferKickerHardware,
+                    TransferConstants.kTransferConfiguration,
+                    TransferConstants.kStatusSignalUpdateFrequencyHz),
+                new RegulatorIOTalonFX(
+                    TransferConstants.kTransferRegulatorHardware,
+                    TransferConstants.kTransferConfiguration,
+                    TransferConstants.kRegulatorGains,
+                    TransferConstants.kStatusSignalUpdateFrequencyHz));
         break;
 
       case SIM:
@@ -100,11 +133,37 @@ public class RobotContainer {
                 new ModuleIOSim(TunerConstants.BackLeft),
                 new ModuleIOSim(TunerConstants.BackRight));
 
-        // vision =
-        //     new Vision(
-        //         drive::addVisionMeasurement,
-        //         new VisionIOLimelight(camera0Name, robotToCamera0, drive::getPose),
-        //         new VisionIOPhotonVisionSim(camera1Name, robotToCamera1, drive::getPose));
+        intake =
+            new Intake(
+                new IntakePivotIOSim(
+                    0.02,
+                    IntakeConstants.kPivotMotorHardware,
+                    IntakeConstants.kPivotSimulationConfiguration,
+                    IntakeConstants.kPivotGains),
+                new IntakeRollerIOSim(
+                    0.02,
+                    IntakeConstants.kRollerMotorHardware,
+                    IntakeConstants.kIntakeRollerSimulationConfiguration));
+        spindexer =
+            new Spindexer(
+                new SpindexerIOSim(
+                    0.01,
+                    SpindexerConstants.kSpindexerHardware,
+                    SpindexerConstants.kSimulationSpindexerGains,
+                    SpindexerConstants.kSpindexerSimulationConfiguration));
+        transfer =
+            new Transfer(
+                new TransferIOSim(
+                    0.02,
+                    TransferConstants.kTransferKickerHardware,
+                    TransferConstants.kSimulationRegulatorGains,
+                    TransferConstants.kTransferSimulationConfiguration),
+                new TransferIOSim(
+                    0.02,
+                    TransferConstants.kTransferRegulatorHardware,
+                    TransferConstants.kSimulationRegulatorGains,
+                    TransferConstants.kTransferSimulationConfiguration));
+
         break;
 
       default:
@@ -117,9 +176,14 @@ public class RobotContainer {
                 new ModuleIO() {},
                 new ModuleIO() {});
         vision = new Vision(drive::addVisionMeasurement, new VisionIO() {}, new VisionIO() {});
+
+        intake = new Intake(null, null);
+        transfer = new Transfer(null, null);
+        spindexer = new Spindexer(new SpindexerIOSim(0, null, null, null));
         break;
     }
-    autonCommands = new AutonCommands(drive);
+    autonCommands = new AutonCommands();
+    teleopCommands = new TeleopCommands(intake, spindexer, transfer, controller);
 
     // Set up auto routines
     autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
@@ -189,9 +253,6 @@ public class RobotContainer {
                             new Pose2d(4.626, 4.028, Rotation2d.kZero))
                         .plus(new Rotation2d(Math.PI))));
 
-    // Switch to X pattern when X button is pressed
-    controller.x().onTrue(Commands.runOnce(drive::stopWithX, drive));
-
     // Reset gyro to 0° when B button is pressed
     controller
         .b()
@@ -202,6 +263,23 @@ public class RobotContainer {
                             new Pose2d(drive.getPose().getTranslation(), Rotation2d.kZero)),
                     drive)
                 .ignoringDisable(true));
+
+    controller
+        .leftTrigger(0.25)
+        .onTrue(teleopCommands.runIntakeFloorPickup())
+        .onFalse(teleopCommands.runIntakeSlowRollers());
+
+    controller
+        .rightTrigger(0.25)
+        .onTrue(teleopCommands.startShoot())
+        .whileTrue(teleopCommands.whileShooting())
+        .onFalse(teleopCommands.stopShooting());
+
+    controller.x().whileTrue(teleopCommands.spinAlt());
+    controller.x().whileTrue(teleopCommands.startKick());
+
+    controller.x().onFalse(teleopCommands.spinStop());
+    controller.x().onFalse(teleopCommands.stopKick());
   }
 
   /**
