@@ -6,21 +6,22 @@ import edu.wpi.first.math.system.plant.LinearSystemId;
 import edu.wpi.first.wpilibj.simulation.DCMotorSim;
 import frc.robot.subsystems.shooter.ShooterConstants.ShooterFlywheelHardware;
 import frc.robot.subsystems.shooter.ShooterConstants.SimulationConfiguration;
+import frc.robot.subsystems.shooter.ShooterHoodIO.ShooterHoodIOInputs;
 
-public class ShooterTurretIOSim implements ShooterTurretIO {
+public class ShooterHoodIOSim implements ShooterHoodIO {
   private final double kLoopPeriodSec;
 
-  private final DCMotorSim turretMotor;
+  private final DCMotorSim hoodMotor;
 
   // private final DCMotorSim flywheelRight;
 
   private double appliedVoltage = 0.0;
 
-  public ShooterTurretIOSim(
+  public ShooterHoodIOSim(
       double loopPeriodSec,
       ShooterFlywheelHardware hardware,
       SimulationConfiguration configuration) {
-    turretMotor =
+    hoodMotor =
         new DCMotorSim(
             LinearSystemId.createDCMotorSystem(
                 configuration.motorType(), configuration.measurementStdDevs(), hardware.gearing()),
@@ -29,14 +30,13 @@ public class ShooterTurretIOSim implements ShooterTurretIO {
   }
 
   @Override
-  public void updateInputs(ShooterTurretIOInputs inputs) {
-    turretMotor.update(kLoopPeriodSec);
+  public void updateInputs(ShooterHoodIOInputs inputs) {
+    hoodMotor.update(kLoopPeriodSec);
     // flywheelRight.update(kLoopPeriodSec);
 
     inputs.isMotorConnected = true;
 
-    inputs.position = Rotation2d.fromRotations(turretMotor.getAngularPositionRotations());
-    inputs.velocityRotPerSec = turretMotor.getAngularVelocityRPM() / 60.0;
+    inputs.position = Rotation2d.fromRotations(hoodMotor.getAngularPositionRotations());
     // inputs.rightVelocityRotPerSec = flywheelRight.getAngularVelocityRPM() / 60.0;
     inputs.appliedVoltage = appliedVoltage;
     inputs.supplyCurrentAmps = 0.0;
@@ -47,12 +47,12 @@ public class ShooterTurretIOSim implements ShooterTurretIO {
   @Override
   public void setVoltage(double volts) {
     appliedVoltage = MathUtil.clamp(volts, -12.0, 12.0);
-    turretMotor.setInputVoltage(appliedVoltage);
+    hoodMotor.setInputVoltage(appliedVoltage);
   }
 
   @Override
   public void setPosition(Rotation2d goalPosition) {
-    turretMotor.setAngle(goalPosition.getRadians());
+    hoodMotor.setAngle(goalPosition.getRadians());
   }
 
   @Override

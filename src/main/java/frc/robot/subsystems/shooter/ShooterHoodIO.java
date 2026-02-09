@@ -7,13 +7,13 @@ package frc.robot.subsystems.shooter;
 import edu.wpi.first.math.geometry.Rotation2d;
 import org.littletonrobotics.junction.AutoLog;
 
-public interface ShooterTurretIO {
+public interface ShooterHoodIO {
   @AutoLog
-  public static class ShooterTurretIOInputs {
+  public static class ShooterHoodIOInputs {
     public boolean isMotorConnected = false;
 
     public Rotation2d position = new Rotation2d();
-    public double velocityRotPerSec = 0.0;
+    public boolean withinRange = false;
     public double appliedVoltage = 0.0;
     public double supplyCurrentAmps = 0.0;
     public double statorCurrentAmps = 0.0;
@@ -25,7 +25,7 @@ public interface ShooterTurretIO {
    *
    * @param inputs The inputs object
    */
-  public default void updateInputs(ShooterTurretIOInputs inputs) {}
+  public default void updateInputs(ShooterHoodIOInputs inputs) {}
 
   /**
    * @param volts The voltage that should be applied to the motor from -12 to 12
@@ -34,7 +34,7 @@ public interface ShooterTurretIO {
 
   /**
    * @param goalPosition The desired angular position for the pivot to be set to. Runs using
-   *     internal MotionMagic
+   *     positionVoltage
    */
   public default void setPosition(Rotation2d goalPosition) {}
 
@@ -56,15 +56,16 @@ public interface ShooterTurretIO {
    */
   public default void setGains(double p, double i, double d, double s, double v, double a) {}
 
-  /**
-   * Updates the gains of the profile. Note that profiled pid control is called "MotionMagic" by
-   * CTRE
-   *
-   * @param maxVelocity The maximum achieveable velocity of the motor in meters per second
-   * @param maxAcceleration The maximum achieveable acceleration of the motor in meters per second
-   *     squared
-   */
-  public default void setMotionMagicConstraints(double maxVelocity, double maxAcceleration) {}
+  // /**
+  //  * Updates the gains of the profile. Note that profiled pid control is called "MotionMagic" by
+  //  * CTRE
+  //  *
+  //  * @param maxVelocity The maximum achieveable velocity of the motor in meters per second
+  //  * @param maxAcceleration The maximum achieveable acceleration of the motor in meters per
+  // second
+  //  *     squared
+  //  */
+  // public default void setMotionMagicConstraints(double maxVelocity, double maxAcceleration) {}
 
   /**
    * Enables brake or coast on the motor, only on the real motors. Useful since we usually keep them

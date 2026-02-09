@@ -15,10 +15,8 @@ import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.Current;
 import edu.wpi.first.units.measure.Temperature;
 import edu.wpi.first.units.measure.Voltage;
-import frc.robot.subsystems.shooter.ShooterConstants.ShooterFlywheelHardware;
 import frc.robot.subsystems.shooter.ShooterConstants.FlywheelTalonFXConfiguration;
-import frc.robot.subsystems.shooter.ShooterConstants.FlywheelGains;
-
+import frc.robot.subsystems.shooter.ShooterConstants.ShooterFlywheelHardware;
 
 public class ShooterFlywheelIOTalonFX implements ShooterFlywheelIO {
   private final TalonFX flywheelMotorLeft;
@@ -28,7 +26,7 @@ public class ShooterFlywheelIOTalonFX implements ShooterFlywheelIO {
 
   // logged data for roller:
   private StatusSignal<AngularVelocity> leftVelocityRotPerSec;
-private StatusSignal<AngularVelocity> rightVelocityRotPerSec;
+  private StatusSignal<AngularVelocity> rightVelocityRotPerSec;
   private StatusSignal<Current> supplyAmps;
   private StatusSignal<Current> statorAmps;
   private StatusSignal<Voltage> appliedVolts;
@@ -44,8 +42,8 @@ private StatusSignal<AngularVelocity> rightVelocityRotPerSec;
     flywheelMotorLeft = new TalonFX(hardware.flyWheelMotorLeftId());
     flywheelMotorRight = new TalonFX(hardware.flyWheelMotorRightId());
 
-    flywheelMotorRight.setControl(new Follower(hardware.flyWheelMotorLeftId(), MotorAlignmentValue.Opposed));
-
+    flywheelMotorRight.setControl(
+        new Follower(hardware.flyWheelMotorLeftId(), MotorAlignmentValue.Opposed));
 
     motorConfiguration.CurrentLimits.SupplyCurrentLimitEnable =
         configuration.enableSupplyCurrentLimit();
@@ -60,7 +58,6 @@ private StatusSignal<AngularVelocity> rightVelocityRotPerSec;
             ? InvertedValue.CounterClockwise_Positive
             : InvertedValue.Clockwise_Positive;
     motorConfiguration.MotorOutput.NeutralMode = configuration.neutralMode();
-    
 
     leftVelocityRotPerSec = flywheelMotorLeft.getVelocity();
     rightVelocityRotPerSec = flywheelMotorRight.getVelocity();
@@ -80,7 +77,7 @@ private StatusSignal<AngularVelocity> rightVelocityRotPerSec;
         temperatureCelsius);
 
     flywheelMotorLeft.optimizeBusUtilization(0.0, 1.0);
-    flywheelMotorRight.optimizeBusUtilization(0.0, 1.0);  // TODO: What is this?
+    flywheelMotorRight.optimizeBusUtilization(0.0, 1.0); // TODO: What is this?
   }
 
   public ShooterFlywheelIOTalonFX(
@@ -95,7 +92,12 @@ private StatusSignal<AngularVelocity> rightVelocityRotPerSec;
   public void updateInputs(ShooterFlywheelIOInputs inputs) {
     inputs.isMotorConnected =
         BaseStatusSignal.refreshAll(
-                leftVelocityRotPerSec, rightVelocityRotPerSec, appliedVolts, supplyAmps, statorAmps, temperatureCelsius)
+                leftVelocityRotPerSec,
+                rightVelocityRotPerSec,
+                appliedVolts,
+                supplyAmps,
+                statorAmps,
+                temperatureCelsius)
             .isOK();
 
     inputs.leftVelocityRotPerSec = leftVelocityRotPerSec.getValueAsDouble();
@@ -116,12 +118,12 @@ private StatusSignal<AngularVelocity> rightVelocityRotPerSec;
     flywheelMotorLeft.setControl(new MotionMagicVelocityVoltage(velocity));
   }
   /*Some info from the docs:
-   * Motion Magic® Velocity produces a motion profile in real-time while attempting to honor the specified Acceleration and (optional) Jerk. This control mode does not use the CruiseVelocity, Expo_kV, or Expo_kA configs.
+  * Motion Magic® Velocity produces a motion profile in real-time while attempting to honor the specified Acceleration and (optional) Jerk. This control mode does not use the CruiseVelocity, Expo_kV, or Expo_kA configs.
 
-    If the specified acceleration is zero, the Acceleration under Motion Magic® configuration parameter is used instead. This allows for runtime adjustment of acceleration for advanced users. Jerk is also specified in the Motion Magic® persistent configuration values. If Jerk is set to zero, Motion Magic® will produce a trapezoidal acceleration profile.
+   If the specified acceleration is zero, the Acceleration under Motion Magic® configuration parameter is used instead. This allows for runtime adjustment of acceleration for advanced users. Jerk is also specified in the Motion Magic® persistent configuration values. If Jerk is set to zero, Motion Magic® will produce a trapezoidal acceleration profile.
 
-    Target velocity can also be changed on-the-fly and Motion Magic® will do its best to adjust the profile. This control mode is voltage-based, so relevant closed-loop gains will use Volts for the numerator.
-   */
+   Target velocity can also be changed on-the-fly and Motion Magic® will do its best to adjust the profile. This control mode is voltage-based, so relevant closed-loop gains will use Volts for the numerator.
+  */
 
   @Override
   public void stop() {

@@ -7,30 +7,27 @@ package frc.robot.subsystems.shooter;
 import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.configs.CANcoderConfiguration;
-import com.ctre.phoenix6.configs.MotionMagicConfigs;
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.controls.NeutralOut;
 import com.ctre.phoenix6.controls.VoltageOut;
-import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
-import com.ctre.phoenix6.signals.SensorDirectionValue;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.Current;
 import edu.wpi.first.units.measure.Temperature;
 import edu.wpi.first.units.measure.Voltage;
-import frc.robot.subsystems.shooter.ShooterConstants.ShooterTurretHardware;
-import frc.robot.subsystems.shooter.ShooterConstants.TurretGains;
-import frc.robot.subsystems.shooter.ShooterConstants.TurretMotorConfiguration;
+import frc.robot.subsystems.shooter.ShooterConstants.HoodGains;
+import frc.robot.subsystems.shooter.ShooterConstants.HoodMotorConfiguration;
+import frc.robot.subsystems.shooter.ShooterConstants.ShooterHoodHardware;
+import frc.robot.subsystems.shooter.ShooterHoodIO.ShooterHoodIOInputs;
 
-public class ShooterTurretIOTalonFX implements ShooterTurretIO {
-  private final TalonFX turretMotor;
-  private final CANcoder turretCANcoder;
+public class ShooterHoodIOTalonFX implements ShooterHoodIO {
+  private final TalonFX hoodMotor;
 
   private TalonFXConfiguration motorConfiguration = new TalonFXConfiguration();
   private CANcoderConfiguration canCoderConfiguration = new CANcoderConfiguration();
@@ -49,31 +46,20 @@ public class ShooterTurretIOTalonFX implements ShooterTurretIO {
   private final VoltageOut kVoltageControl = new VoltageOut(0.0);
   private final MotionMagicVoltage kPositionControl = new MotionMagicVoltage(0.0);
 
-  public ShooterTurretIOTalonFX(
+  public ShooterHoodIOTalonFX(
       String canbus,
-      ShooterTurretHardware hardware,
-      TurretMotorConfiguration configuration,
-      TurretGains gains,
+      ShooterHoodHardware hardware,
+      HoodMotorConfiguration configuration,
+      HoodGains gains,
       double statusSignalUpdateFrequency) {
 
-    turretMotor = new TalonFX(hardware.turretMotorId(), canbus);
-    turretCANcoder = new CANcoder(hardware.turretMotorId(), canbus);
-
-    canCoderConfiguration.MagnetSensor.SensorDirection =
-        SensorDirectionValue.CounterClockwise_Positive; // TODO: check
-    canCoderConfiguration.MagnetSensor.MagnetOffset = 0.265625;
-    turretCANcoder.getConfigurator().apply(canCoderConfiguration);
+    hoodMotor = new TalonFX(hardware.hoodMotorId(), canbus);
 
     motorConfiguration.Slot0.kP = gains.p();
     motorConfiguration.Slot0.kI = gains.i();
     motorConfiguration.Slot0.kD = gains.d();
     motorConfiguration.Slot0.kV = gains.v();
     motorConfiguration.Slot0.kA = gains.a();
-    motorConfiguration.MotionMagic.MotionMagicCruiseVelocity =
-        gains.maxVelocityRotationsPerSecond();
-    motorConfiguration.MotionMagic.MotionMagicAcceleration =
-        gains.maxAccelerationRotationsPerSecondSquared();
-    motorConfiguration.MotionMagic.MotionMagicJerk = gains.jerkRotationsPerSecondCubed();
 
     motorConfiguration.CurrentLimits.SupplyCurrentLimitEnable =
         configuration.enableSupplyCurrentLimit();
@@ -93,23 +79,16 @@ public class ShooterTurretIOTalonFX implements ShooterTurretIO {
     motorConfiguration.Feedback.SensorToMechanismRatio = hardware.gearing();
     motorConfiguration.Feedback.RotorToSensorRatio = 1.0;
 
-    // Rotor sensor is the built-in sensor
-    motorConfiguration.Feedback.FeedbackRemoteSensorID = turretCANcoder.getDeviceID();
-    // motorConfiguration.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.RotorSensor;
-
-    // Enable to true because arm
-    motorConfiguration.ClosedLoopGeneral.ContinuousWrap = true;
-
     // // Reset position on startup
     // kMotor.setPosition(Rotation2d.fromDegrees(64.331).getRotations()); //UPDATE VALUES
 
     // Get status signals from the motor controller
-    positionRotations = turretMotor.getPosition();
-    velocityRotationsPerSec = turretMotor.getVelocity();
-    appliedVolts = turretMotor.getMotorVoltage();
-    supplyCurrentAmps = turretMotor.getSupplyCurrent();
-    statorCurrentAmps = turretMotor.getStatorCurrent();
-    temperatureCelsius = turretMotor.getDeviceTemp();
+    positionRotations = hoodMotor.getPosition();
+    velocityRotationsPerSec = hoodMotor.getVelocity();
+    appliedVolts = hoodMotor.getMotorVoltage();
+    supplyCurrentAmps = hoodMotor.getSupplyCurrent();
+    statorCurrentAmps = hoodMotor.getStatorCurrent();
+    temperatureCelsius = hoodMotor.getDeviceTemp();
 
     BaseStatusSignal.setUpdateFrequencyForAll(
         statusSignalUpdateFrequency,
@@ -124,13 +103,13 @@ public class ShooterTurretIOTalonFX implements ShooterTurretIO {
     // Optimize the CANBus utilization by explicitly telling all CAN signals we
     // are not using to simply not be sent over the CANBus
     // kMotor.optimizeBusUtilization(0.0, 1.0);
-    turretMotor.getConfigurator().apply(motorConfiguration, 1);
+    hoodMotor.getConfigurator().apply(motorConfiguration, 1);
   }
 
-  public ShooterTurretIOTalonFX(
-      ShooterTurretHardware hardware,
-      TurretMotorConfiguration configuration,
-      TurretGains gains,
+  public ShooterHoodIOTalonFX(
+      ShooterHoodHardware hardware,
+      HoodMotorConfiguration configuration,
+      HoodGains gains,
       double statusSignalUpdateFrequency) {
 
     // Assumes the rio is the CANBus
@@ -138,7 +117,7 @@ public class ShooterTurretIOTalonFX implements ShooterTurretIO {
   }
 
   @Override
-  public void updateInputs(ShooterTurretIOInputs inputs) {
+  public void updateInputs(ShooterHoodIOInputs inputs) {
     inputs.isMotorConnected =
         BaseStatusSignal.refreshAll(
                 positionRotations,
@@ -151,8 +130,6 @@ public class ShooterTurretIOTalonFX implements ShooterTurretIO {
             .isOK();
 
     inputs.position = Rotation2d.fromRotations(positionRotations.getValueAsDouble());
-    inputs.velocityRotPerSec = velocityRotationsPerSec.getValueAsDouble();
-    // Rotation2d.fromRotations(velocityRotationsPerSec.getValueAsDouble());
     inputs.appliedVoltage = appliedVolts.getValueAsDouble();
     inputs.supplyCurrentAmps = supplyCurrentAmps.getValueAsDouble();
     inputs.statorCurrentAmps = statorCurrentAmps.getValueAsDouble();
@@ -161,26 +138,26 @@ public class ShooterTurretIOTalonFX implements ShooterTurretIO {
 
   @Override
   public void setVoltage(double volts) {
-    turretMotor.setControl(kVoltageControl.withOutput(volts));
+    hoodMotor.setControl(kVoltageControl.withOutput(volts));
   }
 
   @Override
   public void setPosition(Rotation2d goalPosition) {
-    turretMotor.setControl(kPositionControl.withPosition(goalPosition.getRotations()).withSlot(0));
+    hoodMotor.setControl(kPositionControl.withPosition(goalPosition.getRotations()).withSlot(0));
   }
 
   public void setNeutralMode(NeutralModeValue value) {
-    turretMotor.setNeutralMode(value);
+    hoodMotor.setNeutralMode(value);
   }
 
   @Override
   public void stop() {
-    turretMotor.setControl(new NeutralOut());
+    hoodMotor.setControl(new NeutralOut());
   }
 
   @Override
   public void resetPosition() {
-    turretMotor.setPosition(0.0);
+    hoodMotor.setPosition(0.0);
   }
 
   @Override
@@ -194,25 +171,14 @@ public class ShooterTurretIOTalonFX implements ShooterTurretIO {
     slotConfiguration.kV = v;
     slotConfiguration.kA = a;
 
-    turretMotor.getConfigurator().apply((slotConfiguration));
-  }
-
-  @Override
-  public void setMotionMagicConstraints(double maxVelocity, double maxAcceleration) {
-    var motionMagicConfiguration = new MotionMagicConfigs();
-
-    motionMagicConfiguration.MotionMagicCruiseVelocity = maxVelocity;
-    motionMagicConfiguration.MotionMagicAcceleration = maxAcceleration;
-    motionMagicConfiguration.MotionMagicJerk = 10.0 * maxAcceleration;
-
-    turretMotor.getConfigurator().apply(motionMagicConfiguration);
+    hoodMotor.getConfigurator().apply((slotConfiguration));
   }
 
   @Override
   public void setBrakeMode(boolean enableBrake) {
     NeutralModeValue newMode = enableBrake ? NeutralModeValue.Brake : NeutralModeValue.Coast;
     if (currentMode != newMode) {
-      turretMotor.setNeutralMode(newMode);
+      hoodMotor.setNeutralMode(newMode);
       currentMode = newMode;
     }
   }

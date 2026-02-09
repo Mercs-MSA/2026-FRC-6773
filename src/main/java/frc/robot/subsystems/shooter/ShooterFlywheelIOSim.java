@@ -2,11 +2,9 @@ package frc.robot.subsystems.shooter;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.system.plant.LinearSystemId;
-import edu.wpi.first.wpilibj.simulation.DCMotorSim;
 import edu.wpi.first.wpilibj.simulation.FlywheelSim;
 import frc.robot.subsystems.shooter.ShooterConstants.ShooterFlywheelHardware;
 import frc.robot.subsystems.shooter.ShooterConstants.SimulationConfiguration;
-
 
 public class ShooterFlywheelIOSim implements ShooterFlywheelIO {
   private final double kLoopPeriodSec;
@@ -18,7 +16,9 @@ public class ShooterFlywheelIOSim implements ShooterFlywheelIO {
   private double appliedVoltage = 0.0;
 
   public ShooterFlywheelIOSim(
-      double loopPeriodSec, ShooterFlywheelHardware hardware, SimulationConfiguration configuration) {
+      double loopPeriodSec,
+      ShooterFlywheelHardware hardware,
+      SimulationConfiguration configuration) {
     flywheelLeft =
         new FlywheelSim(
             LinearSystemId.createFlywheelSystem(
@@ -27,10 +27,11 @@ public class ShooterFlywheelIOSim implements ShooterFlywheelIO {
     // flywheelRight =
     //     new DCMotorSim(
     //         LinearSystemId.createDCMotorSystem(
-    //             configuration.motorType(), configuration.measurementStdDevs(), hardware.gearing()),
+    //             configuration.motorType(), configuration.measurementStdDevs(),
+    // hardware.gearing()),
     //         configuration.motorType());
-    
-        //TODO figure out leader follower
+
+    // TODO figure out leader follower
     kLoopPeriodSec = loopPeriodSec;
   }
 
@@ -38,7 +39,6 @@ public class ShooterFlywheelIOSim implements ShooterFlywheelIO {
   public void updateInputs(ShooterFlywheelIOInputs inputs) {
     flywheelLeft.update(kLoopPeriodSec);
     // flywheelRight.update(kLoopPeriodSec);
-
 
     inputs.isMotorConnected = true;
 
