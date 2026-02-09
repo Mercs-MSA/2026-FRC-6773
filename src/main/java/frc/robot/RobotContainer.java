@@ -132,6 +132,7 @@ public class RobotContainer {
                 new ShooterFlywheelIOTalonFX(
                     ShooterConstants.flywheelHardware,
                     ShooterConstants.flywheelConfigs,
+                    ShooterConstants.flywheelGains,
                     ShooterConstants.kStatusSignalUpdateFrequencyHz),
                 new ShooterTurretIOTalonFX(
                     ShooterConstants.turretHardware,
