@@ -34,6 +34,11 @@ import frc.robot.subsystems.intake.IntakePivotIOSim;
 import frc.robot.subsystems.intake.IntakePivotIOTalonFX;
 import frc.robot.subsystems.intake.IntakeRollerIOSim;
 import frc.robot.subsystems.intake.IntakeRollerIOTalonFX;
+import frc.robot.subsystems.shooter.Shooter;
+import frc.robot.subsystems.shooter.ShooterConstants;
+import frc.robot.subsystems.shooter.ShooterFlywheelIOTalonFX;
+import frc.robot.subsystems.shooter.ShooterHoodIOTalonFX;
+import frc.robot.subsystems.shooter.ShooterTurretIOTalonFX;
 import frc.robot.subsystems.spindexer.Spindexer;
 import frc.robot.subsystems.spindexer.SpindexerConstants;
 import frc.robot.subsystems.spindexer.SpindexerIOSim;
@@ -61,6 +66,7 @@ public class RobotContainer {
   private final Spindexer spindexer;
   private final Transfer transfer;
   private Intake intake;
+  private Shooter shooter;
 
   // Controller
   private final CommandXboxController controller = new CommandXboxController(0);
@@ -121,6 +127,22 @@ public class RobotContainer {
                     TransferConstants.kTransferConfiguration,
                     TransferConstants.kRegulatorGains,
                     TransferConstants.kStatusSignalUpdateFrequencyHz));
+        shooter =
+            new Shooter(
+                new ShooterFlywheelIOTalonFX(
+                    ShooterConstants.flywheelHardware,
+                    ShooterConstants.flywheelConfigs,
+                    ShooterConstants.kStatusSignalUpdateFrequencyHz),
+                new ShooterTurretIOTalonFX(
+                    ShooterConstants.turretHardware,
+                    ShooterConstants.turretConfigs,
+                    ShooterConstants.turretGains,
+                    ShooterConstants.kStatusSignalUpdateFrequencyHz),
+                new ShooterHoodIOTalonFX(
+                    ShooterConstants.hoodHardware,
+                    ShooterConstants.hoodConfigs,
+                    ShooterConstants.hoodGains,
+                    ShooterConstants.kStatusSignalUpdateFrequencyHz));
         break;
 
       case SIM:
@@ -164,6 +186,8 @@ public class RobotContainer {
                     TransferConstants.kSimulationRegulatorGains,
                     TransferConstants.kTransferSimulationConfiguration));
 
+        shooter = new Shooter(null, null, null);
+
         break;
 
       default:
@@ -180,10 +204,11 @@ public class RobotContainer {
         intake = new Intake(null, null);
         transfer = new Transfer(null, null);
         spindexer = new Spindexer(new SpindexerIOSim(0, null, null, null));
+        shooter = new Shooter(null, null, null);
         break;
     }
     autonCommands = new AutonCommands();
-    teleopCommands = new TeleopCommands(intake, spindexer, transfer, controller);
+    teleopCommands = new TeleopCommands(intake, spindexer, transfer, shooter, controller);
 
     // Set up auto routines
     autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
@@ -270,10 +295,10 @@ public class RobotContainer {
         .onFalse(teleopCommands.runIntakeSlowRollers());
 
     controller
-        .rightTrigger(0.25)
-        .onTrue(teleopCommands.startShoot())
-        .whileTrue(teleopCommands.whileShooting())
-        .onFalse(teleopCommands.stopShooting());
+        .rightTrigger()
+        .whileTrue(teleopCommands.startShoot())
+        // .whileTrue(teleopCommands.whileShooting())
+        .onFalse(teleopCommands.stopShoot());
 
     controller.x().whileTrue(teleopCommands.spinAlt());
     controller.x().whileTrue(teleopCommands.startKick());

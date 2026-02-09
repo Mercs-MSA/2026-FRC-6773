@@ -193,8 +193,9 @@ public class Shooter extends SubsystemBase {
     return hoodInputs.position;
   }
 
-    public double[] getFlywheelVelocities() {
-      return new double[]{flywheelInputs.leftVelocityRotPerSec, flywheelInputs.rightVelocityRotPerSec};
-    }
-
+  public double[] getFlywheelVelocities() {
+    return new double[] {
+      flywheelInputs.leftVelocityRotPerSec, flywheelInputs.rightVelocityRotPerSec
+    };
+  }
 }

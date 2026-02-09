@@ -45,7 +45,7 @@ public class ShooterConstants {
 
   public record HoodGains(double p, double i, double d, double v, double a) {}
 
-  public record FlywheelTalonFXConfiguration(
+  public record FlywheelMotorConfiguration(
       boolean invert,
       boolean enableStatorCurrentLimit,
       boolean enableSupplyCurrentLimit,
@@ -88,10 +88,22 @@ public class ShooterConstants {
   public static final ShooterTurretHardware turretHardware =
       new ShooterTurretHardware(53, 54, 102 / 25);
 
+  public static final TurretMotorConfiguration turretConfigs =
+      new TurretMotorConfiguration(false, true, true, 60, 50, 12, -12, NeutralModeValue.Brake);
+  public static final FlywheelMotorConfiguration flywheelConfigs =
+      new FlywheelMotorConfiguration(false, false, false, 60, 50, 12, -12, NeutralModeValue.Brake);
+  public static final HoodMotorConfiguration hoodConfigs =
+      new HoodMotorConfiguration(false, false, false, 60, 50, 12, -12, NeutralModeValue.Brake);
+
+  public static final FlywheelGains flywheelGains = new FlywheelGains(1, 0, 0, 0, 0, 0, 0, 0);
+  public static final HoodGains hoodGains = new HoodGains(1, 0, 0, 0, 0);
   public static final TurretGains turretGains =
       switch (Constants.currentMode) {
         case REAL -> new TurretGains(1, 0.0, 0.0, 0.0, 0.0, 0.0, 0.2, 0.0, 0);
         case SIM -> new TurretGains(1, 0.0, 0.0, 0.0, 0.0, 0.0, 0.2, 0.0, 0);
         default -> new TurretGains(0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.2, 0.0, 0.0);
       };
+
+  /** The frequency that telemetry form the motor is pushed to the CANBus */
+  public static final double kStatusSignalUpdateFrequencyHz = 100.0;
 }

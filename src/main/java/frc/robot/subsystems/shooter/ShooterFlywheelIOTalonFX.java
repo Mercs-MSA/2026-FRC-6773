@@ -15,7 +15,7 @@ import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.Current;
 import edu.wpi.first.units.measure.Temperature;
 import edu.wpi.first.units.measure.Voltage;
-import frc.robot.subsystems.shooter.ShooterConstants.FlywheelTalonFXConfiguration;
+import frc.robot.subsystems.shooter.ShooterConstants.FlywheelMotorConfiguration;
 import frc.robot.subsystems.shooter.ShooterConstants.ShooterFlywheelHardware;
 
 public class ShooterFlywheelIOTalonFX implements ShooterFlywheelIO {
@@ -36,8 +36,8 @@ public class ShooterFlywheelIOTalonFX implements ShooterFlywheelIO {
 
   public ShooterFlywheelIOTalonFX(
       String canbus,
-      ShooterFlywheelHardware hardware,
-      FlywheelTalonFXConfiguration configuration,
+      ShooterFlywheelHardware hardware, // TODO Gains
+      FlywheelMotorConfiguration configuration,
       double statusSignalUpdateFrequency) {
     flywheelMotorLeft = new TalonFX(hardware.flyWheelMotorLeftId());
     flywheelMotorRight = new TalonFX(hardware.flyWheelMotorRightId());
@@ -82,7 +82,7 @@ public class ShooterFlywheelIOTalonFX implements ShooterFlywheelIO {
 
   public ShooterFlywheelIOTalonFX(
       ShooterFlywheelHardware hardware,
-      FlywheelTalonFXConfiguration configuration,
+      FlywheelMotorConfiguration configuration,
       double statusSignalUpdateFrequency) {
 
     // Assumes the rio is the CANBus

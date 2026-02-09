@@ -23,9 +23,15 @@ public class TeleopCommands {
   private Shooter shooter;
 
   public TeleopCommands(
-      Intake intake, Spindexer indexer, Transfer transfer, CommandXboxController controller) {
+      Intake intake,
+      Spindexer indexer,
+      Transfer transfer,
+      Shooter shooter,
+      CommandXboxController controller) {
     this.intake = intake;
     this.controller = controller;
+    this.shooter = shooter;
+
     mIndexer = indexer;
     mTransfer = transfer;
     // kClimb = climb;
@@ -76,18 +82,27 @@ public class TeleopCommands {
   }
 
   public Command stopShooting() {
-    return Commands.runOnce(
+    return Commands.run(
         () -> {
           mTransfer.stopTransfer();
           mIndexer.setState(ShooterState.INACTIVE);
         });
   }
 
+  public Command stopShoot() {
+    return Commands.run(
+        () -> {
+          // mTransfer.setRegulatorVelocity(0);
+          shooter.setFlywheelVoltage(0);
+          mTransfer.setRegulatorVoltage(0);
+        });
+  }
+
   public Command startShoot() {
     return Commands.run(
         () -> {
-          mTransfer.setRegulatorVelocity(12);
-          shooter.setFlywheelVoltage(4);
+          // mTransfer.setRegulatorVelocity(12);
+          shooter.setFlywheelVoltage(10);
           mTransfer.setRegulatorVoltage(10);
           // TODO: ADD SHOOTER
         });
