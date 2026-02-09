@@ -39,9 +39,9 @@ public class ShooterConstants {
       double d,
       double v,
       double a,
-      double maxVelocityMetersPerSecond,
-      double maxAccelerationMetersPerSecondSquared,
-      double jerkMetersPerSecondCubed) {}
+      double maxVelocityRotationsPerSecond,
+      double maxAccelerationRotationsPerSecondSquared,
+      double jerkRotationsPerSecondCubed) {}
 
   public record HoodGains(double p, double i, double d, double v, double a) {}
 

@@ -63,6 +63,25 @@ public class Shooter extends SubsystemBase {
           "Shooter/MotionMagic/Turret_kMaxAcceleration",
           ShooterConstants.turretGains.maxAccelerationRotationsPerSecondSquared());
 
+  private final LoggedNetworkNumber flywheel_kP =
+      new LoggedNetworkNumber("Shooter/Gains/Flywheel_kP", ShooterConstants.flywheelGains.p());
+  private final LoggedNetworkNumber flywheel_kI =
+      new LoggedNetworkNumber("Shooter/Gains/Flywheel_kI", ShooterConstants.flywheelGains.i());
+  private final LoggedNetworkNumber flywheel_kD =
+      new LoggedNetworkNumber("Shooter/Gains/Flywheel_kD", ShooterConstants.flywheelGains.d());
+  private final LoggedNetworkNumber flywheel_kV =
+      new LoggedNetworkNumber("Shooter/Gains/Flywheel_kV", ShooterConstants.flywheelGains.v());
+  private final LoggedNetworkNumber flywheel_kA =
+      new LoggedNetworkNumber("Shooter/Gains/Flywheel_kA", ShooterConstants.flywheelGains.a());
+  private final LoggedNetworkNumber flywheel_maxVelocity =
+      new LoggedNetworkNumber(
+          "Shooter/MotionMagic/Flywheel_kMaxVelocity",
+          ShooterConstants.flywheelGains.maxVelocityRotationsPerSecond());
+  private final LoggedNetworkNumber flywheel_maxAcceleration =
+      new LoggedNetworkNumber(
+          "Shooter/MotionMagic/Flywheel_kMaxAcceleration",
+          ShooterConstants.flywheelGains.maxAccelerationRotationsPerSecondSquared());
+
   // private boolean detectedGamepiece = false;
   //   private ShooterGoal currentPivotGoal;
 

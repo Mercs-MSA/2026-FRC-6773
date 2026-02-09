@@ -2,6 +2,7 @@ package frc.robot.subsystems.shooter;
 
 import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.StatusSignal;
+import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.controls.MotionMagicVelocityVoltage;
@@ -15,6 +16,7 @@ import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.Current;
 import edu.wpi.first.units.measure.Temperature;
 import edu.wpi.first.units.measure.Voltage;
+import frc.robot.subsystems.shooter.ShooterConstants.FlywheelGains;
 import frc.robot.subsystems.shooter.ShooterConstants.FlywheelMotorConfiguration;
 import frc.robot.subsystems.shooter.ShooterConstants.ShooterFlywheelHardware;
 
@@ -38,12 +40,19 @@ public class ShooterFlywheelIOTalonFX implements ShooterFlywheelIO {
       String canbus,
       ShooterFlywheelHardware hardware, // TODO Gains
       FlywheelMotorConfiguration configuration,
+      FlywheelGains gains,
       double statusSignalUpdateFrequency) {
     flywheelMotorLeft = new TalonFX(hardware.flyWheelMotorLeftId());
     flywheelMotorRight = new TalonFX(hardware.flyWheelMotorRightId());
 
     flywheelMotorRight.setControl(
         new Follower(hardware.flyWheelMotorLeftId(), MotorAlignmentValue.Opposed));
+
+    motorConfiguration.Slot0.kP = gains.p();
+    motorConfiguration.Slot0.kI = gains.i();
+    motorConfiguration.Slot0.kD = gains.d();
+    motorConfiguration.Slot0.kV = gains.v();
+    motorConfiguration.Slot0.kA = gains.a();
 
     motorConfiguration.CurrentLimits.SupplyCurrentLimitEnable =
         configuration.enableSupplyCurrentLimit();
@@ -78,15 +87,18 @@ public class ShooterFlywheelIOTalonFX implements ShooterFlywheelIO {
 
     flywheelMotorLeft.optimizeBusUtilization(0.0, 1.0);
     flywheelMotorRight.optimizeBusUtilization(0.0, 1.0); // TODO: What is this?
+    flywheelMotorLeft.getConfigurator().apply(motorConfiguration, 1);
+    flywheelMotorLeft.getConfigurator().apply(motorConfiguration, 1);
   }
 
   public ShooterFlywheelIOTalonFX(
       ShooterFlywheelHardware hardware,
       FlywheelMotorConfiguration configuration,
+      FlywheelGains gains,
       double statusSignalUpdateFrequency) {
 
     // Assumes the rio is the CANBus
-    this("rio", hardware, configuration, statusSignalUpdateFrequency);
+    this("rio", hardware, configuration, gains, statusSignalUpdateFrequency);
   }
 
   public void updateInputs(ShooterFlywheelIOInputs inputs) {
@@ -124,6 +136,20 @@ public class ShooterFlywheelIOTalonFX implements ShooterFlywheelIO {
 
    Target velocity can also be changed on-the-fly and Motion Magic® will do its best to adjust the profile. This control mode is voltage-based, so relevant closed-loop gains will use Volts for the numerator.
   */
+
+  @Override
+  public void setGains(double p, double i, double d, double v, double a) {
+    var slotConfiguration = new Slot0Configs();
+
+    slotConfiguration.kP = p;
+    slotConfiguration.kI = i;
+    slotConfiguration.kD = d;
+    slotConfiguration.kV = v;
+    slotConfiguration.kA = a;
+
+    flywheelMotorLeft.getConfigurator().apply((slotConfiguration));
+    flywheelMotorRight.getConfigurator().apply((slotConfiguration));
+  }
 
   @Override
   public void stop() {
