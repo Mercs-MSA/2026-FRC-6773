@@ -92,7 +92,7 @@ public class IntakeConstants {
 
   public static final double kPivotGearing = 1.0 / 3.0; // TODO Check this value
 
-  public static final double kRollerIntakingVoltage = 7.5;
+  public static final double kRollerIntakingVoltage = 16.0;
   public static final double kRollersSlowVoltage = 1.0;
 
   public static final double kRollerStowVoltage = 1;

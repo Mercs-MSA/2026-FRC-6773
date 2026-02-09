@@ -64,6 +64,10 @@ public class Transfer extends SubsystemBase {
     regulator.setVelocity(velocity);
   }
 
+  public void setRegulatorVoltage(double voltage) {
+    regulator.setVoltage(voltage);
+  }
+
   public void setKickerVoltage(double voltage) {
     transferState = TransferState.FREEFORM;
     kicker.setVoltage(voltage);

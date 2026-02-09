@@ -82,9 +82,9 @@ public class TeleopCommands {
   }
 
   public Command startShoot() {
-    return Commands.runOnce(
+    return Commands.run(
         () -> {
-          mTransfer.setRegulatorVelocity(12);
+          mTransfer.setRegulatorVoltage(10);
           // TODO: ADD SHOOTER
         });
   }
