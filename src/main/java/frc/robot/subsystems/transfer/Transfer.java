@@ -34,24 +34,24 @@ public class Transfer extends SubsystemBase {
 
   @Override
   public void periodic() {
-    switch (shooterState) {
-      case INACTIVE:
-        regulator.stop();
-        kicker.stop();
-        break;
+    // switch (shooterState) {
+    //   case INACTIVE:
+    //     regulator.stop();
+    //     kicker.stop();
+    //     break;
 
-      case SPINUP:
-        regulator.setVelocity(12);
-        kicker.stop();
-        if (withinSpeed()) shooterState = ShooterState.SCORE;
-        break;
+    //   case SPINUP:
+    //     regulator.setVelocity(12);
+    //     kicker.stop();
+    //     if (withinSpeed()) shooterState = ShooterState.SCORE;
+    //     break;
 
-      case SCORE:
-        regulator.setVelocity(12);
-        kicker.setVoltage(TransferConstants.kKickerVoltage.getAsDouble());
-        if (!withinSpeed()) shooterState = ShooterState.SPINUP;
-        break;
-    }
+    //   case SCORE:
+    //     regulator.setVelocity(12);
+    //     kicker.setVoltage(TransferConstants.kKickerVoltage.getAsDouble());
+    //     if (!withinSpeed()) shooterState = ShooterState.SPINUP;
+    //     break;
+    // }
 
     kicker.updateInputs(kickerInputs);
     regulator.updateInputs(regulatorInputs);

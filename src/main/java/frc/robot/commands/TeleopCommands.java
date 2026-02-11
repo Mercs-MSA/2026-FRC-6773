@@ -109,7 +109,7 @@ public class TeleopCommands {
   public Command startKick() {
     return Commands.run(
         () -> {
-          mTransfer.setKickerVoltage(10);
+          mTransfer.setKickerVoltage(4);
           // TODO: ADD SHOOTER
         });
   }
@@ -133,7 +133,7 @@ public class TeleopCommands {
   public Command spinAlt() {
     return Commands.run(
         () -> {
-          mIndexer.setVoltage(-8);
+          mIndexer.setVoltage(-4);
         },
         mIndexer);
   }
