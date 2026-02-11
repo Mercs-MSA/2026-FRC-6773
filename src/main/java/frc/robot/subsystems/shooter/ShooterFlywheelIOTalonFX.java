@@ -5,9 +5,8 @@ import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.Follower;
-import com.ctre.phoenix6.controls.MotionMagicVelocityVoltage;
 import com.ctre.phoenix6.controls.NeutralOut;
-import com.ctre.phoenix6.controls.VoltageOut;
+import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.MotorAlignmentValue;
@@ -34,11 +33,11 @@ public class ShooterFlywheelIOTalonFX implements ShooterFlywheelIO {
   private StatusSignal<Voltage> appliedVolts;
   private StatusSignal<Temperature> temperatureCelsius;
 
-  private final VoltageOut kVoltageControl = new VoltageOut(0.0);
+  private final VelocityVoltage kvelocityVoltage = new VelocityVoltage(0.0);
 
   public ShooterFlywheelIOTalonFX(
       String canbus,
-      ShooterFlywheelHardware hardware, // TODO Gains
+      ShooterFlywheelHardware hardware,
       FlywheelMotorConfiguration configuration,
       FlywheelGains gains,
       double statusSignalUpdateFrequency) {
@@ -86,9 +85,9 @@ public class ShooterFlywheelIOTalonFX implements ShooterFlywheelIO {
         temperatureCelsius);
 
     flywheelMotorLeft.optimizeBusUtilization(0.0, 1.0);
-    flywheelMotorRight.optimizeBusUtilization(0.0, 1.0); // TODO: What is this?
+    flywheelMotorRight.optimizeBusUtilization(0.0, 1.0);
     flywheelMotorLeft.getConfigurator().apply(motorConfiguration, 1);
-    flywheelMotorLeft.getConfigurator().apply(motorConfiguration, 1);
+    flywheelMotorRight.getConfigurator().apply(motorConfiguration, 1);
   }
 
   public ShooterFlywheelIOTalonFX(
@@ -120,14 +119,14 @@ public class ShooterFlywheelIOTalonFX implements ShooterFlywheelIO {
     inputs.temperatureCelsius = temperatureCelsius.getValueAsDouble();
   }
 
-  @Override
-  public void setVoltage(double volts) {
-    flywheelMotorLeft.setControl(kVoltageControl.withOutput(volts));
-  }
+  // @Override
+  // public void setVoltage(double volts) {
+  //   flywheelMotorLeft.setControl(kvelocityVoltage.withVelocity(volts));
+  // }
 
   @Override
   public void setVelocityRPS(double velocity) {
-    flywheelMotorLeft.setControl(new MotionMagicVelocityVoltage(velocity));
+    flywheelMotorLeft.setControl(kvelocityVoltage.withVelocity(velocity));
   }
   /*Some info from the docs:
   * Motion Magic® Velocity produces a motion profile in real-time while attempting to honor the specified Acceleration and (optional) Jerk. This control mode does not use the CruiseVelocity, Expo_kV, or Expo_kA configs.

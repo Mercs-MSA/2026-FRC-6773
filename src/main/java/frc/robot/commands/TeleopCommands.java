@@ -94,17 +94,15 @@ public class TeleopCommands {
         () -> {
           // mTransfer.setRegulatorVelocity(0);
           shooter.stop(true, false, false);
-          mTransfer.setRegulatorVoltage(0);
+          mTransfer.setRegulatorVelocity(0);
         });
   }
 
   public Command startShoot() {
     return Commands.run(
         () -> {
-          // mTransfer.setRegulatorVelocity(12);
           shooter.setFlywheelVelocityRPS(60);
-          mTransfer.setRegulatorVoltage(10);
-          // TODO: ADD SHOOTER
+          mTransfer.setRegulatorVelocity(60);
         });
   }
 

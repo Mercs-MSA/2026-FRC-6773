@@ -34,14 +34,7 @@ public class ShooterConstants {
       double jerkRotationsPerSecondCubed) {}
 
   public record FlywheelGains(
-      double p,
-      double i,
-      double d,
-      double v,
-      double a,
-      double maxVelocityRotationsPerSecond,
-      double maxAccelerationRotationsPerSecondSquared,
-      double jerkRotationsPerSecondCubed) {}
+      double p, double i, double d, double s, double v, double a, double g) {}
 
   public record HoodGains(double p, double i, double d, double v, double a) {}
 
@@ -95,7 +88,8 @@ public class ShooterConstants {
   public static final HoodMotorConfiguration hoodConfigs =
       new HoodMotorConfiguration(false, false, false, 60, 50, 12, -12, NeutralModeValue.Brake);
 
-  public static final FlywheelGains flywheelGains = new FlywheelGains(1, 0, 0, 0, 0, 0, 0, 0);
+  public static final FlywheelGains flywheelGains =
+      new FlywheelGains(0.2, 0.0, 0.0, 0.1, 0.126, 0.0, 0.0);
   public static final HoodGains hoodGains = new HoodGains(1, 0, 0, 0, 0);
   public static final TurretGains turretGains =
       switch (Constants.currentMode) {
