@@ -218,7 +218,7 @@ public class RobotContainer {
         break;
     }
     teleopCommands = new TeleopCommands(intake, spindexer, transfer, shooter, controller);
-    autonCommands = new AutonCommands(teleopCommands);
+    autonCommands = new AutonCommands(intake, spindexer, transfer, shooter, controller);
 
     // Set up auto routines
     autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
