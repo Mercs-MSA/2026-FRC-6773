@@ -3,6 +3,7 @@ package frc.robot.subsystems.spindexer;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Constants.Mode;
+import frc.robot.commands.TeleopCommands;
 import frc.robot.commands.TeleopCommands.ShooterState;
 import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.Logger;
@@ -21,7 +22,7 @@ public class Spindexer extends SubsystemBase {
 
   @Override
   public void periodic() {
-    switch (shooterState) {
+    switch (TeleopCommands.globalState) {
       case INACTIVE:
         stopSpindexer();
         break;
@@ -31,6 +32,7 @@ public class Spindexer extends SubsystemBase {
         setVelocity(12.0);
         break;
     }
+    shooterState = TeleopCommands.globalState;
 
     kSpindexerHardware.updateInputs(kSpindexerInputs);
     Logger.processInputs("Spindexer/Inputs", kSpindexerInputs);

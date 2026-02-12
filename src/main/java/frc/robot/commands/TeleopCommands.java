@@ -17,6 +17,8 @@ public class TeleopCommands {
     // Note that this state encompasses the Spindexer, Transfer and Shooter + constant tracking
   }
 
+  public static ShooterState globalState = ShooterState.INACTIVE;
+
   private CommandXboxController controller;
   private Intake intake;
   private Spindexer mIndexer;
@@ -48,16 +50,6 @@ public class TeleopCommands {
         intake);
   }
 
-  public Command runIntakeStow() {
-    return Commands.runOnce(
-        () -> {
-          intake.setPivotState(IntakeState.kStow);
-          intake.stowRollers();
-          intake.setBrakeMode(true);
-        },
-        intake);
-  }
-
   public Command runIntakeSlowRollers() {
     return Commands.runOnce(
         () -> {
@@ -68,115 +60,137 @@ public class TeleopCommands {
         intake);
   }
 
-  public Command startShooting() {
+  public Command startShoot() {
     return Commands.runOnce(
         () -> {
           mTransfer.startTransfer(12);
-        });
-  }
-
-  public Command whileShooting() {
-    return Commands.run(
-        () -> {
-          mIndexer.setState(mTransfer.getState());
-        });
-  }
-
-  public Command stopShooting() {
-    return Commands.run(
-        () -> {
-          mTransfer.stopTransfer();
-          mIndexer.setState(ShooterState.INACTIVE);
-        });
+          shooter.setFlywheelVelocityRPS(60);
+        },
+        shooter,
+        mTransfer);
   }
 
   public Command stopShoot() {
-    return Commands.run(
+    return Commands.runOnce(
         () -> {
-          // mTransfer.setRegulatorVelocity(0);
+          mTransfer.stop();
           shooter.stop(true, false, false);
-          mTransfer.setRegulatorVelocity(0);
-        });
-  }
-
-  public Command startShoot() {
-    return Commands.run(
-        () -> {
-          shooter.setFlywheelVelocityRPS(60);
-          mTransfer.setRegulatorVelocity(50);
-        });
-  }
-
-  public Command startKick() {
-    return Commands.run(
-        () -> {
-          mTransfer.setKickerVoltage(4);
-          // TODO: ADD SHOOTER
-        });
-  }
-
-  public Command stopKick() {
-    return Commands.run(
-        () -> {
-          mTransfer.setKickerVoltage(0);
-          // TODO: ADD SHOOTER
-        });
-  }
-
-  public Command spin(double vel) {
-    return Commands.run(
-        () -> {
-          mIndexer.setVelocity(vel);
+          ;
         },
-        mIndexer);
-  }
-
-  public Command spinAlt() {
-    return Commands.run(
-        () -> {
-          mIndexer.setVoltage(-3);
-        },
-        mIndexer);
-  }
-
-  public Command spinStop() {
-    return Commands.run(
-        () -> {
-          mIndexer.setVoltage(0);
-        },
-        mIndexer);
-  }
-
-  public Command stop() {
-    return Commands.runOnce(
-        () -> {
-          mIndexer.stopSpindexer();
-        },
-        mIndexer);
-  }
-
-  public Command startTransfer(double shooterSpeed) {
-    return Commands.runOnce(
-        () -> {
-          mTransfer.startTransfer(shooterSpeed);
-        },
+        shooter,
         mTransfer);
   }
 
-  public Command stopTransfer() {
-    return Commands.runOnce(
-        () -> {
-          mTransfer.stopTransfer();
-          mIndexer.setState(ShooterState.INACTIVE);
-        },
-        mTransfer);
-  }
+  // public Command startShooting() {
+  //   return Commands.runOnce(
+  //       () -> {
+  //         mTransfer.startTransfer(12);
+  //       });
+  // }
 
-  public Command stopKicker() {
-    return Commands.runOnce(
-        () -> {
-          mTransfer.setKickerVoltage(0);
-        },
-        mTransfer);
-  }
+  // public Command whileShooting() {
+  //   return Commands.run(
+  //       () -> {
+  //         mIndexer.setState(mTransfer.getState());
+  //       });
+  // }
+
+  // public Command stopShooting() {
+  //   return Commands.run(
+  //       () -> {
+  //         mTransfer.stopTransfer();
+  //         mIndexer.setState(ShooterState.INACTIVE);
+  //       });
+  // }
+
+  // public Command stopShoot() {
+  //   return Commands.run(
+  //       () -> {
+  //         // mTransfer.setRegulatorVelocity(0);
+  //         shooter.stop(true, false, false);
+  //         mTransfer.setRegulatorVelocity(0);
+  //       });
+  // }
+
+  // public Command startShoot() {
+  //   return Commands.run(
+  //       () -> {
+  //         shooter.setFlywheelVelocityRPS(60);
+  //         mTransfer.setRegulatorVelocity(50);
+  //       });
+  // }
+
+  // public Command startKick() {
+  //   return Commands.run(
+  //       () -> {
+  //         mTransfer.setKickerVoltage(4);
+  //         // TODO: ADD SHOOTER
+  //       });
+  // }
+
+  // public Command stopKick() {
+  //   return Commands.run(
+  //       () -> {
+  //         mTransfer.setKickerVoltage(0);
+  //         // TODO: ADD SHOOTER
+  //       });
+  // }
+
+  // public Command spin(double vel) {
+  //   return Commands.run(
+  //       () -> {
+  //         mIndexer.setVelocity(vel);
+  //       },
+  //       mIndexer);
+  // }
+
+  // public Command spinAlt() {
+  //   return Commands.run(
+  //       () -> {
+  //         mIndexer.setVoltage(-3);
+  //       },
+  //       mIndexer);
+  // }
+
+  // public Command spinStop() {
+  //   return Commands.run(
+  //       () -> {
+  //         mIndexer.setVoltage(0);
+  //       },
+  //       mIndexer);
+  // }
+
+  // public Command stop() {
+  //   return Commands.runOnce(
+  //       () -> {
+  //         mIndexer.stopSpindexer();
+  //       },
+  //       mIndexer);
+  // }
+
+  // public Command startTransfer(double shooterSpeed) {
+  //   return Commands.runOnce(
+  //       () -> {
+  //         mTransfer.startTransfer(shooterSpeed);
+  //       },
+  //       mTransfer);
+  // }
+
+  // public Command stopTransfer() {
+  //   return Commands.runOnce(
+  //       () -> {
+  //         mTransfer.stopTransfer();
+  //         mIndexer.setState(ShooterState.INACTIVE);
+  //       },
+  //       mTransfer);
+  // }
+
+  // public Command stopKicker() {
+  //   return Commands.runOnce(
+  //       () -> {
+  //         mTransfer.setKickerVoltage(0);
+  //       },
+  //       mTransfer);
+  // }
+
 }
