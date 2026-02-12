@@ -11,8 +11,8 @@ import com.ctre.phoenix6.configs.MotionMagicConfigs;
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.Follower;
-import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.controls.NeutralOut;
+import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
@@ -49,7 +49,7 @@ public class IntakePivotIOTalonFX implements IntakePivotIO {
 
   // Control modes
   private final VoltageOut kVoltageControl = new VoltageOut(0.0);
-  private final MotionMagicVoltage kPositionControl = new MotionMagicVoltage(0.0);
+  private final PositionVoltage kPositionControl = new PositionVoltage(0.0);
 
   public IntakePivotIOTalonFX(
       String canbus,
@@ -67,13 +67,13 @@ public class IntakePivotIOTalonFX implements IntakePivotIO {
     motorConfiguration.Slot0.kV = gains.v();
     motorConfiguration.Slot0.kA = gains.a();
     motorConfiguration.Slot0.kG = gains.g();
-    motorConfiguration.MotionMagic.MotionMagicCruiseVelocity =
-        gains.maxVelocityRotationsPerSecond();
-    motorConfiguration.MotionMagic.MotionMagicAcceleration =
-        gains.maxAccelerationRotationsPerSecondSquared();
-    motorConfiguration.MotionMagic.MotionMagicJerk = gains.jerkRotationsPerSecondCubed();
+    // motorConfiguration.MotionMagic.MotionMagicCruiseVelocity =
+    //     gains.maxVelocityRotationsPerSecond();
+    // motorConfiguration.MotionMagic.MotionMagicAcceleration =
+    //     gains.maxAccelerationRotationsPerSecondSquared();
+    // motorConfiguration.MotionMagic.MotionMagicJerk = gains.jerkRotationsPerSecondCubed();
 
-    motorConfiguration.Slot1.kG = gains.g();
+    // motorConfiguration.Slot1.kG = gains.g();
 
     motorConfiguration.CurrentLimits.SupplyCurrentLimitEnable =
         configuration.enableSupplyCurrentLimit();

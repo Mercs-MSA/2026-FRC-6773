@@ -17,8 +17,8 @@ import org.littletonrobotics.junction.networktables.LoggedNetworkNumber;
 
 public class Intake extends SubsystemBase {
   public enum IntakeState {
-    kFloorPickup(() -> Rotation2d.fromRotations(0.0)),
-    kStow(() -> Rotation2d.fromRotations(-0.17)),
+    kFloorPickup(() -> Rotation2d.fromRotations(-5.5)),
+    kStow(() -> Rotation2d.fromRotations(0.0)),
     /** Custom setpoint that can be modified over network tables; Useful for debugging */
     custom(
         () ->
@@ -56,14 +56,14 @@ public class Intake extends SubsystemBase {
       new LoggedNetworkNumber("Intake/Gains/Pivot_kA", IntakeConstants.kPivotGains.a());
   private final LoggedNetworkNumber kG =
       new LoggedNetworkNumber("Intake/Gains/Pivot_kG", IntakeConstants.kPivotGains.g());
-  private final LoggedNetworkNumber kMaxVelocity =
-      new LoggedNetworkNumber(
-          "Intake/MotionMagic/Pivot_kMaxVelocity",
-          IntakeConstants.kPivotGains.maxVelocityRotationsPerSecond());
-  private final LoggedNetworkNumber kMaxAcceleration =
-      new LoggedNetworkNumber(
-          "Intake/MotionMagic/Pivot_kMaxAcceleration",
-          IntakeConstants.kPivotGains.maxAccelerationRotationsPerSecondSquared());
+  // private final LoggedNetworkNumber kMaxVelocity =
+  //     new LoggedNetworkNumber(
+  //         "Intake/MotionMagic/Pivot_kMaxVelocity",
+  //         IntakeConstants.kPivotGains.maxVelocityRotationsPerSecond());
+  // private final LoggedNetworkNumber kMaxAcceleration =
+  //     new LoggedNetworkNumber(
+  //         "Intake/MotionMagic/Pivot_kMaxAcceleration",
+  //         IntakeConstants.kPivotGains.maxAccelerationRotationsPerSecondSquared());
 
   // private boolean detectedGamepiece = false;
   private IntakeState pivotState;

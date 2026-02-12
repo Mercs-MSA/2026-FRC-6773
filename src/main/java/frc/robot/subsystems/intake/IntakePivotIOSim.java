@@ -62,11 +62,11 @@ public class IntakePivotIOSim implements IntakePivotIO {
             configuration.measurementStdDevs(),
             configuration.measurementStdDevs());
 
-    kProfile =
-        new TrapezoidProfile(
-            new TrapezoidProfile.Constraints(
-                gains.maxVelocityRotationsPerSecond(),
-                gains.maxAccelerationRotationsPerSecondSquared()));
+    // kProfile =
+    //     new TrapezoidProfile(
+    //         new TrapezoidProfile.Constraints(
+    //             gains.maxVelocityRotationsPerSecond(),
+    //             gains.maxAccelerationRotationsPerSecondSquared()));
 
     kFeedback = new PIDController(gains.p(), gains.i(), gains.d());
 

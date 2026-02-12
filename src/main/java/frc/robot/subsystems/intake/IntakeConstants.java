@@ -19,10 +19,6 @@ public class IntakeConstants {
       double p,
       double i,
       double d,
-      // Motion magic constraints
-      double maxVelocityRotationsPerSecond,
-      double maxAccelerationRotationsPerSecondSquared,
-      double jerkRotationsPerSecondCubed,
       // Pivot feedforward values
       double s,
       double v,
@@ -85,15 +81,15 @@ public class IntakeConstants {
 
   /* Pivot constants */
 
-  public static final Rotation2d kMinPivotPosition = Rotation2d.fromRotations(-0.29);
-  public static final Rotation2d kMaxPivotPosition = Rotation2d.fromRotations(0.1);
+  public static final Rotation2d kMinPivotPosition = Rotation2d.fromRotations(0.1);
+  public static final Rotation2d kMaxPivotPosition = Rotation2d.fromRotations(-0.4);
 
   public static final Rotation2d kPivotPositionTolerance = Rotation2d.fromRotations(0.01);
 
-  public static final double kPivotGearing = 1.0 / 3.0; // TODO Check this value
+  public static final double kPivotGearing = 1.0 / 15.0; // TODO Check this value
 
-  public static final double kRollerIntakingVoltage = 16.0;
-  public static final double kRollersSlowVoltage = 1.0;
+  public static final double kRollerIntakingVoltage = -16.0;
+  public static final double kRollersSlowVoltage = 0.0;
 
   public static final double kRollerStowVoltage = 1;
 
@@ -105,10 +101,10 @@ public class IntakeConstants {
   public static final IntakePivotGains kPivotGains =
       switch (Constants.currentMode) {
           // case REAL -> new IntakePivotGains(5.0, 0.0, 0.0, 1, 2, 20, 0.0, 0.0, 0.0, -0.4);
-        case REAL -> new IntakePivotGains(0.0, 0.0, 0.0, 0, 0, 0, 0.0, 0.0, 0.0, 0.0);
+        case REAL -> new IntakePivotGains(10.0, 0.0, 0.0, 0, 0.2, 0.4, 0.0);
 
-        case SIM -> new IntakePivotGains(550.0, 0.0, 0.0, 10.0, 4.0, 0.0, 0.0, 0.17, 0.06, 0.01);
-        default -> new IntakePivotGains(0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0);
+        case SIM -> new IntakePivotGains(550.0, 0.0, 0.0, 10.0, 0.17, 0.06, 0.01);
+        default -> new IntakePivotGains(0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0);
       };
 
   public static final IntakePivotTalonFXConfiguration kPivotMotorConfiguration =
@@ -120,11 +116,11 @@ public class IntakeConstants {
           50.0, // Supply limit
           12.0, // Peak forward voltage
           -12.0, // Peak reverse voltage
-          NeutralModeValue.Brake); // Idle mode
+          NeutralModeValue.Coast); // Idle mode
 
   public static final IntakeRollerTalonFXConfiguration kRollerMotorConfiguration =
       new IntakeRollerTalonFXConfiguration(
-          true, // Invert
+          false, // Invert
           true, // Enable stator current limiting
           true, // Enable supply current limiting
           60.0, // Stator limit
