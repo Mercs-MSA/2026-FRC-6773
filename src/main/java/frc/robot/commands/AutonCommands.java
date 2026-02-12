@@ -13,6 +13,7 @@ public class AutonCommands {
   private boolean stopRollers = false;
   private boolean stopPivot = false;
 
+  private TeleopCommands teleCommands;
   // public TeleopCommands(Elevator elevator, Intake intake, Manipulator manipulator,
   // CommandXboxController controller) {
   //     kElevator = elevator;
@@ -22,7 +23,9 @@ public class AutonCommands {
   //     // kClimb = climb;
   // }
 
-  public AutonCommands() {}
+  public AutonCommands(TeleopCommands teleopCommands) {
+    this.teleCommands = teleopCommands;
+  }
 
   public Command getPathCommand(String pathName) {
     try {
@@ -51,11 +54,19 @@ public class AutonCommands {
 
     switch (startChoice) {
       case "CENTER":
-        autonCommand.addCommands(getPathCommand("Bump"));
+        autonCommand.addCommands(getPathCommand("C_Start_Climb"));
         break;
       case "RIGHT":
+        autonCommand.addCommands(getPathCommand("H_Start_HIntake"));
+        autonCommand.addCommands(teleCommands.runIntakeFloorPickup());
+        autonCommand.addCommands(getPathCommand("H_Intake_HSStart"));
+        autonCommand.addCommands(teleCommands.startShoot());
         break;
       case "LEFT":
+        autonCommand.addCommands(getPathCommand("D_Start_DIntake"));
+        autonCommand.addCommands(teleCommands.runIntakeFloorPickup());
+        autonCommand.addCommands(getPathCommand("D_Intake_DSStart"));
+        autonCommand.addCommands(teleCommands.startShoot());
         break;
       default:
         DriverStation.reportError("Big oops: Invalid Start Pos", false);

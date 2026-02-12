@@ -4,7 +4,7 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.system.plant.LinearSystemId;
 import edu.wpi.first.wpilibj.simulation.DCMotorSim;
-import frc.robot.subsystems.shooter.ShooterConstants.ShooterFlywheelHardware;
+import frc.robot.subsystems.shooter.ShooterConstants.ShooterHoodHardware;
 import frc.robot.subsystems.shooter.ShooterConstants.SimulationConfiguration;
 import frc.robot.subsystems.shooter.ShooterHoodIO.ShooterHoodIOInputs;
 
@@ -18,9 +18,7 @@ public class ShooterHoodIOSim implements ShooterHoodIO {
   private double appliedVoltage = 0.0;
 
   public ShooterHoodIOSim(
-      double loopPeriodSec,
-      ShooterFlywheelHardware hardware,
-      SimulationConfiguration configuration) {
+      double loopPeriodSec, ShooterHoodHardware hardware, SimulationConfiguration configuration) {
     hoodMotor =
         new DCMotorSim(
             LinearSystemId.createDCMotorSystem(

@@ -6,7 +6,6 @@ import edu.wpi.first.math.system.plant.DCMotor;
 import frc.robot.Constants;
 
 public class ShooterConstants {
-
   public static final Rotation2d turretMaxLimit = new Rotation2d(Math.PI);
   public static final Rotation2d turretMinLimit = new Rotation2d(-Math.PI);
 
@@ -87,6 +86,9 @@ public class ShooterConstants {
       new FlywheelMotorConfiguration(true, false, false, 60, 50, 12, -12, NeutralModeValue.Brake);
   public static final HoodMotorConfiguration hoodConfigs =
       new HoodMotorConfiguration(false, false, false, 60, 50, 12, -12, NeutralModeValue.Brake);
+
+  public static final SimulationConfiguration shooterSimConfig =
+      new SimulationConfiguration(DCMotor.getKrakenX44(1), 0.002);
 
   public static final FlywheelGains flywheelGains =
       new FlywheelGains(0.2, 0.0, 0.0, 0.1, 0.126, 0.0, 0.0);
