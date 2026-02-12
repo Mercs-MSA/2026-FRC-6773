@@ -5,7 +5,10 @@
 package frc.robot.subsystems.shooter;
 
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.subsystems.drive.Drive;
 import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.Logger;
 import org.littletonrobotics.junction.networktables.LoggedNetworkNumber;
@@ -42,6 +45,8 @@ public class Shooter extends SubsystemBase {
   private final ShooterHoodIO hoodHardware;
   private final ShooterHoodIOInputsAutoLogged hoodInputs = new ShooterHoodIOInputsAutoLogged();
 
+  private Drive drive;
+
   private final LoggedNetworkNumber turret_kP =
       new LoggedNetworkNumber("Shooter/Gains/Turret_kP", ShooterConstants.turretGains.p());
   private final LoggedNetworkNumber turret_kI =
@@ -77,6 +82,7 @@ public class Shooter extends SubsystemBase {
       new LoggedNetworkNumber("Shooter/Gains/Flywheel_kA", ShooterConstants.flywheelGains.a());
   private final LoggedNetworkNumber flywheel_kG =
       new LoggedNetworkNumber("Shooter/Gains/Flywheel_kG", ShooterConstants.flywheelGains.g());
+
   // private final LoggedNetworkNumber flywheel_maxVelocity =
   //     new LoggedNetworkNumber(
   //         "Shooter/MotionMagic/Flywheel_kMaxVelocity",
@@ -93,10 +99,12 @@ public class Shooter extends SubsystemBase {
   public Shooter(
       ShooterFlywheelIO flywheelHardwareIO,
       ShooterTurretIO turretHardwareIO,
-      ShooterHoodIO hoodHardwareIO) {
+      ShooterHoodIO hoodHardwareIO,
+      Drive drive) {
     flywheelHardware = flywheelHardwareIO;
     turretHardware = turretHardwareIO;
     hoodHardware = hoodHardwareIO;
+    this.drive = drive;
 
     // TODO: visualizer
   }
@@ -220,5 +228,17 @@ public class Shooter extends SubsystemBase {
     return new double[] {
       flywheelInputs.leftVelocityRotPerSec, flywheelInputs.rightVelocityRotPerSec
     };
+  }
+
+  public Command runFlywheelTrackTargetCommand() {
+    return runEnd(
+        () ->
+            setFlywheelVelocityRPS(
+                ShooterCalculator.getInstance().getParameters(drive).flywheelSpeed()),
+        () -> stop(true, false, false));
+  }
+
+  public Command shooterDefaultCommand() { // TODO: Run turret + hood tracking commands
+    return new ParallelCommandGroup(runFlywheelTrackTargetCommand());
   }
 }

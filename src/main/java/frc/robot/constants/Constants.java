@@ -5,7 +5,7 @@
 // license that can be found in the LICENSE file
 // at the root directory of this project.
 
-package frc.robot;
+package frc.robot.constants;
 
 import edu.wpi.first.wpilibj.RobotBase;
 
@@ -17,6 +17,14 @@ import edu.wpi.first.wpilibj.RobotBase;
 public final class Constants {
   public static final Mode simMode = Mode.SIM;
   public static final Mode currentMode = RobotBase.isReal() ? Mode.REAL : simMode;
+
+  public static final double loopPeriodSecs = 0.02;
+
+  public static boolean disableHAL = false;
+
+  public static void disableHAL() {
+    disableHAL = true;
+  }
 
   public static enum Mode {
     /** Running on a real robot. */

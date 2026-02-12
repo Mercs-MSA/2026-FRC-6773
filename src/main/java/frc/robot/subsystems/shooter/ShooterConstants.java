@@ -2,8 +2,10 @@ package frc.robot.subsystems.shooter;
 
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Rotation3d;
+import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.system.plant.DCMotor;
-import frc.robot.Constants;
+import frc.robot.constants.Constants;
 
 public class ShooterConstants {
   public static final Rotation2d turretMaxLimit = new Rotation2d(Math.PI);
@@ -13,6 +15,8 @@ public class ShooterConstants {
   public static final Rotation2d hoodMinLimit = new Rotation2d(1);
 
   public static final Rotation2d turretPositionTolerance = new Rotation2d(Math.toRadians(0.5));
+
+  public static Transform3d robotToTurret = new Transform3d(-0.19685, 0.0, 0.44, Rotation3d.kZero);
 
   public record ShooterFlywheelHardware(
       int flyWheelMotorLeftId, int flyWheelMotorRightId, double gearing) {}

@@ -21,6 +21,7 @@ import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.commands.AutonCommands;
 import frc.robot.commands.DriveCommands;
 import frc.robot.commands.TeleopCommands;
+import frc.robot.constants.Constants;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.drive.GyroIO;
@@ -146,7 +147,8 @@ public class RobotContainer {
                     ShooterConstants.hoodHardware,
                     ShooterConstants.hoodConfigs,
                     ShooterConstants.hoodGains,
-                    ShooterConstants.kStatusSignalUpdateFrequencyHz));
+                    ShooterConstants.kStatusSignalUpdateFrequencyHz),
+                drive);
         break;
 
       case SIM:
@@ -197,7 +199,8 @@ public class RobotContainer {
                 new ShooterTurretIOSim(
                     0.02, ShooterConstants.turretHardware, ShooterConstants.shooterSimConfig),
                 new ShooterHoodIOSim(
-                    0.02, ShooterConstants.hoodHardware, ShooterConstants.shooterSimConfig));
+                    0.02, ShooterConstants.hoodHardware, ShooterConstants.shooterSimConfig),
+                drive);
         break;
 
       default:
@@ -214,7 +217,7 @@ public class RobotContainer {
         intake = new Intake(null, null);
         transfer = new Transfer(null, null);
         spindexer = new Spindexer(new SpindexerIOSim(0, null, null, null));
-        shooter = new Shooter(null, null, null);
+        shooter = new Shooter(null, null, null, null);
         break;
     }
     teleopCommands = new TeleopCommands(intake, spindexer, transfer, shooter, controller);
@@ -260,6 +263,7 @@ public class RobotContainer {
             () -> -controller.getLeftY(),
             () -> -controller.getLeftX(),
             () -> -controller.getRightX()));
+    shooter.setDefaultCommand(shooter.shooterDefaultCommand());
 
     // controller.axisLessThan(4, )
 
@@ -304,11 +308,11 @@ public class RobotContainer {
         .onTrue(teleopCommands.runIntakeFloorPickup())
         .onFalse(teleopCommands.runIntakeSlowRollers());
 
-    controller
-        .rightTrigger()
-        .whileTrue(teleopCommands.startShoot())
-        // .whileTrue(teleopCommands.whileShooting())
-        .onFalse(teleopCommands.stopShoot());
+    // controller
+    //     .rightTrigger()
+    //     .whileTrue(teleopCommands.startShoot())
+    //     // .whileTrue(teleopCommands.whileShooting())
+    //     .onFalse(teleopCommands.stopShoot());
 
     controller.x().whileTrue(teleopCommands.spinAlt());
     controller.x().whileTrue(teleopCommands.startKick());

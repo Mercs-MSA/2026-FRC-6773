@@ -22,7 +22,7 @@ public class IntakePivotIOSim implements IntakePivotIO {
 
   // Create and use the feedback and feedforware controllers in here since we
   // are using the internal motor controllers
-  private TrapezoidProfile kProfile;
+  // private TrapezoidProfile kProfile;
 
   private final PIDController kFeedback;
 
@@ -113,7 +113,7 @@ public class IntakePivotIOSim implements IntakePivotIO {
     }
     goal = new TrapezoidProfile.State(goalPosition.getRadians(), 0.0);
 
-    setpoint = kProfile.calculate(kLoopPeriodSec, setpoint, goal);
+    // setpoint = kProfile.calculate(kLoopPeriodSec, setpoint, goal);
 
     double feedforwardEffort = kFeedforward.calculate(setpoint.position, setpoint.velocity);
     double feedbackEffort = kFeedback.calculate(kPivot.getAngleRads(), setpoint.position);
@@ -140,10 +140,11 @@ public class IntakePivotIOSim implements IntakePivotIO {
 
   // public void setGains(LoggedNetwork)
 
-  @Override
-  public void setMotionMagicConstraints(double maxVelocity, double maxAcceleration) {
-    kProfile = new TrapezoidProfile(new TrapezoidProfile.Constraints(maxVelocity, maxAcceleration));
-  }
+  // @Override //TODO: add back later
+  // public void setMotionMagicConstraints(double maxVelocity, double maxAcceleration) {
+  //   kProfile = new TrapezoidProfile(new TrapezoidProfile.Constraints(maxVelocity,
+  // maxAcceleration));
+  // }
 
   @Override
   public void resetPosition() {

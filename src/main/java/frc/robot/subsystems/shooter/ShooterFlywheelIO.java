@@ -11,6 +11,8 @@ public interface ShooterFlywheelIO {
   public static class ShooterFlywheelIOInputs {
     public boolean isMotorConnected = false;
 
+    public boolean hasCommand = false;
+
     public double leftVelocityRotPerSec = 0.0;
     public double rightVelocityRotPerSec = 0.0;
     public double appliedVoltage = 0.0;
