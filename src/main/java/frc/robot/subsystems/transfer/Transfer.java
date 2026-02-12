@@ -2,6 +2,7 @@ package frc.robot.subsystems.transfer;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.commands.TeleopCommands;
 import frc.robot.commands.TeleopCommands.ShooterState;
 import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.Logger;
@@ -18,15 +19,6 @@ public class Transfer extends SubsystemBase {
 
   public ShooterState shooterState = ShooterState.INACTIVE;
 
-  public enum TransferState {
-    STOW,
-    SPEEDINGUP,
-    READY,
-    FREEFORM,
-  }
-
-  public TransferState transferState;
-
   public Transfer(TransferIO kickerIO, TransferIO regulatorIO) {
     kicker = kickerIO;
     regulator = regulatorIO;
@@ -34,24 +26,25 @@ public class Transfer extends SubsystemBase {
 
   @Override
   public void periodic() {
-    // switch (shooterState) {
-    //   case INACTIVE:
-    //     regulator.stop();
-    //     kicker.stop();
-    //     break;
+    switch (TeleopCommands.globalState) {
+      case INACTIVE:
+        regulator.stop();
+        kicker.stop();
+        break;
 
-    //   case SPINUP:
-    //     regulator.setVelocity(12);
-    //     kicker.stop();
-    //     if (withinSpeed()) shooterState = ShooterState.SCORE;
-    //     break;
+      case SPINUP:
+        regulator.setVelocity(12);
+        kicker.stop();
+        if (withinSpeed()) TeleopCommands.globalState = ShooterState.SCORE;
+        break;
 
-    //   case SCORE:
-    //     regulator.setVelocity(12);
-    //     kicker.setVoltage(TransferConstants.kKickerVoltage.getAsDouble());
-    //     if (!withinSpeed()) shooterState = ShooterState.SPINUP;
-    //     break;
-    // }
+      case SCORE:
+        regulator.setVelocity(12);
+        kicker.setVoltage(TransferConstants.kKickerVoltage.getAsDouble());
+        if (!withinSpeed()) TeleopCommands.globalState = ShooterState.SPINUP;
+        break;
+    }
+    shooterState = TeleopCommands.globalState;
 
     kicker.updateInputs(kickerInputs);
     regulator.updateInputs(regulatorInputs);
@@ -60,7 +53,6 @@ public class Transfer extends SubsystemBase {
   }
 
   public void setRegulatorVelocity(double velocity) {
-    transferState = TransferState.FREEFORM;
     regulator.setVelocity(velocity);
   }
 
@@ -69,13 +61,12 @@ public class Transfer extends SubsystemBase {
   }
 
   public void setKickerVoltage(double voltage) {
-    transferState = TransferState.FREEFORM;
     kicker.setVoltage(voltage);
   }
 
   public void startTransfer(double shooterSpeed) {
     desiredShooterSpeed = shooterSpeed;
-    shooterState = ShooterState.SPINUP;
+    TeleopCommands.globalState = ShooterState.SPINUP;
   }
 
   @AutoLogOutput(key = "Transfer/State")
@@ -83,8 +74,8 @@ public class Transfer extends SubsystemBase {
     return this.shooterState;
   }
 
-  public void stopTransfer() {
-    shooterState = ShooterState.INACTIVE;
+  public void stop() {
+    TeleopCommands.globalState = ShooterState.INACTIVE;
   }
 
   public boolean withinSpeed() {
