@@ -4,7 +4,7 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.system.plant.LinearSystemId;
 import edu.wpi.first.wpilibj.simulation.DCMotorSim;
-import frc.robot.subsystems.shooter.ShooterConstants.ShooterFlywheelHardware;
+import frc.robot.subsystems.shooter.ShooterConstants.ShooterTurretHardware;
 import frc.robot.subsystems.shooter.ShooterConstants.SimulationConfiguration;
 
 public class ShooterTurretIOSim implements ShooterTurretIO {
@@ -17,9 +17,7 @@ public class ShooterTurretIOSim implements ShooterTurretIO {
   private double appliedVoltage = 0.0;
 
   public ShooterTurretIOSim(
-      double loopPeriodSec,
-      ShooterFlywheelHardware hardware,
-      SimulationConfiguration configuration) {
+      double loopPeriodSec, ShooterTurretHardware hardware, SimulationConfiguration configuration) {
     turretMotor =
         new DCMotorSim(
             LinearSystemId.createDCMotorSystem(

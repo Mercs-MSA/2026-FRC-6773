@@ -72,7 +72,6 @@ public class IntakePivotIOTalonFX implements IntakePivotIO {
     motorConfiguration.MotionMagic.MotionMagicAcceleration =
         gains.maxAccelerationRotationsPerSecondSquared();
     motorConfiguration.MotionMagic.MotionMagicJerk = gains.jerkRotationsPerSecondCubed();
-
     motorConfiguration.Slot1.kG = gains.g();
 
     motorConfiguration.CurrentLimits.SupplyCurrentLimitEnable =

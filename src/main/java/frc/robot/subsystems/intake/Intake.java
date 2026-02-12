@@ -9,10 +9,12 @@ import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj.util.Color8Bit;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.util.visualizers.PivotVisualizer;
+import java.util.HashMap;
 // import frc.robot.util.debugging.LoggedTunableNumber;
 import java.util.function.Supplier;
 import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.Logger;
+import org.littletonrobotics.junction.networktables.LoggedNetworkInput;
 import org.littletonrobotics.junction.networktables.LoggedNetworkNumber;
 
 public class Intake extends SubsystemBase {
@@ -42,6 +44,7 @@ public class Intake extends SubsystemBase {
   private final IntakeRollerIO kRollerHardware;
   private final IntakeRollerIOInputsAutoLogged kRollerInputs = new IntakeRollerIOInputsAutoLogged();
 
+  private final HashMap<String, LoggedNetworkInput> dashboard = new HashMap<>();
   private final LoggedNetworkNumber kP =
       new LoggedNetworkNumber("Intake/Gains/Pivot_kP", IntakeConstants.kPivotGains.p());
   private final LoggedNetworkNumber kI =
@@ -85,6 +88,14 @@ public class Intake extends SubsystemBase {
 
     pivotState = IntakeState.kFloorPickup;
 
+    dashboard.put("kP", kP);
+    dashboard.put("kI", kI);
+    dashboard.put("kD", kD);
+    dashboard.put("kS", kS);
+    dashboard.put("kV", kV);
+    dashboard.put("kA", kA);
+    dashboard.put("kG", kG);
+
     // TODO: roller visualizer
   }
   // testing
@@ -119,20 +130,16 @@ public class Intake extends SubsystemBase {
     // This says that if the value is changed in the advantageScope tool,
     // Then we change the values in the code. Saves deploy time.
     // More found in prerequisites slide
-    // LoggedNetworkNumber.ifChanged(
-    //   hashCode(),
-    //   () -> {
-    //     kPivotHardware.setGains(
-    //         kP.get(), kI.get(), kD.get(), kS.get(), kG.get(), kV.get(), kA.get());
-    //     //TODO: tunable voltage
-    //   },
-    //   kP,
-    //   kI,
-    //   kD,
-    //   kS,
-    //   kV,
-    //   kA,
-    //   kG);
+
+    kPivotHardware.setGains(
+        kP.getAsDouble(),
+        kI.getAsDouble(),
+        kD.getAsDouble(),
+        kS.getAsDouble(),
+        kV.getAsDouble(),
+        kA.getAsDouble(),
+        kG.getAsDouble());
+
     // LoggedNetworkNumber.ifChanged(
     //     hashCode(),
     //     () -> {

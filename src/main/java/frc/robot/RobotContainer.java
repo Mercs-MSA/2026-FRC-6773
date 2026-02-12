@@ -36,8 +36,11 @@ import frc.robot.subsystems.intake.IntakeRollerIOSim;
 import frc.robot.subsystems.intake.IntakeRollerIOTalonFX;
 import frc.robot.subsystems.shooter.Shooter;
 import frc.robot.subsystems.shooter.ShooterConstants;
+import frc.robot.subsystems.shooter.ShooterFlywheelIOSim;
 import frc.robot.subsystems.shooter.ShooterFlywheelIOTalonFX;
+import frc.robot.subsystems.shooter.ShooterHoodIOSim;
 import frc.robot.subsystems.shooter.ShooterHoodIOTalonFX;
+import frc.robot.subsystems.shooter.ShooterTurretIOSim;
 import frc.robot.subsystems.shooter.ShooterTurretIOTalonFX;
 import frc.robot.subsystems.spindexer.Spindexer;
 import frc.robot.subsystems.spindexer.SpindexerConstants;
@@ -187,8 +190,14 @@ public class RobotContainer {
                     TransferConstants.kSimulationRegulatorGains,
                     TransferConstants.kTransferSimulationConfiguration));
 
-        shooter = new Shooter(null, null, null);
-
+        shooter =
+            new Shooter(
+                new ShooterFlywheelIOSim(
+                    0.02, ShooterConstants.flywheelHardware, ShooterConstants.shooterSimConfig),
+                new ShooterTurretIOSim(
+                    0.02, ShooterConstants.turretHardware, ShooterConstants.shooterSimConfig),
+                new ShooterHoodIOSim(
+                    0.02, ShooterConstants.hoodHardware, ShooterConstants.shooterSimConfig));
         break;
 
       default:
@@ -208,8 +217,8 @@ public class RobotContainer {
         shooter = new Shooter(null, null, null);
         break;
     }
-    autonCommands = new AutonCommands();
     teleopCommands = new TeleopCommands(intake, spindexer, transfer, shooter, controller);
+    autonCommands = new AutonCommands(teleopCommands);
 
     // Set up auto routines
     autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());

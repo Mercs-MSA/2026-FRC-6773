@@ -138,6 +138,8 @@ public class IntakePivotIOSim implements IntakePivotIO {
     kFeedforward = new ArmFeedforward(s, g, v, a);
   }
 
+  // public void setGains(LoggedNetwork)
+
   @Override
   public void setMotionMagicConstraints(double maxVelocity, double maxAcceleration) {
     kProfile = new TrapezoidProfile(new TrapezoidProfile.Constraints(maxVelocity, maxAcceleration));

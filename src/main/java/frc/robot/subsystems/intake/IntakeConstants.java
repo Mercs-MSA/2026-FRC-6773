@@ -9,7 +9,6 @@ import frc.robot.Constants;
 import frc.robot.util.visualizers.PivotVisualizer.PivotVisualizerConfiguration;
 
 public class IntakeConstants {
-
   public record IntakePivotHardware(int motorId, double gearing) {}
 
   public record IntakeRollerHardware(int motorId, double gearing) {}
@@ -90,7 +89,7 @@ public class IntakeConstants {
 
   public static final Rotation2d kPivotPositionTolerance = Rotation2d.fromRotations(0.01);
 
-  public static final double kPivotGearing = 1.0 / 3.0; // TODO Check this value
+  public static final double kPivotGearing = 15.0 / 1.0; // TODO Check this value
 
   public static final double kRollerIntakingVoltage = 16.0;
   public static final double kRollersSlowVoltage = 1.0;
@@ -106,8 +105,7 @@ public class IntakeConstants {
       switch (Constants.currentMode) {
           // case REAL -> new IntakePivotGains(5.0, 0.0, 0.0, 1, 2, 20, 0.0, 0.0, 0.0, -0.4);
         case REAL -> new IntakePivotGains(0.0, 0.0, 0.0, 0, 0, 0, 0.0, 0.0, 0.0, 0.0);
-
-        case SIM -> new IntakePivotGains(550.0, 0.0, 0.0, 10.0, 4.0, 0.0, 0.0, 0.17, 0.06, 0.01);
+        case SIM -> new IntakePivotGains(5.5, 0.0, 0.0, 10.0, 4.0, 0.0, 0.0, 0.17, 0.06, 0.01);
         default -> new IntakePivotGains(0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0);
       };
 
