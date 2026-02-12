@@ -83,7 +83,7 @@ public class ShooterConstants {
   public static final TurretMotorConfiguration turretConfigs =
       new TurretMotorConfiguration(false, true, true, 60, 50, 12, -12, NeutralModeValue.Brake);
   public static final FlywheelMotorConfiguration flywheelConfigs =
-      new FlywheelMotorConfiguration(false, false, false, 60, 50, 12, -12, NeutralModeValue.Brake);
+      new FlywheelMotorConfiguration(true, false, false, 60, 50, 12, -12, NeutralModeValue.Brake);
   public static final HoodMotorConfiguration hoodConfigs =
       new HoodMotorConfiguration(false, false, false, 60, 50, 12, -12, NeutralModeValue.Brake);
 
