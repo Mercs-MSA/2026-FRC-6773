@@ -102,6 +102,7 @@ public class ShooterCalculator {
   }
 
   public LaunchingParameters getParameters() {
+
     if (latestParameters != null) {
       return latestParameters;
     }
