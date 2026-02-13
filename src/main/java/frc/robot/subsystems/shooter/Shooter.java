@@ -234,8 +234,7 @@ public class Shooter extends SubsystemBase {
     return runEnd(
         () ->
             setFlywheelVelocityRPS(ShooterCalculator.getInstance().getParameters().flywheelSpeed()),
-        () -> stop(true, false, fals
-        e));
+        () -> stop(true, false, false));
   }
 
   public Command shooterDefaultCommand() { // TODO: Run turret + hood tracking commands
