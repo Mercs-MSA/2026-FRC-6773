@@ -1,6 +1,7 @@
 package frc.robot.commands;
 
 import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.path.PathPlannerPath;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -11,73 +12,70 @@ import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.shooter.Shooter;
 import frc.robot.subsystems.spindexer.Spindexer;
 import frc.robot.subsystems.transfer.Transfer;
-
 import java.util.Optional;
 
-public class AutonCommands extends TeleopCommands{
+public class AutonCommands extends TeleopCommands {
 
-	private boolean stopRollers = false;
-	private boolean stopPivot = false;
-					
-	public AutonCommands(
-		Intake intake,
-		Spindexer indexer,
-		Transfer transfer,
-		Shooter shooter,
-		CommandXboxController controller) 
-	{
-		super(intake, indexer, transfer, shooter, controller);
-	}
+  public AutonCommands(
+      Intake intake,
+      Spindexer indexer,
+      Transfer transfer,
+      Shooter shooter,
+      CommandXboxController controller) {
+    super(intake, indexer, transfer, shooter, controller);
+  }
 
-	public Command getPathCommand(String pathName) {
-		try {
-		// Load the path you want to follow using its name in the GUI
-		PathPlannerPath path = PathPlannerPath.fromChoreoTrajectory(pathName);
+  public void registerNamedCommands() {
+    NamedCommands.registerCommand("IntakeDown", stowIntake());
+  }
 
-		// Create a path following command using AutoBuilder. This will also trigger event markers.
-		return AutoBuilder.followPath(path);
-		} catch (Exception e) {
-		DriverStation.reportError("Big oops: " + e.getMessage(), e.getStackTrace());
-		return Commands.none();
-		}
-	}
+  public Command getPathCommand(String pathName) {
+    try {
+      // Load the path you want to follow using its name in the GUI
+      PathPlannerPath path = PathPlannerPath.fromChoreoTrajectory(pathName);
 
-	public Optional<PathPlannerPath> getTraj(String pathName) {
-		try {
-		return Optional.of(PathPlannerPath.fromChoreoTrajectory(pathName));
-		} catch (Exception e) {
-		e.printStackTrace();
-		return Optional.empty();
-		}
-	}
+      // Create a path following command using AutoBuilder. This will also trigger event markers.
+      return AutoBuilder.followPath(path);
+    } catch (Exception e) {
+      DriverStation.reportError("Big oops: " + e.getMessage(), e.getStackTrace());
+      return Commands.none();
+    }
+  }
 
-	public Command getAutonomousSequence(String startChoice) {
-		SequentialCommandGroup autonCommand = new SequentialCommandGroup();
+  public Optional<PathPlannerPath> getTraj(String pathName) {
+    try {
+      return Optional.of(PathPlannerPath.fromChoreoTrajectory(pathName));
+    } catch (Exception e) {
+      e.printStackTrace();
+      return Optional.empty();
+    }
+  }
 
-		switch (startChoice) {
-		case "CENTER":
-			autonCommand.addCommands(getPathCommand("C_Start_Climb"));
-			break;
-		case "RIGHT":
-			autonCommand.addCommands(getPathCommand("H_Start_HIntake"));
-			autonCommand.addCommands(runIntakeFloorPickup());
-			autonCommand.addCommands(getPathCommand("H_Intake_HSStart"));
-			autonCommand.addCommands(startShoot());
-			break;
-		case "LEFT":
-			autonCommand.addCommands(getPathCommand("D_Start_DIntake"));
-			autonCommand.addCommands(runIntakeFloorPickup());
-			autonCommand.addCommands(getPathCommand("D_Intake_DSStart"));
-			autonCommand.addCommands(startShoot());
-			break;
-		default:
-			DriverStation.reportError("Big oops: Invalid Start Pos", false);
-			// Do nothing auton
-			break;
-		}
+  public Command getAutonomousSequence(String startChoice) {
+    SequentialCommandGroup autonCommand = new SequentialCommandGroup();
 
-		return autonCommand;
-	}
+    switch (startChoice) {
+      case "CENTER":
+        autonCommand.addCommands(getPathCommand("C_Start_Climb.traj"));
+        break;
+      case "RIGHT":
+        autonCommand.addCommands(getPathCommand("H_Start_Intake"));
+        autonCommand.addCommands(runIntakeFloorPickup());
+        autonCommand.addCommands(getPathCommand("H_Intake_SStart"));
+        autonCommand.addCommands(startShoot());
+        break;
+      case "LEFT":
+        autonCommand.addCommands(getPathCommand("D_Start_Intake"));
+        autonCommand.addCommands(runIntakeFloorPickup());
+        autonCommand.addCommands(getPathCommand("D_Intake_SStart"));
+        autonCommand.addCommands(startShoot());
+        break;
+      default:
+        DriverStation.reportError("Big oops: Invalid Start Pos", false);
+        // Do nothing auton
+        break;
+    }
 
-
+    return autonCommand;
+  }
 }

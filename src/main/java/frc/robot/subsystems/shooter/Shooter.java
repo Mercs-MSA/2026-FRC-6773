@@ -120,15 +120,13 @@ public class Shooter extends SubsystemBase {
     //   Logger.recordOutput("Shooter/PivotGoal", "NONE");
     // }
 
-    // Check if pivot is attempting to move beyond its limitations
+    // Check if turret is attempting to move beyond its limitations
     if (getPivotPosition().getDegrees() > ShooterConstants.turretMaxLimit.getDegrees()
         && turretInputs.appliedVoltage > 0.0) {
       stop(false, true, false);
     } else if (getPivotPosition().getDegrees() < ShooterConstants.turretMinLimit.getDegrees()
         && turretInputs.appliedVoltage < 0.0) {
       stop(false, true, false);
-    } else {
-      // Do nothing if limits are not reached
     }
   }
 
@@ -203,7 +201,7 @@ public class Shooter extends SubsystemBase {
   }
 
   @AutoLogOutput(key = "Turret/Feedback/AtGoal")
-  public boolean turrettAtGoal() {
+  public boolean turretAtGoal() {
     return Math.abs(getTurretErrorDegrees())
         < ShooterConstants.turretPositionTolerance.getDegrees();
   }

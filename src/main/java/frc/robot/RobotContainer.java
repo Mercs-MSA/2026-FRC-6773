@@ -123,6 +123,7 @@ public class RobotContainer {
             new Transfer(
                 new KickerIOTalonFX(
                     TransferConstants.kTransferKickerHardware,
+                    TransferConstants.kKickerGains,
                     TransferConstants.kTransferConfiguration,
                     TransferConstants.kStatusSignalUpdateFrequencyHz),
                 new RegulatorIOTalonFX(
@@ -219,12 +220,15 @@ public class RobotContainer {
     }
     teleopCommands = new TeleopCommands(intake, spindexer, transfer, shooter, controller);
     autonCommands = new AutonCommands(intake, spindexer, transfer, shooter, controller);
+    autonCommands.registerNamedCommands();
 
     // Set up auto routines
     autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
 
     autoChooser.addOption("Test Path", autonCommands.getPathCommand("TuningPath"));
     autoChooser.addOption("Center Bump Path", autonCommands.getAutonomousSequence("CENTER"));
+    autoChooser.addOption("Right Path", autonCommands.getAutonomousSequence("RIGHT"));
+    autoChooser.addOption("Left Path", autonCommands.getAutonomousSequence("LEFT"));
 
     // Set up SysId routines
     autoChooser.addOption(

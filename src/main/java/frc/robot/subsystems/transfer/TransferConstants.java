@@ -63,6 +63,8 @@ public class TransferConstants {
 
   public static final TransferGains kRegulatorGains =
       new TransferGains(0.0, 0, 0.0, 0.12, 0.1); // TODO: Values need to be tuned
+  public static final TransferGains kKickerGains =
+      new TransferGains(0.0, 0, 0.0, 0.12, 0.1); // TODO: Values need to be tuned
 
   public static final TransferGains kSimulationRegulatorGains =
       new TransferGains(

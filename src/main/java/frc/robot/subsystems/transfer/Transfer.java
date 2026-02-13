@@ -15,10 +15,6 @@ public class Transfer extends SubsystemBase {
   private TransferIOInputsAutoLogged regulatorInputs = new TransferIOInputsAutoLogged();
   private TransferIO regulator;
 
-  private double desiredShooterSpeed;
-
-  public ShooterState shooterState = ShooterState.INACTIVE;
-
   public Transfer(TransferIO kickerIO, TransferIO regulatorIO) {
     kicker = kickerIO;
     regulator = regulatorIO;
@@ -26,25 +22,6 @@ public class Transfer extends SubsystemBase {
 
   @Override
   public void periodic() {
-    switch (TeleopCommands.globalState) {
-      case INACTIVE:
-        regulator.stop();
-        kicker.stop();
-        break;
-
-      case SPINUP:
-        regulator.setVelocity(12);
-        kicker.stop();
-        if (withinSpeed()) TeleopCommands.globalState = ShooterState.SCORE;
-        break;
-
-      case SCORE:
-        regulator.setVelocity(12);
-        kicker.setVoltage(TransferConstants.kKickerVoltage.getAsDouble());
-        if (!withinSpeed()) TeleopCommands.globalState = ShooterState.SPINUP;
-        break;
-    }
-    shooterState = TeleopCommands.globalState;
 
     kicker.updateInputs(kickerInputs);
     regulator.updateInputs(regulatorInputs);
@@ -64,14 +41,12 @@ public class Transfer extends SubsystemBase {
     kicker.setVoltage(voltage);
   }
 
-  public void startTransfer(double shooterSpeed) {
-    desiredShooterSpeed = shooterSpeed;
-    TeleopCommands.globalState = ShooterState.SPINUP;
+  public void setKickerVelocity(double velocity) {
+    kicker.setVelocity(velocity);
   }
 
-  @AutoLogOutput(key = "Transfer/State")
-  public ShooterState getState() {
-    return this.shooterState;
+  public void startTransfer(double shooterSpeed) {
+    TeleopCommands.globalState = ShooterState.SPINUP;
   }
 
   public void stop() {
@@ -80,10 +55,6 @@ public class Transfer extends SubsystemBase {
 
   public boolean withinSpeed() {
     return MathUtil.isNear(12, regulator.getVelocity(), 1);
-  }
-
-  public double desiredSpeed() {
-    return desiredShooterSpeed * TransferConstants.kMinRegulatorVelocityScalar.getAsDouble();
   }
 
   @AutoLogOutput(key = "Transfer/Regulator/Velocity")
