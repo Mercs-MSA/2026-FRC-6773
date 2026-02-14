@@ -17,7 +17,7 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
-import frc.robot.subsystems.drive.DriveConstants;
+import edu.wpi.first.math.util.Units;
 import frc.robot.util.geometry.GeomUtil;
 import java.util.*;
 import lombok.Getter;
@@ -29,6 +29,8 @@ import org.littletonrobotics.junction.AutoLogOutput;
 public class RobotState {
   // Constants
   private static final double poseBufferSizeSec = 2.0;
+  private static final double turretAngleBufferSizeSec = 2.0;
+
   private static final Matrix<N3, N1> odometryStateStdDevs =
       new Matrix<>(VecBuilder.fill(0.003, 0.003, 0.002));
 
@@ -39,6 +41,8 @@ public class RobotState {
   @Getter @AutoLogOutput private Pose2d estimatedPose = Pose2d.kZero;
   private final TimeInterpolatableBuffer<Pose2d> poseBuffer =
       TimeInterpolatableBuffer.createBuffer(poseBufferSizeSec);
+  private final TimeInterpolatableBuffer<Rotation2d> turretAngleBuffer =
+      TimeInterpolatableBuffer.createBuffer(turretAngleBufferSizeSec);
   private final Matrix<N3, N1> qStdDevs = new Matrix<>(Nat.N3(), Nat.N1());
 
   // Odometry fields
@@ -67,7 +71,14 @@ public class RobotState {
     for (int i = 0; i < 3; ++i) {
       qStdDevs.set(i, 0, Math.pow(odometryStateStdDevs.get(i, 0), 2));
     }
-    kinematics = new SwerveDriveKinematics(DriveConstants.moduleTranslations);
+    // Module translations: 21.5 inches trackwidth, convert to meters
+    double trackWidthMeters = Units.inchesToMeters(21.5);
+    kinematics =
+        new SwerveDriveKinematics(
+            new Translation2d(trackWidthMeters / 2, trackWidthMeters / 2),
+            new Translation2d(trackWidthMeters / 2, -trackWidthMeters / 2),
+            new Translation2d(-trackWidthMeters / 2, trackWidthMeters / 2),
+            new Translation2d(-trackWidthMeters / 2, -trackWidthMeters / 2));
   }
 
   // MARK: - Drive & vision methods
@@ -88,7 +99,9 @@ public class RobotState {
   }
 
   public ChassisSpeeds getFieldVelocity() {
-    return ChassisSpeeds.fromRobotRelativeSpeeds(robotVelocity, getRotation());
+    // Use odometry rotation (real-time gyro) not estimated rotation (vision-fused with latency)
+    // This ensures velocity commands are rotated using the actual current heading
+    return ChassisSpeeds.fromRobotRelativeSpeeds(robotVelocity, odometryPose.getRotation());
   }
 
   /** Adds a new odometry sample from the drive subsystem. */
@@ -113,6 +126,16 @@ public class RobotState {
     // Apply odometry delta to vision pose estimate
     Twist2d finalTwist = lastOdometryPose.log(odometryPose);
     estimatedPose = estimatedPose.exp(finalTwist);
+  }
+
+  @AutoLogOutput
+  public Optional<Rotation2d> getTurretAngle(double timestamp) {
+    return turretAngleBuffer.getSample(timestamp);
+  }
+
+  /** Adds a turret pose observation from the turret subsystem */
+  public void addTurretObservation(TurretObservation observation) {
+    turretAngleBuffer.addSample(observation.timestamp(), observation.turretAngle);
   }
 
   /** Adds a new vision pose observation from the vision subsystem. */
@@ -183,4 +206,6 @@ public class RobotState {
       double timestamp, SwerveModulePosition[] wheelPositions, Optional<Rotation2d> gyroAngle) {}
 
   public record VisionObservation(double timestamp, Pose3d visionPose, Matrix<N3, N1> stdDevs) {}
+
+  public record TurretObservation(double timestamp, Rotation2d turretAngle) {}
 }
