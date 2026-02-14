@@ -303,22 +303,22 @@ public class RobotContainer {
                     drive)
                 .ignoringDisable(true));
 
-    // controller
-    //     .leftTrigger(0.25)
-    //     .onTrue(teleopCommands.runIntakeFloorPickup())
-    //     .onFalse(teleopCommands.runIntakeSlowRollers());
+    controller
+        .leftTrigger(0.25)
+        .onTrue(teleopCommands.runIntakeFloorPickup())
+        .onFalse(teleopCommands.runIntakeSlowRollers());
 
-    // controller
-    //     .rightTrigger()
-    //     .whileTrue(teleopCommands.startShoot())
-    //     // .whileTrue(teleopCommands.whileShooting())
-    //     .onFalse(teleopCommands.stopShoot());
+    controller
+        .rightTrigger()
+        .whileTrue(teleopCommands.startShoot())
+        // .whileTrue(teleopCommands.whileShooting())
+        .onFalse(teleopCommands.stopShoot());
 
-    // controller.x().whileTrue(teleopCommands.spinAlt());
-    // controller.x().whileTrue(teleopCommands.startKick());
+    controller.x().whileTrue(teleopCommands.spinAlt());
+    controller.x().whileTrue(teleopCommands.startKick());
 
-    // controller.x().onFalse(teleopCommands.spinStop());
-    // controller.x().onFalse(teleopCommands.stopKick());
+    controller.x().onFalse(teleopCommands.spinStop());
+    controller.x().onFalse(teleopCommands.stopKick());
   }
 
   /**
