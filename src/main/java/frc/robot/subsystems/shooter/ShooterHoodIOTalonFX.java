@@ -9,8 +9,8 @@ import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.configs.CANcoderConfiguration;
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
-import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.controls.NeutralOut;
+import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
@@ -44,7 +44,7 @@ public class ShooterHoodIOTalonFX implements ShooterHoodIO {
 
   // Control modes
   private final VoltageOut kVoltageControl = new VoltageOut(0.0);
-  private final MotionMagicVoltage kPositionControl = new MotionMagicVoltage(0.0);
+  private final PositionVoltage kPositionControl = new PositionVoltage(0.0);
 
   public ShooterHoodIOTalonFX(
       String canbus,
@@ -58,8 +58,10 @@ public class ShooterHoodIOTalonFX implements ShooterHoodIO {
     motorConfiguration.Slot0.kP = gains.p();
     motorConfiguration.Slot0.kI = gains.i();
     motorConfiguration.Slot0.kD = gains.d();
+    motorConfiguration.Slot0.kD = gains.s();
     motorConfiguration.Slot0.kV = gains.v();
     motorConfiguration.Slot0.kA = gains.a();
+    motorConfiguration.Slot0.kD = gains.g();
 
     motorConfiguration.CurrentLimits.SupplyCurrentLimitEnable =
         configuration.enableSupplyCurrentLimit();

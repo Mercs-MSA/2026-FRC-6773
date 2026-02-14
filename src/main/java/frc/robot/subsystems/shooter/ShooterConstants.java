@@ -39,7 +39,7 @@ public class ShooterConstants {
   public record FlywheelGains(
       double p, double i, double d, double s, double v, double a, double g) {}
 
-  public record HoodGains(double p, double i, double d, double v, double a) {}
+  public record HoodGains(double p, double i, double d, double s, double v, double a, double g) {}
 
   public record FlywheelMotorConfiguration(
       boolean invert,
@@ -78,25 +78,25 @@ public class ShooterConstants {
 
   public static final ShooterHoodHardware hoodHardware =
       new ShooterHoodHardware(
-          55, 1 // TODO:  Check and update
+          55, 163.0 // TODO:  Check and update
           );
 
   public static final ShooterTurretHardware turretHardware =
-      new ShooterTurretHardware(53, 54, 102 / 25);
+      new ShooterTurretHardware(53, 54, 25 / 102);
 
   public static final TurretMotorConfiguration turretConfigs =
       new TurretMotorConfiguration(false, true, true, 60, 50, 12, -12, NeutralModeValue.Brake);
   public static final FlywheelMotorConfiguration flywheelConfigs =
       new FlywheelMotorConfiguration(true, false, false, 60, 50, 12, -12, NeutralModeValue.Brake);
   public static final HoodMotorConfiguration hoodConfigs =
-      new HoodMotorConfiguration(false, false, false, 60, 50, 12, -12, NeutralModeValue.Brake);
+      new HoodMotorConfiguration(true, false, false, 60, 50, 12, -12, NeutralModeValue.Brake);
 
   public static final SimulationConfiguration shooterSimConfig =
       new SimulationConfiguration(DCMotor.getKrakenX44(1), 0.002);
 
   public static final FlywheelGains flywheelGains =
       new FlywheelGains(0.2, 0.0, 0.0, 0.1, 0.126, 0.0, 0.0);
-  public static final HoodGains hoodGains = new HoodGains(1, 0, 0, 0, 0);
+  public static final HoodGains hoodGains = new HoodGains(70, 0, 0, 0.1, 0, 0, 0.3);
   public static final TurretGains turretGains =
       switch (Constants.currentMode) {
         case REAL -> new TurretGains(1, 0.0, 0.0, 0.0, 0.0, 0.0, 0.2, 0.0, 0);

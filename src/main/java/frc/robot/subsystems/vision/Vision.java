@@ -138,6 +138,10 @@ public class Vision extends SubsystemBase {
             observation.pose().toPose2d(),
             observation.timestamp(),
             VecBuilder.fill(linearStdDev, linearStdDev, angularStdDev));
+
+        //     allVisionObservations.stream()
+        // .sorted(Comparator.comparingDouble(VisionObservation::timestamp))
+        // .forEach(RobotState.getInstance()::addVisionObservation);
       }
 
       // Log camera metadata

@@ -93,8 +93,7 @@ public class TeleopCommands {
   public Command stopShoot() {
     return Commands.run(
         () -> {
-          // mTransfer.setRegulatorVelocity(0);
-          shooter.stop(true, false, false);
+          // shooter.stop(true, false, false);
           mTransfer.setRegulatorVelocity(0);
         });
   }
