@@ -102,7 +102,7 @@ public class TeleopCommands {
   public Command startShoot() {
     return Commands.run(
         () -> {
-          shooter.setFlywheelVelocityRPS(60);
+          // shooter.setFlywheelVelocityRPS(60);
           mTransfer.setRegulatorVelocity(50);
         });
   }
