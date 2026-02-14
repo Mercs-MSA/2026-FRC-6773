@@ -2,8 +2,10 @@ package frc.robot.subsystems.transfer;
 
 import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.StatusSignal;
+import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.NeutralOut;
+import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
@@ -13,6 +15,7 @@ import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.Current;
 import edu.wpi.first.units.measure.Temperature;
 import edu.wpi.first.units.measure.Voltage;
+import frc.robot.subsystems.transfer.TransferConstants.TransferGains;
 import frc.robot.subsystems.transfer.TransferConstants.TransferHardware;
 import frc.robot.subsystems.transfer.TransferConstants.TransferTalonFXConfiguration;
 
@@ -33,6 +36,7 @@ public class KickerIOTalonFX implements TransferIO {
   public KickerIOTalonFX(
       String canbus,
       TransferHardware kickerHardware,
+      TransferGains gains,
       TransferTalonFXConfiguration config,
       double statusSignalUpdateFrequency) {
     kicker = new TalonFX(kickerHardware.motorId(), canbus);
@@ -48,6 +52,13 @@ public class KickerIOTalonFX implements TransferIO {
             ? InvertedValue.CounterClockwise_Positive
             : InvertedValue.Clockwise_Positive;
     motorconfig.MotorOutput.NeutralMode = config.neutralMode();
+    motorconfig.Slot0 =
+        new Slot0Configs()
+            .withKP(gains.p())
+            .withKI(gains.i())
+            .withKD(gains.d())
+            .withKV(gains.v())
+            .withKS(gains.s());
     velocityRotPerSec = kicker.getVelocity();
     appliedVolts = kicker.getMotorVoltage();
     supplyAmps = kicker.getSupplyCurrent();
@@ -68,11 +79,12 @@ public class KickerIOTalonFX implements TransferIO {
 
   public KickerIOTalonFX(
       TransferHardware kickerhardware,
+      TransferGains gains,
       TransferTalonFXConfiguration config,
       double statusSignalUpdateFrequency) {
 
     // Assumes the rio is the CANBus
-    this("rio", kickerhardware, config, statusSignalUpdateFrequency);
+    this("rio", kickerhardware, gains, config, statusSignalUpdateFrequency);
   }
 
   public void updateInputs(TransferIOInputs inputs) {
@@ -91,6 +103,11 @@ public class KickerIOTalonFX implements TransferIO {
   @Override
   public void setVoltage(double volts) {
     kicker.setControl(kVoltageControl.withOutput(MathUtil.clamp(volts, -12, 12)));
+  }
+
+  @Override
+  public void setVelocity(double vel) {
+    kicker.setControl(new VelocityVoltage(vel));
   }
 
   @Override

@@ -73,6 +73,10 @@ public class Transfer extends SubsystemBase {
     kicker.setVoltage(voltage);
   }
 
+  public void setKickerVelocity(double velocity) {
+    kicker.setVelocity(velocity);
+  } 
+
   public void startTransfer(double shooterSpeed) {
     desiredShooterSpeed = shooterSpeed;
     shooterState = ShooterState.SPINUP;

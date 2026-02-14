@@ -128,6 +128,7 @@ public class RobotContainer {
             new Transfer(
                 new KickerIOTalonFX(
                     TransferConstants.kTransferKickerHardware,
+                    TransferConstants.kKickerGains,
                     TransferConstants.kTransferConfiguration,
                     TransferConstants.kStatusSignalUpdateFrequencyHz),
                 new RegulatorIOTalonFX(
