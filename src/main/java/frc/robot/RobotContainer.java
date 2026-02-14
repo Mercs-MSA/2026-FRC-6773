@@ -97,7 +97,11 @@ public class RobotContainer {
                 new ModuleIOTalonFX(DriveConstants.BackRight));
         vision =
             new Vision(
-                drive::addVisionMeasurement,
+                (visionRobotPose, timestamp, stds) -> {
+                  drive.addVisionMeasurement(visionRobotPose, timestamp, stds);
+                  RobotState.getInstance()
+                      .addVisionObservation(visionRobotPose, timestamp, stds);
+                },
                 new VisionIOLimelight(camera0Name, drive::getRotation),
                 new VisionIOLimelight(camera1Name, drive::getRotation));
         intake =
@@ -212,7 +216,7 @@ public class RobotContainer {
                 new ModuleIO() {},
                 new ModuleIO() {},
                 new ModuleIO() {});
-        vision = new Vision(drive::addVisionMeasurement, new VisionIO() {}, new VisionIO() {});
+        vision = new Vision(RobotState.getInstance()::addVisionObservation, new VisionIO() {}, new VisionIO() {});
 
         intake = new Intake(null, null);
         transfer = new Transfer(null, null);

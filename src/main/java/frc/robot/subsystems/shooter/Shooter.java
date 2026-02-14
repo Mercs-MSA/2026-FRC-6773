@@ -268,13 +268,22 @@ public class Shooter extends SubsystemBase {
   //     () -> stop(true, false, false));
   // }
 
-  public Command runTurretTrackTargetCommand() {
+  public Command runTrackTargetCommand() {
     return run(
         () -> {
           var params = ShooterCalculator.getInstance().getParameters();
           // setFieldRelativeTurretTarget(params.turretAngle(), params.turretVelocity());
           setFlywheelVelocityRPS(params.flywheelSpeed());
+          setHoodPosition(Rotation2d.fromRadians(params.hoodAngle()));
           // setLaunchState(LaunchState.TRACKING);
+        });
+  }
+
+  public Command runHoodTrackTargetCommand() { //Todo: add velocity (similar to turret)
+    return run(
+        () -> {
+          var params = ShooterCalculator.getInstance().getParameters();
+          setHoodPosition(Rotation2d.fromRadians(params.hoodAngle()));
         });
   }
 
@@ -354,6 +363,6 @@ public class Shooter extends SubsystemBase {
   }
 
   public Command shooterDefaultCommand() { // TODO: Run turret + hood tracking commands
-    return runTurretTrackTargetCommand();
+    return runTrackTargetCommand();
   }
 }
