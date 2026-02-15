@@ -40,7 +40,6 @@ public class KickerIOTalonFX implements TransferIO {
       String canbus,
       TransferHardware kickerHardware,
       TransferGains gains,
-      TransferGains gains,
       TransferTalonFXConfiguration config,
       double statusSignalUpdateFrequency) {
     kicker = new TalonFX(kickerHardware.motorId(), canbus);
@@ -92,12 +91,10 @@ public class KickerIOTalonFX implements TransferIO {
   public KickerIOTalonFX(
       TransferHardware kickerhardware,
       TransferGains gains,
-      TransferGains gains,
       TransferTalonFXConfiguration config,
       double statusSignalUpdateFrequency) {
 
     // Assumes the rio is the CANBus
-    this("rio", kickerhardware, gains, config, statusSignalUpdateFrequency);
     this("rio", kickerhardware, gains, config, statusSignalUpdateFrequency);
   }
 
