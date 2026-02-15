@@ -36,4 +36,7 @@ public final class Constants {
     /** Replaying from a log file. */
     REPLAY
   }
+
+  public static final double speedDecrementRatio =
+      5.0; // TODO: FIND THE PROPER THING OF THIS, IT IS JUST A
 }

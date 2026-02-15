@@ -1,30 +1,32 @@
 package frc.robot.commands;
 
 import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.path.PathPlannerPath;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import frc.robot.subsystems.intake.Intake;
+import frc.robot.subsystems.shooter.Shooter;
+import frc.robot.subsystems.spindexer.Spindexer;
+import frc.robot.subsystems.transfer.Transfer;
 import java.util.Optional;
 
-public class AutonCommands {
+public class AutonCommands extends TeleopCommands {
 
-  private boolean stopRollers = false;
-  private boolean stopPivot = false;
+  public AutonCommands(
+      Intake intake,
+      Spindexer indexer,
+      Transfer transfer,
+      Shooter shooter,
+      CommandXboxController controller) {
+    super(intake, indexer, transfer, shooter, controller);
+  }
 
-  private TeleopCommands teleCommands;
-  // public TeleopCommands(Elevator elevator, Intake intake, Manipulator manipulator,
-  // CommandXboxController controller) {
-  //     kElevator = elevator;
-  //     kIntake = intake;
-  //     kManipulator = manipulator;
-  //     kController = controller;
-  //     // kClimb = climb;
-  // }
-
-  public AutonCommands(TeleopCommands teleopCommands) {
-    this.teleCommands = teleopCommands;
+  public void registerNamedCommands() {
+    NamedCommands.registerCommand("IntakeDown", stowIntake());
   }
 
   public Command getPathCommand(String pathName) {
@@ -54,19 +56,19 @@ public class AutonCommands {
 
     switch (startChoice) {
       case "CENTER":
-        autonCommand.addCommands(getPathCommand("C_Start_Climb"));
+        autonCommand.addCommands(getPathCommand("C_Start_Climb.traj"));
         break;
       case "RIGHT":
-        autonCommand.addCommands(getPathCommand("H_Start_HIntake"));
-        autonCommand.addCommands(teleCommands.runIntakeFloorPickup());
-        autonCommand.addCommands(getPathCommand("H_Intake_HSStart"));
-        autonCommand.addCommands(teleCommands.startShoot());
+        autonCommand.addCommands(getPathCommand("H_Start_Intake"));
+        autonCommand.addCommands(runIntakeFloorPickup());
+        autonCommand.addCommands(getPathCommand("H_Intake_SStart"));
+        autonCommand.addCommands(startShoot());
         break;
       case "LEFT":
-        autonCommand.addCommands(getPathCommand("D_Start_DIntake"));
-        autonCommand.addCommands(teleCommands.runIntakeFloorPickup());
-        autonCommand.addCommands(getPathCommand("D_Intake_DSStart"));
-        autonCommand.addCommands(teleCommands.startShoot());
+        autonCommand.addCommands(getPathCommand("D_Start_Intake"));
+        autonCommand.addCommands(runIntakeFloorPickup());
+        autonCommand.addCommands(getPathCommand("D_Intake_SStart"));
+        autonCommand.addCommands(startShoot());
         break;
       default:
         DriverStation.reportError("Big oops: Invalid Start Pos", false);

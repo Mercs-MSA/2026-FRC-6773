@@ -9,11 +9,14 @@ import org.littletonrobotics.junction.Logger;
 
 public class Spindexer extends SubsystemBase {
 
+  public enum SpindexerState {
+    INACTIVE,
+    ACTIVE,
+    MANUAL
+  }
+
   private final SpindexerIO kSpindexerHardware;
   private final SpindexerIOInputsAutoLogged kSpindexerInputs = new SpindexerIOInputsAutoLogged();
-  private double constantVel = 0.0;
-
-  public ShooterState shooterState = ShooterState.INACTIVE;
 
   public Spindexer(SpindexerIO kSpindexerIO) {
     this.kSpindexerHardware = kSpindexerIO;
@@ -21,17 +24,6 @@ public class Spindexer extends SubsystemBase {
 
   @Override
   public void periodic() {
-    switch (shooterState) {
-      case INACTIVE:
-        stopSpindexer();
-        break;
-      case SPINUP:
-        stopSpindexer();
-      case SCORE:
-        setVelocity(12.0);
-        break;
-    }
-
     kSpindexerHardware.updateInputs(kSpindexerInputs);
     Logger.processInputs("Spindexer/Inputs", kSpindexerInputs);
   }
@@ -49,17 +41,16 @@ public class Spindexer extends SubsystemBase {
     return kSpindexerHardware.getVelocity();
   }
 
-  @AutoLogOutput(key = "Spindexer/Outputs/StateVal")
-  public ShooterState getState() {
-    return this.shooterState;
-  }
+  // @AutoLogOutput(key = "Spindexer/Outputs/StateVal")
+  // public ShooterState getState() {
+  //   return this.shooterState;
+  // }
 
   public void stopSpindexer() {
     kSpindexerHardware.stop();
-    constantVel = 0;
   }
 
-  public void setState(ShooterState state) {
-    shooterState = state;
-  }
+  // public void setState(ShooterState state) {
+  //   shooterState = state;
+  // }
 }

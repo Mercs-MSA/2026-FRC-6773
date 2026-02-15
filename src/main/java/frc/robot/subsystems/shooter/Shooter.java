@@ -235,7 +235,7 @@ public class Shooter extends SubsystemBase {
   }
 
   @AutoLogOutput(key = "Turret/Feedback/AtGoal")
-  public boolean turrettAtGoal() {
+  public boolean turretAtGoal() {
     return Math.abs(getTurretErrorDegrees())
         < ShooterConstants.turretPositionTolerance.getDegrees();
   }

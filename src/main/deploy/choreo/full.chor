@@ -5,6 +5,20 @@
  "variables":{
   "expressions":{},
   "poses":{
+   "C_Climb":{
+    "x":{
+     "exp":"1.7 m",
+     "val":1.7
+    },
+    "y":{
+     "exp":"3.3 m",
+     "val":3.3
+    },
+    "heading":{
+     "exp":"180 deg",
+     "val":3.141592653589793
+    }
+   },
    "C_Start":{
     "x":{
      "exp":"3.575 m",
@@ -15,8 +29,8 @@
      "val":3.75
     },
     "heading":{
-     "exp":"180 deg",
-     "val":3.141592653589793
+     "exp":"0 deg",
+     "val":0.0
     }
    },
    "CircleCenter":{
@@ -133,16 +147,16 @@
    },
    "H_Climb":{
     "x":{
-     "exp":"1.7 m",
-     "val":1.7
+     "exp":"0.75 m",
+     "val":0.75
     },
     "y":{
-     "exp":"3.3 m",
-     "val":3.3
+     "exp":"2.625 m",
+     "val":2.625
     },
     "heading":{
-     "exp":"180 deg",
-     "val":3.141592653589793
+     "exp":"-90 deg",
+     "val":-1.5707963267948966
     }
    },
    "H_HumanPlayer":{

@@ -226,13 +226,16 @@ public class RobotContainer {
         break;
     }
     teleopCommands = new TeleopCommands(intake, spindexer, transfer, shooter, controller);
-    autonCommands = new AutonCommands(teleopCommands);
+    autonCommands = new AutonCommands(intake, spindexer, transfer, shooter, controller);
+    autonCommands.registerNamedCommands();
 
     // Set up auto routines
     autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
 
     autoChooser.addOption("Test Path", autonCommands.getPathCommand("TuningPath"));
     autoChooser.addOption("Center Bump Path", autonCommands.getAutonomousSequence("CENTER"));
+    autoChooser.addOption("Right Path", autonCommands.getAutonomousSequence("RIGHT"));
+    autoChooser.addOption("Left Path", autonCommands.getAutonomousSequence("LEFT"));
 
     // Set up SysId routines
     autoChooser.addOption(
@@ -319,11 +322,11 @@ public class RobotContainer {
         // .whileTrue(teleopCommands.whileShooting())
         .onFalse(teleopCommands.stopShoot());
 
-    controller.x().whileTrue(teleopCommands.spinAlt());
-    controller.x().whileTrue(teleopCommands.startKick());
+    // controller.x().whileTrue(teleopCommands.spinAlt());
+    // controller.x().whileTrue(teleopCommands.startKick());
 
-    controller.x().onFalse(teleopCommands.spinStop());
-    controller.x().onFalse(teleopCommands.stopKick());
+    // controller.x().onFalse(teleopCommands.spinStop());
+    // controller.x().onFalse(teleopCommands.stopKick());
   }
 
   /**

@@ -52,7 +52,7 @@ public class SpindexerIOSim implements SpindexerIO {
 
   @Override
   public void stop() {
-    setVoltage(0.0);
+    kMotor.setAngularVelocity(0);
   }
 
   @Override
