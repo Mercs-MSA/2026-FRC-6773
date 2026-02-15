@@ -62,8 +62,6 @@ public class IntakePivotIOSim implements IntakePivotIO {
             configuration.measurementStdDevs(),
             configuration.measurementStdDevs());
 
-    kProfile = new TrapezoidProfile(new TrapezoidProfile.Constraints(10, 50)); // random values
-
     kFeedback = new PIDController(gains.p(), gains.i(), gains.d());
 
     kFeedforward = new ArmFeedforward(gains.s(), gains.g(), gains.v(), gains.a());
