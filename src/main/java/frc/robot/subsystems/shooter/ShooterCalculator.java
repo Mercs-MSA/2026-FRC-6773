@@ -93,15 +93,15 @@ public class ShooterCalculator {
     // launchFlywheelSpeedMap.put(5.57, 275.0);
     // launchFlywheelSpeedMap.put(5.60, 290.0);
 
-    launchFlywheelSpeedMap.put(1.34, 30.0);
-    launchFlywheelSpeedMap.put(1.78, 35.0);
-    launchFlywheelSpeedMap.put(2.17, 35.0);
-    launchFlywheelSpeedMap.put(2.81, 40.0);
-    launchFlywheelSpeedMap.put(3.82, 40.0);
-    launchFlywheelSpeedMap.put(4.09, 45.0);
-    launchFlywheelSpeedMap.put(4.40, 50.0);
-    launchFlywheelSpeedMap.put(4.77, 55.0);
-    launchFlywheelSpeedMap.put(5.57, 60.0);
+    launchFlywheelSpeedMap.put(1.34, 45.0);
+    launchFlywheelSpeedMap.put(1.78, 48.0);
+    launchFlywheelSpeedMap.put(2.17, 49.0);
+    launchFlywheelSpeedMap.put(2.81, 41.0);
+    launchFlywheelSpeedMap.put(3.82, 43.0);
+    launchFlywheelSpeedMap.put(4.09, 55.0);
+    launchFlywheelSpeedMap.put(4.40, 55.0);
+    launchFlywheelSpeedMap.put(4.77, 58.0);
+    launchFlywheelSpeedMap.put(5.57, 63.0);
     launchFlywheelSpeedMap.put(5.60, 65.0);
 
     timeOfFlightMap.put(5.68, 1.16);
