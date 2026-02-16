@@ -20,11 +20,14 @@ import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.util.Units;
 import frc.robot.RobotState.OdometryObservation;
 import frc.robot.RobotState.TurretObservation;
+import frc.robot.constants.FieldConstants;
 import frc.robot.util.geometry.GeomUtil;
 import java.util.*;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.ExtensionMethod;
+
+import org.littletonrobotics.junction.AutoLog;
 import org.littletonrobotics.junction.AutoLogOutput;
 
 @ExtensionMethod({GeomUtil.class})
@@ -207,6 +210,12 @@ public class RobotState {
     // Recalculate the current estimate by applying the scaled transform to the old estimate
     // then shifting forwards using odometry data
     estimatedPose = estimateAtTime.plus(scaledTransform).plus(sampleToOdometryTransform);
+  }
+
+  @AutoLogOutput(key="Drive/distancetoHub")
+  public static double distanceToHub()
+  {
+    return (getInstance().estimatedPose).getTranslation().getDistance(FieldConstants.Hub.innerCenterPoint2d);
   }
 
   // MARK: - Type declarations

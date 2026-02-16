@@ -317,10 +317,10 @@ public class RobotContainer {
                     drive)
                 .ignoringDisable(true));
 
-    controller
-        .leftTrigger(0.25)
-        .onTrue(teleopCommands.runIntakeFloorPickup())
-        .onFalse(teleopCommands.runIntakeSlowRollers());
+    // controller
+    //     .leftTrigger(0.25)
+    //     .onTrue(teleopCommands.runIntakeFloorPickup())
+    //     .onFalse(teleopCommands.runIntakeSlowRollers());
 
     controller
         .rightTrigger()

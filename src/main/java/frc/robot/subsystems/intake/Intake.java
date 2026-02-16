@@ -19,8 +19,8 @@ import org.littletonrobotics.junction.networktables.LoggedNetworkNumber;
 
 public class Intake extends SubsystemBase {
   public enum IntakeState {
-    kFloorPickup(() -> Rotation2d.fromRotations(-0.3)),
-    kStow(() -> Rotation2d.fromRotations(0.0)),
+    kFloorPickup(() -> Rotation2d.fromRotations(0.02)),
+    kStow(() -> Rotation2d.fromRotations(0.176)),
     /** Custom setpoint that can be modified over network tables; Useful for debugging */
     custom(
         () ->
@@ -109,7 +109,7 @@ public class Intake extends SubsystemBase {
     Logger.processInputs("Intake/Inputs/Roller", kRollerInputs);
 
     if (pivotState != null) {
-      setPivotPosition(pivotState.getGoalPosition());
+      // setPivotPosition(pivotState.getGoalPosition());
       Logger.recordOutput("Intake/PivotGoalValue", pivotState.getGoalPosition());
       Logger.recordOutput("Intake/PivotGoal", pivotState);
     } else {

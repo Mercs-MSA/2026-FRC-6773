@@ -16,6 +16,7 @@ import frc.robot.RobotState;
 import frc.robot.subsystems.drive.Drive;
 import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.Logger;
+import org.littletonrobotics.junction.networktables.LoggedNetworkBoolean;
 import org.littletonrobotics.junction.networktables.LoggedNetworkNumber;
 
 public class Shooter extends SubsystemBase {
@@ -93,6 +94,17 @@ public class Shooter extends SubsystemBase {
   private final LoggedNetworkNumber flywheel_kG =
       new LoggedNetworkNumber("Shooter/Gains/Flywheel_kG", ShooterConstants.flywheelGains.g());
 
+  private final LoggedNetworkNumber flywheelVel =
+      new LoggedNetworkNumber("Shooter/Flywheel/Velocity");
+
+  private final LoggedNetworkBoolean useFlyBoolean =
+      new LoggedNetworkBoolean("Shooter/Flywheel/UseCustomVel", false);
+
+  private final LoggedNetworkNumber hoodAngle = new LoggedNetworkNumber("Shooter/Hood/Angle", 0);
+
+  private final LoggedNetworkBoolean useHoodBool =
+      new LoggedNetworkBoolean("Shooter/Hood/UseCustomAngle", false);
+
   // private final LoggedNetworkNumber flywheel_maxVelocity =
   //     new LoggedNetworkNumber(
   //         "Shooter/MotionMagic/Flywheel_kMaxVelocity",
@@ -163,6 +175,14 @@ public class Shooter extends SubsystemBase {
                     ShooterConstants.robotToTurret.getX(), ShooterConstants.robotToTurret.getY()),
                 Rotation2d.fromRadians(getTurretPosition())));
     Logger.recordOutput("TurretPose", turretPose);
+
+    if (useFlyBoolean.getAsBoolean()) {
+      setFlywheelVelocityRPS(flywheelVel.getAsDouble());
+    }
+
+    if (useFlyBoolean.getAsBoolean()) {
+      setHoodPosition(Rotation2d.fromDegrees(hoodAngle.getAsDouble()));
+    }
   }
   //   public void setPivotGoal(IntakePivotGoal desiredGoal) {
   //     currentPivotGoal = desiredGoal;
