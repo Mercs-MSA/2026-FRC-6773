@@ -100,7 +100,7 @@ public class IntakeConstants {
   public static final IntakePivotGains kPivotGains =
       switch (Constants.currentMode) {
           // case REAL -> new IntakePivotGains(5.0, 0.0, 0.0, 1, 2, 20, 0.0, 0.0, 0.0, -0.4);
-        case REAL -> new IntakePivotGains(10.0, 0.0, 0.0, 0, 0.2, 0.4, 0.0);
+        case REAL -> new IntakePivotGains(20.0, 0.0, 0.0, 0, 0.0, 0.4, 0.0);
 
         case SIM -> new IntakePivotGains(550.0, 0.0, 0.0, 10.0, 0.17, 0.06, 0.01);
         default -> new IntakePivotGains(0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0);

@@ -52,8 +52,8 @@ public class Shooter extends SubsystemBase {
 
   private Drive drive;
 
-  private double minLegalAngle = Math.toRadians(-90);
-  private double maxLegalAngle = Math.toRadians(90);
+  private double minLegalAngle = Math.toRadians(-45);
+  private double maxLegalAngle = Math.toRadians(45);
 
   private double lastGoalAngle = 0.0;
 
@@ -272,14 +272,14 @@ public class Shooter extends SubsystemBase {
     return run(
         () -> {
           var params = ShooterCalculator.getInstance().getParameters();
-          // setFieldRelativeTurretTarget(params.turretAngle(), params.turretVelocity());
+          setFieldRelativeTurretTarget(params.turretAngle(), params.turretVelocity());
           setFlywheelVelocityRPS(params.flywheelSpeed());
           setHoodPosition(Rotation2d.fromRadians(params.hoodAngle()));
           // setLaunchState(LaunchState.TRACKING);
         });
   }
 
-  public Command runHoodTrackTargetCommand() { //Todo: add velocity (similar to turret)
+  public Command runHoodTrackTargetCommand() { // Todo: add velocity (similar to turret)
     return run(
         () -> {
           var params = ShooterCalculator.getInstance().getParameters();
@@ -304,10 +304,10 @@ public class Shooter extends SubsystemBase {
 
     // Proper PD control law:
     // P term: respond to position error (using clamped error to respect bounds)
-    double pTerm = error * turret_kP.getAsDouble();
+    double pTerm = error * 1;
 
     // D term: damping using actual velocity (derivative of position)
-    double dTerm = -getTurretVelocity() * turret_kD.getAsDouble();
+    // double dTerm = -getTurretVelocity() * turret_kD.getAsDouble();
 
     // Feedforward term: help track moving targets (but zero out if at limit trying to exceed)
     double feedforward = rrGoalVel * 0.12;
@@ -316,7 +316,7 @@ public class Shooter extends SubsystemBase {
       feedforward = 0;
     }
 
-    double controlOutput = pTerm + dTerm + feedforward;
+    double controlOutput = pTerm;
     double voltage = MathUtil.clamp(controlOutput, -12.0, 12.0);
 
     setTurretVoltage(voltage);
@@ -360,9 +360,5 @@ public class Shooter extends SubsystemBase {
     lastGoalAngle = bestAngle;
     // Clamp to bounds to ensure turret respects limits
     return MathUtil.clamp(bestAngle, minLegalAngle, maxLegalAngle);
-  }
-
-  public Command shooterDefaultCommand() { // TODO: Run turret + hood tracking commands
-    return runTrackTargetCommand();
   }
 }

@@ -1,5 +1,6 @@
 package frc.robot.commands;
 
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -59,28 +60,28 @@ public class TeleopCommands {
   }
 
   public Command runIntakeSlowRollers() {
-    return Commands.runOnce(
+    return Commands.run(
         () -> {
-          // intake.setPivotState(IntakeState.kFloorPickup);
+          intake.setPivotState(IntakeState.kStow);
           intake.slowRollers();
           intake.setBrakeMode(true);
         },
         intake);
   }
 
-  public Command startShooting() {
-    return Commands.runOnce(
-        () -> {
-          mTransfer.startTransfer(12);
-        });
-  }
+  // public Command startShooting() {
+  //   return Commands.runOnce(
+  //       () -> {
+  //         mTransfer.startTransfer(12);
+  //       });
+  // }
 
-  public Command whileShooting() {
-    return Commands.run(
-        () -> {
-          mIndexer.setState(mTransfer.getState());
-        });
-  }
+  // public Command whileShooting() {
+  //   return Commands.run(
+  //       () -> {
+  //         mIndexer.setState(mTransfer.getState());
+  //       });
+  // }
 
   public Command stopShooting() {
     return Commands.run(
@@ -103,6 +104,19 @@ public class TeleopCommands {
         () -> {
           // shooter.setFlywheelVelocityRPS(60);
           mTransfer.setRegulatorVelocity(50);
+        });
+  }
+
+  public Command trackHub() {
+    return shooter.runTrackTargetCommand();
+  }
+
+  public Command idleShooter() {
+    return Commands.run(
+        () -> {
+          shooter.setHoodPosition(Rotation2d.fromDegrees(1));
+          shooter.setFlywheelVelocityRPS(10);
+          shooter.setTurretVoltage(0);
         });
   }
 

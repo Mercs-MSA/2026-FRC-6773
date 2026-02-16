@@ -19,7 +19,7 @@ import org.littletonrobotics.junction.networktables.LoggedNetworkNumber;
 
 public class Intake extends SubsystemBase {
   public enum IntakeState {
-    kFloorPickup(() -> Rotation2d.fromRotations(-5.5)),
+    kFloorPickup(() -> Rotation2d.fromRotations(-0.3)),
     kStow(() -> Rotation2d.fromRotations(0.0)),
     /** Custom setpoint that can be modified over network tables; Useful for debugging */
     custom(

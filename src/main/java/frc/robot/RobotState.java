@@ -141,11 +141,14 @@ public class RobotState {
   }
 
   /** Adds a new vision pose observation from the vision subsystem. */
-  public void addVisionObservation(Pose2d visionRobotPoseMeters,
+  public void addVisionObservation(
+      Pose2d visionRobotPoseMeters,
       double timestampSeconds,
       Matrix<N3, N1> visionMeasurementStdDevs) {
-    
-    VisionObservation observation = new VisionObservation(timestampSeconds, new Pose3d(visionRobotPoseMeters), visionMeasurementStdDevs);
+
+    VisionObservation observation =
+        new VisionObservation(
+            timestampSeconds, new Pose3d(visionRobotPoseMeters), visionMeasurementStdDevs);
     // If measurement is old enough to be outside the pose buffer's timespan, skip.
     try {
       if (poseBuffer.getInternalBuffer().lastKey() - poseBufferSizeSec > observation.timestamp()) {
