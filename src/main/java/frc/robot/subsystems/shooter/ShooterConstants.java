@@ -99,7 +99,7 @@ public class ShooterConstants {
   public static final HoodGains hoodGains = new HoodGains(70, 0, 0, 0.1, 0, 0, 0.3);
   public static final TurretGains turretGains =
       switch (Constants.currentMode) {
-        case REAL -> new TurretGains(1, 0.0, 0.0, 0.0, 0.0, 0.0, 0.2, 0.0, 0);
+        case REAL -> new TurretGains(0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.2, 0.0, 0);
         case SIM -> new TurretGains(5, 0.0, 0.01, 0.0, 0.0, 0.0, 0.2, 0.0, 0);
         default -> new TurretGains(0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.2, 0.0, 0.0);
       };

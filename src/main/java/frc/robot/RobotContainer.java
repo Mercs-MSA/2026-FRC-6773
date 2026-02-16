@@ -22,6 +22,7 @@ import frc.robot.commands.AutonCommands;
 import frc.robot.commands.DriveCommands;
 import frc.robot.commands.TeleopCommands;
 import frc.robot.constants.Constants;
+import frc.robot.constants.FieldConstants;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.drive.DriveConstants;
 import frc.robot.subsystems.drive.GyroIO;
@@ -285,24 +286,23 @@ public class RobotContainer {
                 () -> -controller.getLeftX(),
                 () -> Rotation2d.kZero));
 
-    // controller
-    //     .rightStick()
-    //     .whileTrue(
-    //         DriveCommands.joystickDriveAtAngle(
-    //             drive,
-    //             () -> -controller.getLeftY(),
-    //             () -> -controller.getLeftX(),
-    //             () ->
-    //                 drive
-    //                     .interpolateAngle(
-    //                         new Pose2d(
-    //                             drive.getPose().getX(), drive.getPose().getY(),
-    // Rotation2d.kZero),
-    //                         new Pose2d(
-    //                             FieldConstants.Hub.topCenterPoint.getX(),
-    //                             FieldConstants.Hub.topCenterPoint.getY(),
-    //                             Rotation2d.kZero))
-    //                     .plus(new Rotation2d(Math.PI))));
+    controller
+        .leftStick()
+        .whileTrue(
+            DriveCommands.joystickDriveAtAngle(
+                drive,
+                () -> -controller.getLeftY(),
+                () -> -controller.getLeftX(),
+                () ->
+                    drive
+                        .interpolateAngle(
+                            new Pose2d(
+                                drive.getPose().getX(), drive.getPose().getY(), Rotation2d.kZero),
+                            new Pose2d(
+                                FieldConstants.Hub.topCenterPoint.getX(),
+                                FieldConstants.Hub.topCenterPoint.getY(),
+                                Rotation2d.kZero))
+                        .plus(new Rotation2d(Math.PI))));
     controller.rightStick().whileTrue(teleopCommands.trackHub());
     controller.rightStick().onFalse(teleopCommands.idleShooter());
 
@@ -324,15 +324,15 @@ public class RobotContainer {
 
     controller
         .rightTrigger()
-        .whileTrue(teleopCommands.startShoot())
+        .onTrue(teleopCommands.startShoot())
         // .whileTrue(teleopCommands.whileShooting())
         .onFalse(teleopCommands.stopShoot());
 
-    controller.rightTrigger().whileTrue(teleopCommands.spinAlt());
-    controller.rightTrigger().whileTrue(teleopCommands.startKick());
+    controller.x().whileTrue(teleopCommands.spinAlt());
+    controller.x().whileTrue(teleopCommands.startKick());
 
-    controller.rightTrigger().onFalse(teleopCommands.spinStop());
-    controller.rightTrigger().onFalse(teleopCommands.stopKick());
+    controller.x().onFalse(teleopCommands.spinStop());
+    controller.x().onFalse(teleopCommands.stopKick());
   }
 
   /**
