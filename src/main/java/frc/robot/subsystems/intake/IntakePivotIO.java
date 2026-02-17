@@ -57,7 +57,7 @@ public interface IntakePivotIO {
    * @param a
    */
   public default void setGains(
-      double p, double i, double d, double s, double g, double v, double a) {}
+      double p, double i, double d, double s, double v, double a, double g) {}
 
   /**
    * Updates the gains of the profile. Note that profiled pid control is called "MotionMagic" by

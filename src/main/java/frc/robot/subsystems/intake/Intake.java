@@ -20,7 +20,7 @@ import org.littletonrobotics.junction.networktables.LoggedNetworkNumber;
 public class Intake extends SubsystemBase {
   public enum IntakeState {
     kFloorPickup(() -> Rotation2d.fromRotations(0.02)),
-    kStow(() -> Rotation2d.fromRotations(0.176)),
+    kStow(() -> Rotation2d.fromRotations(0.175)),
     /** Custom setpoint that can be modified over network tables; Useful for debugging */
     custom(
         () ->
@@ -109,7 +109,7 @@ public class Intake extends SubsystemBase {
     Logger.processInputs("Intake/Inputs/Roller", kRollerInputs);
 
     if (pivotState != null) {
-      // setPivotPosition(pivotState.getGoalPosition());
+      setPivotPosition(pivotState.getGoalPosition());
       Logger.recordOutput("Intake/PivotGoalValue", pivotState.getGoalPosition());
       Logger.recordOutput("Intake/PivotGoal", pivotState);
     } else {
@@ -117,15 +117,15 @@ public class Intake extends SubsystemBase {
     }
 
     // Check if pivot is attempting to move beyond its limitations
-    if (getPivotPosition().getDegrees() > IntakeConstants.kMaxPivotPosition.getDegrees()
-        && kPivotInputs.appliedVoltage > 0.0) {
-      stop(false, true);
-    } else if (getPivotPosition().getDegrees() < IntakeConstants.kMinPivotPosition.getDegrees()
-        && kPivotInputs.appliedVoltage < 0.0) {
-      stop(false, true);
-    } else {
-      // Do nothing if limits are not reached
-    }
+    // if (getPivotPosition().getDegrees() > IntakeConstants.kMaxPivotPosition.getDegrees()
+    //     && kPivotInputs.appliedVoltage > 0.0) {
+    //   stop(false, true);
+    // } else if (getPivotPosition().getDegrees() < IntakeConstants.kMinPivotPosition.getDegrees()
+    //     && kPivotInputs.appliedVoltage < 0.0) {
+    //   stop(false, true);
+    // } else {
+    //   // Do nothing if limits are not reached
+    // }
 
     // This says that if the value is changed in the advantageScope tool,
     // Then we change the values in the code. Saves deploy time.

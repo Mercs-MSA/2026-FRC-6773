@@ -26,8 +26,6 @@ import java.util.*;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.ExtensionMethod;
-
-import org.littletonrobotics.junction.AutoLog;
 import org.littletonrobotics.junction.AutoLogOutput;
 
 @ExtensionMethod({GeomUtil.class})
@@ -212,10 +210,11 @@ public class RobotState {
     estimatedPose = estimateAtTime.plus(scaledTransform).plus(sampleToOdometryTransform);
   }
 
-  @AutoLogOutput(key="Drive/distancetoHub")
-  public static double distanceToHub()
-  {
-    return (getInstance().estimatedPose).getTranslation().getDistance(FieldConstants.Hub.innerCenterPoint2d);
+  @AutoLogOutput(key = "Drive/distancetoHub")
+  public double distanceToHub() {
+    return (getInstance().estimatedPose)
+        .getTranslation()
+        .getDistance(FieldConstants.Hub.innerCenterPoint2d);
   }
 
   // MARK: - Type declarations

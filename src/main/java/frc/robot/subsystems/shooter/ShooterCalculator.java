@@ -67,34 +67,29 @@ public class ShooterCalculator {
       new InterpolatingDoubleTreeMap();
 
   static {
-    minDistance = 1.34;
+    minDistance = 1.75;
     maxDistance = 5.60;
     phaseDelay = 0.03;
 
-    launchHoodAngleMap.put(1.0, Rotation2d.fromDegrees(0.0));
-    launchHoodAngleMap.put(1.5, Rotation2d.fromDegrees(2.0));
-    launchHoodAngleMap.put(2.0, Rotation2d.fromDegrees(4.0));
-    launchHoodAngleMap.put(2.5, Rotation2d.fromDegrees(6.0));
-    launchHoodAngleMap.put(3.0, Rotation2d.fromDegrees(8.0));
-    launchHoodAngleMap.put(3.5, Rotation2d.fromDegrees(10.0));
-    launchHoodAngleMap.put(4.0, Rotation2d.fromDegrees(12.0));
-    launchHoodAngleMap.put(4.5, Rotation2d.fromDegrees(14.0));
-    launchHoodAngleMap.put(5.0, Rotation2d.fromDegrees(16.0));
-    launchHoodAngleMap.put(5.5, Rotation2d.fromDegrees(18.0));
+    launchHoodAngleMap.put(1.5, Rotation2d.fromDegrees(0.0));
+    launchHoodAngleMap.put(2.012, Rotation2d.fromDegrees(2.0));
+    launchHoodAngleMap.put(2.58, Rotation2d.fromDegrees(10.0));
+    launchHoodAngleMap.put(3.022, Rotation2d.fromDegrees(12.0));
+    launchHoodAngleMap.put(3.483, Rotation2d.fromDegrees(14.0));
+    launchHoodAngleMap.put(4.082, Rotation2d.fromDegrees(16.0));
+    launchHoodAngleMap.put(4.55, Rotation2d.fromDegrees(18.0));
+    launchHoodAngleMap.put(5.18, Rotation2d.fromDegrees(20.0));
     launchHoodAngleMap.put(5.5, Rotation2d.fromDegrees(20.0));
 
-    launchFlywheelSpeedMap.put(1.0, 50.0);
-    launchFlywheelSpeedMap.put(1.5, 52.0);
-    launchFlywheelSpeedMap.put(2.0, 53.0);
-    launchFlywheelSpeedMap.put(2.5, 54.0);
-    launchFlywheelSpeedMap.put(3.0, 55.0);
-    launchFlywheelSpeedMap.put(3.5, 56.0);
-    launchFlywheelSpeedMap.put(4.0, 57.0);
-    launchFlywheelSpeedMap.put(4.5, 58.0);
-    launchFlywheelSpeedMap.put(5.0, 63.0);
-    launchFlywheelSpeedMap.put(5.5, 65.0);
-    launchFlywheelSpeedMap.put(6.0, 63.0);
-    launchFlywheelSpeedMap.put(6.5, 65.0);
+    launchFlywheelSpeedMap.put(1.5, 50.0);
+    launchFlywheelSpeedMap.put(2.012, 50.0);
+    launchFlywheelSpeedMap.put(2.58, 50.0);
+    launchFlywheelSpeedMap.put(3.022, 55.0);
+    launchFlywheelSpeedMap.put(3.483, 55.0);
+    launchFlywheelSpeedMap.put(4.082, 60.0);
+    launchFlywheelSpeedMap.put(4.55, 65.0);
+    launchFlywheelSpeedMap.put(5.18, 65.0);
+    launchFlywheelSpeedMap.put(5.5, 70.0);
 
     timeOfFlightMap.put(5.68, 1.16);
     timeOfFlightMap.put(4.55, 1.12);

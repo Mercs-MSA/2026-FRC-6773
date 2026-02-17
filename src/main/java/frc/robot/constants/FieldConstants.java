@@ -103,8 +103,7 @@ public class FieldConstants {
     public static final Translation2d innerCenterPoint2d =
         new Translation2d(
             AprilTagLayoutType.OFFICIAL.getLayout().getTagPose(26).get().getX() + width / 2.0,
-            fieldWidth / 2.0
-        );
+            fieldWidth / 2.0);
 
     public static final Translation2d nearLeftCorner =
         new Translation2d(topCenterPoint.getX() - width / 2.0, fieldWidth / 2.0 + width / 2.0);

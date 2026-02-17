@@ -5,6 +5,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.subsystems.intake.Intake;
+import frc.robot.subsystems.intake.Intake.IntakeState;
 import frc.robot.subsystems.shooter.Shooter;
 import frc.robot.subsystems.spindexer.Spindexer;
 import frc.robot.subsystems.transfer.Transfer;
@@ -41,7 +42,7 @@ public class TeleopCommands {
   public Command runIntakeFloorPickup() {
     return Commands.runOnce(
         () -> {
-          // intake.setPivotState(IntakeState.kFloorPickup);
+          intake.setPivotState(IntakeState.kFloorPickup);
           intake.runRollers();
           intake.setBrakeMode(false);
         },
@@ -51,7 +52,7 @@ public class TeleopCommands {
   public Command runIntakeStow() {
     return Commands.runOnce(
         () -> {
-          // intake.setPivotState(IntakeState.kStow);
+          intake.setPivotState(IntakeState.kStow);
           intake.stowRollers();
           intake.setBrakeMode(true);
         },
@@ -114,7 +115,7 @@ public class TeleopCommands {
     return Commands.runOnce(
         () -> {
           shooter.setHoodPosition(Rotation2d.fromDegrees(1));
-          shooter.setFlywheelVelocityRPS(10);
+          // shooter.setFlywheelVelocityRPS(10);
           shooter.setTurretVoltage(0);
           mTransfer.setRegulatorVelocity(10);
         });

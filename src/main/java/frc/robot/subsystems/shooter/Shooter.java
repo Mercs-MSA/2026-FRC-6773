@@ -95,7 +95,7 @@ public class Shooter extends SubsystemBase {
       new LoggedNetworkNumber("Shooter/Gains/Flywheel_kG", ShooterConstants.flywheelGains.g());
 
   private final LoggedNetworkNumber flywheelVel =
-      new LoggedNetworkNumber("Shooter/Flywheel/Velocity");
+      new LoggedNetworkNumber("Shooter/Flywheel/Velocity", 0);
 
   private final LoggedNetworkBoolean useFlyBoolean =
       new LoggedNetworkBoolean("Shooter/Flywheel/UseCustomVel", false);

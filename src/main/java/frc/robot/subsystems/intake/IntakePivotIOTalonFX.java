@@ -202,16 +202,16 @@ public class IntakePivotIOTalonFX implements IntakePivotIO {
   }
 
   @Override
-  public void setGains(double p, double i, double d, double s, double g, double v, double a) {
+  public void setGains(double p, double i, double d, double s, double v, double a, double g) {
     var slotConfiguration = new Slot0Configs();
 
     slotConfiguration.kP = p;
     slotConfiguration.kI = i;
     slotConfiguration.kD = d;
     slotConfiguration.kS = s;
-    slotConfiguration.kG = g;
     slotConfiguration.kV = v;
     slotConfiguration.kA = a;
+    slotConfiguration.kG = g;
 
     kMotor.getConfigurator().apply((slotConfiguration));
   }
