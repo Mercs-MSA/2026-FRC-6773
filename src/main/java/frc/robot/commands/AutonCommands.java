@@ -1,7 +1,6 @@
 package frc.robot.commands;
 
 import com.pathplanner.lib.auto.AutoBuilder;
-import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.path.PathPlannerPath;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -26,7 +25,7 @@ public class AutonCommands extends TeleopCommands {
   }
 
   public void registerNamedCommands() {
-    NamedCommands.registerCommand("IntakeDown", stowIntake());
+
   }
 
   public Command getPathCommand(String pathName) {
