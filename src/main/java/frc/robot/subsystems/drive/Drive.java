@@ -224,6 +224,8 @@ public class Drive extends SubsystemBase {
 
     Logger.recordOutput(
         "Odometry/RobotStateEstimatedPose", RobotState.getInstance().getEstimatedPose());
+
+    Logger.recordOutput("Drive/DistanceToHub", RobotState.getInstance().distanceToHub());
   }
 
   /**

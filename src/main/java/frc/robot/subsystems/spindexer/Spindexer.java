@@ -2,8 +2,6 @@ package frc.robot.subsystems.spindexer;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.commands.TeleopCommands.ShooterState;
-import frc.robot.constants.Constants;
-import frc.robot.constants.Constants.Mode;
 import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.Logger;
 

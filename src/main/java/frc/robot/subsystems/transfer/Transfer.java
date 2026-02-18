@@ -43,7 +43,7 @@ public class Transfer extends SubsystemBase {
 
   public void setKickerVelocity(double velocity) {
     kicker.setVelocity(velocity);
-  } 
+  }
 
   public void startTransfer(double shooterSpeed) {
     TeleopCommands.globalState = ShooterState.SPINUP;

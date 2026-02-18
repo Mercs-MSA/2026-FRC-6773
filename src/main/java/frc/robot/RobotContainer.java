@@ -22,6 +22,7 @@ import frc.robot.commands.AutonCommands;
 import frc.robot.commands.DriveCommands;
 import frc.robot.commands.TeleopCommands;
 import frc.robot.constants.Constants;
+import frc.robot.constants.FieldConstants;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.drive.DriveConstants;
 import frc.robot.subsystems.drive.GyroIO;
@@ -99,11 +100,10 @@ public class RobotContainer {
             new Vision(
                 (visionRobotPose, timestamp, stds) -> {
                   drive.addVisionMeasurement(visionRobotPose, timestamp, stds);
-                  RobotState.getInstance()
-                      .addVisionObservation(visionRobotPose, timestamp, stds);
+                  RobotState.getInstance().addVisionObservation(visionRobotPose, timestamp, stds);
                 },
-                new VisionIOLimelight(camera0Name, drive::getRotation),
-                new VisionIOLimelight(camera1Name, drive::getRotation));
+                new VisionIOLimelight(camera0Name, drive::getRotation));
+        // new VisionIOLimelight(camera1Name, drive::getRotation));
         intake =
             new Intake(
                 new IntakePivotIOTalonFX(
@@ -217,7 +217,11 @@ public class RobotContainer {
                 new ModuleIO() {},
                 new ModuleIO() {},
                 new ModuleIO() {});
-        vision = new Vision(RobotState.getInstance()::addVisionObservation, new VisionIO() {}, new VisionIO() {});
+        vision =
+            new Vision(
+                RobotState.getInstance()::addVisionObservation,
+                new VisionIO() {},
+                new VisionIO() {});
 
         intake = new Intake(null, null);
         transfer = new Transfer(null, null);
@@ -271,7 +275,7 @@ public class RobotContainer {
             () -> -controller.getLeftY(),
             () -> -controller.getLeftX(),
             () -> -controller.getRightX()));
-    shooter.setDefaultCommand(shooter.shooterDefaultCommand());
+    // shooter.setDefaultCommand(shooter.shooterDefaultCommand());
 
     // controller.axisLessThan(4, )
 
@@ -286,7 +290,7 @@ public class RobotContainer {
                 () -> Rotation2d.kZero));
 
     controller
-        .leftBumper()
+        .leftStick()
         .whileTrue(
             DriveCommands.joystickDriveAtAngle(
                 drive,
@@ -297,8 +301,13 @@ public class RobotContainer {
                         .interpolateAngle(
                             new Pose2d(
                                 drive.getPose().getX(), drive.getPose().getY(), Rotation2d.kZero),
-                            new Pose2d(4.626, 4.028, Rotation2d.kZero))
+                            new Pose2d(
+                                FieldConstants.Hub.topCenterPoint.getX(),
+                                FieldConstants.Hub.topCenterPoint.getY(),
+                                Rotation2d.kZero))
                         .plus(new Rotation2d(Math.PI))));
+    controller.rightStick().whileTrue(teleopCommands.trackHub());
+    controller.rightStick().onFalse(teleopCommands.idleShooter());
 
     // Reset gyro to 0° when B button is pressed
     controller
@@ -318,7 +327,7 @@ public class RobotContainer {
 
     controller
         .rightTrigger()
-        .whileTrue(teleopCommands.startShoot())
+        .onTrue(teleopCommands.startShoot())
         // .whileTrue(teleopCommands.whileShooting())
         .onFalse(teleopCommands.stopShoot());
 

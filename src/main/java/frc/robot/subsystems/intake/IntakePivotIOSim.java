@@ -127,7 +127,7 @@ public class IntakePivotIOSim implements IntakePivotIO {
   }
 
   @Override
-  public void setGains(double p, double i, double d, double s, double g, double v, double a) {
+  public void setGains(double p, double i, double d, double s, double v, double a, double g) {
     kFeedback.setPID(p, i, d);
     kFeedforward = new ArmFeedforward(s, g, v, a);
   }
