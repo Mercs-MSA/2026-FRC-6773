@@ -24,7 +24,6 @@ import edu.wpi.first.units.measure.Voltage;
 import frc.robot.subsystems.shooter.ShooterConstants.HoodGains;
 import frc.robot.subsystems.shooter.ShooterConstants.HoodMotorConfiguration;
 import frc.robot.subsystems.shooter.ShooterConstants.ShooterHoodHardware;
-import frc.robot.subsystems.shooter.ShooterHoodIO.ShooterHoodIOInputs;
 
 public class ShooterHoodIOTalonFX implements ShooterHoodIO {
   private final TalonFX hoodMotor;

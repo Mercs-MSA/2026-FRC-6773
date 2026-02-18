@@ -51,8 +51,6 @@ public class Shooter extends SubsystemBase {
   private final ShooterHoodIO hoodHardware;
   private final ShooterHoodIOInputsAutoLogged hoodInputs = new ShooterHoodIOInputsAutoLogged();
 
-  private Drive drive;
-
   private double minLegalAngle = Math.toRadians(-45);
   private double maxLegalAngle = Math.toRadians(45);
 
@@ -121,12 +119,10 @@ public class Shooter extends SubsystemBase {
   public Shooter(
       ShooterFlywheelIO flywheelHardwareIO,
       ShooterTurretIO turretHardwareIO,
-      ShooterHoodIO hoodHardwareIO,
-      Drive drive) {
+      ShooterHoodIO hoodHardwareIO) {
     flywheelHardware = flywheelHardwareIO;
     turretHardware = turretHardwareIO;
     hoodHardware = hoodHardwareIO;
-    this.drive = drive;
 
     // TODO: visualizer
   }

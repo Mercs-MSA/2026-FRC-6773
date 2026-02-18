@@ -50,7 +50,8 @@ public class Transfer extends SubsystemBase {
   }
 
   public void stop() {
-    TeleopCommands.globalState = ShooterState.INACTIVE;
+    kicker.stop();
+    regulator.stop();
   }
 
   public boolean withinSpeed() {

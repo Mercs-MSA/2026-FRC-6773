@@ -152,8 +152,7 @@ public class RobotContainer {
                     ShooterConstants.hoodHardware,
                     ShooterConstants.hoodConfigs,
                     ShooterConstants.hoodGains,
-                    ShooterConstants.kStatusSignalUpdateFrequencyHz),
-                drive);
+                    ShooterConstants.kStatusSignalUpdateFrequencyHz));
         break;
 
       case SIM:
@@ -204,8 +203,7 @@ public class RobotContainer {
                 new ShooterTurretIOSim(
                     0.02, ShooterConstants.turretHardware, ShooterConstants.shooterSimConfig),
                 new ShooterHoodIOSim(
-                    0.02, ShooterConstants.hoodHardware, ShooterConstants.shooterSimConfig),
-                drive);
+                    0.02, ShooterConstants.hoodHardware, ShooterConstants.shooterSimConfig));
         break;
 
       default:
@@ -226,7 +224,7 @@ public class RobotContainer {
         intake = new Intake(null, null);
         transfer = new Transfer(null, null);
         spindexer = new Spindexer(new SpindexerIOSim(0, null, null, null));
-        shooter = new Shooter(null, null, null, null);
+        shooter = new Shooter(null, null, null);
         break;
     }
     teleopCommands = new TeleopCommands(intake, spindexer, transfer, shooter, controller);

@@ -18,7 +18,6 @@ import edu.wpi.first.units.measure.Voltage;
 import frc.robot.subsystems.spindexer.SpindexerConstants.SpindexerGains;
 import frc.robot.subsystems.spindexer.SpindexerConstants.SpindexerHardware;
 import frc.robot.subsystems.spindexer.SpindexerConstants.SpindexerTalonFXConfiguration;
-import frc.robot.subsystems.spindexer.SpindexerIO.SpindexerIOInputs;
 
 public class SpindexerIOTalonFX implements SpindexerIO {
   private final TalonFX kMotor;

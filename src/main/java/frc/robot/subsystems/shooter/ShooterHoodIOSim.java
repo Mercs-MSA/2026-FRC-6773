@@ -6,7 +6,6 @@ import edu.wpi.first.math.system.plant.LinearSystemId;
 import edu.wpi.first.wpilibj.simulation.DCMotorSim;
 import frc.robot.subsystems.shooter.ShooterConstants.ShooterHoodHardware;
 import frc.robot.subsystems.shooter.ShooterConstants.SimulationConfiguration;
-import frc.robot.subsystems.shooter.ShooterHoodIO.ShooterHoodIOInputs;
 
 public class ShooterHoodIOSim implements ShooterHoodIO {
   private final double kLoopPeriodSec;
