@@ -217,6 +217,7 @@ public class Drive extends SubsystemBase {
     // Update gyro alert
     gyroDisconnectedAlert.set(!gyroInputs.connected && Constants.currentMode != Mode.SIM);
 
+<<<<<<< HEAD
     // Logger.recordOutput(
     //     "Odometry/FieldRelativeVelocity", RobotState.getInstance().getFieldVelocity());
 
@@ -224,6 +225,15 @@ public class Drive extends SubsystemBase {
     //     "Odometry/RobotStateEstimatedPose", RobotState.getInstance().getEstimatedPose());
 
     // Logger.recordOutput("Drive/DistanceToHub", RobotState.getInstance().distanceToHub());
+=======
+    Logger.recordOutput(
+        "Odometry/FieldRelativeVelocity", getFieldVelocity());
+
+    Logger.recordOutput(
+        "Odometry/RobotStateEstimatedPose", poseEstimator.getEstimatedPosition());
+
+    // Logger.recordOutput("Drive/DistanceToHub", );
+>>>>>>> 64a7bb785e3c6486aef32c2e070abb523edd429b
   }
 
   /**
