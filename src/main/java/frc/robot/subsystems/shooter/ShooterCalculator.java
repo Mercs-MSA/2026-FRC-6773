@@ -127,7 +127,8 @@ public class ShooterCalculator {
     double turretToTargetDistance = target.getDistance(turretPosition.getTranslation());
 
     // Calculate field relative turret velocity
-    ChassisSpeeds robotVelocity = ChassisSpeeds.fromRobotRelativeSpeeds(robotRelativeVelocity, drive.getRotation());
+    ChassisSpeeds robotVelocity =
+        ChassisSpeeds.fromRobotRelativeSpeeds(robotRelativeVelocity, drive.getRotation());
     double robotAngle = estimatedPose.getRotation().getRadians();
     double turretVelocityX =
         robotVelocity.vxMetersPerSecond

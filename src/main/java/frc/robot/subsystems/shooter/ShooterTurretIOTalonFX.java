@@ -9,6 +9,7 @@ import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.configs.CANcoderConfiguration;
 import com.ctre.phoenix6.configs.MotionMagicConfigs;
 import com.ctre.phoenix6.configs.Slot0Configs;
+import com.ctre.phoenix6.configs.SoftwareLimitSwitchConfigs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.NeutralOut;
 import com.ctre.phoenix6.controls.PositionVoltage;
@@ -64,7 +65,7 @@ public class ShooterTurretIOTalonFX implements ShooterTurretIO {
         // SensorDirectionValue.CounterClockwise_Positive;
         SensorDirectionValue.Clockwise_Positive; // TODO: check
 
-    canCoderConfiguration.MagnetSensor.MagnetOffset = 0;
+    canCoderConfiguration.MagnetSensor.MagnetOffset = 0.41845703125;
     turretCANcoder.getConfigurator().apply(canCoderConfiguration);
 
     motorConfiguration.Slot0.kP = gains.p();
@@ -86,6 +87,13 @@ public class ShooterTurretIOTalonFX implements ShooterTurretIO {
     motorConfiguration.CurrentLimits.StatorCurrentLimit = configuration.statorCurrentLimitAmps();
     motorConfiguration.Voltage.PeakForwardVoltage = configuration.peakForwardVoltage();
     motorConfiguration.Voltage.PeakReverseVoltage = configuration.peakReverseVoltage();
+
+    motorConfiguration.withSoftwareLimitSwitch(
+        new SoftwareLimitSwitchConfigs()
+            .withForwardSoftLimitEnable(true)
+            .withForwardSoftLimitThreshold(ShooterConstants.turretMaxLimit.getRotations())
+            .withReverseSoftLimitEnable(true)
+            .withReverseSoftLimitThreshold(ShooterConstants.turretMinLimit.getRotations()));
 
     motorConfiguration.MotorOutput.NeutralMode = configuration.neutralMode();
     motorConfiguration.MotorOutput.Inverted =
@@ -219,5 +227,10 @@ public class ShooterTurretIOTalonFX implements ShooterTurretIO {
       turretMotor.setNeutralMode(newMode);
       currentMode = newMode;
     }
+  }
+
+  @Override
+  public void setTurretSetpoint(Angle position, AngularVelocity velocity) {
+    turretMotor.setControl(kPositionControl.withPosition(position).withVelocity(velocity));
   }
 }

@@ -88,7 +88,8 @@
 
 //   /** Reset the pose estimate and odometry pose to the given pose. */
 //   public void resetPose(Pose2d pose) {
-//     // Gyro offset is the rotation that maps the old gyro rotation (estimated - offset) to the new
+//     // Gyro offset is the rotation that maps the old gyro rotation (estimated - offset) to the
+// new
 //     // frame of rotation
 //     gyroOffset = pose.getRotation().minus(odometryPose.getRotation().minus(gyroOffset));
 //     estimatedPose = pose;
@@ -152,7 +153,8 @@
 //             timestampSeconds, new Pose3d(visionRobotPoseMeters), visionMeasurementStdDevs);
 //     // If measurement is old enough to be outside the pose buffer's timespan, skip.
 //     try {
-//       if (poseBuffer.getInternalBuffer().lastKey() - poseBufferSizeSec > observation.timestamp()) {
+//       if (poseBuffer.getInternalBuffer().lastKey() - poseBufferSizeSec > observation.timestamp())
+// {
 //         return;
 //       }
 //     } catch (NoSuchElementException ex) {
