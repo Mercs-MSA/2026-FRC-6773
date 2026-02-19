@@ -40,8 +40,8 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
-import frc.robot.RobotState;
-import frc.robot.RobotState.OdometryObservation;
+// import frc.robot.RobotState;
+// import frc.robot.RobotState.OdometryObservation;
 import frc.robot.constants.Constants;
 import frc.robot.constants.Constants.Mode;
 import frc.robot.util.LocalADStarAK;
@@ -194,13 +194,13 @@ public class Drive extends SubsystemBase {
       }
 
       // Update odometry
-      RobotState.getInstance()
-          .addOdometryObservation(
-              new OdometryObservation(
-                  Timer.getTimestamp(),
-                  modulePositions,
-                  Optional.ofNullable(gyroInputs.connected ? gyroInputs.yawPosition : null)));
-      RobotState.getInstance().setRobotVelocity(getChassisSpeeds());
+      // RobotState.getInstance()
+      //     .addOdometryObservation(
+      //         new OdometryObservation(
+      //             Timer.getTimestamp(),
+      //             modulePositions,
+      //             Optional.ofNullable(gyroInputs.connected ? gyroInputs.yawPosition : null)));
+      // RobotState.getInstance().setRobotVelocity(getChassisSpeeds());
 
       // Update gyro angle
       if (gyroInputs.connected) {
@@ -220,12 +220,12 @@ public class Drive extends SubsystemBase {
     gyroDisconnectedAlert.set(!gyroInputs.connected && Constants.currentMode != Mode.SIM);
 
     Logger.recordOutput(
-        "Odometry/FieldRelativeVelocity", RobotState.getInstance().getFieldVelocity());
+        "Odometry/FieldRelativeVelocity", getFieldVelocity());
 
     Logger.recordOutput(
-        "Odometry/RobotStateEstimatedPose", RobotState.getInstance().getEstimatedPose());
+        "Odometry/RobotStateEstimatedPose", poseEstimator.getEstimatedPosition());
 
-    Logger.recordOutput("Drive/DistanceToHub", RobotState.getInstance().distanceToHub());
+    // Logger.recordOutput("Drive/DistanceToHub", );
   }
 
   /**
