@@ -39,6 +39,7 @@ import frc.robot.subsystems.intake.IntakePivotIOTalonFX;
 import frc.robot.subsystems.intake.IntakeRollerIOSim;
 import frc.robot.subsystems.intake.IntakeRollerIOTalonFX;
 import frc.robot.subsystems.shooter.Shooter;
+import frc.robot.subsystems.shooter.ShooterCalculator;
 import frc.robot.subsystems.shooter.ShooterConstants;
 import frc.robot.subsystems.shooter.ShooterFlywheelIOSim;
 import frc.robot.subsystems.shooter.ShooterFlywheelIOTalonFX;
@@ -99,13 +100,13 @@ public class RobotContainer {
                 new ModuleIOTalonFX(DriveConstants.FrontRight),
                 new ModuleIOTalonFX(DriveConstants.BackLeft),
                 new ModuleIOTalonFX(DriveConstants.BackRight));
+
+        
         vision =
             new Vision(
-                (visionRobotPose, timestamp, stds) -> {
-                  drive.addVisionMeasurement(visionRobotPose, timestamp, stds);
-                  RobotState.getInstance().addVisionObservation(visionRobotPose, timestamp, stds);
-                },
+                drive::addVisionMeasurement,
                 new VisionIOLimelight(camera0Name, drive::getRotation));
+        ShooterCalculator.provideDrive(drive);
         // new VisionIOLimelight(camera1Name, drive::getRotation));
         intake =
             new Intake(
@@ -209,6 +210,7 @@ public class RobotContainer {
                 new ShooterHoodIOSim(
                     0.02, ShooterConstants.hoodHardware, ShooterConstants.shooterSimConfig),
                 drive);
+        ShooterCalculator.provideDrive(drive);
         break;
 
       default:
@@ -222,7 +224,8 @@ public class RobotContainer {
                 new ModuleIO() {});
         vision =
             new Vision(
-                RobotState.getInstance()::addVisionObservation,
+                // RobotState.getInstance()::addVisionObservation,
+                drive::addVisionMeasurement,
                 new VisionIO() {},
                 new VisionIO() {});
 
@@ -230,6 +233,7 @@ public class RobotContainer {
         transfer = new Transfer(null, null);
         spindexer = new Spindexer(new SpindexerIOSim(0, null, null, null));
         shooter = new Shooter(null, null, null, null);
+        ShooterCalculator.provideDrive(drive);
         break;
     }
     teleopCommands = new TeleopCommands(intake, spindexer, transfer, shooter, controller);
