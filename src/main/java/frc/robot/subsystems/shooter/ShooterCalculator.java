@@ -16,9 +16,9 @@ import edu.wpi.first.math.interpolation.InterpolatingDoubleTreeMap;
 import edu.wpi.first.math.interpolation.InterpolatingTreeMap;
 import edu.wpi.first.math.interpolation.InverseInterpolator;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
-import frc.robot.RobotState;
 import frc.robot.constants.Constants;
 import frc.robot.constants.FieldConstants;
+import frc.robot.subsystems.drive.Drive;
 import frc.robot.util.geometry.AllianceFlipUtil;
 import frc.robot.util.geometry.GeomUtil;
 import lombok.experimental.ExtensionMethod;
@@ -40,9 +40,15 @@ public class ShooterCalculator {
   private double turretVelocity;
   private double hoodVelocity;
 
+  private static Drive drive;
+
   public static ShooterCalculator getInstance() {
     if (instance == null) instance = new ShooterCalculator();
     return instance;
+  }
+
+  public static void provideDrive(Drive drivePassed) {
+    drive = drivePassed;
   }
 
   public record LaunchingParameters(
@@ -104,8 +110,8 @@ public class ShooterCalculator {
     }
 
     // Calculate estimated pose while accounting for phase delay
-    Pose2d estimatedPose = RobotState.getInstance().getEstimatedPose();
-    ChassisSpeeds robotRelativeVelocity = RobotState.getInstance().getRobotVelocity();
+    Pose2d estimatedPose = drive.getPose();
+    ChassisSpeeds robotRelativeVelocity = drive.getChassisSpeeds();
     estimatedPose =
         estimatedPose.exp(
             new Twist2d(
@@ -121,7 +127,7 @@ public class ShooterCalculator {
     double turretToTargetDistance = target.getDistance(turretPosition.getTranslation());
 
     // Calculate field relative turret velocity
-    ChassisSpeeds robotVelocity = RobotState.getInstance().getFieldVelocity();
+    ChassisSpeeds robotVelocity = ChassisSpeeds.fromRobotRelativeSpeeds(robotRelativeVelocity, drive.getRotation());
     double robotAngle = estimatedPose.getRotation().getRadians();
     double turretVelocityX =
         robotVelocity.vxMetersPerSecond

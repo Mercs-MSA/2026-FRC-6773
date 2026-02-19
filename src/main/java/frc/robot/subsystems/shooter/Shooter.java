@@ -12,7 +12,7 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.RobotState;
+// import frc.robot.RobotState;
 import frc.robot.subsystems.drive.Drive;
 import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.Logger;
@@ -161,20 +161,6 @@ public class Shooter extends SubsystemBase {
     //   // Do nothing if limits are not reached
     // }
 
-    RobotState.getInstance()
-        .addTurretObservation(
-            new RobotState.TurretObservation(
-                Timer.getTimestamp(), new Rotation2d(getTurretPosition())));
-
-    // Log turret pose in field frame using pose transformations
-    Pose2d robotPose = RobotState.getInstance().getEstimatedPose();
-    Pose2d turretPose =
-        robotPose.transformBy(
-            new Transform2d(
-                new Translation2d(
-                    ShooterConstants.robotToTurret.getX(), ShooterConstants.robotToTurret.getY()),
-                Rotation2d.fromRadians(getTurretPosition())));
-    Logger.recordOutput("TurretPose", turretPose);
 
     if (useFlyBoolean.getAsBoolean()) {
       setFlywheelVelocityRPS(flywheelVel.getAsDouble());
@@ -308,77 +294,8 @@ public class Shooter extends SubsystemBase {
   }
 
   private void setFieldRelativeTurretTarget(Rotation2d angle, double velocity) {
-    double rrGoalAngle = calcRobotRelativeShooterParams(angle);
-    double rrGoalVel = calcRobotRelAngVelocity(velocity);
-
-    // Position error (proportional term) - use angle subtraction to minimize error
-    double currentAngle = getTurretPosition();
-    double error =
-        Rotation2d.fromRadians(rrGoalAngle)
-            .minus(Rotation2d.fromRadians(currentAngle))
-            .getRadians();
-
-    // // Hard bounds enforcement: clamp error to keep turret within limits
-    // double clampedError =
-    //     MathUtil.clamp(error, minLegalAngle - currentAngle, maxLegalAngle - currentAngle);
-
-    // Proper PD control law:
-    // P term: respond to position error (using clamped error to respect bounds)
-    double pTerm = error * 1.5;
-
-    // D term: damping using actual velocity (derivative of position)
-    // double dTerm = -getTurretVelocity() * turret_kD.getAsDouble();
-
-    // Feedforward term: help track moving targets (but zero out if at limit trying to exceed)
-    double feedforward = rrGoalVel * 0.12;
-    if ((currentAngle >= maxLegalAngle && feedforward > 0)
-        || (currentAngle <= minLegalAngle && feedforward < 0)) {
-      feedforward = 0;
-    }
-
-    double controlOutput = pTerm;
-    double voltage = MathUtil.clamp(controlOutput, -12.0, 12.0);
-
-    setTurretVoltage(voltage);
+    
   }
 
-  public double calcRobotRelAngVelocity(double fieldRelativeGoalVelocity) {
-    double robotAngularVelocity = RobotState.getInstance().getFieldVelocity().omegaRadiansPerSecond;
-    double robotRelativeGoalVelocity = fieldRelativeGoalVelocity - robotAngularVelocity;
-
-    return robotRelativeGoalVelocity;
-  }
-
-  /**
-   * calculates the optimized turret angle and
-   *
-   * @param fieldRelativeGoalAngle the goal angle relative to the field
-   * @return a Rotation2D containing best turret angle
-   */
-  public double calcRobotRelativeShooterParams(Rotation2d fieldRelativeGoalAngle) {
-    Rotation2d robotAngle = RobotState.getInstance().getRotation();
-
-    Rotation2d robotRelativeGoalAngle = fieldRelativeGoalAngle.minus(robotAngle);
-
-    boolean hasBestAngle = false;
-    double bestAngle = getTurretPosition(); // Default to current position if no valid angle exists
-
-    for (int i = -2; i < 3; i++) {
-      double potentialSetpoint = robotRelativeGoalAngle.getRadians() + Math.PI * 2.0 * i;
-      if (potentialSetpoint < minLegalAngle || potentialSetpoint > maxLegalAngle) {
-        continue;
-      } else {
-        if (!hasBestAngle) {
-          bestAngle = potentialSetpoint;
-          hasBestAngle = true;
-        }
-        if (Math.abs(lastGoalAngle - potentialSetpoint) < Math.abs(lastGoalAngle - bestAngle)) {
-          bestAngle = potentialSetpoint;
-        }
-      }
-    }
-    lastGoalAngle = bestAngle;
-    // Clamp to bounds to ensure turret respects limits
-    return MathUtil.clamp(bestAngle, minLegalAngle, maxLegalAngle);
-  }
+  
 }
