@@ -12,11 +12,13 @@ import static frc.robot.subsystems.vision.VisionConstants.*;
 import com.pathplanner.lib.auto.AutoBuilder;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.commands.AutonCommands;
 import frc.robot.commands.DriveCommands;
@@ -56,6 +58,7 @@ import frc.robot.subsystems.transfer.TransferIOSim;
 import frc.robot.subsystems.vision.Vision;
 import frc.robot.subsystems.vision.VisionIO;
 import frc.robot.subsystems.vision.VisionIOLimelight;
+import frc.robot.util.geometry.AllianceFlipUtil;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 /**
@@ -272,7 +275,7 @@ public class RobotContainer {
             () -> -controller.getLeftY(),
             () -> -controller.getLeftX(),
             () -> -controller.getRightX()));
-    // shooter.setDefaultCommand(shooter.shooterDefaultCommand());
+    shooter.setDefaultCommand(teleopCommands.trackHub());
 
     // controller.axisLessThan(4, )
 
@@ -299,12 +302,12 @@ public class RobotContainer {
                             new Pose2d(
                                 drive.getPose().getX(), drive.getPose().getY(), Rotation2d.kZero),
                             new Pose2d(
-                                FieldConstants.Hub.topCenterPoint.getX(),
-                                FieldConstants.Hub.topCenterPoint.getY(),
+                                AllianceFlipUtil.applyX(FieldConstants.Hub.topCenterPoint.getX()),
+                                AllianceFlipUtil.applyY(FieldConstants.Hub.topCenterPoint.getY()),
                                 Rotation2d.kZero))
                         .plus(new Rotation2d(Math.PI))));
-    controller.rightStick().whileTrue(teleopCommands.trackHub());
-    controller.rightStick().onFalse(teleopCommands.idleShooter());
+    // controller.rightStick().whileTrue(teleopCommands.trackHub());
+    // controller.rightStick().onFalse(teleopCommands.idleShooter());
 
     // Reset gyro to 0° when B button is pressed
     controller
@@ -333,6 +336,15 @@ public class RobotContainer {
 
     controller.x().onFalse(teleopCommands.spinStop());
     controller.x().onFalse(teleopCommands.stopKick());
+
+    Trigger inAllianceZone =
+        new Trigger(
+            () -> {
+              return checkInAllianceZone(drive.getPose());
+            });
+
+    // inAllianceZone.whileTrue(teleopCommands.trackHub());
+    // inAllianceZone.whileFalse(teleopCommands.idleShooter());
   }
 
   /**
@@ -342,5 +354,14 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     return autoChooser.get();
+  }
+
+  public boolean checkInAllianceZone(Pose2d robotPose) {
+    if (DriverStation.getAlliance().get() == DriverStation.Alliance.Blue) {
+      return robotPose.getX() <= FieldConstants.LinesVertical.allianceZone;
+    } else if (DriverStation.getAlliance().get() == DriverStation.Alliance.Red) {
+      return robotPose.getX() >= AllianceFlipUtil.applyX(FieldConstants.LinesVertical.allianceZone);
+    }
+    return false;
   }
 }

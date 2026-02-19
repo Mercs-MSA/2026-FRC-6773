@@ -10,11 +10,12 @@ import com.ctre.phoenix6.configs.CANcoderConfiguration;
 import com.ctre.phoenix6.configs.MotionMagicConfigs;
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
-import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.controls.NeutralOut;
+import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
+import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.ctre.phoenix6.signals.SensorDirectionValue;
@@ -47,7 +48,7 @@ public class ShooterTurretIOTalonFX implements ShooterTurretIO {
 
   // Control modes
   private final VoltageOut kVoltageControl = new VoltageOut(0.0);
-  private final MotionMagicVoltage kPositionControl = new MotionMagicVoltage(0.0);
+  private final PositionVoltage kPositionControl = new PositionVoltage(0.0);
 
   public ShooterTurretIOTalonFX(
       String canbus,
@@ -57,11 +58,13 @@ public class ShooterTurretIOTalonFX implements ShooterTurretIO {
       double statusSignalUpdateFrequency) {
 
     turretMotor = new TalonFX(hardware.turretMotorId(), canbus);
-    turretCANcoder = new CANcoder(hardware.turretMotorId(), canbus);
+    turretCANcoder = new CANcoder(hardware.cancoderID(), canbus);
 
     canCoderConfiguration.MagnetSensor.SensorDirection =
-        SensorDirectionValue.CounterClockwise_Positive; // TODO: check
-    canCoderConfiguration.MagnetSensor.MagnetOffset = 0.265625;
+        // SensorDirectionValue.CounterClockwise_Positive;
+        SensorDirectionValue.Clockwise_Positive; // TODO: check
+
+    canCoderConfiguration.MagnetSensor.MagnetOffset = 0;
     turretCANcoder.getConfigurator().apply(canCoderConfiguration);
 
     motorConfiguration.Slot0.kP = gains.p();
@@ -90,12 +93,13 @@ public class ShooterTurretIOTalonFX implements ShooterTurretIO {
             ? InvertedValue.CounterClockwise_Positive
             : InvertedValue.Clockwise_Positive;
 
+    // Rotor sensor is the built-in sensor
+    motorConfiguration.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.FusedCANcoder;
+    motorConfiguration.Feedback.FeedbackRemoteSensorID = turretCANcoder.getDeviceID();
+
     motorConfiguration.Feedback.SensorToMechanismRatio = hardware.gearing();
     motorConfiguration.Feedback.RotorToSensorRatio = 1.0;
-
-    // Rotor sensor is the built-in sensor
-    motorConfiguration.Feedback.FeedbackRemoteSensorID = turretCANcoder.getDeviceID();
-    // motorConfiguration.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.RotorSensor;
+    //
 
     // Enable to true because arm
     motorConfiguration.ClosedLoopGeneral.ContinuousWrap = true;

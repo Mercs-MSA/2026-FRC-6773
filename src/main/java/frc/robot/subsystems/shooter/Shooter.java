@@ -53,8 +53,8 @@ public class Shooter extends SubsystemBase {
 
   private Drive drive;
 
-  private double minLegalAngle = Math.toRadians(-45);
-  private double maxLegalAngle = Math.toRadians(45);
+  private double minLegalAngle = Math.toRadians(-90);
+  private double maxLegalAngle = Math.toRadians(90);
 
   private double lastGoalAngle = 0.0;
 
@@ -324,7 +324,7 @@ public class Shooter extends SubsystemBase {
 
     // Proper PD control law:
     // P term: respond to position error (using clamped error to respect bounds)
-    double pTerm = error * 1;
+    double pTerm = error * 1.5;
 
     // D term: damping using actual velocity (derivative of position)
     // double dTerm = -getTurretVelocity() * turret_kD.getAsDouble();
