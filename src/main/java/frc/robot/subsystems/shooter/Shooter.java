@@ -292,7 +292,7 @@ public class Shooter extends SubsystemBase {
     return run(
         () -> {
           var params = ShooterCalculator.getInstance().getParameters();
-          setFieldRelativeTurretTarget(params.turretAngle(), params.turretVelocity());
+          // setFieldRelativeTurretTarget(params.turretAngle(), params.turretVelocity());
           setFlywheelVelocityRPS(params.flywheelSpeed());
           setHoodPosition(Rotation2d.fromRadians(params.hoodAngle()));
           // setLaunchState(LaunchState.TRACKING);
