@@ -4,18 +4,27 @@
 
 package frc.robot.subsystems.shooter;
 
-import edu.wpi.first.math.MathUtil;
+import static edu.wpi.first.units.Units.Degrees;
+import static edu.wpi.first.units.Units.Inches;
+import static edu.wpi.first.units.Units.RadiansPerSecond;
+import static edu.wpi.first.units.Units.Rotations;
+import static edu.wpi.first.units.Units.RotationsPerSecond;
+
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Transform2d;
-import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.units.measure.Angle;
+import edu.wpi.first.units.measure.AngularVelocity;
+import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.RobotState;
+import frc.robot.constants.FieldConstants;
+// import frc.robot.RobotState;
+import frc.robot.subsystems.drive.Drive;
+import frc.robot.subsystems.shooter.ShooterTurretCalculator.ShotData;
 import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.Logger;
-import org.littletonrobotics.junction.networktables.LoggedNetworkBoolean;
 import org.littletonrobotics.junction.networktables.LoggedNetworkNumber;
 
 public class Shooter extends SubsystemBase {
@@ -50,8 +59,10 @@ public class Shooter extends SubsystemBase {
   private final ShooterHoodIO hoodHardware;
   private final ShooterHoodIOInputsAutoLogged hoodInputs = new ShooterHoodIOInputsAutoLogged();
 
-  private double minLegalAngle = Math.toRadians(-45);
-  private double maxLegalAngle = Math.toRadians(45);
+  private Drive drive;
+
+  private double minLegalAngle = Math.toRadians(-90);
+  private double maxLegalAngle = Math.toRadians(90);
 
   private double lastGoalAngle = 0.0;
 
@@ -91,16 +102,16 @@ public class Shooter extends SubsystemBase {
   private final LoggedNetworkNumber flywheel_kG =
       new LoggedNetworkNumber("Shooter/Gains/Flywheel_kG", ShooterConstants.flywheelGains.g());
 
-  private final LoggedNetworkNumber flywheelVel =
-      new LoggedNetworkNumber("Shooter/Flywheel/Velocity", 0);
+  // private final LoggedNetworkNumber flywheelVel =
+  //     new LoggedNetworkNumber("Shooter/Flywheel/Velocity", 0);
 
-  private final LoggedNetworkBoolean useFlyBoolean =
-      new LoggedNetworkBoolean("Shooter/Flywheel/UseCustomVel", false);
+  // private final LoggedNetworkBoolean useFlyBoolean =
+  //     new LoggedNetworkBoolean("Shooter/Flywheel/UseCustomVel", false);
 
-  private final LoggedNetworkNumber hoodAngle = new LoggedNetworkNumber("Shooter/Hood/Angle", 0);
+  // private final LoggedNetworkNumber hoodAngle = new LoggedNetworkNumber("Shooter/Hood/Angle", 0);
 
-  private final LoggedNetworkBoolean useHoodBool =
-      new LoggedNetworkBoolean("Shooter/Hood/UseCustomAngle", false);
+  // private final LoggedNetworkBoolean useHoodBool =
+  //     new LoggedNetworkBoolean("Shooter/Hood/UseCustomAngle", false);
 
   // private final LoggedNetworkNumber flywheel_maxVelocity =
   //     new LoggedNetworkNumber(
@@ -156,28 +167,23 @@ public class Shooter extends SubsystemBase {
     //   // Do nothing if limits are not reached
     // }
 
-    RobotState.getInstance()
-        .addTurretObservation(
-            new RobotState.TurretObservation(
-                Timer.getTimestamp(), new Rotation2d(getTurretPosition())));
+    // if (useFlyBoolean.getAsBoolean()) {
+    //   setFlywheelVelocityRPS(flywheelVel.getAsDouble());
+    // }
 
-    // Log turret pose in field frame using pose transformations
-    Pose2d robotPose = RobotState.getInstance().getEstimatedPose();
-    Pose2d turretPose =
-        robotPose.transformBy(
-            new Transform2d(
-                new Translation2d(
-                    ShooterConstants.robotToTurret.getX(), ShooterConstants.robotToTurret.getY()),
-                Rotation2d.fromRadians(getTurretPosition())));
-    Logger.recordOutput("TurretPose", turretPose);
+    // if (useFlyBoolean.getAsBoolean()) {
+    //   setHoodPosition(Rotation2d.fromDegrees(hoodAngle.getAsDouble()));
+    // }
 
-    if (useFlyBoolean.getAsBoolean()) {
-      setFlywheelVelocityRPS(flywheelVel.getAsDouble());
-    }
+    Pose2d turretBotPose =
+        new Pose3d(drive.getPose()).transformBy(ShooterConstants.robotToTurret).toPose2d();
+    Pose2d turretPoseOut =
+        new Pose2d(
+            turretBotPose.getX(),
+            turretBotPose.getY(),
+            turretBotPose.getRotation().plus(Rotation2d.fromRotations(getTurretPosition())));
 
-    if (useFlyBoolean.getAsBoolean()) {
-      setHoodPosition(Rotation2d.fromDegrees(hoodAngle.getAsDouble()));
-    }
+    Logger.recordOutput("Shooter/Inputs/Hood/TurretPose", turretPoseOut);
   }
   //   public void setPivotGoal(IntakePivotGoal desiredGoal) {
   //     currentPivotGoal = desiredGoal;
@@ -257,7 +263,7 @@ public class Shooter extends SubsystemBase {
 
   @AutoLogOutput(key = "Shooter/Turret/MeasuredPositionRad")
   public double getTurretPosition() {
-    return turretInputs.position.getRadians();
+    return turretInputs.position.getRotations();
   }
 
   @AutoLogOutput(key = "Shooter/Turret/VelocityRadPerSec")
@@ -275,6 +281,10 @@ public class Shooter extends SubsystemBase {
     };
   }
 
+  public void setTurretSetpoint(Angle angle, AngularVelocity angvel) {
+    turretHardware.setTurretSetpoint(angle, angvel);
+  }
+
   // public Command runFlywheelTrackTargetCommand() {
   // return runEnd(
   //     () ->
@@ -286,10 +296,7 @@ public class Shooter extends SubsystemBase {
   public Command runTrackTargetCommand() {
     return run(
         () -> {
-          var params = ShooterCalculator.getInstance().getParameters();
-          setFieldRelativeTurretTarget(params.turretAngle(), params.turretVelocity());
-          setFlywheelVelocityRPS(params.flywheelSpeed());
-          setHoodPosition(Rotation2d.fromRadians(params.hoodAngle()));
+          calculateShot(drive.getPose());
           // setLaunchState(LaunchState.TRACKING);
         });
   }
@@ -302,78 +309,23 @@ public class Shooter extends SubsystemBase {
         });
   }
 
-  private void setFieldRelativeTurretTarget(Rotation2d angle, double velocity) {
-    double rrGoalAngle = calcRobotRelativeShooterParams(angle);
-    double rrGoalVel = calcRobotRelAngVelocity(velocity);
+  private void calculateShot(Pose2d robotPose) {
+    ChassisSpeeds fieldSpeeds = drive.getFieldVelocity();
 
-    // Position error (proportional term) - use angle subtraction to minimize error
-    double currentAngle = getTurretPosition();
-    double error =
-        Rotation2d.fromRadians(rrGoalAngle)
-            .minus(Rotation2d.fromRadians(currentAngle))
-            .getRadians();
+    ShotData calculatedShot =
+        ShooterTurretCalculator.iterativeMovingShotFromMap(
+            robotPose, fieldSpeeds, FieldConstants.Hub.topCenterPoint, 2);
+    Angle azimuthAngle =
+        ShooterTurretCalculator.calculateAzimuthAngle(
+            robotPose, calculatedShot.target(), Angle.ofBaseUnits(getTurretPosition(), Rotations));
+    AngularVelocity azimuthVelocity = RadiansPerSecond.of(-fieldSpeeds.omegaRadiansPerSecond);
+    setTurretSetpoint(azimuthAngle, azimuthVelocity);
+    setHoodPosition(Rotation2d.fromDegrees(calculatedShot.getHoodAngle().in(Degrees)));
+    setFlywheelVelocityRPS(
+        ShooterTurretCalculator.linearToAngularVelocity(
+                calculatedShot.getExitVelocity(), Distance.ofBaseUnits(2, Inches))
+            .in(RotationsPerSecond));
 
-    // // Hard bounds enforcement: clamp error to keep turret within limits
-    // double clampedError =
-    //     MathUtil.clamp(error, minLegalAngle - currentAngle, maxLegalAngle - currentAngle);
-
-    // Proper PD control law:
-    // P term: respond to position error (using clamped error to respect bounds)
-    double pTerm = error * 1;
-
-    // D term: damping using actual velocity (derivative of position)
-    // double dTerm = -getTurretVelocity() * turret_kD.getAsDouble();
-
-    // Feedforward term: help track moving targets (but zero out if at limit trying to exceed)
-    double feedforward = rrGoalVel * 0.12;
-    if ((currentAngle >= maxLegalAngle && feedforward > 0)
-        || (currentAngle <= minLegalAngle && feedforward < 0)) {
-      feedforward = 0;
-    }
-
-    double controlOutput = pTerm;
-    double voltage = MathUtil.clamp(controlOutput, -12.0, 12.0);
-
-    setTurretVoltage(voltage);
-  }
-
-  public double calcRobotRelAngVelocity(double fieldRelativeGoalVelocity) {
-    double robotAngularVelocity = RobotState.getInstance().getFieldVelocity().omegaRadiansPerSecond;
-    double robotRelativeGoalVelocity = fieldRelativeGoalVelocity - robotAngularVelocity;
-
-    return robotRelativeGoalVelocity;
-  }
-
-  /**
-   * calculates the optimized turret angle and
-   *
-   * @param fieldRelativeGoalAngle the goal angle relative to the field
-   * @return a Rotation2D containing best turret angle
-   */
-  public double calcRobotRelativeShooterParams(Rotation2d fieldRelativeGoalAngle) {
-    Rotation2d robotAngle = RobotState.getInstance().getRotation();
-
-    Rotation2d robotRelativeGoalAngle = fieldRelativeGoalAngle.minus(robotAngle);
-
-    boolean hasBestAngle = false;
-    double bestAngle = getTurretPosition(); // Default to current position if no valid angle exists
-
-    for (int i = -2; i < 3; i++) {
-      double potentialSetpoint = robotRelativeGoalAngle.getRadians() + Math.PI * 2.0 * i;
-      if (potentialSetpoint < minLegalAngle || potentialSetpoint > maxLegalAngle) {
-        continue;
-      } else {
-        if (!hasBestAngle) {
-          bestAngle = potentialSetpoint;
-          hasBestAngle = true;
-        }
-        if (Math.abs(lastGoalAngle - potentialSetpoint) < Math.abs(lastGoalAngle - bestAngle)) {
-          bestAngle = potentialSetpoint;
-        }
-      }
-    }
-    lastGoalAngle = bestAngle;
-    // Clamp to bounds to ensure turret respects limits
-    return MathUtil.clamp(bestAngle, minLegalAngle, maxLegalAngle);
+    Logger.recordOutput("Turret/Shot", calculatedShot);
   }
 }

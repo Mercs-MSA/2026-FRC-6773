@@ -1,8 +1,13 @@
 package frc.robot.subsystems.shooter;
 
+import static edu.wpi.first.units.Units.Radians;
+import static edu.wpi.first.units.Units.RadiansPerSecond;
+
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.system.plant.LinearSystemId;
+import edu.wpi.first.units.measure.Angle;
+import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.wpilibj.simulation.DCMotorSim;
 import frc.robot.subsystems.shooter.ShooterConstants.ShooterTurretHardware;
 import frc.robot.subsystems.shooter.ShooterConstants.SimulationConfiguration;
@@ -56,5 +61,11 @@ public class ShooterTurretIOSim implements ShooterTurretIO {
   @Override
   public void stop() {
     setVoltage(0.0);
+  }
+
+  @Override
+  public void setTurretSetpoint(Angle angle, AngularVelocity velocity) {
+    turretMotor.setAngle(angle.in(Radians));
+    turretMotor.setAngularVelocity(velocity.in(RadiansPerSecond));
   }
 }

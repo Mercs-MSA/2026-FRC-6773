@@ -5,6 +5,8 @@
 package frc.robot.subsystems.shooter;
 
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.units.measure.Angle;
+import edu.wpi.first.units.measure.AngularVelocity;
 import org.littletonrobotics.junction.AutoLog;
 
 public interface ShooterTurretIO {
@@ -76,4 +78,6 @@ public interface ShooterTurretIO {
 
   /** Reset the relative encoder to 0 */
   public default void resetPosition() {}
+
+  public default void setTurretSetpoint(Angle position, AngularVelocity velocity) {}
 }
