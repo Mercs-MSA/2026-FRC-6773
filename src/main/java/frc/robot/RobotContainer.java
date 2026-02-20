@@ -155,7 +155,7 @@ public class RobotContainer {
                     ShooterConstants.hoodHardware,
                     ShooterConstants.hoodConfigs,
                     ShooterConstants.hoodGains,
-                    ShooterConstants.kStatusSignalUpdateFrequencyHz));
+                    ShooterConstants.kStatusSignalUpdateFrequencyHz), drive);
         break;
 
       case SIM:
