@@ -19,16 +19,16 @@ public class Spindexer extends SubsystemBase {
 
   @Override
   public void periodic() {
-    switch (shooterState) {
-      case INACTIVE:
-        stopSpindexer();
-        break;
-      case SPINUP:
-        stopSpindexer();
-      case SCORE:
-        setVelocity(12.0);
-        break;
-    }
+    // switch (shooterState) {
+    //   case INACTIVE:
+    //     stopSpindexer();
+    //     break;
+    //   case SPINUP:
+    //     stopSpindexer();
+    //   case SCORE:
+    //     setVelocity(12.0);
+    //     break;
+    // }
 
     kSpindexerHardware.updateInputs(kSpindexerInputs);
     Logger.processInputs("Spindexer/Inputs", kSpindexerInputs);

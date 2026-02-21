@@ -25,6 +25,7 @@ import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.shooter.ShooterTurretCalculator.ShotData;
 import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.Logger;
+import org.littletonrobotics.junction.networktables.LoggedNetworkBoolean;
 import org.littletonrobotics.junction.networktables.LoggedNetworkNumber;
 
 public class Shooter extends SubsystemBase {
@@ -102,16 +103,16 @@ public class Shooter extends SubsystemBase {
   private final LoggedNetworkNumber flywheel_kG =
       new LoggedNetworkNumber("Shooter/Gains/Flywheel_kG", ShooterConstants.flywheelGains.g());
 
-  // private final LoggedNetworkNumber flywheelVel =
-  //     new LoggedNetworkNumber("Shooter/Flywheel/Velocity", 0);
+  private final LoggedNetworkNumber flywheelVel =
+      new LoggedNetworkNumber("Shooter/Flywheel/Velocity", 0);
 
-  // private final LoggedNetworkBoolean useFlyBoolean =
-  //     new LoggedNetworkBoolean("Shooter/Flywheel/UseCustomVel", false);
+  private final LoggedNetworkBoolean useFlyBoolean =
+      new LoggedNetworkBoolean("Shooter/Flywheel/UseCustomVel", false);
 
-  // private final LoggedNetworkNumber hoodAngle = new LoggedNetworkNumber("Shooter/Hood/Angle", 0);
+  private final LoggedNetworkNumber hoodAngle = new LoggedNetworkNumber("Shooter/Hood/Angle", 0);
 
-  // private final LoggedNetworkBoolean useHoodBool =
-  //     new LoggedNetworkBoolean("Shooter/Hood/UseCustomAngle", false);
+  private final LoggedNetworkBoolean useHoodBool =
+      new LoggedNetworkBoolean("Shooter/Hood/UseCustomAngle", false);
 
   // private final LoggedNetworkNumber flywheel_maxVelocity =
   //     new LoggedNetworkNumber(
@@ -169,13 +170,13 @@ public class Shooter extends SubsystemBase {
     //   // Do nothing if limits are not reached
     // }
 
-    // if (useFlyBoolean.getAsBoolean()) {
-    //   setFlywheelVelocityRPS(flywheelVel.getAsDouble());
-    // }
+    if (useFlyBoolean.getAsBoolean()) {
+      setFlywheelVelocityRPS(flywheelVel.getAsDouble());
+    }
 
-    // if (useFlyBoolean.getAsBoolean()) {
-    //   setHoodPosition(Rotation2d.fromDegrees(hoodAngle.getAsDouble()));
-    // }
+    if (useFlyBoolean.getAsBoolean()) {
+      setHoodPosition(Rotation2d.fromDegrees(hoodAngle.getAsDouble()));
+    }
 
     Pose2d turretBotPose =
         new Pose3d(drive.getPose()).transformBy(ShooterConstants.robotToTurret).toPose2d();
