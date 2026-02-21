@@ -335,8 +335,8 @@ public class RobotContainer {
         // .whileTrue(teleopCommands.whileShooting())
         .onFalse(teleopCommands.stopShoot());
 
-    // controller.x().whileTrue(teleopCommands.spinAlt());
-    // controller.x().whileTrue(teleopCommands.startKick());
+    controller.x().whileTrue(teleopCommands.spinAlt());
+    controller.x().whileTrue(teleopCommands.startKick());
 
     controller.x().onFalse(teleopCommands.spinStop());
     controller.x().onFalse(teleopCommands.stopKick());

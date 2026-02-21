@@ -2,9 +2,12 @@ package frc.robot.commands;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.path.PathPlannerPath;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.subsystems.drive.Drive;
@@ -16,6 +19,8 @@ import java.util.Optional;
 
 public class AutonCommands extends TeleopCommands {
 
+  public Drive drive;
+
   public AutonCommands(
       Drive drive,
       Intake intake,
@@ -24,9 +29,8 @@ public class AutonCommands extends TeleopCommands {
       Shooter shooter,
       CommandXboxController controller) {
     super(intake, indexer, transfer, shooter, controller);
+    this.drive = drive;
   }
-
-
 
   public void registerNamedCommands() {}
 
@@ -65,16 +69,28 @@ public class AutonCommands extends TeleopCommands {
         autonCommand.addCommands(getPathCommand("H_Intake_SStart"));
         autonCommand.addCommands(startShoot());
         autonCommand.addCommands(Commands.waitSeconds(2.5));
-        autonCommand.addCommands(getPathCommand("H_SStart_Climb"));
+        // autonCommand.addCommands(getPathCommand("H_SStart_Climb"));
 
         break;
       case "LEFT":
+        autonCommand.addCommands(
+            Commands.runOnce(
+                () -> {
+                  drive.setPose(new Pose2d(3.6, 5.6, new Rotation2d(Math.toRadians(-90))));
+                }));
         autonCommand.addCommands(getPathCommand("D_Start_Intake"));
         autonCommand.addCommands(runIntakeFloorPickup());
         autonCommand.addCommands(getPathCommand("D_Intake_SStart"));
-        autonCommand.addCommands(startShoot());
-        autonCommand.addCommands(Commands.waitSeconds(2.5));
-        autonCommand.addCommands(getPathCommand("D_SStart_Climb"));
+        autonCommand.addCommands(new ParallelCommandGroup(spinAlt(), startKick(), startShoot()));
+        // autonCommand.addCommands(startShoot());
+        
+        // autonCommand.addCommands(Commands.waitSeconds(0.1));
+
+        // autonCommand.addCommands(spinAlt());
+        // autonCommand.addCommands(startKick());
+        // autonCommand.addCommands(Commands.waitSeconds(2.5));
+
+        // autonCommand.addCommands(getPathCommand("D_SStart_Climb"));
 
         break;
       default:
