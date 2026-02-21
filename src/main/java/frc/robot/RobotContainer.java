@@ -155,7 +155,8 @@ public class RobotContainer {
                     ShooterConstants.hoodHardware,
                     ShooterConstants.hoodConfigs,
                     ShooterConstants.hoodGains,
-                    ShooterConstants.kStatusSignalUpdateFrequencyHz), drive);
+                    ShooterConstants.kStatusSignalUpdateFrequencyHz),
+                drive);
         break;
 
       case SIM:
@@ -233,7 +234,7 @@ public class RobotContainer {
         break;
     }
     teleopCommands = new TeleopCommands(intake, spindexer, transfer, shooter, controller);
-    autonCommands = new AutonCommands(intake, spindexer, transfer, shooter, controller);
+    autonCommands = new AutonCommands(drive, intake, spindexer, transfer, shooter, controller);
     autonCommands.registerNamedCommands();
 
     // Set up auto routines

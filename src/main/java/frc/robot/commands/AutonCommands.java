@@ -7,6 +7,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.shooter.Shooter;
 import frc.robot.subsystems.spindexer.Spindexer;
@@ -16,6 +17,7 @@ import java.util.Optional;
 public class AutonCommands extends TeleopCommands {
 
   public AutonCommands(
+      Drive drive,
       Intake intake,
       Spindexer indexer,
       Transfer transfer,
@@ -23,6 +25,8 @@ public class AutonCommands extends TeleopCommands {
       CommandXboxController controller) {
     super(intake, indexer, transfer, shooter, controller);
   }
+
+
 
   public void registerNamedCommands() {}
 
@@ -53,20 +57,25 @@ public class AutonCommands extends TeleopCommands {
 
     switch (startChoice) {
       case "CENTER":
-        autonCommand.addCommands(getPathCommand("C_Start_Climb.traj"));
+        autonCommand.addCommands(getPathCommand("C_Start_Climb"));
         break;
       case "RIGHT":
         autonCommand.addCommands(getPathCommand("H_Start_Intake"));
         autonCommand.addCommands(runIntakeFloorPickup());
         autonCommand.addCommands(getPathCommand("H_Intake_SStart"));
-        autonCommand.addCommands(trackHub());
         autonCommand.addCommands(startShoot());
+        autonCommand.addCommands(Commands.waitSeconds(2.5));
+        autonCommand.addCommands(getPathCommand("H_SStart_Climb"));
+
         break;
       case "LEFT":
         autonCommand.addCommands(getPathCommand("D_Start_Intake"));
         autonCommand.addCommands(runIntakeFloorPickup());
         autonCommand.addCommands(getPathCommand("D_Intake_SStart"));
         autonCommand.addCommands(startShoot());
+        autonCommand.addCommands(Commands.waitSeconds(2.5));
+        autonCommand.addCommands(getPathCommand("D_SStart_Climb"));
+
         break;
       default:
         DriverStation.reportError("Big oops: Invalid Start Pos", false);

@@ -129,7 +129,8 @@ public class Shooter extends SubsystemBase {
   public Shooter(
       ShooterFlywheelIO flywheelHardwareIO,
       ShooterTurretIO turretHardwareIO,
-      ShooterHoodIO hoodHardwareIO, Drive drive) {
+      ShooterHoodIO hoodHardwareIO,
+      Drive drive) {
     flywheelHardware = flywheelHardwareIO;
     turretHardware = turretHardwareIO;
     hoodHardware = hoodHardwareIO;

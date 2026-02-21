@@ -4,6 +4,13 @@
  "type":"Swerve",
  "variables":{
   "expressions":{
+   "SpeedOverBump":{
+    "dimension":"LinVel",
+    "var":{
+     "exp":"2.5 m / s",
+     "val":2.5
+    }
+   },
    "WINDBACK_DIST":{
     "dimension":"Number",
     "var":{
@@ -113,16 +120,16 @@
    },
    "D_Shoot":{
     "x":{
-     "exp":"3.3 m",
-     "val":3.3
+     "exp":"3.1 m",
+     "val":3.1
     },
     "y":{
      "exp":"5.35 m",
      "val":5.35
     },
     "heading":{
-     "exp":"-90 deg",
-     "val":-1.5707963267948966
+     "exp":"-0.756671665229757 rad",
+     "val":-0.756671665229757
     }
    },
    "HI_Start":{
@@ -183,16 +190,16 @@
    },
    "H_Shoot":{
     "x":{
-     "exp":"3.3 m",
-     "val":3.3
+     "exp":"3.1 m",
+     "val":3.1
     },
     "y":{
-     "exp":"2.8 m",
-     "val":2.8
+     "exp":"2.6 m",
+     "val":2.6
     },
     "heading":{
-     "exp":"90 deg",
-     "val":1.5707963267948966
+     "exp":"0.756671665229757 rad",
+     "val":0.756671665229757
     }
    }
   }
