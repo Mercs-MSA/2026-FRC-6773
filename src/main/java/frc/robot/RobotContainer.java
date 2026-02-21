@@ -301,15 +301,15 @@ public class RobotContainer {
                 () -> -controller.getLeftY(),
                 () -> -controller.getLeftX(),
                 () ->
-                    drive
-                        .interpolateAngle(
-                            new Pose2d(
-                                drive.getPose().getX(), drive.getPose().getY(), Rotation2d.kZero),
-                            new Pose2d(
-                                AllianceFlipUtil.applyX(FieldConstants.Hub.topCenterPoint.getX()),
-                                AllianceFlipUtil.applyY(FieldConstants.Hub.topCenterPoint.getY()),
-                                Rotation2d.kZero))
-                        .plus(new Rotation2d(Math.PI))));
+                    drive.interpolateAngle(
+                        new Pose2d(
+                            drive.getPose().getX(), drive.getPose().getY(), Rotation2d.kZero),
+                        new Pose2d(
+                            AllianceFlipUtil.applyX(FieldConstants.Hub.topCenterPoint.getX()),
+                            AllianceFlipUtil.applyY(FieldConstants.Hub.topCenterPoint.getY()),
+                            Rotation2d.kZero))
+                // .plus(new Rotation2d(Math.PI))
+                ));
     // controller.rightStick().whileTrue(teleopCommands.trackHub());
     // controller.rightStick().onFalse(teleopCommands.idleShooter());
 

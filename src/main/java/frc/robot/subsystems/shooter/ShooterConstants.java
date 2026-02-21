@@ -16,8 +16,7 @@ public class ShooterConstants {
 
   public static final Rotation2d turretPositionTolerance = new Rotation2d(Math.toRadians(0.5));
 
-  public static Transform3d robotToTurret =
-      new Transform3d(-0.19685, 0.13567, 0.44, Rotation3d.kZero);
+  public static Transform3d robotToTurret = new Transform3d(-0.14, 0.14, 0.545, Rotation3d.kZero);
 
   public record ShooterFlywheelHardware(
       int flyWheelMotorLeftId, int flyWheelMotorRightId, double gearing) {}
