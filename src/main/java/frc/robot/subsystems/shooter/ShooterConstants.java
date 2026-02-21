@@ -75,7 +75,7 @@ public class ShooterConstants {
   public record SimulationConfiguration(DCMotor motorType, double measurementStdDevs) {}
 
   public static final ShooterFlywheelHardware flywheelHardware =
-      new ShooterFlywheelHardware(56, 57, 6000 / 4800);
+      new ShooterFlywheelHardware(56, 57, 24 / 20);
 
   public static final ShooterHoodHardware hoodHardware =
       new ShooterHoodHardware(

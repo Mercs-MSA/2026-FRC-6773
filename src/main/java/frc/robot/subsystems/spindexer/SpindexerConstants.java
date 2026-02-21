@@ -49,10 +49,10 @@ public class SpindexerConstants {
   public static final SpindexerHardware kSpindexerHardware =
       new SpindexerHardware(
           43, // TODO: CAN ID
-          18.0 / 24.0 // TODO: GEARING
+          1.5 // TODO: GEARING
           );
 
-  public static final double kGearing = 1.0 / 3.0; // TODO Check this value
+  //   public static final double kGearing = 1.0 / 3.0; // TODO Check this value
 
   public record SpindexerGains(double p, double i, double d, double v, double s) {}
 
@@ -64,7 +64,7 @@ public class SpindexerConstants {
 
   public static final SpindexerTalonFXConfiguration kSpindexerConfiguration =
       new SpindexerTalonFXConfiguration(
-          false, // Invert
+          true, // Invert
           true, // Enable stator current limiting
           true, // Enable supply current limiting
           60.0, // Stator limit

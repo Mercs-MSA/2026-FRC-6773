@@ -74,6 +74,8 @@ public class ShooterFlywheelIOTalonFX implements ShooterFlywheelIO {
     statorAmps = flywheelMotorLeft.getStatorCurrent();
     temperatureCelsius = flywheelMotorLeft.getDeviceTemp();
 
+    motorConfiguration.Feedback.SensorToMechanismRatio = hardware.gearing();
+
     BaseStatusSignal.setUpdateFrequencyForAll(
         statusSignalUpdateFrequency,
         leftVelocityRotPerSec,

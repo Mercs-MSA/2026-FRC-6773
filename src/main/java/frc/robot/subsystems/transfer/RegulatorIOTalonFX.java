@@ -47,6 +47,9 @@ public class RegulatorIOTalonFX implements TransferIO {
     motorconfig.CurrentLimits.StatorCurrentLimit = config.statorCurrentLimitAmps();
     motorconfig.Voltage.PeakForwardVoltage = config.peakForwardVoltage();
     motorconfig.Voltage.PeakReverseVoltage = config.peakReverseVoltage();
+
+    motorconfig.Feedback.SensorToMechanismRatio = regulatorHardware.gearing();
+
     motorconfig.MotorOutput.Inverted =
         config.invert()
             ? InvertedValue.CounterClockwise_Positive
@@ -75,6 +78,7 @@ public class RegulatorIOTalonFX implements TransferIO {
         temperatureCelsius);
 
     regulator.optimizeBusUtilization(0.0, 1.0);
+    regulator.getConfigurator().apply(motorconfig, 1);
   }
 
   public RegulatorIOTalonFX(

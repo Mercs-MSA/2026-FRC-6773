@@ -49,15 +49,15 @@ public class TransferConstants {
 
   public static final TransferHardware kTransferRegulatorHardware =
       new TransferHardware(
-          52, 18.0 / 24.0 // TODO: GEARING
+          52, 1.5 // TODO: GEARING
           );
 
   public static final TransferHardware kTransferKickerHardware =
       new TransferHardware(
-          51, 18.0 / 24.0 // TODO: GEARING
+          51, 1.5 // TODO: GEARING
           );
 
-  public static final double kGearing = 1.0 / 3.0; // TODO Check this value
+  //   public static final double kGearing = 1.0 / 3.0; // TODO Check this value
 
   public record TransferGains(double p, double i, double d, double v, double s) {}
 
@@ -72,7 +72,7 @@ public class TransferConstants {
 
   public static final TransferTalonFXConfiguration kTransferConfiguration =
       new TransferTalonFXConfiguration(
-          false, // Invert
+          true, // Invert
           true, // Enable stator current limiting
           true, // Enable supply current limiting
           60.0, // Stator limit

@@ -47,6 +47,9 @@ public class KickerIOTalonFX implements TransferIO {
     motorconfig.CurrentLimits.StatorCurrentLimit = config.statorCurrentLimitAmps();
     motorconfig.Voltage.PeakForwardVoltage = config.peakForwardVoltage();
     motorconfig.Voltage.PeakReverseVoltage = config.peakReverseVoltage();
+
+    motorconfig.Feedback.SensorToMechanismRatio = kickerHardware.gearing();
+
     motorconfig.MotorOutput.Inverted =
         config.invert()
             ? InvertedValue.CounterClockwise_Positive
@@ -75,6 +78,7 @@ public class KickerIOTalonFX implements TransferIO {
         temperatureCelsius);
 
     kicker.optimizeBusUtilization(0.0, 1.0);
+    kicker.getConfigurator().apply(motorconfig, 1);
   }
 
   public KickerIOTalonFX(

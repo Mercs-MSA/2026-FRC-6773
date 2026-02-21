@@ -103,7 +103,7 @@ public class TeleopCommands {
     return Commands.run(
         () -> {
           // shooter.setFlywheelVelocityRPS(60);
-          mTransfer.setRegulatorVelocity(50);
+          mTransfer.setRegulatorVelocity(75);
         });
   }
 
@@ -117,14 +117,14 @@ public class TeleopCommands {
           shooter.setHoodPosition(Rotation2d.fromDegrees(1));
           // shooter.setFlywheelVelocityRPS(10);
           shooter.setTurretVoltage(0);
-          mTransfer.setRegulatorVelocity(10);
+          mTransfer.setRegulatorVelocity(15);
         });
   }
 
   public Command startKick() {
     return Commands.run(
         () -> {
-          mTransfer.setKickerVelocity(40);
+          mTransfer.setKickerVelocity(60);
           // TODO: ADD SHOOTER
         });
   }
@@ -148,7 +148,7 @@ public class TeleopCommands {
   public Command spinAlt() {
     return Commands.run(
         () -> {
-          mIndexer.setVelocity(-30);
+          mIndexer.setVelocity(-45);
         },
         mIndexer);
   }
