@@ -1,6 +1,5 @@
 package frc.robot.commands;
 
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -83,13 +82,13 @@ public class TeleopCommands {
   //       });
   // }
 
-  public Command stopShooting() {
-    return Commands.run(
-        () -> {
-          mTransfer.stopTransfer();
-          mIndexer.setState(ShooterState.INACTIVE);
-        });
-  }
+  // public Command stopShooting() {
+  //   return Commands.run(
+  //       () -> {
+  //         mTransfer.stopTransfer();
+  //         mIndexer.setState(ShooterState.INACTIVE);
+  //       });
+  // }
 
   public Command stopShoot() {
     return Commands.runOnce(
@@ -103,7 +102,7 @@ public class TeleopCommands {
     return Commands.run(
         () -> {
           // shooter.setFlywheelVelocityRPS(60);
-          mTransfer.setRegulatorVelocity(75);
+          mTransfer.setRegulatorVelocity(50);
         });
   }
 
@@ -112,12 +111,12 @@ public class TeleopCommands {
   }
 
   public Command idleShooter() {
-    return Commands.runOnce(
+    return Commands.run(
         () -> {
-          shooter.setHoodPosition(Rotation2d.fromDegrees(1));
-          // shooter.setFlywheelVelocityRPS(10);
+          // shooter.setHoodPosition(Rotation2d.fromDegrees(1));
+          shooter.setFlywheelVelocityRPS(10);
           shooter.setTurretVoltage(0);
-          mTransfer.setRegulatorVelocity(15);
+          // mTransfer.setRegulatorVelocity(15);
         });
   }
 
@@ -137,13 +136,13 @@ public class TeleopCommands {
         });
   }
 
-  public Command spin(double vel) {
-    return Commands.run(
-        () -> {
-          mIndexer.setVelocity(vel);
-        },
-        mIndexer);
-  }
+  // public Command spin(double vel) {
+  //   return Commands.run(
+  //       () -> {
+  //         mIndexer.setVelocity(vel);
+  //       },
+  //       mIndexer);
+  // }
 
   public Command spinAlt() {
     return Commands.run(
@@ -177,14 +176,14 @@ public class TeleopCommands {
         mTransfer);
   }
 
-  public Command stopTransfer() {
-    return Commands.runOnce(
-        () -> {
-          mTransfer.stopTransfer();
-          mIndexer.setState(ShooterState.INACTIVE);
-        },
-        mTransfer);
-  }
+  // public Command stopTransfer() {
+  //   return Commands.runOnce(
+  //       () -> {
+  //         mTransfer.stopTransfer();
+  //         mIndexer.setState(ShooterState.INACTIVE);
+  //       },
+  //       mTransfer);
+  // }
 
   public Command stopKicker() {
     return Commands.runOnce(

@@ -62,7 +62,7 @@ public class TransferConstants {
   public record TransferGains(double p, double i, double d, double v, double s) {}
 
   public static final TransferGains kRegulatorGains =
-      new TransferGains(0.0, 0, 0.0, 0.12, 0.1); // TODO: Values need to be tuned
+      new TransferGains(0.0, 0, 0.0, 0.145, 0.1); // TODO: Values need to be tuned
 
   public static final TransferGains kSimulationRegulatorGains =
       new TransferGains(

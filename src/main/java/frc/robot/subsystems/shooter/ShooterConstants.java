@@ -8,8 +8,8 @@ import edu.wpi.first.math.system.plant.DCMotor;
 import frc.robot.constants.Constants;
 
 public class ShooterConstants {
-  public static final Rotation2d turretMaxLimit = Rotation2d.fromDegrees(90);
-  public static final Rotation2d turretMinLimit = Rotation2d.fromDegrees(-90);
+  public static final Rotation2d turretMaxLimit = Rotation2d.fromDegrees(200);
+  public static final Rotation2d turretMinLimit = Rotation2d.fromDegrees(0);
 
   public static final Rotation2d hoodMaxLimit = new Rotation2d(-1);
   public static final Rotation2d hoodMinLimit = new Rotation2d(1);
@@ -87,7 +87,7 @@ public class ShooterConstants {
   public static final TurretMotorConfiguration turretConfigs =
       new TurretMotorConfiguration(false, true, true, 60, 50, 12, -12, NeutralModeValue.Brake);
   public static final FlywheelMotorConfiguration flywheelConfigs =
-      new FlywheelMotorConfiguration(true, false, false, 60, 50, 12, -12, NeutralModeValue.Brake);
+      new FlywheelMotorConfiguration(true, false, false, 120, 80, 12, -12, NeutralModeValue.Coast);
   public static final HoodMotorConfiguration hoodConfigs =
       new HoodMotorConfiguration(true, false, false, 60, 50, 12, -12, NeutralModeValue.Brake);
 
@@ -95,7 +95,7 @@ public class ShooterConstants {
       new SimulationConfiguration(DCMotor.getKrakenX44(1), 0.002);
 
   public static final FlywheelGains flywheelGains =
-      new FlywheelGains(0.2, 0.0, 0.0, 0.1, 0.126, 0.0, 0.0);
+      new FlywheelGains(0.5, 0.0, 0.0, 0.1, 0.126, 0.0, 0.0);
   public static final HoodGains hoodGains = new HoodGains(70, 0, 0, 0.1, 0, 0, 0.3);
   public static final TurretGains turretGains =
       switch (Constants.currentMode) {

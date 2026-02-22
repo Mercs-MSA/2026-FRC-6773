@@ -276,19 +276,19 @@ public class RobotContainer {
             () -> -controller.getLeftY(),
             () -> -controller.getLeftX(),
             () -> -controller.getRightX()));
-    shooter.setDefaultCommand(teleopCommands.trackHub());
+    // shooter.setDefaultCommand(teleopCommands.trackHub());
 
     // controller.axisLessThan(4, )
 
     // Lock to 0° when A button is held
-    controller
-        .a()
-        .whileTrue(
-            DriveCommands.joystickDriveAtAngle(
-                drive,
-                () -> -controller.getLeftY(),
-                () -> -controller.getLeftX(),
-                () -> Rotation2d.kZero));
+    // controller
+    //     .a()
+    //     .whileTrue(
+    //         DriveCommands.joystickDriveAtAngle(
+    //             drive,
+    //             () -> -controller.getLeftY(),
+    //             () -> -controller.getLeftX(),
+    //             () -> Rotation2d.kZero));
 
     controller
         .leftStick()
@@ -327,10 +327,13 @@ public class RobotContainer {
         .onFalse(teleopCommands.runIntakeSlowRollers());
 
     controller
-        .rightTrigger()
-        .onTrue(teleopCommands.startShoot())
+        .a()
+        .whileTrue(teleopCommands.startShoot())
         // .whileTrue(teleopCommands.whileShooting())
         .onFalse(teleopCommands.stopShoot());
+
+    controller.rightTrigger().whileTrue(teleopCommands.trackHub());
+    controller.rightTrigger().whileFalse(teleopCommands.idleShooter());
 
     controller.x().whileTrue(teleopCommands.spinAlt());
     controller.x().whileTrue(teleopCommands.startKick());

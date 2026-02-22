@@ -328,6 +328,11 @@ public class Shooter extends SubsystemBase {
         ShooterTurretCalculator.linearToAngularVelocity(
                 calculatedShot.getExitVelocity(), Distance.ofBaseUnits(2, Inches))
             .in(RotationsPerSecond));
+    Logger.recordOutput(
+        "Shooter/Flywheel/TargetRPS",
+        ShooterTurretCalculator.linearToAngularVelocity(
+                calculatedShot.getExitVelocity(), Distance.ofBaseUnits(2, Inches))
+            .in(RotationsPerSecond));
 
     Logger.recordOutput("Turret/Shot", calculatedShot);
   }
