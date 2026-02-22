@@ -288,9 +288,9 @@
  },
  "generationFeatures":[],
  "codegen":{
-  "root":"..\\..\\java\\frc\\robot\\choreo",
-  "genVars":false,
-  "genTrajData":false,
-  "useChoreoLib":false
+  "root":"..\\..\\java\\frc\\robot\\ChoreoFiles",
+  "genVars":true,
+  "genTrajData":true,
+  "useChoreoLib":true
  }
 }
