@@ -57,7 +57,7 @@ public class SpindexerConstants {
   public record SpindexerGains(double p, double i, double d, double v, double s) {}
 
   public static final SpindexerGains kSpindexerGains =
-      new SpindexerGains(0, 0, 0, 0.11, 0.1); // TODO: FIX THIS IT'S BAD
+      new SpindexerGains(0, 0, 0, 0.149, 0.1); // TODO: FIX THIS IT'S BAD
 
   public static final SpindexerGains kSimulationSpindexerGains =
       new SpindexerGains(0.1, 0, 0, 0.1, 0.1);

@@ -68,7 +68,7 @@ public class TransferConstants {
       new TransferGains(
           0.1, 0, 0, 0.1, 0.1); // TODO: Unsure if the Spindexer values work for Transfer in sim
 
-  public static final TransferGains kKickerGains = new TransferGains(0, 0, 0, 0.1, 0);
+  public static final TransferGains kKickerGains = new TransferGains(0, 0, 0, 0.145, 0);
 
   public static final TransferTalonFXConfiguration kTransferConfiguration =
       new TransferTalonFXConfiguration(

@@ -123,7 +123,7 @@ public class TeleopCommands {
   public Command startKick() {
     return Commands.run(
         () -> {
-          mTransfer.setKickerVelocity(60);
+          mTransfer.setKickerVelocity(40);
           // TODO: ADD SHOOTER
         });
   }
@@ -147,7 +147,7 @@ public class TeleopCommands {
   public Command spinAlt() {
     return Commands.run(
         () -> {
-          mIndexer.setVelocity(-45);
+          mIndexer.setVelocity(-30);
         },
         mIndexer);
   }
