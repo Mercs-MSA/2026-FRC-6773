@@ -378,6 +378,8 @@ public class RobotContainer {
 		double[] currents = pdh.getAllCurrents();
 
 		// Drivetrain
+		Logger.recordOutput("CurrentDraws/Overall", pdh.getTotalCurrent());
+
 		Logger.recordOutput("CurrentDraws/LeftFrontDrive", currents[20]);
 		Logger.recordOutput("CurrentDraws/LeftFrontRotation", currents[19]);
 		Logger.recordOutput("CurrentDraws/LeftBackDrive", currents[18]);
