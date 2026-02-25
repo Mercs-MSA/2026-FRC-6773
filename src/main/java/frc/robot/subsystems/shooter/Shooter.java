@@ -13,6 +13,7 @@ import static edu.wpi.first.units.Units.RotationsPerSecond;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.AngularVelocity;
@@ -304,10 +305,10 @@ public class Shooter extends SubsystemBase {
         });
   }
 
-  public Command runFlywheelTargetCommand() {
+  public Command runFlywheelTargetCommand(Translation3d goal) {
     return run(
         () -> {
-          calculateFlywheel(drive.getPose());
+          calculateFlywheel(drive.getPose(), goal);
           // setLaunchState(LaunchState.TRACKING);
         });
   }
@@ -340,15 +341,22 @@ public class Shooter extends SubsystemBase {
     Logger.recordOutput("Turret/Shot", calculatedShot);
   }
 
-  private void calculateFlywheel(Pose2d robotPose) {
+  private void calculateFlywheel(Pose2d robotPose, Translation3d goal) {
     ChassisSpeeds fieldSpeeds = drive.getFieldVelocity();
 
     ShotData calculatedShot =
-        ShooterTurretCalculator.iterativeMovingShotFromMap(
-            robotPose, fieldSpeeds, FieldConstants.Hub.topCenterPoint, 2);
+        ShooterTurretCalculator.iterativeMovingShotFromMap(robotPose, fieldSpeeds, goal, 2);
+    Angle azimuthAngle =
+        ShooterTurretCalculator.calculateAzimuthAngle(
+            robotPose, calculatedShot.target(), Angle.ofBaseUnits(getTurretPosition(), Rotations));
+    AngularVelocity azimuthVelocity = RadiansPerSecond.of(-fieldSpeeds.omegaRadiansPerSecond);
+    setTurretSetpoint(azimuthAngle, azimuthVelocity);
+    setHoodPosition(Rotation2d.fromDegrees(calculatedShot.getHoodAngle().in(Degrees)));
     setFlywheelVelocityRPS(
         ShooterTurretCalculator.linearToAngularVelocity(
                 calculatedShot.getExitVelocity(), Distance.ofBaseUnits(2, Inches))
             .in(RotationsPerSecond));
+
+    Logger.recordOutput("Turret/Shot", calculatedShot);
   }
 }

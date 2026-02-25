@@ -1,14 +1,18 @@
 package frc.robot.commands;
 
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import frc.robot.constants.FieldConstants;
+import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.intake.Intake.IntakeState;
 import frc.robot.subsystems.shooter.Shooter;
 import frc.robot.subsystems.spindexer.Spindexer;
 import frc.robot.subsystems.transfer.Transfer;
+import frc.robot.util.geometry.AllianceFlipUtil;
 
 public class TeleopCommands {
   public enum ShooterState {
@@ -19,6 +23,7 @@ public class TeleopCommands {
   }
 
   private CommandXboxController controller;
+  private Drive drive;
   private Intake intake;
   private Spindexer mIndexer;
   private Transfer mTransfer;
@@ -29,11 +34,12 @@ public class TeleopCommands {
       Spindexer indexer,
       Transfer transfer,
       Shooter shooter,
+      Drive drive,
       CommandXboxController controller) {
     this.intake = intake;
     this.controller = controller;
     this.shooter = shooter;
-
+    this.drive = drive;
     mIndexer = indexer;
     mTransfer = transfer;
     // kClimb = climb;
@@ -94,9 +100,9 @@ public class TeleopCommands {
   public Command stopShoot() {
     return Commands.runOnce(
         () -> {
-          shooter.setFlywheelVelocityRPS(0);
-          shooter.stop(true, false, false);
-          mTransfer.setRegulatorVelocity(0);
+          shooter.setFlywheelVelocityRPS(10);
+          // shooter.stop(true, false, false);
+          mTransfer.setRegulatorVelocity(10);
         });
   }
 
@@ -109,11 +115,34 @@ public class TeleopCommands {
   }
 
   public Command trackHub() {
-    return shooter.runTrackTargetCommand();
+    if (drive.checkInAllianceZone(drive.getPose())) {
+      return shooter.runTrackTargetCommand();
+    } else {
+      return null;
+    }
   }
 
   public Command trackFlywheel() {
-    return shooter.runFlywheelTargetCommand();
+    if (drive.checkInAllianceZone(drive.getPose())) {
+      return trackFlywheelHub();
+    } else {
+      return trackFlywheelPassRight();
+    }
+  }
+
+  public Command trackFlywheelHub() {
+    return shooter.runFlywheelTargetCommand(
+        AllianceFlipUtil.apply(FieldConstants.Hub.topCenterPoint));
+  }
+
+  public Command trackFlywheelPassRight() {
+    return shooter.runFlywheelTargetCommand(
+        new Translation3d(AllianceFlipUtil.apply(FieldConstants.RightBump.farRightCorner)));
+  }
+
+  public Command trackFlywheelPassLeft() {
+    return shooter.runFlywheelTargetCommand(
+        new Translation3d(AllianceFlipUtil.apply(FieldConstants.LeftBump.farLeftCorner)));
   }
 
   public Command idleShooter() {
