@@ -115,20 +115,27 @@ public class ShooterTurretCalculator {
   public static Angle calculateAzimuthAngle(
       Pose2d robot, Translation3d target, Angle currentAngle) {
     Translation2d turretTranslation =
-        new Pose3d(robot).transformBy(robotToTurret).toPose2d().getTranslation();
+        new Pose3d(robot).transformBy(ShooterConstants.robotToTurret).toPose2d().getTranslation();
 
     Translation2d direction = target.toTranslation2d().minus(turretTranslation);
+    return calculateAzimuthAngle(robot, direction.getAngle().getMeasure(), currentAngle);
+  }
+
+  // calculates the angle of a turret relative to the robot to hit a target
+  public static Angle calculateAzimuthAngle(
+      Pose2d robot, Angle fieldRelativeAngle, Angle currentAngle) {
     double angle =
         MathUtil.inputModulus(
-            direction.getAngle().minus(robot.getRotation()).getRotations(), -0.5, 0.5);
+            new Rotation2d(fieldRelativeAngle).minus(robot.getRotation()).getRotations(),
+            -0.5,
+            0.5);
     double current = currentAngle.in(Rotations);
-    // Wrap angle by ±1 rotation if needed to stay closest to current position
-    if (current > 0 && angle + 1 <= turretMaxLimit.getRotations()) angle += 1;
-    if (current < 0 && angle - 1 >= turretMinLimit.getRotations()) angle -= 1;
-    // Clamp angle to turret limits
-    // angle = MathUtil.clamp(angle, turretMinLimit.getRotations(), turretMaxLimit.getRotations());
-    // //TODO: check if this is better or if soft limits in tuner x is better
-    Logger.recordOutput("Turret/DesiredAzimuthRot", Rotation2d.fromRadians(angle).getRotations());
+    if (current > 0 && angle + 1 <= ShooterConstants.turretMaxLimit.getRotations()) angle += 1;
+    if (current < 0 && angle - 1 >= ShooterConstants.turretMinLimit.getRotations()) angle -= 1;
+
+    angle = MathUtil.clamp(angle, turretMinLimit.getRotations(), turretMaxLimit.getRotations());
+
+    Logger.recordOutput("Turret/DesiredAzimuthRad", angle);
     return Rotations.of(angle);
   }
 
