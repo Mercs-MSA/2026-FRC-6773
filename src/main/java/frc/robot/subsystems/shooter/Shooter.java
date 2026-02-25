@@ -304,6 +304,14 @@ public class Shooter extends SubsystemBase {
         });
   }
 
+  public Command runFlywheelTargetCommand() {
+    return run(
+        () -> {
+          calculateFlywheel(drive.getPose());
+          // setLaunchState(LaunchState.TRACKING);
+        });
+  }
+
   public Command runHoodTrackTargetCommand() { // Todo: add velocity (similar to turret)
     return run(
         () -> {
@@ -324,11 +332,23 @@ public class Shooter extends SubsystemBase {
     AngularVelocity azimuthVelocity = RadiansPerSecond.of(-fieldSpeeds.omegaRadiansPerSecond);
     setTurretSetpoint(azimuthAngle, azimuthVelocity);
     setHoodPosition(Rotation2d.fromDegrees(calculatedShot.getHoodAngle().in(Degrees)));
+    // setFlywheelVelocityRPS(
+    //     ShooterTurretCalculator.linearToAngularVelocity(
+    //             calculatedShot.getExitVelocity(), Distance.ofBaseUnits(2, Inches))
+    //         .in(RotationsPerSecond));
+
+    Logger.recordOutput("Turret/Shot", calculatedShot);
+  }
+
+  private void calculateFlywheel(Pose2d robotPose) {
+    ChassisSpeeds fieldSpeeds = drive.getFieldVelocity();
+
+    ShotData calculatedShot =
+        ShooterTurretCalculator.iterativeMovingShotFromMap(
+            robotPose, fieldSpeeds, FieldConstants.Hub.topCenterPoint, 2);
     setFlywheelVelocityRPS(
         ShooterTurretCalculator.linearToAngularVelocity(
                 calculatedShot.getExitVelocity(), Distance.ofBaseUnits(2, Inches))
             .in(RotationsPerSecond));
-
-    Logger.recordOutput("Turret/Shot", calculatedShot);
   }
 }

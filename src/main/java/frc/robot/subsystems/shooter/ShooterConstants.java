@@ -8,8 +8,8 @@ import edu.wpi.first.math.system.plant.DCMotor;
 import frc.robot.constants.Constants;
 
 public class ShooterConstants {
-  public static final Rotation2d turretMaxLimit = Rotation2d.fromDegrees(90);
-  public static final Rotation2d turretMinLimit = Rotation2d.fromDegrees(-90);
+  public static final Rotation2d turretMaxLimit = Rotation2d.fromDegrees(160);
+  public static final Rotation2d turretMinLimit = Rotation2d.fromDegrees(-160);
 
   public static final Rotation2d hoodMaxLimit = new Rotation2d(-1);
   public static final Rotation2d hoodMinLimit = new Rotation2d(1);

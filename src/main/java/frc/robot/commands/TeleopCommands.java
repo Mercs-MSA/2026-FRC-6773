@@ -94,7 +94,8 @@ public class TeleopCommands {
   public Command stopShoot() {
     return Commands.runOnce(
         () -> {
-          // shooter.stop(true, false, false);
+          shooter.setFlywheelVelocityRPS(0);
+          shooter.stop(true, false, false);
           mTransfer.setRegulatorVelocity(0);
         });
   }
@@ -109,6 +110,10 @@ public class TeleopCommands {
 
   public Command trackHub() {
     return shooter.runTrackTargetCommand();
+  }
+
+  public Command trackFlywheel() {
+    return shooter.runFlywheelTargetCommand();
   }
 
   public Command idleShooter() {

@@ -328,8 +328,8 @@ public class RobotContainer {
 
     controller
         .rightTrigger()
-        .onTrue(teleopCommands.startShoot())
-        // .whileTrue(teleopCommands.whileShooting())
+        .whileTrue(teleopCommands.startShoot())
+        .whileTrue(teleopCommands.trackFlywheel())
         .onFalse(teleopCommands.stopShoot());
 
     controller.x().whileTrue(teleopCommands.spinAlt());
