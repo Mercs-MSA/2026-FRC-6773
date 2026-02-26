@@ -233,7 +233,7 @@ public class RobotContainer {
         ShooterCalculator.provideDrive(drive);
         break;
     }
-    teleopCommands = new TeleopCommands(intake, spindexer, transfer, shooter, controller);
+    teleopCommands = new TeleopCommands(intake, spindexer, transfer, shooter, drive, controller);
     autonCommands = new AutonCommands(drive, intake, spindexer, transfer, shooter, controller);
     autonCommands.registerNamedCommands();
 
@@ -279,7 +279,6 @@ public class RobotContainer {
             () -> -controller.getLeftY(),
             () -> -controller.getLeftX(),
             () -> -controller.getRightX()));
-    shooter.setDefaultCommand(teleopCommands.trackHub());
 
     // controller.axisLessThan(4, )
 
@@ -329,11 +328,14 @@ public class RobotContainer {
         .onTrue(teleopCommands.runIntakeFloorPickup())
         .onFalse(teleopCommands.runIntakeSlowRollers());
 
+    shooter.setDefaultCommand(teleopCommands.trackHub());
     controller
         .rightTrigger()
-        .onTrue(teleopCommands.startShoot())
-        // .whileTrue(teleopCommands.whileShooting())
+        .whileTrue(teleopCommands.startShoot())
+        .whileTrue(teleopCommands.trackFlywheel())
         .onFalse(teleopCommands.stopShoot());
+
+    shooter.setDefaultCommand(teleopCommands.trackHub());
 
     controller.x().whileTrue(teleopCommands.spinAlt());
     controller.x().whileTrue(teleopCommands.startKick());
@@ -346,9 +348,6 @@ public class RobotContainer {
             () -> {
               return checkInAllianceZone(drive.getPose());
             });
-
-    // inAllianceZone.whileTrue(teleopCommands.trackHub());
-    // inAllianceZone.whileFalse(teleopCommands.idleShooter());
   }
 
   /**
@@ -367,5 +366,9 @@ public class RobotContainer {
       return robotPose.getX() >= AllianceFlipUtil.applyX(FieldConstants.LinesVertical.allianceZone);
     }
     return false;
+  }
+
+  public Drive getDrive() {
+    return drive;
   }
 }

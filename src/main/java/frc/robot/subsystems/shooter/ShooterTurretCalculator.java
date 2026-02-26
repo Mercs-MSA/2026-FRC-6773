@@ -46,31 +46,31 @@ public class ShooterTurretCalculator {
 
   static {
     SHOT_MAP.put(5.5, new ShotData(RPM.of(70 * 60), Degrees.of(20)));
-    TOF_MAP.put(5.5, 1.0);
+    TOF_MAP.put(5.5, 1.31);
 
     SHOT_MAP.put(5.18, new ShotData(RPM.of(65 * 60), Degrees.of(20)));
-    TOF_MAP.put(5.18, 0.99);
+    TOF_MAP.put(5.18, 1.4);
 
     SHOT_MAP.put(4.55, new ShotData(RPM.of(65 * 60), Degrees.of(18)));
-    TOF_MAP.put(4.55, 0.97);
+    TOF_MAP.put(4.55, 1.420);
 
     SHOT_MAP.put(4.082, new ShotData(RPM.of(60 * 60), Degrees.of(16)));
-    TOF_MAP.put(4.082, 0.97);
+    TOF_MAP.put(4.082, 1.32);
 
     SHOT_MAP.put(3.483, new ShotData(RPM.of(55 * 60), Degrees.of(14)));
-    TOF_MAP.put(3.483, 0.95);
+    TOF_MAP.put(3.483, 1.28);
 
     SHOT_MAP.put(3.022, new ShotData(RPM.of(55 * 60), Degrees.of(12)));
-    TOF_MAP.put(3.022, 0.94);
+    TOF_MAP.put(3.022, 1.3676767);
 
     SHOT_MAP.put(2.58, new ShotData(RPM.of(50 * 60), Degrees.of(10)));
-    TOF_MAP.put(2.58, 0.93);
+    TOF_MAP.put(2.58, 1.29);
 
     SHOT_MAP.put(2.012, new ShotData(RPM.of(50 * 60), Degrees.of(2)));
-    TOF_MAP.put(2.012, 0.915);
+    TOF_MAP.put(2.012, 1.25);
 
     SHOT_MAP.put(1.5, new ShotData(RPM.of(50 * 60), Degrees.of(0)));
-    TOF_MAP.put(1.5, 0.9);
+    TOF_MAP.put(1.5, 1.23);
   }
 
   public static Distance getDistanceToTarget(Pose2d robot, Translation3d target) {
@@ -115,20 +115,27 @@ public class ShooterTurretCalculator {
   public static Angle calculateAzimuthAngle(
       Pose2d robot, Translation3d target, Angle currentAngle) {
     Translation2d turretTranslation =
-        new Pose3d(robot).transformBy(robotToTurret).toPose2d().getTranslation();
+        new Pose3d(robot).transformBy(ShooterConstants.robotToTurret).toPose2d().getTranslation();
 
     Translation2d direction = target.toTranslation2d().minus(turretTranslation);
+    return calculateAzimuthAngle(robot, direction.getAngle().getMeasure(), currentAngle);
+  }
+
+  // calculates the angle of a turret relative to the robot to hit a target
+  public static Angle calculateAzimuthAngle(
+      Pose2d robot, Angle fieldRelativeAngle, Angle currentAngle) {
     double angle =
         MathUtil.inputModulus(
-            direction.getAngle().minus(robot.getRotation()).getRotations(), -0.5, 0.5);
+            new Rotation2d(fieldRelativeAngle).minus(robot.getRotation()).getRotations(),
+            -0.5,
+            0.5);
     double current = currentAngle.in(Rotations);
-    // Wrap angle by ±1 rotation if needed to stay closest to current position
-    if (current > 0 && angle + 1 <= turretMaxLimit.getRotations()) angle += 1;
-    if (current < 0 && angle - 1 >= turretMinLimit.getRotations()) angle -= 1;
-    // Clamp angle to turret limits
-    // angle = MathUtil.clamp(angle, turretMinLimit.getRotations(), turretMaxLimit.getRotations());
-    // //TODO: check if this is better or if soft limits in tuner x is better
-    Logger.recordOutput("Turret/DesiredAzimuthRot", Rotation2d.fromRadians(angle).getRotations());
+    if (current > 0 && angle + 1 <= ShooterConstants.turretMaxLimit.getRotations()) angle += 1;
+    if (current < 0 && angle - 1 >= ShooterConstants.turretMinLimit.getRotations()) angle -= 1;
+
+    angle = MathUtil.clamp(angle, turretMinLimit.getRotations(), turretMaxLimit.getRotations());
+
+    Logger.recordOutput("Turret/DesiredAzimuthRad", angle);
     return Rotations.of(angle);
   }
 

@@ -65,6 +65,7 @@ public class ShooterTurretIOTalonFX implements ShooterTurretIO {
         // SensorDirectionValue.CounterClockwise_Positive;
         SensorDirectionValue.Clockwise_Positive; // TODO: check
     canCoderConfiguration.MagnetSensor.MagnetOffset = 0.413330078125; // DO NOT CHANGE THIS PLEAASEE
+    canCoderConfiguration.MagnetSensor.AbsoluteSensorDiscontinuityPoint = 0.5;
     turretCANcoder.getConfigurator().apply(canCoderConfiguration);
 
     motorConfiguration.Slot0.kP = gains.p();
@@ -109,7 +110,7 @@ public class ShooterTurretIOTalonFX implements ShooterTurretIO {
     //
 
     // Enable to true because arm
-    motorConfiguration.ClosedLoopGeneral.ContinuousWrap = true;
+    motorConfiguration.ClosedLoopGeneral.ContinuousWrap = false;
 
     // // Reset position on startup
     // kMotor.setPosition(Rotation2d.fromDegrees(64.331).getRotations()); //UPDATE VALUES

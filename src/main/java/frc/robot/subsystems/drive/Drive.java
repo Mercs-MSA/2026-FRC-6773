@@ -43,7 +43,9 @@ import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 // import frc.robot.RobotState.OdometryObservation;
 import frc.robot.constants.Constants;
 import frc.robot.constants.Constants.Mode;
+import frc.robot.constants.FieldConstants;
 import frc.robot.util.LocalADStarAK;
+import frc.robot.util.geometry.AllianceFlipUtil;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 import org.littletonrobotics.junction.AutoLogOutput;
@@ -374,6 +376,15 @@ public class Drive extends SubsystemBase {
         .getTranslation()
         .minus(pose1.getTranslation()) // Vector from point1 to point2
         .getAngle();
+  }
+
+  public boolean checkInAllianceZone(Pose2d robotPose) {
+    if (DriverStation.getAlliance().get() == DriverStation.Alliance.Blue) {
+      return robotPose.getX() <= FieldConstants.LinesVertical.allianceZone;
+    } else if (DriverStation.getAlliance().get() == DriverStation.Alliance.Red) {
+      return robotPose.getX() >= AllianceFlipUtil.applyX(FieldConstants.LinesVertical.allianceZone);
+    }
+    return false;
   }
 
   // public Command followPath(PathPlannerPath path, PPHolonomicDriveController drivePID) {
