@@ -46,6 +46,35 @@ public class TeleopCommands {
     // kClimb = climb;
   }
 
+  public Command runIntakeStow() {
+    return Commands.runOnce(
+        () -> {
+          intake.setPivotState(IntakeState.kStow);
+          intake.stowRollers();
+          intake.setBrakeMode(true);
+        },
+        intake);
+  }
+
+  public Command runShootingSystem(double outputVel) {
+    return Commands.runOnce(
+        () -> {
+          shooter.setFlywheelVelocityRPS(outputVel);
+          transfer.setRegulatorVelocity(outputVel);
+          transfer.setKickerVelocity(outputVel);
+          spindexer.setVelocity(outputVel);
+        },
+        shooter,
+        transfer,
+        spindexer);
+    // return Commands.runOnce(() ->{
+    // 	shooter.setFlywheelVelocityRPS(outputVel);
+    // 	transfer.setRegulatorVelocity(outputVel * (3.0 / 4.0));
+    // 	transfer.setKickerVelocity(outputVel * (2.0 / 4.0));
+    // 	spindexer.setVelocity(outputVel * (1.0 / 4.0));
+    // });
+  }
+
   public Command runIntakeFloorPickup() {
     return Commands.runOnce(
         () -> {
@@ -197,24 +226,7 @@ public class TeleopCommands {
         shooter,
         transfer,
         spindexer);
-  }
-
-  public Command startTransfer(double shooterSpeed) {
-    return Commands.runOnce(
-        () -> {
-          transfer.startTransfer(shooterSpeed);
-        },
-        transfer);
-  }
-
-  public Command stopTransfer() {
-    return Commands.runOnce(
-        () -> {
-          transfer.stop();
-          spindexer.stopSpindexer();
-        },
-        transfer);
-  }
+  } 
 
   public Command stopKicker() {
     return Commands.runOnce(

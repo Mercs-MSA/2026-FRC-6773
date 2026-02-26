@@ -46,7 +46,8 @@ public class Transfer extends SubsystemBase {
   }
 
   public void startTransfer(double shooterSpeed) {
-    TeleopCommands.globalState = ShooterState.SPINUP;
+    regulator.setVelocity(shooterSpeed);
+    
   }
 
   public void stop() {

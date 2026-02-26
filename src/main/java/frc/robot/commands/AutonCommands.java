@@ -25,7 +25,7 @@ import com.pathplanner.lib.util.FlippingUtil;
 
 public class AutonCommands extends TeleopCommands {
 
-  public Drive drive;
+  private Drive drive;
 
   public AutonCommands(
       Drive drive,
@@ -34,7 +34,7 @@ public class AutonCommands extends TeleopCommands {
       Transfer transfer,
       Shooter shooter,
       CommandXboxController controller) {
-    super(intake, indexer, transfer, shooter, controller);
+    super(intake, indexer, transfer, shooter, drive, controller);
     this.drive = drive;
   }
 
@@ -43,6 +43,7 @@ public class AutonCommands extends TeleopCommands {
   }
 
   public Command getPathCommand(String pathName) {
+    
     try {
       // Load the path you want to follow using its name in the GUI
       PathPlannerPath path = PathPlannerPath.fromChoreoTrajectory(pathName);
