@@ -6,10 +6,6 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import java.util.Map;
 import java.util.OptionalInt;
 
-// If these imports cause errors because you're not using ChoreoLib,
-// turn off "Include ChoreoLib-specific Helpers" in Choreo's codegen settings.
-import choreo.auto.AutoRoutine;
-import choreo.auto.AutoTrajectory;
 
 /**
  * A class containing the name, start pose, end pose, and total time of every Choreo trajectory.
@@ -27,40 +23,68 @@ public record ChoreoTraj(
     public static final ChoreoTraj C_Start_Climb = new ChoreoTraj(
 	    "C_Start_Climb",
 	    OptionalInt.empty(),
-	    1.11609,
-	    new Pose2d(3.575, 3.75, Rotation2d.fromRadians(0)),
+	    1.25925,
+	    new Pose2d(3.575, 3.75, Rotation2d.fromRadians(3.142)),
 	    new Pose2d(1.6, 3.75, Rotation2d.fromRadians(0))
+	);
+	public static final ChoreoTraj D_Intake_Shoot45 = new ChoreoTraj(
+	    "D_Intake_Shoot45",
+	    OptionalInt.empty(),
+	    3.10188,
+	    new Pose2d(7.515, 6.1, Rotation2d.fromRadians(-0.785)),
+	    new Pose2d(2.984, 5.59, Rotation2d.fromRadians(-1.571))
+	);
+	public static final ChoreoTraj D_Intake_Shoot45Full = new ChoreoTraj(
+	    "D_Intake_Shoot45Full",
+	    OptionalInt.empty(),
+	    4.46739,
+	    new Pose2d(7.515, 6.1, Rotation2d.fromRadians(-0.785)),
+	    new Pose2d(3.095, 2.493, Rotation2d.fromRadians(0))
 	);
 	public static final ChoreoTraj D_Intake_SStart = new ChoreoTraj(
 	    "D_Intake_SStart",
 	    OptionalInt.empty(),
-	    3.75722,
+	    3.53108,
 	    new Pose2d(7.8, 7, Rotation2d.fromRadians(-1.571)),
-	    new Pose2d(3.1, 5.7, Rotation2d.fromRadians(-0.839))
+	    new Pose2d(3.1, 5.7, Rotation2d.fromRadians(-1.571))
 	);
 	public static final ChoreoTraj D_SStart_Climb = new ChoreoTraj(
 	    "D_SStart_Climb",
 	    OptionalInt.empty(),
-	    1.22957,
+	    1.18243,
 	    new Pose2d(3.1, 5.7, Rotation2d.fromRadians(-0.839)),
-	    new Pose2d(1.61, 4.62, Rotation2d.fromRadians(0))
+	    new Pose2d(1.618, 4.658, Rotation2d.fromRadians(3.142))
 	);
 	public static final ChoreoTraj D_Start_Intake = new ChoreoTraj(
 	    "D_Start_Intake",
 	    OptionalInt.empty(),
-	    3.32182,
-	    new Pose2d(3.6, 5.6, Rotation2d.fromRadians(-1.571)),
+	    3.37016,
+	    new Pose2d(3.6, 5.4, Rotation2d.fromRadians(-1.571)),
 	    new Pose2d(7.8, 7, Rotation2d.fromRadians(-1.571))
 	);
-	public static final ChoreoTraj H_Intake_SStart = new ChoreoTraj(
-	    "H_Intake_SStart",
+	public static final ChoreoTraj D_Start_Intake45 = new ChoreoTraj(
+	    "D_Start_Intake45",
+	    OptionalInt.empty(),
+	    2.98985,
+	    new Pose2d(3.6, 5.4, Rotation2d.fromRadians(-1.571)),
+	    new Pose2d(7.515, 6.1, Rotation2d.fromRadians(-0.785))
+	);
+	public static final ChoreoTraj H_Intake_Shoot = new ChoreoTraj(
+	    "H_Intake_Shoot",
 	    OptionalInt.empty(),
 	    3.37558,
 	    new Pose2d(7.8, 1.02, Rotation2d.fromRadians(1.571)),
 	    new Pose2d(3.1, 2.6, Rotation2d.fromRadians(0.757))
 	);
-	public static final ChoreoTraj H_SStart_Climb = new ChoreoTraj(
-	    "H_SStart_Climb",
+	public static final ChoreoTraj H_Intake_Shoot45 = new ChoreoTraj(
+	    "H_Intake_Shoot45",
+	    OptionalInt.empty(),
+	    3.06577,
+	    new Pose2d(7.515, 2, Rotation2d.fromRadians(0.785)),
+	    new Pose2d(2.984, 2.7, Rotation2d.fromRadians(1.571))
+	);
+	public static final ChoreoTraj H_Shoot_Climb = new ChoreoTraj(
+	    "H_Shoot_Climb",
 	    OptionalInt.empty(),
 	    1.01834,
 	    new Pose2d(3.1, 2.6, Rotation2d.fromRadians(0.757)),
@@ -73,26 +97,12 @@ public record ChoreoTraj(
 	    new Pose2d(3.6, 2.15, Rotation2d.fromRadians(1.571)),
 	    new Pose2d(7.8, 1.02, Rotation2d.fromRadians(1.571))
 	);
-	public static final ChoreoTraj D_Start_Intake45 = new ChoreoTraj(
-	    "D_Start_Intake45",
+	public static final ChoreoTraj H_Start_Intake45 = new ChoreoTraj(
+	    "H_Start_Intake45",
 	    OptionalInt.empty(),
-	    2.71182,
-	    new Pose2d(3.4, 5.6, Rotation2d.fromRadians(0)),
-	    new Pose2d(7.215, 5.6, Rotation2d.fromRadians(-0.785))
-	);
-	public static final ChoreoTraj D_Intake_Shoot45 = new ChoreoTraj(
-	    "D_Intake_Shoot45",
-	    OptionalInt.empty(),
-	    3.08937,
-	    new Pose2d(7.215, 5.6, Rotation2d.fromRadians(-0.785)),
-	    new Pose2d(2.972, 5.593, Rotation2d.fromRadians(-0.75))
-	);
-	public static final ChoreoTraj D_Intake_Shoot45Full = new ChoreoTraj(
-	    "D_Intake_Shoot45Full",
-	    OptionalInt.empty(),
-	    3.88023,
-	    new Pose2d(7.215, 5.6, Rotation2d.fromRadians(-0.785)),
-	    new Pose2d(3.108, 2.48, Rotation2d.fromRadians(0.794))
+	    2.95163,
+	    new Pose2d(3.6, 5.4, Rotation2d.fromRadians(-1.571)),
+	    new Pose2d(7.315, 6.1, Rotation2d.fromRadians(-0.785))
 	);
 
     /**
@@ -101,15 +111,17 @@ public record ChoreoTraj(
      */
     public static final Map<String, ChoreoTraj> ALL_TRAJECTORIES = Map.ofEntries(
     	Map.entry("C_Start_Climb", C_Start_Climb),
+		Map.entry("D_Intake_Shoot45", D_Intake_Shoot45),
+		Map.entry("D_Intake_Shoot45Full", D_Intake_Shoot45Full),
 		Map.entry("D_Intake_SStart", D_Intake_SStart),
 		Map.entry("D_SStart_Climb", D_SStart_Climb),
 		Map.entry("D_Start_Intake", D_Start_Intake),
-		Map.entry("H_Intake_SStart", H_Intake_SStart),
-		Map.entry("H_SStart_Climb", H_SStart_Climb),
-		Map.entry("H_Start_Intake", H_Start_Intake),
 		Map.entry("D_Start_Intake45", D_Start_Intake45),
-		Map.entry("D_Intake_Shoot45", D_Intake_Shoot45),
-		Map.entry("D_Intake_Shoot45Full", D_Intake_Shoot45Full)
+		Map.entry("H_Intake_Shoot", H_Intake_Shoot),
+		Map.entry("H_Intake_Shoot45", H_Intake_Shoot45),
+		Map.entry("H_Shoot_Climb", H_Shoot_Climb),
+		Map.entry("H_Start_Intake", H_Start_Intake),
+		Map.entry("H_Start_Intake45", H_Start_Intake45)
     );
 
     /**
@@ -124,15 +136,4 @@ public record ChoreoTraj(
         return traj;
     }
     
-    // If these methods cause errors because you're not using ChoreoLib,
-    // turn off "Include ChoreoLib-specific Helpers" in Choreo's codegen settings.
-    /**
-     * Load an AutoTrajectory directly from a ChoreoTraj, which may be a segment of a larger trajectory.
-     */
-    public AutoTrajectory asAutoTraj(AutoRoutine routine) {
-        if (this.segment.isPresent()) {
-            return routine.trajectory(this.name, this.segment.getAsInt());
-        }
-        return routine.trajectory(this.name);
-    }
 }

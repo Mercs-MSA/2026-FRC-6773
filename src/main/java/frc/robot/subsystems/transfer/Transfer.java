@@ -2,8 +2,6 @@ package frc.robot.subsystems.transfer;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.commands.TeleopCommands;
-import frc.robot.commands.TeleopCommands.ShooterState;
 import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.Logger;
 
@@ -47,7 +45,6 @@ public class Transfer extends SubsystemBase {
 
   public void startTransfer(double shooterSpeed) {
     regulator.setVelocity(shooterSpeed);
-    
   }
 
   public void stop() {

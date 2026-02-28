@@ -226,7 +226,7 @@ public class TeleopCommands {
         shooter,
         transfer,
         spindexer);
-  } 
+  }
 
   public Command stopKicker() {
     return Commands.runOnce(
