@@ -246,6 +246,7 @@ public class RobotContainer {
     autoChooser.addOption("Left Path", autonCommands.getAutonomousSequence("LEFT"));
     autoChooser.addOption("Left Path 45", autonCommands.getAutonomousSequence("LEFT_45"));
     autoChooser.addOption("Left Path 45 Full", autonCommands.getAutonomousSequence("LEFT_45_FULL"));
+    autoChooser.addOption("Right Path 45", autonCommands.getAutonomousSequence("RIGHT_45"));
 
     // Set up SysId routines
     autoChooser.addOption(

@@ -74,11 +74,21 @@ public class AutonCommands extends TeleopCommands {
         autonCommand.addCommands(getPathCommand("H_Start_Intake"));
         autonCommand.addCommands(runIntakeFloorPickup());
         autonCommand.addCommands(getPathCommand("H_Intake_SStart"));
-        autonCommand.addCommands(startShoot());
-        autonCommand.addCommands(Commands.waitSeconds(2.5));
+        autonCommand.addCommands(runShootingSystem());
+        // autonCommand.addCommands(Commands.waitSeconds(2.5));
         // autonCommand.addCommands(getPathCommand("H_SStart_Climb"));
 
         break;
+      case "RIGHT_45":
+        autonCommand.addCommands(getPathCommand("H_Start_Intake45"));
+        autonCommand.addCommands(runIntakeFloorPickup());
+        autonCommand.addCommands(getPathCommand("H_Intake_Shoot45"));
+        autonCommand.addCommands(runShootingSystem());
+        // autonCommand.addCommands(Commands.waitSeconds(2.5));
+        // autonCommand.addCommands(getPathCommand("H_SStart_Climb"));
+
+        break;
+
       case "LEFT":
         // autonCommand.addCommands(
         //     Commands.runOnce(
