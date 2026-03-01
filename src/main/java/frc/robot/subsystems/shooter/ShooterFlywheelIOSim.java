@@ -65,4 +65,6 @@ public class ShooterFlywheelIOSim implements ShooterFlywheelIO {
   public void stop() {
     setVoltage(0.0);
   }
+
+  
 }

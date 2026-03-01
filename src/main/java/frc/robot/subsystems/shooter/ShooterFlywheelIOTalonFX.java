@@ -159,4 +159,10 @@ public class ShooterFlywheelIOTalonFX implements ShooterFlywheelIO {
   public void setBrakeMode(boolean enableBrake) {
     flywheelMotorLeft.setNeutralMode(enableBrake ? NeutralModeValue.Brake : NeutralModeValue.Coast);
   }
+
+  @Override
+  public double getStatorCurrent()
+  {
+    return flywheelMotorLeft.getStatorCurrent().getValueAsDouble();
+  }
 }

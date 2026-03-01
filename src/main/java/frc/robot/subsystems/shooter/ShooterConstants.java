@@ -106,4 +106,6 @@ public class ShooterConstants {
 
   /** The frequency that telemetry form the motor is pushed to the CANBus */
   public static final double kStatusSignalUpdateFrequencyHz = 100.0;
+
+  public static final double timeToleranceSec = 3.0;
 }

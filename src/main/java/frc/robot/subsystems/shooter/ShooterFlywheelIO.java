@@ -50,4 +50,9 @@ public interface ShooterFlywheelIO {
    * @param enableBrake
    */
   public default void setBrakeMode(boolean enableBrake) {}
+
+  public default double getStatorCurrent()
+  {
+    return 0.0;
+  }
 }

@@ -10,6 +10,8 @@ import static edu.wpi.first.units.Units.RadiansPerSecond;
 import static edu.wpi.first.units.Units.Rotations;
 import static edu.wpi.first.units.Units.RotationsPerSecond;
 
+import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.filter.LinearFilter;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -18,6 +20,7 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.Distance;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.FieldConstants;
@@ -67,6 +70,9 @@ public class Shooter extends SubsystemBase {
   private double maxLegalAngle = Math.toRadians(90);
 
   private double lastGoalAngle = 0.0;
+
+  private LinearFilter filter = LinearFilter.movingAverage((int) (ShooterConstants.timeToleranceSec * 50.0));
+  private Timer timer = new Timer();
 
   private final LoggedNetworkNumber turret_kP =
       new LoggedNetworkNumber("Shooter/Gains/Turret_kP", ShooterConstants.turretGains.p());
@@ -188,6 +194,23 @@ public class Shooter extends SubsystemBase {
             turretBotPose.getRotation().plus(Rotation2d.fromRotations(getTurretPosition())));
 
     Logger.recordOutput("Shooter/Inputs/Hood/TurretPose", turretPoseOut);
+
+
+    double statorCurrent = flywheelHardware.getStatorCurrent();
+    if (statorCurrent > 1)
+    {
+      double runningCurrent = filter.lastValue();
+      if (!MathUtil.isNear(runningCurrent, statorCurrent, 5));
+      {
+        timer.reset();
+      }
+      filter.calculate(flywheelHardware.getStatorCurrent());
+      
+    }
+    else
+    {
+      timer.reset();
+    }
   }
   //   public void setPivotGoal(IntakePivotGoal desiredGoal) {
   //     currentPivotGoal = desiredGoal;
@@ -356,7 +379,12 @@ public class Shooter extends SubsystemBase {
         ShooterTurretCalculator.linearToAngularVelocity(
                 calculatedShot.getExitVelocity(), Distance.ofBaseUnits(2, Inches))
             .in(RotationsPerSecond));
-
     Logger.recordOutput("Turret/Shot", calculatedShot);
+  }
+
+  @AutoLogOutput(key="Shooter/HasBalls")
+  public boolean notShooting()
+  {
+    return !timer.hasElapsed(ShooterConstants.timeToleranceSec);
   }
 }
