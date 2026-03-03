@@ -70,6 +70,7 @@ public class AutonCommands extends TeleopCommands {
       case "CENTER":
         autonCommand.addCommands(getPathCommand("C_Start_Climb"));
         break;
+        
       case "RIGHT":
         autonCommand.addCommands(getPathCommand("H_Start_Intake"));
         autonCommand.addCommands(runIntakeFloorPickup());
