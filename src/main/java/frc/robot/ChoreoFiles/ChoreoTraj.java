@@ -72,9 +72,9 @@ public record ChoreoTraj(
 	public static final ChoreoTraj H_Intake_Shoot = new ChoreoTraj(
 	    "H_Intake_Shoot",
 	    OptionalInt.empty(),
-	    3.37558,
+	    3.50021,
 	    new Pose2d(7.8, 1.02, Rotation2d.fromRadians(1.571)),
-	    new Pose2d(3.1, 2.6, Rotation2d.fromRadians(0.757))
+	    new Pose2d(2.984, 2.1, Rotation2d.fromRadians(3.142))
 	);
 	public static final ChoreoTraj H_Intake_Shoot45 = new ChoreoTraj(
 	    "H_Intake_Shoot45",
@@ -83,11 +83,18 @@ public record ChoreoTraj(
 	    new Pose2d(7.515, 2, Rotation2d.fromRadians(0.785)),
 	    new Pose2d(2.984, 2.1, Rotation2d.fromRadians(3.142))
 	);
+	public static final ChoreoTraj H_Intake_Shoot45_FULL = new ChoreoTraj(
+	    "H_Intake_Shoot45_FULL",
+	    OptionalInt.empty(),
+	    3.91342,
+	    new Pose2d(7.515, 2, Rotation2d.fromRadians(0.785)),
+	    new Pose2d(2.984, 5.4, Rotation2d.fromRadians(0))
+	);
 	public static final ChoreoTraj H_Shoot_Climb = new ChoreoTraj(
 	    "H_Shoot_Climb",
 	    OptionalInt.empty(),
-	    1.01834,
-	    new Pose2d(3.1, 2.6, Rotation2d.fromRadians(0.757)),
+	    1.06733,
+	    new Pose2d(3.1, 2.6, Rotation2d.fromRadians(0)),
 	    new Pose2d(1.6, 2.9, Rotation2d.fromRadians(3.142))
 	);
 	public static final ChoreoTraj H_Start_Intake = new ChoreoTraj(
@@ -104,12 +111,26 @@ public record ChoreoTraj(
 	    new Pose2d(3.6, 2.5, Rotation2d.fromRadians(1.571)),
 	    new Pose2d(7.515, 2.3, Rotation2d.fromRadians(0.785))
 	);
-	public static final ChoreoTraj H_Intake_Shoot45_FULL = new ChoreoTraj(
-	    "H_Intake_Shoot45_FULL",
+	public static final ChoreoTraj H_Shoot_HumanPlayer = new ChoreoTraj(
+	    "H_Shoot_HumanPlayer",
 	    OptionalInt.empty(),
-	    3.91342,
-	    new Pose2d(7.515, 2, Rotation2d.fromRadians(0.785)),
-	    new Pose2d(2.984, 5.4, Rotation2d.fromRadians(0))
+	    1.07407,
+	    new Pose2d(2.984, 2.1, Rotation2d.fromRadians(3.142)),
+	    new Pose2d(1.5, 0.65, Rotation2d.fromRadians(3.142))
+	);
+	public static final ChoreoTraj H_Start_HumanPlayer = new ChoreoTraj(
+	    "H_Start_HumanPlayer",
+	    OptionalInt.empty(),
+	    1.01255,
+	    new Pose2d(3.6, 2.5, Rotation2d.fromRadians(1.571)),
+	    new Pose2d(1.5, 0.65, Rotation2d.fromRadians(3.142))
+	);
+	public static final ChoreoTraj H_HumanPlayer_Start = new ChoreoTraj(
+	    "H_HumanPlayer_Start",
+	    OptionalInt.empty(),
+	    1.01138,
+	    new Pose2d(1.5, 0.65, Rotation2d.fromRadians(3.142)),
+	    new Pose2d(3.6, 2.5, Rotation2d.fromRadians(1.571))
 	);
 
     /**
@@ -126,10 +147,13 @@ public record ChoreoTraj(
 		Map.entry("D_Start_Intake45", D_Start_Intake45),
 		Map.entry("H_Intake_Shoot", H_Intake_Shoot),
 		Map.entry("H_Intake_Shoot45", H_Intake_Shoot45),
+		Map.entry("H_Intake_Shoot45_FULL", H_Intake_Shoot45_FULL),
 		Map.entry("H_Shoot_Climb", H_Shoot_Climb),
 		Map.entry("H_Start_Intake", H_Start_Intake),
 		Map.entry("H_Start_Intake45", H_Start_Intake45),
-		Map.entry("H_Intake_Shoot45_FULL", H_Intake_Shoot45_FULL)
+		Map.entry("H_Shoot_HumanPlayer", H_Shoot_HumanPlayer),
+		Map.entry("H_Start_HumanPlayer", H_Start_HumanPlayer),
+		Map.entry("H_HumanPlayer_Start", H_HumanPlayer_Start)
     );
 
     /**

@@ -27,9 +27,11 @@ public final class ChoreoVars {
         public static final Pose2d D_Start = new Pose2d(3.6, 5.4, Rotation2d.fromRadians(-1.571));
         public static final Pose2d HI_Start = new Pose2d(3.6, 2.15, Rotation2d.fromRadians(1.571));
         public static final Pose2d H_Climb = new Pose2d(0.75, 2.625, Rotation2d.fromRadians(-1.571));
-        public static final Pose2d H_HumanPlayer = new Pose2d(0.8, 0.65, Rotation2d.fromRadians(3.142));
+        public static final Pose2d H_HumanPlayer = new Pose2d(1.5, 0.65, Rotation2d.fromRadians(3.142));
         public static final Pose2d H_Intake = new Pose2d(7.8, 1.02, Rotation2d.fromRadians(1.571));
-        public static final Pose2d H_Shoot = new Pose2d(3.1, 2.6, Rotation2d.fromRadians(0.757));
+        public static final Pose2d H_Shoot = new Pose2d(3.1, 2.6, Rotation2d.kZero);
+        public static final Pose2d H_ShootBack = new Pose2d(2.984, 2.1, Rotation2d.fromRadians(3.142));
+        public static final Pose2d H_Start = new Pose2d(3.6, 2.5, Rotation2d.fromRadians(1.571));
 
         private Poses() {}
     }
