@@ -1,19 +1,23 @@
 package frc.robot.commands;
 
+import java.util.Optional;
+
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.path.PathPlannerPath;
+
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import java.util.Optional;
+import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import frc.robot.subsystems.drive.Drive;
+import frc.robot.subsystems.shooter.Shooter;
 
-public class AutonCommands {
+public class AutonCommands extends TeleopCommands {
 
   private boolean stopRollers = false;
   private boolean stopPivot = false;
 
-  private TeleopCommands teleCommands;
   // public TeleopCommands(Elevator elevator, Intake intake, Manipulator manipulator,
   // CommandXboxController controller) {
   //     kElevator = elevator;
@@ -23,8 +27,10 @@ public class AutonCommands {
   //     // kClimb = climb;
   // }
 
-  public AutonCommands(TeleopCommands teleopCommands) {
-    this.teleCommands = teleopCommands;
+  public AutonCommands(Shooter shooter,
+      Drive drive,
+      CommandXboxController controller) {
+    super(shooter, drive, controller);
   }
 
   public Command getPathCommand(String pathName) {
@@ -53,27 +59,150 @@ public class AutonCommands {
     SequentialCommandGroup autonCommand = new SequentialCommandGroup();
 
     switch (startChoice) {
-      case "CENTER":
-        autonCommand.addCommands(getPathCommand("C_Start_Climb"));
+      case "LEFT":
+        autonCommand.addCommands(getDynamic("D_Start", "Intake_45", "Shoot"));
         break;
       case "RIGHT":
-        autonCommand.addCommands(getPathCommand("H_Start_HIntake"));
-        autonCommand.addCommands(teleCommands.runIntakeFloorPickup());
-        autonCommand.addCommands(getPathCommand("H_Intake_HSStart"));
-        autonCommand.addCommands(teleCommands.startShoot());
-        break;
-      case "LEFT":
-        autonCommand.addCommands(getPathCommand("D_Start_DIntake"));
-        autonCommand.addCommands(teleCommands.runIntakeFloorPickup());
-        autonCommand.addCommands(getPathCommand("D_Intake_DSStart"));
-        autonCommand.addCommands(teleCommands.startShoot());
-        break;
-      default:
-        DriverStation.reportError("Big oops: Invalid Start Pos", false);
-        // Do nothing auton
+        autonCommand.addCommands(getDynamic("H_Start", "Intake_45", "Shoot"));
         break;
     }
 
     return autonCommand;
+  }
+
+  /*
+   * Command to automatically make a sequential command based on a list of waypoints
+   * 
+   * If ()
+   */
+  public Command getDynamic(String... wayPoints)
+  {
+    if (wayPoints.length < 1)
+    {
+      DriverStation.reportError("1 or less waypoints given", null);
+      return null;
+    }
+    SequentialCommandGroup autonCommand = new SequentialCommandGroup();
+
+    DynamicWaypoint last = new DynamicWaypoint(wayPoints[0]); 
+
+    for (int i = 1; i < wayPoints.length; i++)
+    {
+      DynamicWaypoint curr;
+      if (wayPoints[i].split("_")[0].length() != 1)
+      {
+        curr = new DynamicWaypoint(wayPoints[i], last.side);
+      }
+      else
+      {
+        curr = new DynamicWaypoint(wayPoints[i]);
+      }
+
+      autonCommand.addCommands(curr.fromLast(last));
+      last = curr;
+    }
+
+    return autonCommand;
+  }
+
+  public class DynamicWaypoint
+  {
+    public String point;
+    public char side;
+    public boolean isAlliance;
+
+    public DynamicWaypoint(String point)
+    {
+      if (point.charAt(1) != '_' && !(point.equals("Depot") || point.equals("HumanPlayer")))
+      {
+        DriverStation.reportError("please specify side in point string if there is no side", null);
+      }
+      else if (point.equals("HumanPlayer"))
+      {
+        this.point = point;
+        side = 'H';
+      }
+      else if (point.equals("Depot"))
+      {
+        this.point = point;
+        side = 'D';
+      }
+      else
+      {
+        this.point = point.split("_")[1];
+        this.side = point.charAt(0);
+
+        switch (point)
+        {
+          case "Start":
+          case "Depot":
+          case "HumanPlayer":
+          case "Shoot":
+            this.isAlliance = true;
+            break;
+          case "Intake_45":
+            this.isAlliance = false;
+            break;
+          default:
+            DriverStation.reportError("Unknown waypoint given", null);
+        }
+
+      }
+    }
+
+    public DynamicWaypoint(String point, char side)
+    {
+      this.point = point.split("_")[1];
+      if (point.charAt(1) == '_' && point.charAt(1) != side)
+      {
+        this.side = point.charAt(0);
+      }
+      else
+      {
+        this.side = side;
+      }
+
+      switch (point)
+      {
+        case "Start":
+        case "Depot":
+        case "HumanPlayer":
+        case "Shoot":
+          this.isAlliance = true;
+          break;
+        case "Intake_45":
+          this.isAlliance = false;
+          break;
+        default:
+          DriverStation.reportError("Unknown waypoint given", null);
+      }
+    }
+
+    //TODO: ADD LOGIC FOR COMMANDS WHEN THOSE ARE IMPLEMENTED IN TELEOPCOMMANDS
+    public Command fromLast(DynamicWaypoint last)
+    {
+      SequentialCommandGroup command = new SequentialCommandGroup(); 
+
+      if (last.isAlliance != isAlliance)
+      {
+        command.addCommands(getPathCommand(last.side + "_" + last.point + "_" + this.side + "_BUMP"));
+        if (last.isAlliance)
+        {
+          command.addCommands(getPathCommand(this.side + "_AllianceNeutral"));
+        }
+        else
+        {
+          command.addCommands(getPathCommand(this.side + "_NeutralAlliance"));
+        }
+
+        command.addCommands(getPathCommand(this.side + "_BUMP_" + this.side + "_" + this.point));
+      }
+      else
+      {
+        command.addCommands(getPathCommand(last.side + "_" + last.point + "_" + this.side + "_" + this.point));
+      }
+
+      return command;
+    }
   }
 }
