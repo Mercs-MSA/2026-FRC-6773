@@ -3,8 +3,37 @@
  "version":2,
  "type":"Swerve",
  "variables":{
-  "expressions":{},
+  "expressions":{
+   "SpeedOverBump":{
+    "dimension":"LinVel",
+    "var":{
+     "exp":"2 m / s",
+     "val":2.0
+    }
+   },
+   "WINDBACK_DIST":{
+    "dimension":"Number",
+    "var":{
+     "exp":"2.6",
+     "val":2.6
+    }
+   }
+  },
   "poses":{
+   "C_Climb":{
+    "x":{
+     "exp":"1.7 m",
+     "val":1.7
+    },
+    "y":{
+     "exp":"3.3 m",
+     "val":3.3
+    },
+    "heading":{
+     "exp":"180 deg",
+     "val":3.141592653589793
+    }
+   },
    "C_Start":{
     "x":{
      "exp":"3.575 m",
@@ -15,8 +44,8 @@
      "val":3.75
     },
     "heading":{
-     "exp":"180 deg",
-     "val":3.141592653589793
+     "exp":"0 deg",
+     "val":0.0
     }
    },
    "CircleCenter":{
@@ -35,44 +64,58 @@
    },
    "DI_Start":{
     "x":{
-     "exp":"3.6 m",
-     "val":3.6
+     "exp":"3.5968518257141113 m",
+     "val":3.5968518257141113
     },
     "y":{
-     "exp":"6.025 m",
-     "val":6.025
+     "exp":"DI_Start.y",
+     "val":5.6
+    },
+    "heading":{
+     "exp":"0 deg",
+     "val":0.0
+    }
+   },
+   "D_BumpAlliance":{
+    "x":{
+     "exp":"3.2 m",
+     "val":3.2
+    },
+    "y":{
+     "exp":"5.9 m",
+     "val":5.9
     },
     "heading":{
      "exp":"-90 deg",
      "val":-1.5707963267948966
     }
    },
-   "DS_Start":{
+   "D_BumpNeutral":{
     "x":{
-     "exp":"3.575 m",
-     "val":3.575
+     "exp":"6.1 m",
+     "val":6.1
     },
     "y":{
-     "exp":"7.45 m",
-     "val":7.45
+     "exp":"5.9 m",
+     "val":5.9
     },
     "heading":{
-     "exp":"0 rad",
-     "val":0.0
+     "exp":"-90 deg",
+     "val":-1.5707963267948966
     }
    },
    "D_Climb":{
     "x":{
-     "exp":"1.7 m",
-     "val":1.7
+     "exp":"1.61 m",
+     "val":1.61
     },
     "y":{
-     "exp":"4.175 m",
-     "val":4.175
+     "exp":"4.62 m",
+     "val":4.62
     },
     "heading":{
-     "exp":"180 deg",
-     "val":3.141592653589793
+     "exp":"0 deg",
+     "val":0.0
     }
    },
    "D_Depot":{
@@ -81,8 +124,8 @@
      "val":1.1
     },
     "y":{
-     "exp":"6 m",
-     "val":6.0
+     "exp":"5.97 m",
+     "val":5.97
     },
     "heading":{
      "exp":"180 deg",
@@ -95,60 +138,102 @@
      "val":7.8
     },
     "y":{
-     "exp":"7.105 m",
-     "val":7.105
+     "exp":"7 m",
+     "val":7.0
     },
     "heading":{
      "exp":"-90 deg",
      "val":-1.5707963267948966
+    }
+   },
+   "D_Intake_45":{
+    "x":{
+     "exp":"7.4 m",
+     "val":7.4
+    },
+    "y":{
+     "exp":"6.5 m",
+     "val":6.5
+    },
+    "heading":{
+     "exp":"-45 deg",
+     "val":-0.7853981633974483
     }
    },
    "D_Shoot":{
     "x":{
-     "exp":"3.3 m",
-     "val":3.3
+     "exp":"3.1 m",
+     "val":3.1
     },
     "y":{
-     "exp":"5.35 m",
-     "val":5.35
+     "exp":"5.7 m",
+     "val":5.7
     },
     "heading":{
-     "exp":"-90 deg",
-     "val":-1.5707963267948966
+     "exp":"-0.838720972715846 rad",
+     "val":-0.838720972715846
     }
    },
-   "HI_Start":{
+   "D_Start":{
     "x":{
      "exp":"3.6 m",
      "val":3.6
     },
     "y":{
-     "exp":"2.1 m",
-     "val":2.1
+     "exp":"5.9 m",
+     "val":5.9
     },
     "heading":{
-     "exp":"90 deg",
+     "exp":"-90 deg",
+     "val":-1.5707963267948966
+    }
+   },
+   "H_BumpAlliance":{
+    "x":{
+     "exp":"3.2 m",
+     "val":3.2
+    },
+    "y":{
+     "exp":"2.2 m",
+     "val":2.2
+    },
+    "heading":{
+     "exp":"H_Start.heading",
+     "val":1.5707963267948966
+    }
+   },
+   "H_BumpNeutral":{
+    "x":{
+     "exp":"H_BumpAlliance.x + 2.9 m",
+     "val":6.1
+    },
+    "y":{
+     "exp":"H_BumpAlliance.y",
+     "val":2.2
+    },
+    "heading":{
+     "exp":"H_BumpAlliance.heading",
      "val":1.5707963267948966
     }
    },
    "H_Climb":{
     "x":{
-     "exp":"1.7 m",
-     "val":1.7
+     "exp":"0.75 m",
+     "val":0.75
     },
     "y":{
-     "exp":"3.3 m",
-     "val":3.3
+     "exp":"2.625 m",
+     "val":2.625
     },
     "heading":{
-     "exp":"180 deg",
-     "val":3.141592653589793
+     "exp":"-90 deg",
+     "val":-1.5707963267948966
     }
    },
    "H_HumanPlayer":{
     "x":{
-     "exp":"0.8 m",
-     "val":0.8
+     "exp":"1.5 m",
+     "val":1.5
     },
     "y":{
      "exp":"0.65 m",
@@ -173,14 +258,56 @@
      "val":1.5707963267948966
     }
    },
-   "H_Shoot":{
+   "H_Intake_45":{
     "x":{
-     "exp":"3.3 m",
-     "val":3.3
+     "exp":"7.4 m",
+     "val":7.4
     },
     "y":{
-     "exp":"2.9 m",
-     "val":2.9
+     "exp":"1.627 m",
+     "val":1.627
+    },
+    "heading":{
+     "exp":"45 deg",
+     "val":0.7853981633974483
+    }
+   },
+   "H_Shoot":{
+    "x":{
+     "exp":"3.1 m",
+     "val":3.1
+    },
+    "y":{
+     "exp":"2.6 m",
+     "val":2.6
+    },
+    "heading":{
+     "exp":"0 rad",
+     "val":0.0
+    }
+   },
+   "H_ShootBack":{
+    "x":{
+     "exp":"2.9836814403533936 m",
+     "val":2.9836814403533936
+    },
+    "y":{
+     "exp":"7.5 m - D_Start.y",
+     "val":1.5999999999999996
+    },
+    "heading":{
+     "exp":"180 deg",
+     "val":3.141592653589793
+    }
+   },
+   "H_Start":{
+    "x":{
+     "exp":"3.6 m",
+     "val":3.6
+    },
+    "y":{
+     "exp":"2.2 m",
+     "val":2.2
     },
     "heading":{
      "exp":"90 deg",
@@ -192,39 +319,39 @@
  "config":{
   "frontLeft":{
    "x":{
-    "exp":"11 in",
-    "val":0.2794
+    "exp":"10.75 in",
+    "val":0.27305
    },
    "y":{
-    "exp":"11 in",
-    "val":0.2794
+    "exp":"10.75 in",
+    "val":0.27305
    }
   },
   "backLeft":{
    "x":{
-    "exp":"-11 in",
-    "val":-0.2794
+    "exp":"-10.75 in",
+    "val":-0.27305
    },
    "y":{
-    "exp":"11 in",
-    "val":0.2794
+    "exp":"10.75 in",
+    "val":0.27305
    }
   },
   "mass":{
-   "exp":"150 lbs",
-   "val":68.0388555
+   "exp":"115 lbs",
+   "val":52.16312255
   },
   "inertia":{
-   "exp":"6 kg m ^ 2",
-   "val":6.0
+   "exp":"5.2418337042 kg m ^ 2",
+   "val":5.2418337042
   },
   "gearing":{
-   "exp":"6.5",
-   "val":6.5
+   "exp":"6.026785714285714",
+   "val":6.026785714285714
   },
   "radius":{
-   "exp":"2 in",
-   "val":0.0508
+   "exp":"1.719 in",
+   "val":0.0436626
   },
   "vmax":{
    "exp":"6000 RPM",
@@ -240,8 +367,8 @@
   },
   "bumper":{
    "front":{
-    "exp":"17 in",
-    "val":0.4318
+    "exp":"25 in",
+    "val":0.635
    },
    "side":{
     "exp":"17 in",
@@ -259,9 +386,9 @@
  },
  "generationFeatures":[],
  "codegen":{
-  "root":"..\\..\\java\\frc\\robot\\choreo",
-  "genVars":false,
-  "genTrajData":false,
+  "root":"..\\..\\java\\frc\\robot\\ChoreoFiles",
+  "genVars":true,
+  "genTrajData":true,
   "useChoreoLib":false
  }
 }
