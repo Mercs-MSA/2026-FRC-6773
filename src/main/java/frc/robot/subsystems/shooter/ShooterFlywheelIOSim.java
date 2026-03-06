@@ -11,8 +11,6 @@ public class ShooterFlywheelIOSim implements ShooterFlywheelIO {
 
   private final FlywheelSim flywheelLeft;
 
-  // private final DCMotorSim flywheelRight;
-
   private double appliedVoltage = 0.0;
 
   public ShooterFlywheelIOSim(
@@ -24,26 +22,17 @@ public class ShooterFlywheelIOSim implements ShooterFlywheelIO {
             LinearSystemId.createFlywheelSystem(
                 configuration.motorType(), configuration.measurementStdDevs(), hardware.gearing()),
             configuration.motorType());
-    // flywheelRight =
-    //     new DCMotorSim(
-    //         LinearSystemId.createDCMotorSystem(
-    //             configuration.motorType(), configuration.measurementStdDevs(),
-    // hardware.gearing()),
-    //         configuration.motorType());
-
-    // TODO figure out leader follower
     kLoopPeriodSec = loopPeriodSec;
   }
 
   @Override
   public void updateInputs(ShooterFlywheelIOInputs inputs) {
     flywheelLeft.update(kLoopPeriodSec);
-    // flywheelRight.update(kLoopPeriodSec);
 
     inputs.isMotorConnected = true;
 
-    inputs.leftVelocityRotPerSec = flywheelLeft.getAngularVelocityRPM() / 60.0;
-    // inputs.rightVelocityRotPerSec = flywheelRight.getAngularVelocityRPM() / 60.0;
+    inputs.leftVelocity = flywheelLeft.getAngularVelocity();
+    inputs.rightVelocity = inputs.leftVelocity;
     inputs.appliedVoltage = appliedVoltage;
     inputs.supplyCurrentAmps = 0.0;
     inputs.statorCurrentAmps = 0.0;

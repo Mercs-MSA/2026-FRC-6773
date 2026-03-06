@@ -7,6 +7,7 @@ import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.controls.NeutralOut;
 import com.ctre.phoenix6.controls.VelocityVoltage;
+import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.MotorAlignmentValue;
@@ -25,15 +26,15 @@ public class ShooterFlywheelIOTalonFX implements ShooterFlywheelIO {
 
   private TalonFXConfiguration motorConfiguration = new TalonFXConfiguration();
 
-  // logged data for roller:
-  private StatusSignal<AngularVelocity> leftVelocityRotPerSec;
-  private StatusSignal<AngularVelocity> rightVelocityRotPerSec;
+
+  private StatusSignal<AngularVelocity> leftVelocity;
+  private StatusSignal<AngularVelocity> rightVelocity;
   private StatusSignal<Current> supplyAmps;
   private StatusSignal<Current> statorAmps;
   private StatusSignal<Voltage> appliedVolts;
   private StatusSignal<Temperature> temperatureCelsius;
 
-  private final VelocityVoltage kvelocityVoltage = new VelocityVoltage(0.0);
+  private final VelocityVoltage motorController = new VelocityVoltage(0.0);
 
   public ShooterFlywheelIOTalonFX(
       String canbus,
@@ -67,8 +68,8 @@ public class ShooterFlywheelIOTalonFX implements ShooterFlywheelIO {
             : InvertedValue.Clockwise_Positive;
     motorConfiguration.MotorOutput.NeutralMode = configuration.neutralMode();
 
-    leftVelocityRotPerSec = flywheelMotorLeft.getVelocity();
-    rightVelocityRotPerSec = flywheelMotorRight.getVelocity();
+    leftVelocity = flywheelMotorLeft.getVelocity();
+    rightVelocity = flywheelMotorRight.getVelocity();
     appliedVolts = flywheelMotorLeft.getMotorVoltage();
     supplyAmps = flywheelMotorLeft.getSupplyCurrent();
     statorAmps = flywheelMotorLeft.getStatorCurrent();
@@ -76,16 +77,16 @@ public class ShooterFlywheelIOTalonFX implements ShooterFlywheelIO {
 
     BaseStatusSignal.setUpdateFrequencyForAll(
         statusSignalUpdateFrequency,
-        leftVelocityRotPerSec,
-        rightVelocityRotPerSec,
+        leftVelocity,
+        rightVelocity,
         appliedVolts,
         supplyAmps,
         supplyAmps,
         statorAmps,
         temperatureCelsius);
 
-    flywheelMotorLeft.optimizeBusUtilization(0.0, 1.0);
-    flywheelMotorRight.optimizeBusUtilization(0.0, 1.0);
+    // flywheelMotorLeft.optimizeBusUtilization(0.0, 1.0);
+    // flywheelMotorRight.optimizeBusUtilization(0.0, 1.0);
     flywheelMotorLeft.getConfigurator().apply(motorConfiguration, 1);
     flywheelMotorRight.getConfigurator().apply(motorConfiguration, 1);
   }
@@ -100,41 +101,35 @@ public class ShooterFlywheelIOTalonFX implements ShooterFlywheelIO {
     this("rio", hardware, configuration, gains, statusSignalUpdateFrequency);
   }
 
+  @Override
   public void updateInputs(ShooterFlywheelIOInputs inputs) {
     inputs.isMotorConnected =
         BaseStatusSignal.refreshAll(
-                leftVelocityRotPerSec,
-                rightVelocityRotPerSec,
+                leftVelocity,
+                rightVelocity,
                 appliedVolts,
                 supplyAmps,
                 statorAmps,
                 temperatureCelsius)
             .isOK();
 
-    inputs.leftVelocityRotPerSec = leftVelocityRotPerSec.getValueAsDouble();
-    inputs.rightVelocityRotPerSec = rightVelocityRotPerSec.getValueAsDouble();
+    inputs.leftVelocity = leftVelocity.getValue();
+    inputs.rightVelocity = rightVelocity.getValue();
     inputs.appliedVoltage = appliedVolts.getValueAsDouble();
     inputs.supplyCurrentAmps = supplyAmps.getValueAsDouble();
     inputs.statorCurrentAmps = statorAmps.getValueAsDouble();
     inputs.temperatureCelsius = temperatureCelsius.getValueAsDouble();
   }
 
-  // @Override
-  // public void setVoltage(double volts) {
-  //   flywheelMotorLeft.setControl(kvelocityVoltage.withVelocity(volts));
-  // }
+  @Override
+  public void setVoltage(double volts) {
+    flywheelMotorLeft.setControl(new VoltageOut(volts));
+  }
 
   @Override
   public void setVelocityRPS(double velocity) {
-    flywheelMotorLeft.setControl(kvelocityVoltage.withVelocity(velocity));
+    flywheelMotorLeft.setControl(motorController.withVelocity(velocity));
   }
-  /*Some info from the docs:
-  * Motion Magic® Velocity produces a motion profile in real-time while attempting to honor the specified Acceleration and (optional) Jerk. This control mode does not use the CruiseVelocity, Expo_kV, or Expo_kA configs.
-
-   If the specified acceleration is zero, the Acceleration under Motion Magic® configuration parameter is used instead. This allows for runtime adjustment of acceleration for advanced users. Jerk is also specified in the Motion Magic® persistent configuration values. If Jerk is set to zero, Motion Magic® will produce a trapezoidal acceleration profile.
-
-   Target velocity can also be changed on-the-fly and Motion Magic® will do its best to adjust the profile. This control mode is voltage-based, so relevant closed-loop gains will use Volts for the numerator.
-  */
 
   @Override
   public void setGains(double p, double i, double d, double v, double a) {

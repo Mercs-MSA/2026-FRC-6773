@@ -35,6 +35,8 @@ import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.units.measure.LinearVelocity;
 import edu.wpi.first.units.measure.Time;
 import frc.robot.constants.FieldConstants;
+import frc.robot.util.geometry.AllianceFlipUtil;
+
 import org.littletonrobotics.junction.Logger;
 
 /** Add your docs here. */
@@ -209,6 +211,7 @@ public class ShooterTurretCalculator {
 
   public static ShotData iterativeMovingShotFromMap(
       Pose2d robot, ChassisSpeeds fieldSpeeds, Translation3d target, int iterations) {
+    target = AllianceFlipUtil.apply(target);
     double distance = getDistanceToTarget(robot, target).in(Meters);
     ShotData shot = SHOT_MAP.get(distance);
     shot = new ShotData(shot.exitVelocity, shot.hoodAngle, target);

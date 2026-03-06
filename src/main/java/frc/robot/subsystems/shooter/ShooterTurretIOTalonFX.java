@@ -7,7 +7,6 @@ package frc.robot.subsystems.shooter;
 import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.configs.CANcoderConfiguration;
-import com.ctre.phoenix6.configs.MotionMagicConfigs;
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.SoftwareLimitSwitchConfigs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
@@ -73,11 +72,8 @@ public class ShooterTurretIOTalonFX implements ShooterTurretIO {
     motorConfiguration.Slot0.kD = gains.d();
     motorConfiguration.Slot0.kV = gains.v();
     motorConfiguration.Slot0.kA = gains.a();
-    motorConfiguration.MotionMagic.MotionMagicCruiseVelocity =
-        gains.maxVelocityRotationsPerSecond();
-    motorConfiguration.MotionMagic.MotionMagicAcceleration =
-        gains.maxAccelerationRotationsPerSecondSquared();
-    motorConfiguration.MotionMagic.MotionMagicJerk = gains.jerkRotationsPerSecondCubed();
+    motorConfiguration.Slot0.kS = gains.s();
+    
 
     motorConfiguration.CurrentLimits.SupplyCurrentLimitEnable =
         configuration.enableSupplyCurrentLimit();
@@ -107,13 +103,9 @@ public class ShooterTurretIOTalonFX implements ShooterTurretIO {
 
     motorConfiguration.Feedback.SensorToMechanismRatio = hardware.gearing();
     motorConfiguration.Feedback.RotorToSensorRatio = 1.0;
-    //
+    
 
-    // Enable to true because arm
     motorConfiguration.ClosedLoopGeneral.ContinuousWrap = false;
-
-    // // Reset position on startup
-    // kMotor.setPosition(Rotation2d.fromDegrees(64.331).getRotations()); //UPDATE VALUES
 
     // Get status signals from the motor controller
     positionRotations = turretMotor.getPosition();
@@ -164,7 +156,6 @@ public class ShooterTurretIOTalonFX implements ShooterTurretIO {
 
     inputs.position = Rotation2d.fromRotations(positionRotations.getValueAsDouble());
     inputs.velocityRotPerSec = velocityRotationsPerSec.getValueAsDouble();
-    // Rotation2d.fromRotations(velocityRotationsPerSec.getValueAsDouble());
     inputs.appliedVoltage = appliedVolts.getValueAsDouble();
     inputs.supplyCurrentAmps = supplyCurrentAmps.getValueAsDouble();
     inputs.statorCurrentAmps = statorCurrentAmps.getValueAsDouble();
@@ -207,17 +198,6 @@ public class ShooterTurretIOTalonFX implements ShooterTurretIO {
     slotConfiguration.kA = a;
 
     turretMotor.getConfigurator().apply((slotConfiguration));
-  }
-
-  @Override
-  public void setMotionMagicConstraints(double maxVelocity, double maxAcceleration) {
-    var motionMagicConfiguration = new MotionMagicConfigs();
-
-    motionMagicConfiguration.MotionMagicCruiseVelocity = maxVelocity;
-    motionMagicConfiguration.MotionMagicAcceleration = maxAcceleration;
-    motionMagicConfiguration.MotionMagicJerk = 10.0 * maxAcceleration;
-
-    turretMotor.getConfigurator().apply(motionMagicConfiguration);
   }
 
   @Override

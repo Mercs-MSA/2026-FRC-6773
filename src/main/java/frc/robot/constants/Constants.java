@@ -7,6 +7,9 @@
 
 package frc.robot.constants;
 
+import static edu.wpi.first.units.Units.FeetPerSecond;
+
+import edu.wpi.first.units.measure.LinearVelocity;
 import edu.wpi.first.wpilibj.RobotBase;
 
 /**
@@ -21,6 +24,8 @@ public final class Constants {
   public static final double loopPeriodSecs = 0.02;
 
   public static boolean disableHAL = false;
+
+  public static LinearVelocity fuelLaunchVelocity = FeetPerSecond.of(62.83);
 
   public static void disableHAL() {
     disableHAL = true;

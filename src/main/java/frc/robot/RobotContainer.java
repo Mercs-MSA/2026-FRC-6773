@@ -37,7 +37,7 @@ import frc.robot.subsystems.intake.IntakeConstants;
 import frc.robot.subsystems.intake.IntakePivotIOSim;
 import frc.robot.subsystems.intake.IntakePivotIOTalonFX;
 import frc.robot.subsystems.intake.IntakeRollerIOSim;
-import frc.robot.subsystems.intake.IntakeRollerIOTalonFX;
+import frc.robot.subsystems.intake.IntakeRollerIOTalonFX.java;
 import frc.robot.subsystems.shooter.Shooter;
 import frc.robot.subsystems.shooter.ShooterCalculator;
 import frc.robot.subsystems.shooter.ShooterConstants;

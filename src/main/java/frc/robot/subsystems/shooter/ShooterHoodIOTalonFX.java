@@ -6,7 +6,6 @@ package frc.robot.subsystems.shooter;
 
 import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.StatusSignal;
-import com.ctre.phoenix6.configs.CANcoderConfiguration;
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.NeutralOut;
@@ -24,13 +23,11 @@ import edu.wpi.first.units.measure.Voltage;
 import frc.robot.subsystems.shooter.ShooterConstants.HoodGains;
 import frc.robot.subsystems.shooter.ShooterConstants.HoodMotorConfiguration;
 import frc.robot.subsystems.shooter.ShooterConstants.ShooterHoodHardware;
-import frc.robot.subsystems.shooter.ShooterHoodIO.ShooterHoodIOInputs;
 
 public class ShooterHoodIOTalonFX implements ShooterHoodIO {
   private final TalonFX hoodMotor;
 
   private TalonFXConfiguration motorConfiguration = new TalonFXConfiguration();
-  private CANcoderConfiguration canCoderConfiguration = new CANcoderConfiguration();
 
   // Motor data we wish to log
   private StatusSignal<Angle> positionRotations;
@@ -61,7 +58,6 @@ public class ShooterHoodIOTalonFX implements ShooterHoodIO {
     motorConfiguration.Slot0.kD = gains.s();
     motorConfiguration.Slot0.kV = gains.v();
     motorConfiguration.Slot0.kA = gains.a();
-    motorConfiguration.Slot0.kD = gains.g();
 
     motorConfiguration.CurrentLimits.SupplyCurrentLimitEnable =
         configuration.enableSupplyCurrentLimit();
@@ -81,9 +77,6 @@ public class ShooterHoodIOTalonFX implements ShooterHoodIO {
     motorConfiguration.Feedback.SensorToMechanismRatio = hardware.gearing();
     motorConfiguration.Feedback.RotorToSensorRatio = 1.0;
 
-    // // Reset position on startup
-    // kMotor.setPosition(Rotation2d.fromDegrees(64.331).getRotations()); //UPDATE VALUES
-
     // Get status signals from the motor controller
     positionRotations = hoodMotor.getPosition();
     velocityRotationsPerSec = hoodMotor.getVelocity();
@@ -97,7 +90,6 @@ public class ShooterHoodIOTalonFX implements ShooterHoodIO {
         positionRotations,
         velocityRotationsPerSec,
         appliedVolts,
-        supplyCurrentAmps,
         supplyCurrentAmps,
         statorCurrentAmps,
         temperatureCelsius);

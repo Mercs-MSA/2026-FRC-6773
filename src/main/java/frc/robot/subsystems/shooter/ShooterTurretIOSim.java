@@ -2,6 +2,7 @@ package frc.robot.subsystems.shooter;
 
 import static edu.wpi.first.units.Units.Radians;
 import static edu.wpi.first.units.Units.RadiansPerSecond;
+import static edu.wpi.first.units.Units.RotationsPerSecond;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -16,8 +17,6 @@ public class ShooterTurretIOSim implements ShooterTurretIO {
   private final double kLoopPeriodSec;
 
   private final DCMotorSim turretMotor;
-
-  // private final DCMotorSim flywheelRight;
 
   private double appliedVoltage = 0.0;
 
@@ -34,13 +33,11 @@ public class ShooterTurretIOSim implements ShooterTurretIO {
   @Override
   public void updateInputs(ShooterTurretIOInputs inputs) {
     turretMotor.update(kLoopPeriodSec);
-    // flywheelRight.update(kLoopPeriodSec);
 
     inputs.isMotorConnected = true;
 
     inputs.position = Rotation2d.fromRotations(turretMotor.getAngularPositionRotations());
-    inputs.velocityRotPerSec = turretMotor.getAngularVelocityRPM() / 60.0;
-    // inputs.rightVelocityRotPerSec = flywheelRight.getAngularVelocityRPM() / 60.0;
+    inputs.velocityRotPerSec = turretMotor.getAngularVelocity().in(RotationsPerSecond);
     inputs.appliedVoltage = appliedVoltage;
     inputs.supplyCurrentAmps = 0.0;
     inputs.statorCurrentAmps = 0.0;

@@ -37,14 +37,15 @@ import edu.wpi.first.wpilibj.Alert.AlertType;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
-// import frc.robot.RobotState;
-// import frc.robot.RobotState.OdometryObservation;
 import frc.robot.constants.Constants;
 import frc.robot.constants.Constants.Mode;
 import frc.robot.constants.FieldConstants;
 import frc.robot.util.LocalADStarAK;
+import frc.robot.util.ZoneUtil;
 import frc.robot.util.geometry.AllianceFlipUtil;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
@@ -52,6 +53,21 @@ import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.Logger;
 
 public class Drive extends SubsystemBase {
+
+  public enum DriveState{
+    IDLE,
+    SHOOTING,
+    BUMP,
+    DRIVING,
+    ALIGN
+  }
+
+  public DriveState driveState = DriveState.IDLE;
+
+  public double speedCap = Double.MAX_VALUE;
+
+  private Trigger bumpTrigger;
+
   // TunerConstants doesn't include these constants, so they are declared locally
   static final double ODOMETRY_FREQUENCY = DriveConstants.kCANBus.isNetworkFD() ? 250.0 : 100.0;
   public static final double DRIVE_BASE_RADIUS =
@@ -150,6 +166,11 @@ public class Drive extends SubsystemBase {
                 (state) -> Logger.recordOutput("Drive/SysIdState", state.toString())),
             new SysIdRoutine.Mechanism(
                 (voltage) -> runCharacterization(voltage.in(Volts)), null, this));
+                
+    bumpTrigger = ZoneUtil.BUMP_ZONES.willContain(this::getPose, this::getFieldVelocity, Seconds.of(0.5));
+    bumpTrigger.onTrue(Commands.runOnce(() -> setDriveState(DriveState.BUMP)));
+    bumpTrigger.onFalse(Commands.runOnce(() -> setDriveState(DriveState.DRIVING)));
+    bumpTrigger.debounce(0.5);
   }
 
   @Override
@@ -193,15 +214,6 @@ public class Drive extends SubsystemBase {
         lastModulePositions[moduleIndex] = modulePositions[moduleIndex];
       }
 
-      // Update odometry
-      // RobotState.getInstance()
-      //     .addOdometryObservation(
-      //         new OdometryObservation(
-      //             Timer.getTimestamp(),
-      //             modulePositions,
-      //             Optional.ofNullable(gyroInputs.connected ? gyroInputs.yawPosition : null)));
-      // RobotState.getInstance().setRobotVelocity(getChassisSpeeds());
-
       // Update gyro angle
       if (gyroInputs.connected) {
         // Use the real gyro angle
@@ -214,18 +226,38 @@ public class Drive extends SubsystemBase {
 
       // Apply update
       poseEstimator.updateWithTime(sampleTimestamps[i], rawGyroRotation, modulePositions);
+
+      switch (driveState) {
+        case IDLE:
+          speedCap = 0;
+          break;
+        case DRIVING:
+          speedCap = Double.MAX_VALUE;
+          break;
+        case SHOOTING:
+          speedCap = 3.0; //m / s
+          break;
+        case BUMP:
+          speedCap = 2.2; //m / s
+          break;
+        case ALIGN:
+          speedCap = 0.0;
+          break;
+      }
     }
+
+
 
     // Update gyro alert
     gyroDisconnectedAlert.set(!gyroInputs.connected && Constants.currentMode != Mode.SIM);
+  }
 
-    // Logger.recordOutput(
-    //     "Odometry/FieldRelativeVelocity", RobotState.getInstance().getFieldVelocity());
+  public void setDriveState(DriveState state) {
+    this.driveState = state;
+  }
 
-    // Logger.recordOutput(
-    //     "Odometry/RobotStateEstimatedPose", RobotState.getInstance().getEstimatedPose());
-
-    // Logger.recordOutput("Drive/DistanceToHub", RobotState.getInstance().distanceToHub());
+  public DriveState getDriveState() {
+    return driveState;
   }
 
   /**
@@ -234,7 +266,15 @@ public class Drive extends SubsystemBase {
    * @param speeds Speeds in meters/sec
    */
   public void runVelocity(ChassisSpeeds speeds) {
-    // Calculate module setpoints
+
+    double magnitude = Math.hypot(speeds.vxMetersPerSecond, speeds.vyMetersPerSecond);
+    
+    if (magnitude > speedCap) {
+      double ratio = speedCap / magnitude;
+      speeds.vxMetersPerSecond *= ratio;
+      speeds.vyMetersPerSecond *= ratio;
+    }
+
     ChassisSpeeds discreteSpeeds = ChassisSpeeds.discretize(speeds, 0.02);
     SwerveModuleState[] setpointStates = kinematics.toSwerveModuleStates(discreteSpeeds);
     SwerveDriveKinematics.desaturateWheelSpeeds(setpointStates, DriveConstants.kSpeedAt12Volts);
@@ -250,6 +290,8 @@ public class Drive extends SubsystemBase {
 
     // Log optimized setpoints (runSetpoint mutates each state)
     Logger.recordOutput("SwerveStates/SetpointsOptimized", setpointStates);
+
+
   }
 
   /** Runs the drive in a straight line with the specified drive output. */
@@ -386,22 +428,6 @@ public class Drive extends SubsystemBase {
     }
     return false;
   }
-
-  // public Command followPath(PathPlannerPath path, PPHolonomicDriveController drivePID) {
-  //   return new FollowPathCommand(
-  //           path,
-  //           this::getPose,
-  //           this::getChassisSpeeds,
-  //           (speeds, ff) -> {
-  //               ppDesiredSpeeds = speeds;
-  //               pathPlanningFF = ff;
-  //           },
-  //           drivePID,
-  //           PP_CONFIG,
-  //           () -> DriverStation.getAlliance().isPresent() &&
-  //               DriverStation.getAlliance().get() == Alliance.Red,
-  //           this);
-  // }
 
   /** Returns an array of module translations. */
   public static Translation2d[] getModuleTranslations() {

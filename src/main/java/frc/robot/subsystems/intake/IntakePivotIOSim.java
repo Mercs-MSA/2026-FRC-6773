@@ -1,22 +1,22 @@
-package frc.robot.subsystems.shooter;
+package frc.robot.subsystems.intake;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.system.plant.LinearSystemId;
 import edu.wpi.first.wpilibj.simulation.DCMotorSim;
-import frc.robot.subsystems.shooter.ShooterConstants.ShooterHoodHardware;
-import frc.robot.subsystems.shooter.ShooterConstants.SimulationConfiguration;
+import frc.robot.subsystems.intake.IntakeConstants.PivotHardware;
+import frc.robot.subsystems.intake.IntakeConstants.IntakeSimulationConfiguration;
 
-public class ShooterHoodIOSim implements ShooterHoodIO {
+public class IntakePivotIOSim implements IntakePivotIO {
   private final double kLoopPeriodSec;
 
-  private final DCMotorSim hoodMotor;
+  private final DCMotorSim pivotMotor;
 
   private double appliedVoltage = 0.0;
 
-  public ShooterHoodIOSim(
-      double loopPeriodSec, ShooterHoodHardware hardware, SimulationConfiguration configuration) {
-    hoodMotor =
+  public IntakePivotIOSim(
+      double loopPeriodSec, PivotHardware hardware, IntakeSimulationConfiguration configuration) {
+    pivotMotor =
         new DCMotorSim(
             LinearSystemId.createDCMotorSystem(
                 configuration.motorType(), configuration.measurementStdDevs(), hardware.gearing()),
@@ -25,12 +25,12 @@ public class ShooterHoodIOSim implements ShooterHoodIO {
   }
 
   @Override
-  public void updateInputs(ShooterHoodIOInputs inputs) {
-    hoodMotor.update(kLoopPeriodSec);
+  public void updateInputs(IntakePivotIOInputs inputs) {
+    pivotMotor.update(kLoopPeriodSec);
 
     inputs.isMotorConnected = true;
 
-    inputs.position = Rotation2d.fromRotations(hoodMotor.getAngularPositionRotations());
+    inputs.position = Rotation2d.fromRotations(pivotMotor.getAngularPositionRotations());
     inputs.appliedVoltage = appliedVoltage;
     inputs.supplyCurrentAmps = 0.0;
     inputs.statorCurrentAmps = 0.0;
@@ -40,12 +40,12 @@ public class ShooterHoodIOSim implements ShooterHoodIO {
   @Override
   public void setVoltage(double volts) {
     appliedVoltage = MathUtil.clamp(volts, -12.0, 12.0);
-    hoodMotor.setInputVoltage(appliedVoltage);
+    pivotMotor.setInputVoltage(appliedVoltage);
   }
 
   @Override
   public void setPosition(Rotation2d goalPosition) {
-    hoodMotor.setAngle(goalPosition.getRadians());
+    pivotMotor.setAngle(goalPosition.getRadians());
   }
 
   @Override
