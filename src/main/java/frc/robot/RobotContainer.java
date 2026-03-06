@@ -331,14 +331,14 @@ public class RobotContainer {
         .onTrue(teleopCommands.runIntakeFloorPickup())
         .onFalse(teleopCommands.runIntakeSlowRollers());
 
-    shooter.setDefaultCommand(teleopCommands.trackHub());
+    // shooter.setDefaultCommand(teleopCommands.trackHub());
     controller
         .rightTrigger()
         .whileTrue(teleopCommands.startShoot())
         .whileTrue(teleopCommands.trackFlywheel())
         .onFalse(teleopCommands.stopShoot());
 
-    shooter.setDefaultCommand(teleopCommands.trackHub());
+    // shooter.setDefaultCommand(teleopCommands.trackHub());
 
     controller.x().whileTrue(teleopCommands.spinAlt());
     controller.x().whileTrue(teleopCommands.startKick());

@@ -7,8 +7,8 @@
    "SpeedOverBump":{
     "dimension":"LinVel",
     "var":{
-     "exp":"2.25 m / s",
-     "val":2.25
+     "exp":"2 m / s",
+     "val":2.0
     }
    },
    "WINDBACK_DIST":{
@@ -76,34 +76,6 @@
      "val":0.0
     }
    },
-   "D_BumpAlliance":{
-    "x":{
-     "exp":"3.2 m",
-     "val":3.2
-    },
-    "y":{
-     "exp":"5.9 m",
-     "val":5.9
-    },
-    "heading":{
-     "exp":"-90 deg",
-     "val":-1.5707963267948966
-    }
-   },
-   "D_BumpNeutral":{
-    "x":{
-     "exp":"6.1 m",
-     "val":6.1
-    },
-    "y":{
-     "exp":"5.9 m",
-     "val":5.9
-    },
-    "heading":{
-     "exp":"-90 deg",
-     "val":-1.5707963267948966
-    }
-   },
    "D_Climb":{
     "x":{
      "exp":"1.61 m",
@@ -124,8 +96,8 @@
      "val":1.1
     },
     "y":{
-     "exp":"5.97 m",
-     "val":5.97
+     "exp":"6 m",
+     "val":6.0
     },
     "heading":{
      "exp":"180 deg",
@@ -148,12 +120,12 @@
    },
    "D_Intake_45":{
     "x":{
-     "exp":"7.4 m",
-     "val":7.4
+     "exp":"7.515 m",
+     "val":7.515
     },
     "y":{
-     "exp":"6.5 m",
-     "val":6.5
+     "exp":"5.6 m",
+     "val":5.6
     },
     "heading":{
      "exp":"-45 deg",
@@ -180,39 +152,25 @@
      "val":3.6
     },
     "y":{
-     "exp":"5.9 m",
-     "val":5.9
+     "exp":"5.4 m",
+     "val":5.4
     },
     "heading":{
      "exp":"-90 deg",
      "val":-1.5707963267948966
     }
    },
-   "H_BumpAlliance":{
+   "HI_Start":{
     "x":{
-     "exp":"3.2 m",
-     "val":3.2
+     "exp":"3.6 m",
+     "val":3.6
     },
     "y":{
-     "exp":"2.2 m",
-     "val":2.2
+     "exp":"2.15 m",
+     "val":2.15
     },
     "heading":{
-     "exp":"H_Start.heading",
-     "val":1.5707963267948966
-    }
-   },
-   "H_BumpNeutral":{
-    "x":{
-     "exp":"H_BumpAlliance.x + 2.9 m",
-     "val":6.1
-    },
-    "y":{
-     "exp":"H_BumpAlliance.y",
-     "val":2.2
-    },
-    "heading":{
-     "exp":"H_BumpAlliance.heading",
+     "exp":"90 deg",
      "val":1.5707963267948966
     }
    },
@@ -258,20 +216,6 @@
      "val":1.5707963267948966
     }
    },
-   "H_Intake_45":{
-    "x":{
-     "exp":"7.4 m",
-     "val":7.4
-    },
-    "y":{
-     "exp":"1.627 m",
-     "val":1.627
-    },
-    "heading":{
-     "exp":"45 deg",
-     "val":0.7853981633974483
-    }
-   },
    "H_Shoot":{
     "x":{
      "exp":"3.1 m",
@@ -293,7 +237,7 @@
     },
     "y":{
      "exp":"7.5 m - D_Start.y",
-     "val":1.5999999999999996
+     "val":2.0999999999999996
     },
     "heading":{
      "exp":"180 deg",
@@ -302,15 +246,15 @@
    },
    "H_Start":{
     "x":{
-     "exp":"3.6 m",
+     "exp":"D_Start.x",
      "val":3.6
     },
     "y":{
-     "exp":"2.2 m",
-     "val":2.2
+     "exp":"7.9 m - D_Start.y",
+     "val":2.5
     },
     "heading":{
-     "exp":"90 deg",
+     "exp":"-D_Start.heading",
      "val":1.5707963267948966
     }
    }

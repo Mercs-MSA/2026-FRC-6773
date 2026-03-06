@@ -68,25 +68,33 @@ public class AutonCommands extends TeleopCommands {
 
     switch (startChoice) {
       case "CENTER":
-        autonCommand.addCommands(getPathCommand("C_Start_Climb"));
+        // autonCommand.addCommands(getPathCommand("C_Start_Climb"));
         break;
-        
+
       case "RIGHT":
-        autonCommand.addCommands(getPathCommand("H_Start_Intake"));
-        autonCommand.addCommands(runIntakeFloorPickup());
-        autonCommand.addCommands(getPathCommand("H_Intake_SStart"));
-        autonCommand.addCommands(runShootingSystem());
+        // autonCommand.addCommands(getPathCommand("H_Start_Intake"));
+        // autonCommand.addCommands(runIntakeFloorPickup());
+        // autonCommand.addCommands(getPathCommand("H_Intake_SStart"));
+        // autonCommand.addCommands(runShootingSystem());
         // autonCommand.addCommands(Commands.waitSeconds(2.5));
         // autonCommand.addCommands(getPathCommand("H_SStart_Climb"));
 
         break;
       case "RIGHT_45":
-        autonCommand.addCommands(getPathCommand("H_Start_Intake45"));
-        autonCommand.addCommands(runIntakeFloorPickup());
-        autonCommand.addCommands(getPathCommand("H_Intake_Shoot45"));
-        autonCommand.addCommands(runShootingSystem());
+        // autonCommand.addCommands(getPathCommand("H_Start_Intake45"));
+        // autonCommand.addCommands(runIntakeFloorPickup());
+        // autonCommand.addCommands(getPathCommand("H_Intake_Shoot45"));
+        // autonCommand.addCommands(runShootingSystem());
         // autonCommand.addCommands(Commands.waitSeconds(2.5));
         // autonCommand.addCommands(getPathCommand("H_SStart_Climb"));
+
+        autonCommand.addCommands(getPathCommand("H_Start_H_BUMP"));
+        autonCommand.addCommands(getPathCommand("H_BumpAllianceNeutral"));
+        // autonCommand.addCommands(runIntakeFloorPickup());
+        autonCommand.addCommands(getPathCommand("H_BUMP_H_Intake_45"));
+        autonCommand.addCommands(getPathCommand("H_Intake_45_H_BUMP"));
+        autonCommand.addCommands(getPathCommand("H_BumpNeutralAlliance"));
+        // autonCommand.addCommands(runShootingSystem());
 
         break;
 
@@ -96,24 +104,32 @@ public class AutonCommands extends TeleopCommands {
         //         () -> {
         //           drive.setPose(new Pose2d(3.6, 5.6, new Rotation2d(Math.toRadians(-90))));
         //         }));
-        autonCommand.addCommands(getPathCommand("D_Start_Intake"));
-        autonCommand.addCommands(runIntakeFloorPickup());
-        autonCommand.addCommands(getPathCommand("D_Intake_SStart"));
-        autonCommand.addCommands(runShootingSystem());
-        autonCommand.addCommands(getPathCommand("D_SStart_Climb"));
+        // autonCommand.addCommands(getPathCommand("D_Start_Intake"));
+        // autonCommand.addCommands(runIntakeFloorPickup());
+        // autonCommand.addCommands(getPathCommand("D_Intake_SStart"));
+        // autonCommand.addCommands(runShootingSystem());
+        // autonCommand.addCommands(getPathCommand("D_SStart_Climb"));
         break;
       case "LEFT_45":
         // autonCommand.addCommands(setInitialPose(ChoreoTraj.D_Start_Intake45));
-        autonCommand.addCommands(getPathCommand("D_Start_Intake45"));
-        autonCommand.addCommands(runIntakeFloorPickup());
-        autonCommand.addCommands(getPathCommand("D_Intake_Shoot45"));
-        autonCommand.addCommands(runShootingSystem());
+        // autonCommand.addCommands(getPathCommand("D_Start_Intake45"));
+        // autonCommand.addCommands(runIntakeFloorPickup());
+        // autonCommand.addCommands(getPathCommand("D_Intake_Shoot45"));
+        // autonCommand.addCommands(runShootingSystem());
+
+        autonCommand.addCommands(getPathCommand("D_Start_D_BUMP"));
+        autonCommand.addCommands(getPathCommand("D_BumpAllianceNeutral"));
+        autonCommand.addCommands(getPathCommand("D_BUMP_D_Intake_45"));
+        autonCommand.addCommands(getPathCommand("D_Intake_45_D_BUMP"));
+        autonCommand.addCommands(getPathCommand("D_BumpNeutralAlliance"));
+        // autonCommand.addCommands(runShootingSystem());
+
       case "LEFT_45_FULL":
         // autonCommand.addCommands(setInitialPose(ChoreoTraj.D_Start_Intake45));
-        autonCommand.addCommands(getPathCommand("D_Start_Intake45"));
-        autonCommand.addCommands(runIntakeFloorPickup());
-        autonCommand.addCommands(getPathCommand("D_Intake_Shoot45FULL"));
-        autonCommand.addCommands(runShootingSystem());
+        // autonCommand.addCommands(getPathCommand("D_Start_Intake45"));
+        // autonCommand.addCommands(runIntakeFloorPickup());
+        // autonCommand.addCommands(getPathCommand("D_Intake_Shoot45FULL"));
+        // autonCommand.addCommands(runShootingSystem());
       default:
         DriverStation.reportError("Big oops: Invalid Start Pos", false);
         // Do nothing auton
@@ -135,7 +151,7 @@ public class AutonCommands extends TeleopCommands {
     return new ParallelCommandGroup(
             startShoot(),
             trackFlywheel(),
-            Commands.waitSeconds(2)
+            Commands.waitSeconds(1)
                 .andThen(new ParallelCommandGroup(spinAlt(), startKick(), startShoot())))
         .withDeadline(new WaitCommand(9));
   }
