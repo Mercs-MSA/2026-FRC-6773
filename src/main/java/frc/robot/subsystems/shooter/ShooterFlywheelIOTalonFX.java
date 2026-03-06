@@ -26,7 +26,6 @@ public class ShooterFlywheelIOTalonFX implements ShooterFlywheelIO {
 
   private TalonFXConfiguration motorConfiguration = new TalonFXConfiguration();
 
-
   private StatusSignal<AngularVelocity> leftVelocity;
   private StatusSignal<AngularVelocity> rightVelocity;
   private StatusSignal<Current> supplyAmps;

@@ -54,7 +54,7 @@ import org.littletonrobotics.junction.Logger;
 
 public class Drive extends SubsystemBase {
 
-  public enum DriveState{
+  public enum DriveState {
     IDLE,
     SHOOTING,
     BUMP,
@@ -166,8 +166,9 @@ public class Drive extends SubsystemBase {
                 (state) -> Logger.recordOutput("Drive/SysIdState", state.toString())),
             new SysIdRoutine.Mechanism(
                 (voltage) -> runCharacterization(voltage.in(Volts)), null, this));
-                
-    bumpTrigger = ZoneUtil.BUMP_ZONES.willContain(this::getPose, this::getFieldVelocity, Seconds.of(0.5));
+
+    bumpTrigger =
+        ZoneUtil.BUMP_ZONES.willContain(this::getPose, this::getFieldVelocity, Seconds.of(0.3));
     bumpTrigger.onTrue(Commands.runOnce(() -> setDriveState(DriveState.BUMP)));
     bumpTrigger.onFalse(Commands.runOnce(() -> setDriveState(DriveState.DRIVING)));
     bumpTrigger.debounce(0.5);
@@ -235,18 +236,22 @@ public class Drive extends SubsystemBase {
           speedCap = Double.MAX_VALUE;
           break;
         case SHOOTING:
-          speedCap = 3.0; //m / s
+          speedCap = 3.0; // m / s
           break;
         case BUMP:
-          speedCap = 2.2; //m / s
+          speedCap = 2.2; // m / s
           break;
         case ALIGN:
-          speedCap = 0.0;
+          speedCap = 3.0; // m / s
+          break;
+        default:
+          speedCap = Double.MAX_VALUE;
           break;
       }
+
+      Logger.recordOutput("DriveState", driveState);
+      Logger.recordOutput("Speed Cap", speedCap);
     }
-
-
 
     // Update gyro alert
     gyroDisconnectedAlert.set(!gyroInputs.connected && Constants.currentMode != Mode.SIM);
@@ -266,18 +271,10 @@ public class Drive extends SubsystemBase {
    * @param speeds Speeds in meters/sec
    */
   public void runVelocity(ChassisSpeeds speeds) {
-
-    double magnitude = Math.hypot(speeds.vxMetersPerSecond, speeds.vyMetersPerSecond);
-    
-    if (magnitude > speedCap) {
-      double ratio = speedCap / magnitude;
-      speeds.vxMetersPerSecond *= ratio;
-      speeds.vyMetersPerSecond *= ratio;
-    }
-
     ChassisSpeeds discreteSpeeds = ChassisSpeeds.discretize(speeds, 0.02);
     SwerveModuleState[] setpointStates = kinematics.toSwerveModuleStates(discreteSpeeds);
-    SwerveDriveKinematics.desaturateWheelSpeeds(setpointStates, DriveConstants.kSpeedAt12Volts);
+    SwerveDriveKinematics.desaturateWheelSpeeds(
+        setpointStates, Math.min(speedCap, DriveConstants.kSpeedAt12Volts.in(MetersPerSecond)));
 
     // Log unoptimized setpoints and setpoint speeds
     Logger.recordOutput("SwerveStates/Setpoints", setpointStates);
@@ -290,8 +287,6 @@ public class Drive extends SubsystemBase {
 
     // Log optimized setpoints (runSetpoint mutates each state)
     Logger.recordOutput("SwerveStates/SetpointsOptimized", setpointStates);
-
-
   }
 
   /** Runs the drive in a straight line with the specified drive output. */

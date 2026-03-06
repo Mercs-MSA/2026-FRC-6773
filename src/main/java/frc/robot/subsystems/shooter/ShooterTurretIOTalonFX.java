@@ -73,7 +73,6 @@ public class ShooterTurretIOTalonFX implements ShooterTurretIO {
     motorConfiguration.Slot0.kV = gains.v();
     motorConfiguration.Slot0.kA = gains.a();
     motorConfiguration.Slot0.kS = gains.s();
-    
 
     motorConfiguration.CurrentLimits.SupplyCurrentLimitEnable =
         configuration.enableSupplyCurrentLimit();
@@ -103,7 +102,6 @@ public class ShooterTurretIOTalonFX implements ShooterTurretIO {
 
     motorConfiguration.Feedback.SensorToMechanismRatio = hardware.gearing();
     motorConfiguration.Feedback.RotorToSensorRatio = 1.0;
-    
 
     motorConfiguration.ClosedLoopGeneral.ContinuousWrap = false;
 

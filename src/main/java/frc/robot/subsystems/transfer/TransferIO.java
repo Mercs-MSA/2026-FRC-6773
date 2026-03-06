@@ -3,10 +3,9 @@ package frc.robot.subsystems.transfer;
 import static edu.wpi.first.units.Units.InchesPerSecond;
 import static edu.wpi.first.units.Units.RotationsPerSecond;
 
-import org.littletonrobotics.junction.AutoLog;
-
 import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.LinearVelocity;
+import org.littletonrobotics.junction.AutoLog;
 
 public interface TransferIO {
   @AutoLog
@@ -58,5 +57,4 @@ public interface TransferIO {
   public default void setBrakeMode(boolean enableBrake) {}
 
   public default void setGains(double p, double i, double d, double v, double a) {}
-
 }

@@ -14,5 +14,12 @@ public class TeleopCommands {
   private Transfer transfer;
   private Shooter shooter;
 
-  
+  public TeleopCommands(
+      Drive drive, Intake intake, Indexer indexer, Transfer transfer, Shooter shooter) {
+    this.drive = drive;
+    this.intake = intake;
+    this.indexer = indexer;
+    this.transfer = transfer;
+    this.shooter = shooter;
+  }
 }

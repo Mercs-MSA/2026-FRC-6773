@@ -12,34 +12,24 @@ import static frc.robot.subsystems.vision.VisionConstants.*;
 import com.pathplanner.lib.auto.AutoBuilder;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
-import frc.robot.commands.AutonCommands;
 import frc.robot.commands.DriveCommands;
-import frc.robot.commands.TeleopCommands;
 import frc.robot.constants.Constants;
 import frc.robot.constants.FieldConstants;
 import frc.robot.subsystems.drive.Drive;
+import frc.robot.subsystems.drive.Drive.DriveState;
 import frc.robot.subsystems.drive.DriveConstants;
 import frc.robot.subsystems.drive.GyroIO;
 import frc.robot.subsystems.drive.GyroIOPigeon2;
 import frc.robot.subsystems.drive.ModuleIO;
 import frc.robot.subsystems.drive.ModuleIOSim;
 import frc.robot.subsystems.drive.ModuleIOTalonFX;
-import frc.robot.subsystems.intake.Intake;
-import frc.robot.subsystems.intake.IntakeConstants;
-import frc.robot.subsystems.intake.IntakePivotIOSim;
-import frc.robot.subsystems.intake.IntakePivotIOTalonFX;
-import frc.robot.subsystems.intake.IntakeRollerIOSim;
-import frc.robot.subsystems.intake.IntakeRollerIOTalonFX.java;
 import frc.robot.subsystems.shooter.Shooter;
-import frc.robot.subsystems.shooter.ShooterCalculator;
 import frc.robot.subsystems.shooter.ShooterConstants;
 import frc.robot.subsystems.shooter.ShooterFlywheelIOSim;
 import frc.robot.subsystems.shooter.ShooterFlywheelIOTalonFX;
@@ -47,15 +37,6 @@ import frc.robot.subsystems.shooter.ShooterHoodIOSim;
 import frc.robot.subsystems.shooter.ShooterHoodIOTalonFX;
 import frc.robot.subsystems.shooter.ShooterTurretIOSim;
 import frc.robot.subsystems.shooter.ShooterTurretIOTalonFX;
-import frc.robot.subsystems.spindexer.Spindexer;
-import frc.robot.subsystems.spindexer.SpindexerConstants;
-import frc.robot.subsystems.spindexer.SpindexerIOSim;
-import frc.robot.subsystems.spindexer.SpindexerIOTalonFX;
-import frc.robot.subsystems.transfer.KickerIOTalonFX;
-import frc.robot.subsystems.transfer.RegulatorIOTalonFX;
-import frc.robot.subsystems.transfer.Transfer;
-import frc.robot.subsystems.transfer.TransferConstants;
-import frc.robot.subsystems.transfer.TransferIOSim;
 import frc.robot.subsystems.vision.Vision;
 import frc.robot.subsystems.vision.VisionIO;
 import frc.robot.subsystems.vision.VisionIOLimelight;
@@ -71,17 +52,17 @@ import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 public class RobotContainer {
   // Subsystems
   private final Drive drive;
-  private Vision vision; // make final once we figure out sim
-  private final Spindexer spindexer;
-  private final Transfer transfer;
-  private Intake intake;
-  private Shooter shooter;
+  private Vision vision;
+  //   private final Indexer indexer;
+  //   private final Transfer transfer;
+  //   private final Intake intake;
+  private final Shooter shooter;
 
   // Controller
   private final CommandXboxController controller = new CommandXboxController(0);
 
-  private final AutonCommands autonCommands;
-  private final TeleopCommands teleopCommands;
+  //   private final AutonCommands autonCommands;
+  //   private final TeleopCommands teleopCommands;
 
   // Dashboard inputs
   private final LoggedDashboardChooser<Command> autoChooser;
@@ -105,40 +86,6 @@ public class RobotContainer {
             new Vision(
                 drive::addVisionMeasurement,
                 new VisionIOLimelight(camera0Name, drive::getRotation));
-        ShooterCalculator.provideDrive(drive);
-        // new VisionIOLimelight(camera1Name, drive::getRotation));
-        intake =
-            new Intake(
-                new IntakePivotIOTalonFX(
-                    IntakeConstants.kPivotMotorHardware,
-                    IntakeConstants.kPivotMotorConfiguration,
-                    IntakeConstants.kPivotGains,
-                    IntakeConstants.kStatusSignalUpdateFrequencyHz),
-                new IntakeRollerIOTalonFX(
-                    IntakeConstants.kRollerMotorHardware,
-                    IntakeConstants.kRollerMotorConfiguration,
-                    IntakeConstants.kStatusSignalUpdateFrequencyHz));
-
-        spindexer =
-            new Spindexer(
-                new SpindexerIOTalonFX(
-                    SpindexerConstants.kSpindexerHardware,
-                    SpindexerConstants.kSpindexerConfiguration,
-                    SpindexerConstants.kSpindexerGains,
-                    SpindexerConstants.kStatusSignalUpdateFrequencyHz));
-
-        transfer =
-            new Transfer(
-                new KickerIOTalonFX(
-                    TransferConstants.kTransferKickerHardware,
-                    TransferConstants.kKickerGains,
-                    TransferConstants.kTransferConfiguration,
-                    TransferConstants.kStatusSignalUpdateFrequencyHz),
-                new RegulatorIOTalonFX(
-                    TransferConstants.kTransferRegulatorHardware,
-                    TransferConstants.kTransferConfiguration,
-                    TransferConstants.kRegulatorGains,
-                    TransferConstants.kStatusSignalUpdateFrequencyHz));
         shooter =
             new Shooter(
                 new ShooterFlywheelIOTalonFX(
@@ -156,7 +103,8 @@ public class RobotContainer {
                     ShooterConstants.hoodConfigs,
                     ShooterConstants.hoodGains,
                     ShooterConstants.kStatusSignalUpdateFrequencyHz),
-                drive);
+                drive::getPose,
+                drive::getFieldVelocity);
         break;
 
       case SIM:
@@ -169,47 +117,18 @@ public class RobotContainer {
                 new ModuleIOSim(DriveConstants.BackLeft),
                 new ModuleIOSim(DriveConstants.BackRight));
 
-        intake =
-            new Intake(
-                new IntakePivotIOSim(
-                    0.02,
-                    IntakeConstants.kPivotMotorHardware,
-                    IntakeConstants.kPivotSimulationConfiguration,
-                    IntakeConstants.kPivotGains),
-                new IntakeRollerIOSim(
-                    0.02,
-                    IntakeConstants.kRollerMotorHardware,
-                    IntakeConstants.kIntakeRollerSimulationConfiguration));
-        spindexer =
-            new Spindexer(
-                new SpindexerIOSim(
-                    0.01,
-                    SpindexerConstants.kSpindexerHardware,
-                    SpindexerConstants.kSimulationSpindexerGains,
-                    SpindexerConstants.kSpindexerSimulationConfiguration));
-        transfer =
-            new Transfer(
-                new TransferIOSim(
-                    0.02,
-                    TransferConstants.kTransferKickerHardware,
-                    TransferConstants.kSimulationRegulatorGains,
-                    TransferConstants.kTransferSimulationConfiguration),
-                new TransferIOSim(
-                    0.02,
-                    TransferConstants.kTransferRegulatorHardware,
-                    TransferConstants.kSimulationRegulatorGains,
-                    TransferConstants.kTransferSimulationConfiguration));
-
         shooter =
             new Shooter(
                 new ShooterFlywheelIOSim(
-                    0.02, ShooterConstants.flywheelHardware, ShooterConstants.shooterSimConfig),
+                    0.02,
+                    ShooterConstants.flywheelHardware,
+                    ShooterConstants.shooterFlywheelSimConfig),
                 new ShooterTurretIOSim(
-                    0.02, ShooterConstants.turretHardware, ShooterConstants.shooterSimConfig),
+                    0.02, ShooterConstants.turretHardware, ShooterConstants.shooterTurretSimConfig),
                 new ShooterHoodIOSim(
-                    0.02, ShooterConstants.hoodHardware, ShooterConstants.shooterSimConfig),
-                drive);
-        ShooterCalculator.provideDrive(drive);
+                    0.02, ShooterConstants.hoodHardware, ShooterConstants.shooterHoodSimConfig),
+                drive::getPose,
+                drive::getFieldVelocity);
         break;
 
       default:
@@ -226,21 +145,21 @@ public class RobotContainer {
                 // RobotState.getInstance()::addVisionObservation,
                 drive::addVisionMeasurement, new VisionIO() {}, new VisionIO() {});
 
-        intake = new Intake(null, null);
-        transfer = new Transfer(null, null);
-        spindexer = new Spindexer(new SpindexerIOSim(0, null, null, null));
-        shooter = new Shooter(null, null, null, null);
-        ShooterCalculator.provideDrive(drive);
+        // intake = new Intake(null, null);
+        // transfer = new Transfer(null, null);
+        // spindexer = new Spindexer(new SpindexerIOSim(0, null, null, null));
+        shooter = new Shooter(null, null, null, null, null);
+        // ShooterCalculator.provideDrive(drive);
         break;
     }
-    teleopCommands = new TeleopCommands(intake, spindexer, transfer, shooter, drive, controller);
-    autonCommands = new AutonCommands(teleopCommands);
+    // teleopCommands = new TeleopCommands(intake, spindexer, transfer, shooter, drive, controller);
+    // autonCommands = new AutonCommands(teleopCommands);
 
     // Set up auto routines
     autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
 
-    autoChooser.addOption("Test Path", autonCommands.getPathCommand("TuningPath"));
-    autoChooser.addOption("Center Bump Path", autonCommands.getAutonomousSequence("CENTER"));
+    // autoChooser.addOption("Test Path", autonCommands.getPathCommand("TuningPath"));
+    // autoChooser.addOption("Center Bump Path", autonCommands.getAutonomousSequence("CENTER"));
 
     // Set up SysId routines
     autoChooser.addOption(
@@ -269,6 +188,9 @@ public class RobotContainer {
    * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
+
+    // DriveCommands.setDriveState(drive, DriveState.DRIVING);
+    drive.setDriveState(DriveState.DRIVING);
     // Default command, normal field-relative drive
     drive.setDefaultCommand(
         DriveCommands.joystickDriveXLock(
@@ -277,20 +199,9 @@ public class RobotContainer {
             () -> -controller.getLeftX(),
             () -> -controller.getRightX()));
 
-    // controller.axisLessThan(4, )
-
-    // Lock to 0° when A button is held
-    controller
-        .a()
-        .whileTrue(
-            DriveCommands.joystickDriveAtAngle(
-                drive,
-                () -> -controller.getLeftY(),
-                () -> -controller.getLeftX(),
-                () -> Rotation2d.kZero));
-
     controller
         .leftStick()
+        .onTrue(Commands.runOnce(() -> drive.setDriveState(DriveState.ALIGN)))
         .whileTrue(
             DriveCommands.joystickDriveAtAngle(
                 drive,
@@ -305,9 +216,8 @@ public class RobotContainer {
                             AllianceFlipUtil.applyY(FieldConstants.Hub.topCenterPoint.getY()),
                             Rotation2d.kZero))
                 // .plus(new Rotation2d(Math.PI))
-                ));
-    // controller.rightStick().whileTrue(teleopCommands.trackHub());
-    // controller.rightStick().onFalse(teleopCommands.idleShooter());
+                ))
+        .onFalse(Commands.runOnce(() -> drive.setDriveState(DriveState.DRIVING)));
 
     // Reset gyro to 0° when B button is pressed
     controller
@@ -320,31 +230,7 @@ public class RobotContainer {
                     drive)
                 .ignoringDisable(true));
 
-    controller
-        .leftTrigger(0.25)
-        .onTrue(teleopCommands.runIntakeFloorPickup())
-        .onFalse(teleopCommands.runIntakeSlowRollers());
-
-    shooter.setDefaultCommand(teleopCommands.trackHub());
-    controller
-        .rightTrigger()
-        .whileTrue(teleopCommands.startShoot())
-        .whileTrue(teleopCommands.trackFlywheel())
-        .onFalse(teleopCommands.stopShoot());
-
-    shooter.setDefaultCommand(teleopCommands.trackHub());
-
-    controller.x().whileTrue(teleopCommands.spinAlt());
-    controller.x().whileTrue(teleopCommands.startKick());
-
-    controller.x().onFalse(teleopCommands.spinStop());
-    controller.x().onFalse(teleopCommands.stopKick());
-
-    Trigger inAllianceZone =
-        new Trigger(
-            () -> {
-              return checkInAllianceZone(drive.getPose());
-            });
+    controller.rightTrigger().whileTrue(shooter.startShooter()).onFalse(shooter.idleShooter());
   }
 
   /**
@@ -354,15 +240,6 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     return autoChooser.get();
-  }
-
-  public boolean checkInAllianceZone(Pose2d robotPose) {
-    if (DriverStation.getAlliance().get() == DriverStation.Alliance.Blue) {
-      return robotPose.getX() <= FieldConstants.LinesVertical.allianceZone;
-    } else if (DriverStation.getAlliance().get() == DriverStation.Alliance.Red) {
-      return robotPose.getX() >= AllianceFlipUtil.applyX(FieldConstants.LinesVertical.allianceZone);
-    }
-    return false;
   }
 
   public Drive getDrive() {

@@ -11,8 +11,6 @@ import static edu.wpi.first.units.Units.RadiansPerSecond;
 import static edu.wpi.first.units.Units.Rotations;
 import static edu.wpi.first.units.Units.RotationsPerSecond;
 
-import java.util.function.Supplier;
-
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -24,8 +22,11 @@ import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.constants.FieldConstants;
 import frc.robot.subsystems.shooter.ShooterTurretCalculator.ShotData;
+import frc.robot.util.ZoneUtil;
+import java.util.function.Supplier;
 import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.Logger;
 
@@ -41,19 +42,25 @@ public class Shooter extends SubsystemBase {
     SHOOT_FIXED
   }
 
-  public ShooterState shooterState = ShooterState.IDLE;
+  public ShooterState shooterState = ShooterState.IDLE_HUB;
 
   private final ShooterTurretIO turretHardware;
-  private final ShooterTurretIOInputsAutoLogged turretInputs = new ShooterTurretIOInputsAutoLogged();
+  private final ShooterTurretIOInputsAutoLogged turretInputs =
+      new ShooterTurretIOInputsAutoLogged();
 
   private final ShooterFlywheelIO flywheelHardware;
-  private final ShooterFlywheelIOInputsAutoLogged flywheelInputs = new ShooterFlywheelIOInputsAutoLogged();
+  private final ShooterFlywheelIOInputsAutoLogged flywheelInputs =
+      new ShooterFlywheelIOInputsAutoLogged();
 
   private final ShooterHoodIO hoodHardware;
   private final ShooterHoodIOInputsAutoLogged hoodInputs = new ShooterHoodIOInputsAutoLogged();
 
   private final Supplier<Pose2d> poseSupplier;
   private final Supplier<ChassisSpeeds> fieldSpeedsSupplier;
+
+  Trigger allianceZoneTrigger;
+  Trigger leftPassTrigger;
+  Trigger rightPassTrigger;
 
   /** Creates a new Shooter. */
   public Shooter(
@@ -68,6 +75,13 @@ public class Shooter extends SubsystemBase {
     this.poseSupplier = poseSupplier;
     this.fieldSpeedsSupplier = fieldSpeedsSupplier;
 
+    allianceZoneTrigger = ZoneUtil.ALLIANCE_ZONE.contains(poseSupplier);
+    rightPassTrigger = ZoneUtil.RIGHT_PASS_ZONE.contains(poseSupplier);
+    leftPassTrigger = ZoneUtil.LEFT_PASS_ZONE.contains(poseSupplier);
+
+    allianceZoneTrigger.onTrue(Commands.runOnce(() -> setShooterState(ShooterState.IDLE_HUB)));
+    rightPassTrigger.onTrue(Commands.runOnce(() -> setShooterState(ShooterState.IDLE)));
+    leftPassTrigger.onTrue(Commands.runOnce(() -> setShooterState(ShooterState.IDLE)));
     // TODO: visualizer
   }
 
@@ -82,11 +96,13 @@ public class Shooter extends SubsystemBase {
     Logger.processInputs("Shooter/Inputs/Flywheel", flywheelInputs);
     Logger.processInputs("Shooter/Inputs/Hood", hoodInputs);
 
-    Pose2d turretBotPose = new Pose3d(poseSupplier.get()).transformBy(ShooterConstants.robotToTurret).toPose2d();
-    Pose2d turretPoseOut = new Pose2d(
-        turretBotPose.getX(),
-        turretBotPose.getY(),
-        turretBotPose.getRotation().plus(Rotation2d.fromRotations(getTurretPosition())));
+    Pose2d turretBotPose =
+        new Pose3d(poseSupplier.get()).transformBy(ShooterConstants.robotToTurret).toPose2d();
+    Pose2d turretPoseOut =
+        new Pose2d(
+            turretBotPose.getX(),
+            turretBotPose.getY(),
+            turretBotPose.getRotation().plus(Rotation2d.fromRotations(getTurretPosition())));
 
     Logger.recordOutput("Shooter/Turret/TurretPose", turretPoseOut);
 
@@ -113,56 +129,83 @@ public class Shooter extends SubsystemBase {
         flywheelVel = 8.0;
         break;
       case IDLE_HUB:
-        calculatedShot = ShooterTurretCalculator.iterativeMovingShotFromMap(robotPose, fieldSpeeds,
-            FieldConstants.Hub.topCenterPoint, 2);
-        azimuthAngle = ShooterTurretCalculator.calculateAzimuthAngle(
-            robotPose, calculatedShot.target(), Angle.ofBaseUnits(getTurretPosition(), Rotations));
+        calculatedShot =
+            ShooterTurretCalculator.iterativeMovingShotFromMap(
+                robotPose, fieldSpeeds, FieldConstants.Hub.topCenterPoint, 2);
+        azimuthAngle =
+            ShooterTurretCalculator.calculateAzimuthAngle(
+                robotPose,
+                calculatedShot.target(),
+                Angle.ofBaseUnits(getTurretPosition(), Rotations));
         azimuthVelocity = RadiansPerSecond.of(-fieldSpeeds.omegaRadiansPerSecond);
         hoodAngle = Rotation2d.fromDegrees(calculatedShot.getHoodAngle().in(Degrees));
         flywheelVel = 8.0;
         break;
       case SHOOT_HUB:
-        calculatedShot = ShooterTurretCalculator.iterativeMovingShotFromMap(robotPose, fieldSpeeds,
-            FieldConstants.Hub.topCenterPoint, 2);
-        azimuthAngle = ShooterTurretCalculator.calculateAzimuthAngle(
-            robotPose, calculatedShot.target(), Angle.ofBaseUnits(getTurretPosition(), Rotations));
+        calculatedShot =
+            ShooterTurretCalculator.iterativeMovingShotFromMap(
+                robotPose, fieldSpeeds, FieldConstants.Hub.topCenterPoint, 2);
+        azimuthAngle =
+            ShooterTurretCalculator.calculateAzimuthAngle(
+                robotPose,
+                calculatedShot.target(),
+                Angle.ofBaseUnits(getTurretPosition(), Rotations));
         azimuthVelocity = RadiansPerSecond.of(-fieldSpeeds.omegaRadiansPerSecond);
         hoodAngle = Rotation2d.fromDegrees(calculatedShot.getHoodAngle().in(Degrees));
-        flywheelVel = ShooterTurretCalculator.linearToAngularVelocity(
-            calculatedShot.getExitVelocity(), Distance.ofBaseUnits(2, Inches))
-            .in(RotationsPerSecond);
+        flywheelVel =
+            ShooterTurretCalculator.linearToAngularVelocity(
+                    calculatedShot.getExitVelocity(), Distance.ofBaseUnits(2, Inches))
+                .in(RotationsPerSecond);
         break;
       case SHOOT_PASS_L:
-        calculatedShot = ShooterTurretCalculator.iterativeMovingShotFromMap(robotPose, fieldSpeeds,
-            new Translation3d(FieldConstants.LeftBump.farLeftCorner).plus(new Translation3d(0, 0, 3)), 2);
-        azimuthAngle = ShooterTurretCalculator.calculateAzimuthAngle(
-            robotPose, calculatedShot.target(), Angle.ofBaseUnits(getTurretPosition(), Rotations));
+        calculatedShot =
+            ShooterTurretCalculator.iterativeMovingShotFromMap(
+                robotPose,
+                fieldSpeeds,
+                FieldConstants.Hub.topCenterPoint.plus(new Translation3d(0, 3, 0)),
+                2);
+        azimuthAngle =
+            ShooterTurretCalculator.calculateAzimuthAngle(
+                robotPose,
+                calculatedShot.target(),
+                Angle.ofBaseUnits(getTurretPosition(), Rotations));
         azimuthVelocity = RadiansPerSecond.of(-fieldSpeeds.omegaRadiansPerSecond);
         hoodAngle = Rotation2d.fromDegrees(calculatedShot.getHoodAngle().in(Degrees));
-        flywheelVel = ShooterTurretCalculator.linearToAngularVelocity(
-            calculatedShot.getExitVelocity(), Distance.ofBaseUnits(2, Inches))
-            .in(RotationsPerSecond);
+        flywheelVel =
+            ShooterTurretCalculator.linearToAngularVelocity(
+                    calculatedShot.getExitVelocity(), Distance.ofBaseUnits(2, Inches))
+                .in(RotationsPerSecond);
         break;
       case SHOOT_PASS_R:
-        calculatedShot = ShooterTurretCalculator.iterativeMovingShotFromMap(robotPose, fieldSpeeds,
-            new Translation3d(FieldConstants.RightBump.farRightCorner).plus(new Translation3d(0, 0, 3)), 2);
-        azimuthAngle = ShooterTurretCalculator.calculateAzimuthAngle(
-            robotPose, calculatedShot.target(), Angle.ofBaseUnits(getTurretPosition(), Rotations));
+        calculatedShot =
+            ShooterTurretCalculator.iterativeMovingShotFromMap(
+                robotPose,
+                fieldSpeeds,
+                FieldConstants.Hub.topCenterPoint.plus(new Translation3d(0, -3, 0)),
+                2);
+        azimuthAngle =
+            ShooterTurretCalculator.calculateAzimuthAngle(
+                robotPose,
+                calculatedShot.target(),
+                Angle.ofBaseUnits(getTurretPosition(), Rotations));
         azimuthVelocity = RadiansPerSecond.of(-fieldSpeeds.omegaRadiansPerSecond);
         hoodAngle = Rotation2d.fromDegrees(calculatedShot.getHoodAngle().in(Degrees));
-        flywheelVel = ShooterTurretCalculator.linearToAngularVelocity(
-            calculatedShot.getExitVelocity(), Distance.ofBaseUnits(2, Inches))
-            .in(RotationsPerSecond);
+        flywheelVel =
+            ShooterTurretCalculator.linearToAngularVelocity(
+                    calculatedShot.getExitVelocity(), Distance.ofBaseUnits(2, Inches))
+                .in(RotationsPerSecond);
         break;
       case SHOOT_FIXED:
-        calculatedShot = ShooterTurretCalculator.iterativeMovingShotFromMap(robotPose, fieldSpeeds,
-            FieldConstants.Hub.topCenterPoint, 2);
+        calculatedShot =
+            ShooterTurretCalculator.iterativeMovingShotFromMap(
+                robotPose, fieldSpeeds, FieldConstants.Hub.topCenterPoint, 2);
         azimuthAngle = Angle.ofBaseUnits(0, Radians);
         azimuthVelocity = RadiansPerSecond.of(0);
         hoodAngle = Rotation2d.fromDegrees(calculatedShot.getHoodAngle().in(Degrees));
-        flywheelVel = ShooterTurretCalculator.linearToAngularVelocity(
-            calculatedShot.getExitVelocity(), Distance.ofBaseUnits(2, Inches))
-            .in(RotationsPerSecond);
+        flywheelVel =
+            ShooterTurretCalculator.linearToAngularVelocity(
+                    calculatedShot.getExitVelocity(), Distance.ofBaseUnits(2, Inches))
+                .in(RotationsPerSecond);
         break;
       default:
         azimuthAngle = Angle.ofBaseUnits(0, Radians);
@@ -179,8 +222,26 @@ public class Shooter extends SubsystemBase {
     Logger.recordOutput("States/ShooterState", shooterState);
   }
 
-  public Command setShooterState(ShooterState state) {
-    return Commands.runOnce(() -> {shooterState = state;}); //TODO: Make run instead of runOnce?
+  public void setShooterState(ShooterState state) {
+    shooterState = state;
+  }
+
+  public Command startShooter() {
+    return Commands.run(
+        () -> {
+          if (allianceZoneTrigger.getAsBoolean()) setShooterState(ShooterState.SHOOT_HUB);
+          if (leftPassTrigger.getAsBoolean()) setShooterState(ShooterState.SHOOT_PASS_L);
+          if (rightPassTrigger.getAsBoolean()) setShooterState(ShooterState.SHOOT_PASS_R);
+        });
+  }
+
+  public Command idleShooter() {
+    return Commands.runOnce(
+        () -> {
+          if (allianceZoneTrigger.getAsBoolean()) setShooterState(ShooterState.IDLE_HUB);
+          if (leftPassTrigger.getAsBoolean()) setShooterState(ShooterState.IDLE);
+          if (rightPassTrigger.getAsBoolean()) setShooterState(ShooterState.IDLE);
+        });
   }
 
   public void stop(boolean stopFlywheels, boolean stopTurret, boolean stopHood) {
@@ -249,9 +310,7 @@ public class Shooter extends SubsystemBase {
 
   @AutoLogOutput(key = "Shooter/Hood/HoodPosition")
   public AngularVelocity[] getFlywheelVelocities() {
-    return new AngularVelocity[] {
-        flywheelInputs.leftVelocity, flywheelInputs.rightVelocity
-    };
+    return new AngularVelocity[] {flywheelInputs.leftVelocity, flywheelInputs.rightVelocity};
   }
 
   public void setTurretSetpoint(Angle angle, AngularVelocity angvel) {

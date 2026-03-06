@@ -10,6 +10,7 @@ package frc.robot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.constants.Constants;
+import frc.robot.util.ZoneUtil;
 import org.littletonrobotics.junction.LogFileUtil;
 import org.littletonrobotics.junction.LoggedRobot;
 import org.littletonrobotics.junction.Logger;
@@ -130,8 +131,13 @@ public class Robot extends LoggedRobot {
   @Override
   public void teleopPeriodic() {
     Logger.recordOutput(
-        "In Alliance Zone",
-        robotContainer.checkInAllianceZone(robotContainer.getDrive().getPose()));
+        "In Alliance Zone", ZoneUtil.ALLIANCE_ZONE.contains(robotContainer.getDrive()::getPose));
+    Logger.recordOutput(
+        "In Left Neutral Zone",
+        ZoneUtil.LEFT_PASS_ZONE.contains(robotContainer.getDrive()::getPose));
+    Logger.recordOutput(
+        "In Right Neutral Zone",
+        ZoneUtil.RIGHT_PASS_ZONE.contains(robotContainer.getDrive()::getPose));
   }
 
   /** This function is called once when test mode is enabled. */

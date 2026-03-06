@@ -5,8 +5,8 @@ import static edu.wpi.first.units.Units.RotationsPerSecond;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.system.plant.LinearSystemId;
 import edu.wpi.first.wpilibj.simulation.DCMotorSim;
-import frc.robot.subsystems.intake.IntakeConstants.RollerHardware;
 import frc.robot.subsystems.intake.IntakeConstants.IntakeSimulationConfiguration;
+import frc.robot.subsystems.intake.IntakeConstants.RollerHardware;
 
 public class IntakeRollerIOSim implements IntakeRollerIO {
   private final double kLoopPeriodSec;
