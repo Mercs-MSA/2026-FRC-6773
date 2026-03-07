@@ -10,6 +10,8 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo.Id;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Translation3d;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.constants.FieldConstants;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.drive.Drive.DriveState;
@@ -32,8 +34,9 @@ public class RobotManager {
     private Transfer transfer;
     private Shooter shooter;
 
-    private RobotScoringState robotState;
+    public RobotScoringState robotState;
     private ShooterState shooterState;
+    public IntakeManagerState intakeState;
 
     public RobotManager(
         Drive drive,
@@ -52,33 +55,40 @@ public class RobotManager {
 
     public void periodicManager() {
         // MARK: - INTAKE
-        switch (robotState)
+        if (robotState == RobotScoringState.CLIMBING)
         {
-            case CLIMBING:
-            case IDLE:
-                intake.setIntakeState(IntakeState.IDLE);
-                break;
-            case INTAKING:
-            case SHOOTING_INTAKING:
-                intake.setIntakeState(IntakeState.INTAKING);
-                break;
-            case SHOOTING:
-                intake.setIntakeState(IntakeState.AGITATE);
-                break;
-            default:
-                break;
+            intakeState = IntakeManagerState.IDLE;
         }
+
+        if (intakeState != IntakeManagerState.INTAKING)
+        {
+            switch (robotState) {
+                case IDLE:
+                case CLIMBING:
+                    intake.setIntakeState(IntakeState.STOW);
+                    break;
+                case SHOOTING:
+                case FIXED_SHOOTING:
+                    intake.setIntakeState(IntakeState.AGITATE);
+                    break;
+                default:
+                    break;
+            }
+        }
+        else 
+        {
+            intake.setIntakeState(IntakeState.INTAKING);
+        }
+
 
         // MARK: - SPINDEXER
         switch (robotState) {
             case CLIMBING:
-            case INTAKING:
             case IDLE:
                 indexer.setIndexerState(IndexerState.IDLE);
                 break;
             case FIXED_SHOOTING:
             case SHOOTING:
-            case SHOOTING_INTAKING:
                 indexer.setIndexerState(IndexerState.INDEXING);
                 break;
             default:
@@ -88,13 +98,11 @@ public class RobotManager {
         // MARK: - TRANSFER
         switch (robotState) {
             case CLIMBING:
-            case INTAKING:
             case IDLE:
                 transfer.setTransferState(TransferState.IDLE);
                 break;
             case FIXED_SHOOTING:
             case SHOOTING:
-            case SHOOTING_INTAKING:
                 transfer.setTransferState(TransferState.TRANSFERRING);
                 break;
             default:
@@ -104,9 +112,8 @@ public class RobotManager {
         // MARK: - SHOOTER
         switch (robotState) {
             case CLIMBING:
-                shooterState = ShooterState.IDLE;
-                break;
-            case INTAKING:
+                // shooterState = ShooterState.IDLE;
+                // break;
             case IDLE:
                 shooterState = ShooterState.IDLE_HUB;
                 break;
@@ -115,7 +122,6 @@ public class RobotManager {
                 break;
             // The following two states need more complex logic
             case SHOOTING:
-            case SHOOTING_INTAKING:
                 Zone zone = drive.returnZone(drive.getPose());
                 switch (zone) {
                     case ALLIANCE:
@@ -139,17 +145,15 @@ public class RobotManager {
         //MARK: - DRIVE
         switch(robotState)
         {
+            case FIXED_SHOOTING:
             case CLIMBING:
                 drive.setDriveState(DriveState.ALIGN);
             case IDLE:
-            case INTAKING:
                 drive.setDriveState(DriveState.DRIVING);
                 break;
             case SHOOTING:
-            case SHOOTING_INTAKING:
                 drive.setDriveState(DriveState.SHOOTING);
                 break;
-            case FIXED_SHOOTING:
             default:
                 drive.setDriveState(DriveState.IDLE);
                 break;
@@ -161,11 +165,14 @@ public class RobotManager {
 
     public enum RobotScoringState {
         IDLE,
-        INTAKING,
         SHOOTING,
         CLIMBING,
         FIXED_SHOOTING,
-        SHOOTING_INTAKING,
+    }
+
+    public enum IntakeManagerState {
+        IDLE,
+        INTAKING
     }
 
     public enum ShootGoal {
@@ -186,5 +193,20 @@ public class RobotManager {
         public Translation3d getGoal() {
             return goal;
         }
+    }
+
+    public Runnable toState(RobotScoringState state)
+    {
+        return () -> {robotState = state;};
+    }
+
+    public Command toStateCommand(RobotScoringState state)
+    {
+        return Commands.runOnce(toState(state));
+    } 
+
+    public Command setIntakeCommand(IntakeManagerState state)
+    {
+        return Commands.runOnce(() -> {intakeState = state;});
     }
 }
