@@ -62,6 +62,12 @@ public class Drive extends SubsystemBase {
     ALIGN
   }
 
+  public enum Zone {
+    NEUTRAL_RIGHT,
+    NEUTRAL_LEFT,
+    ALLIANCE
+  }
+
   public DriveState driveState = DriveState.IDLE;
 
   public double speedCap = Double.MAX_VALUE;
@@ -422,6 +428,28 @@ public class Drive extends SubsystemBase {
       return robotPose.getX() >= AllianceFlipUtil.applyX(FieldConstants.LinesVertical.allianceZone);
     }
     return false;
+  }
+
+  public Zone returnZone(Pose2d robotPose)
+  {
+    if (checkInAllianceZone(robotPose))
+    {
+      return Zone.ALLIANCE;
+    }
+    
+    if (DriverStation.getAlliance().get() == DriverStation.Alliance.Blue) {
+      if (robotPose.getY() < FieldConstants.Hub.innerCenterPoint.getY())
+      {
+        return Zone.NEUTRAL_RIGHT;
+      }
+      return Zone.NEUTRAL_LEFT;
+    }
+
+    if (robotPose.getY() > FieldConstants.Hub.innerCenterPoint.getY())
+    {
+      return Zone.NEUTRAL_RIGHT;
+    }
+    return Zone.NEUTRAL_LEFT;
   }
 
   /** Returns an array of module translations. */
