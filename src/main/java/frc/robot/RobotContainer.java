@@ -18,7 +18,11 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
+import frc.robot.RobotManager.IntakeManagerState;
+import frc.robot.RobotManager.RobotScoringState;
+import frc.robot.commands.AutonCommands;
 import frc.robot.commands.DriveCommands;
+import frc.robot.commands.TeleopCommands;
 import frc.robot.constants.Constants;
 import frc.robot.constants.FieldConstants;
 import frc.robot.subsystems.drive.Drive;
@@ -29,6 +33,18 @@ import frc.robot.subsystems.drive.GyroIOPigeon2;
 import frc.robot.subsystems.drive.ModuleIO;
 import frc.robot.subsystems.drive.ModuleIOSim;
 import frc.robot.subsystems.drive.ModuleIOTalonFX;
+import frc.robot.subsystems.indexer.Indexer;
+import frc.robot.subsystems.indexer.IndexerConstants;
+import frc.robot.subsystems.indexer.IndexerKickerIOSim;
+import frc.robot.subsystems.indexer.IndexerKickerIOTalonFX;
+import frc.robot.subsystems.indexer.IndexerSpindexerIOSim;
+import frc.robot.subsystems.indexer.IndexerSpindexerIOTalonFX;
+import frc.robot.subsystems.intake.Intake;
+import frc.robot.subsystems.intake.IntakeConstants;
+import frc.robot.subsystems.intake.IntakePivotIOSim;
+import frc.robot.subsystems.intake.IntakePivotIOTalonFX;
+import frc.robot.subsystems.intake.IntakeRollerIOSim;
+import frc.robot.subsystems.intake.IntakeRollerIOTalonFX;
 import frc.robot.subsystems.shooter.Shooter;
 import frc.robot.subsystems.shooter.ShooterConstants;
 import frc.robot.subsystems.shooter.ShooterFlywheelIOSim;
@@ -37,6 +53,10 @@ import frc.robot.subsystems.shooter.ShooterHoodIOSim;
 import frc.robot.subsystems.shooter.ShooterHoodIOTalonFX;
 import frc.robot.subsystems.shooter.ShooterTurretIOSim;
 import frc.robot.subsystems.shooter.ShooterTurretIOTalonFX;
+import frc.robot.subsystems.transfer.Transfer;
+import frc.robot.subsystems.transfer.TransferConstants;
+import frc.robot.subsystems.transfer.TransferIOSim;
+import frc.robot.subsystems.transfer.TransferIOTalonFX;
 import frc.robot.subsystems.vision.Vision;
 import frc.robot.subsystems.vision.VisionIO;
 import frc.robot.subsystems.vision.VisionIOLimelight;
@@ -53,16 +73,18 @@ public class RobotContainer {
   // Subsystems
   private final Drive drive;
   private Vision vision;
-  //   private final Indexer indexer;
-  //   private final Transfer transfer;
-  //   private final Intake intake;
+  private final Indexer indexer;
+  private final Transfer transfer;
+  private final Intake intake;
   private final Shooter shooter;
 
   // Controller
   private final CommandXboxController controller = new CommandXboxController(0);
 
-  //   private final AutonCommands autonCommands;
-  //   private final TeleopCommands teleopCommands;
+  private final AutonCommands autonCommands;
+  private final TeleopCommands teleopCommands;
+
+  private RobotManager manager;
 
   // Dashboard inputs
   private final LoggedDashboardChooser<Command> autoChooser;
@@ -105,6 +127,36 @@ public class RobotContainer {
                     ShooterConstants.kStatusSignalUpdateFrequencyHz),
                 drive::getPose,
                 drive::getFieldVelocity);
+        intake =
+            new Intake(
+                new IntakeRollerIOTalonFX(
+                    IntakeConstants.rollerHardware,
+                    IntakeConstants.kRollerMotorConfiguration,
+                    IntakeConstants.kStatusSignalUpdateFrequencyHz),
+                new IntakePivotIOTalonFX(
+                    IntakeConstants.pivotHardware,
+                    IntakeConstants.pivotGains,
+                    IntakeConstants.kPivotMotorConfiguration,
+                    IntakeConstants.kStatusSignalUpdateFrequencyHz));
+        indexer =
+            new Indexer(
+                new IndexerSpindexerIOTalonFX(
+                    IndexerConstants.spindexerHardware,
+                    IndexerConstants.spindexerGains,
+                    IndexerConstants.spindexerTalonFXConfiguration,
+                    IndexerConstants.statusSignalUpdateFrequencyHz),
+                new IndexerKickerIOTalonFX(
+                    IndexerConstants.kickerHardware,
+                    IndexerConstants.kickerGains,
+                    IndexerConstants.kickerTalonFXConfiguration,
+                    IndexerConstants.statusSignalUpdateFrequencyHz));
+        transfer =
+            new Transfer(
+                new TransferIOTalonFX(
+                    TransferConstants.transferHardware,
+                    TransferConstants.transferGains,
+                    TransferConstants.transferTalonFXConfiguration,
+                    TransferConstants.statusSignalUpdateFrequencyHz));
         break;
 
       case SIM:
@@ -129,6 +181,32 @@ public class RobotContainer {
                     0.02, ShooterConstants.hoodHardware, ShooterConstants.shooterHoodSimConfig),
                 drive::getPose,
                 drive::getFieldVelocity);
+        intake =
+            new Intake(
+                new IntakeRollerIOSim(
+                    0.02,
+                    IntakeConstants.rollerHardware,
+                    IntakeConstants.rollerSimulationConfiguration),
+                new IntakePivotIOSim(
+                    0.02,
+                    IntakeConstants.pivotHardware,
+                    IntakeConstants.pivotSimulationConfiguration));
+        indexer =
+            new Indexer(
+                new IndexerSpindexerIOSim(
+                    0.02,
+                    IndexerConstants.spindexerHardware,
+                    IndexerConstants.spindexerSimulationConfiguration),
+                new IndexerKickerIOSim(
+                    0.02,
+                    IndexerConstants.kickerHardware,
+                    IndexerConstants.kickerSimulationConfiguration));
+        transfer =
+            new Transfer(
+                new TransferIOSim(
+                    0.02,
+                    TransferConstants.transferHardware,
+                    TransferConstants.transferSimulationConfiguration));
         break;
 
       default:
@@ -145,18 +223,23 @@ public class RobotContainer {
                 // RobotState.getInstance()::addVisionObservation,
                 drive::addVisionMeasurement, new VisionIO() {}, new VisionIO() {});
 
-        // intake = new Intake(null, null);
-        // transfer = new Transfer(null, null);
-        // spindexer = new Spindexer(new SpindexerIOSim(0, null, null, null));
+        intake = new Intake(null, null);
+        indexer = new Indexer(null, null);
+        transfer = new Transfer(null);
         shooter = new Shooter(null, null, null, null, null);
-        // ShooterCalculator.provideDrive(drive);
         break;
     }
-    // teleopCommands = new TeleopCommands(intake, spindexer, transfer, shooter, drive, controller);
-    // autonCommands = new AutonCommands(teleopCommands);
+    manager = new RobotManager(drive, intake, indexer, transfer, shooter);
+    teleopCommands = new TeleopCommands(drive, intake, indexer, transfer, shooter, manager);
+    autonCommands = new AutonCommands(drive, intake, indexer, transfer, shooter, manager);
 
     // Set up auto routines
     autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
+
+    autoChooser.addOption("Left Path", autonCommands.getAutonomousSequence("LEFT_45"));
+    autoChooser.addOption("Right Path", autonCommands.getAutonomousSequence("RIGHT_45"));
+    autoChooser.addOption("Left Across Path", autonCommands.getAutonomousSequence("LEFT_FULL"));
+    autoChooser.addOption("Right Across Path", autonCommands.getAutonomousSequence("RIGHT_FULL"));
 
     // autoChooser.addOption("Test Path", autonCommands.getPathCommand("TuningPath"));
     // autoChooser.addOption("Center Bump Path", autonCommands.getAutonomousSequence("CENTER"));
@@ -231,6 +314,21 @@ public class RobotContainer {
                 .ignoringDisable(true));
 
     controller.rightTrigger().whileTrue(shooter.startShooter()).onFalse(shooter.idleShooter());
+
+    controller
+        .rightTrigger(0.1)
+        .onTrue(teleopCommands.runShoot())
+        .onFalse(teleopCommands.stopShoot());
+
+    controller
+        .leftStick()
+        .onTrue(teleopCommands.toggleFixedShooting(true))
+        .onFalse(teleopCommands.toggleFixedShooting(false));
+
+    controller
+        .leftTrigger(0.1)
+        .onTrue(teleopCommands.runIntake())
+        .onFalse(teleopCommands.stopIntake());
   }
 
   /**
@@ -244,5 +342,14 @@ public class RobotContainer {
 
   public Drive getDrive() {
     return drive;
+  }
+
+  public void updateManager() {
+    manager.periodicManager();
+  }
+
+  public void resetState() {
+    manager.robotState = RobotScoringState.IDLE;
+    manager.intakeState = IntakeManagerState.IDLE;
   }
 }

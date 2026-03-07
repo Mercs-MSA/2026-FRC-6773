@@ -1,11 +1,14 @@
 package frc.robot.subsystems.indexer;
 
+import static edu.wpi.first.units.Units.InchesPerSecond;
+
 import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.LinearVelocity;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.Constants;
+import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.Logger;
 
 public class Indexer extends SubsystemBase {
@@ -37,6 +40,11 @@ public class Indexer extends SubsystemBase {
     kickerHardware.updateInputs(kickerInputs);
     Logger.processInputs("Indexer/Inputs/Kicker", kickerInputs);
 
+    Logger.recordOutput(
+        "Indexer/SpindexerVelocityIPS", spindexerInputs.linearVelocity.in(InchesPerSecond));
+    Logger.recordOutput(
+        "Indexer/KickerVelocityIPS", kickerInputs.linearVelocity.in(InchesPerSecond));
+
     switch (indexerState) {
       case IDLE:
         stopKicker();
@@ -49,11 +57,15 @@ public class Indexer extends SubsystemBase {
     }
   }
 
-  public Command setIndexerState(IndexerState state) {
+  public Command setIndexerStateCommand(IndexerState state) {
     return Commands.runOnce(
         () -> {
           indexerState = state;
         }); // TODO: Make run instead of runOnce?
+  }
+
+  public void setIndexerState(IndexerState state) {
+    indexerState = state;
   }
 
   public void setSpindexerVoltage(double voltage) {
@@ -86,5 +98,10 @@ public class Indexer extends SubsystemBase {
 
   public void stopKicker() {
     kickerHardware.stop();
+  }
+
+  @AutoLogOutput(key = "States/IndexerState")
+  public IndexerState getIndexerState() {
+    return indexerState;
   }
 }

@@ -64,7 +64,7 @@ public class ShooterConstants { // TODO: CLEANUP
   public record SimulationConfiguration(DCMotor motorType, double measurementStdDevs) {}
 
   public static final ShooterFlywheelHardware flywheelHardware =
-      new ShooterFlywheelHardware(56, 57, 6000 / 4800);
+      new ShooterFlywheelHardware(56, 57, 6000d / 4800d);
 
   public static final ShooterHoodHardware hoodHardware =
       new ShooterHoodHardware(
@@ -72,7 +72,7 @@ public class ShooterConstants { // TODO: CLEANUP
           );
 
   public static final ShooterTurretHardware turretHardware =
-      new ShooterTurretHardware(53, 54, 102 / 25);
+      new ShooterTurretHardware(53, 54, 102d / 25d);
 
   public static final TurretMotorConfiguration turretConfigs =
       new TurretMotorConfiguration(false, true, true, 60, 50, 12, -12, NeutralModeValue.Brake);

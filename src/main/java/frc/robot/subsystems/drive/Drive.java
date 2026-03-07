@@ -430,23 +430,19 @@ public class Drive extends SubsystemBase {
     return false;
   }
 
-  public Zone returnZone(Pose2d robotPose)
-  {
-    if (checkInAllianceZone(robotPose))
-    {
+  public Zone returnZone(Pose2d robotPose) {
+    if (checkInAllianceZone(robotPose)) {
       return Zone.ALLIANCE;
     }
-    
+
     if (DriverStation.getAlliance().get() == DriverStation.Alliance.Blue) {
-      if (robotPose.getY() < FieldConstants.Hub.innerCenterPoint.getY())
-      {
+      if (robotPose.getY() < FieldConstants.Hub.innerCenterPoint.getY()) {
         return Zone.NEUTRAL_RIGHT;
       }
       return Zone.NEUTRAL_LEFT;
     }
 
-    if (robotPose.getY() > FieldConstants.Hub.innerCenterPoint.getY())
-    {
+    if (robotPose.getY() > FieldConstants.Hub.innerCenterPoint.getY()) {
       return Zone.NEUTRAL_RIGHT;
     }
     return Zone.NEUTRAL_LEFT;

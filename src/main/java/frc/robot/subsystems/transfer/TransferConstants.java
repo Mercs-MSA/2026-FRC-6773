@@ -23,7 +23,7 @@ public class TransferConstants {
 
   public static final TransferHardware transferHardware =
       new TransferHardware( // TODO: Gearing
-          52, 18 / 24, 1.5);
+          52, 18d / 24d, 1.5);
 
   public static final TransferGains transferGains = new TransferGains(0, 0, 0, 0.1, 0);
 

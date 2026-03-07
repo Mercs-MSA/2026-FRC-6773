@@ -22,7 +22,7 @@ import frc.robot.subsystems.indexer.IndexerConstants.SpindexerGains;
 import frc.robot.subsystems.indexer.IndexerConstants.SpindexerHardware;
 import frc.robot.subsystems.indexer.IndexerConstants.SpindexerTalonFXConfiguration;
 
-public class IndexerSpindexerIOTalonFX implements IndexerKickerIO {
+public class IndexerSpindexerIOTalonFX implements IndexerSpindexerIO {
   private final TalonFX spindexerMotor;
 
   private TalonFXConfiguration motorConfiguration = new TalonFXConfiguration();
@@ -97,7 +97,7 @@ public class IndexerSpindexerIOTalonFX implements IndexerKickerIO {
   }
 
   @Override
-  public void updateInputs(IndexerKickerIOInputs inputs) {
+  public void updateInputs(IndexerSpindexerIOInputs inputs) {
     inputs.isMotorConnected =
         BaseStatusSignal.refreshAll(
                 velocity, appliedVolts, supplyAmps, statorAmps, temperatureCelsius)

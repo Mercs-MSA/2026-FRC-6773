@@ -1,11 +1,14 @@
 package frc.robot.subsystems.transfer;
 
+import static edu.wpi.first.units.Units.InchesPerSecond;
+
 import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.LinearVelocity;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.Constants;
+import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.Logger;
 
 public class Transfer extends SubsystemBase {
@@ -29,6 +32,8 @@ public class Transfer extends SubsystemBase {
     transferHardware.updateInputs(transferInputs);
     Logger.processInputs("Transfer/Inputs", transferInputs);
 
+    Logger.recordOutput("Transfer/VelocityIPS", transferInputs.linearVelocity.in(InchesPerSecond));
+
     switch (transferState) {
       case IDLE:
         stopTransfer();
@@ -39,11 +44,15 @@ public class Transfer extends SubsystemBase {
     }
   }
 
-  public Command setTransferState(TransferState state) {
+  public Command setTransferStateCommand(TransferState state) {
     return Commands.runOnce(
         () -> {
           transferState = state;
         }); // TODO: Make run instead of runOnce?
+  }
+
+  public void setTransferState(TransferState state) {
+    transferState = state;
   }
 
   public void setVoltage(double voltage) {
@@ -60,5 +69,10 @@ public class Transfer extends SubsystemBase {
 
   public void stopTransfer() {
     transferHardware.stop();
+  }
+
+  @AutoLogOutput(key = "States/TransferState")
+  public TransferState getTransferState() {
+    return transferState;
   }
 }

@@ -22,7 +22,12 @@ public class TeleopCommands {
   boolean fixedShooting = false;
 
   public TeleopCommands(
-      Drive drive, Intake intake, Indexer indexer, Transfer transfer, Shooter shooter, RobotManager manager) {
+      Drive drive,
+      Intake intake,
+      Indexer indexer,
+      Transfer transfer,
+      Shooter shooter,
+      RobotManager manager) {
     this.drive = drive;
     this.intake = intake;
     this.indexer = indexer;
@@ -31,40 +36,36 @@ public class TeleopCommands {
     this.manager = manager;
   }
 
-  public Command runIntake()
-  {
+  public Command runIntake() {
     return manager.setIntakeCommand(IntakeManagerState.INTAKING);
   }
 
-  public Command stopIntake()
-  {
+  public Command stopIntake() {
     return manager.setIntakeCommand(IntakeManagerState.IDLE);
   }
 
-  public Command runShoot()
-  {
-    if (manager.robotState != RobotScoringState.CLIMBING) return manager.toStateCommand(correctShooterState());
+  public Command runShoot() {
+    if (manager.robotState != RobotScoringState.CLIMBING)
+      return manager.toStateCommand(correctShooterState());
     return Commands.none();
   }
 
-  public Command stopShoot()
-  {
-    if (manager.robotState != RobotScoringState.CLIMBING)
-    {
+  public Command stopShoot() {
+    if (manager.robotState != RobotScoringState.CLIMBING) {
       return manager.toStateCommand(RobotScoringState.IDLE);
     }
-    
+
     return Commands.none();
   }
 
-  public Command toggleFixedShooting()
-  {
-    return Commands.runOnce(() -> {fixedShooting = !fixedShooting;});
+  public Command toggleFixedShooting(boolean newBool) {
+    return Commands.runOnce(
+        () -> {
+          fixedShooting = newBool;
+        });
   }
 
-  public RobotScoringState correctShooterState()
-  {
+  public RobotScoringState correctShooterState() {
     return fixedShooting ? RobotScoringState.FIXED_SHOOTING : RobotScoringState.SHOOTING;
   }
-
 }

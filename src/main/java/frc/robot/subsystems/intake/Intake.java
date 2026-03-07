@@ -5,6 +5,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import java.util.function.Supplier;
+import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.Logger;
 
 public class Intake extends SubsystemBase { // TODO: Tunable Numbers as needed
@@ -58,6 +59,9 @@ public class Intake extends SubsystemBase { // TODO: Tunable Numbers as needed
     Logger.processInputs("Intake/Inputs/Roller", rollerInputs);
     Logger.processInputs("Intake/Inputs/Pivot", pivotInputs);
 
+    Logger.recordOutput("Intake/RollerVelocityRotPerSec", rollerInputs.velocityRotPerSec);
+    Logger.recordOutput("Intake/PivotVelocityRotPerSec", pivotInputs.velocityRotPerSec);
+
     switch (intakeState) {
       case STOW:
         resetAgitate = true;
@@ -93,11 +97,15 @@ public class Intake extends SubsystemBase { // TODO: Tunable Numbers as needed
     setRollerVoltage(intakeState.getRollerVol());
   }
 
-  public Command setIntakeState(IntakeState state) {
+  public Command setIntakeStateCommand(IntakeState state) {
     return Commands.runOnce(
         () -> {
           intakeState = state;
         }); // TODO: Make run instead of runOnce?
+  }
+
+  public void setIntakeState(IntakeState state) {
+    intakeState = state;
   }
 
   public void setPivotPosition(Rotation2d goal) {
@@ -128,5 +136,10 @@ public class Intake extends SubsystemBase { // TODO: Tunable Numbers as needed
 
   public void setRollerBrakeMode(boolean enableBrake) {
     rollerHardware.setBrakeMode(enableBrake);
+  }
+
+  @AutoLogOutput(key = "States/IntakeState")
+  public IntakeState getIntakeState() {
+    return intakeState;
   }
 }

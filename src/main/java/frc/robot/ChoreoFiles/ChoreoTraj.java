@@ -17,96 +17,19 @@ public record ChoreoTraj(
     double totalTimeSecs,
     Pose2d initialPoseBlue,
     Pose2d endPoseBlue) {
-  public static final ChoreoTraj H_BumpAllianceNeutral =
-      new ChoreoTraj(
-          "H_BumpAllianceNeutral",
-          OptionalInt.empty(),
-          1.25093,
-          new Pose2d(3.2, 2.2, Rotation2d.fromRadians(1.571)),
-          new Pose2d(5.7, 2.2, Rotation2d.fromRadians(1.571)));
-  public static final ChoreoTraj H_BumpNeutralAlliance =
-      new ChoreoTraj(
-          "H_BumpNeutralAlliance",
-          OptionalInt.empty(),
-          1.4503,
-          new Pose2d(6.1, 2.2, Rotation2d.fromRadians(1.571)),
-          new Pose2d(3.2, 2.2, Rotation2d.fromRadians(1.571)));
-  public static final ChoreoTraj H_Start_H_BUMP =
-      new ChoreoTraj(
-          "H_Start_H_BUMP",
-          OptionalInt.empty(),
-          0.35524,
-          new Pose2d(3.6, 2.2, Rotation2d.fromRadians(1.571)),
-          new Pose2d(3.2, 2.2, Rotation2d.fromRadians(1.571)));
-  public static final ChoreoTraj H_Start_H_HumanPlayer =
-      new ChoreoTraj(
-          "H_Start_H_HumanPlayer",
-          OptionalInt.empty(),
-          0.96973,
-          new Pose2d(3.6, 2.2, Rotation2d.fromRadians(1.571)),
-          new Pose2d(1.5, 0.65, Rotation2d.fromRadians(3.142)));
-  public static final ChoreoTraj H_HumanPlayer_H_BUMP =
-      new ChoreoTraj(
-          "H_HumanPlayer_H_BUMP",
-          OptionalInt.empty(),
-          0.75564,
-          new Pose2d(1.5, 0.65, Rotation2d.fromRadians(3.142)),
-          new Pose2d(3.2, 2.2, Rotation2d.fromRadians(1.571)));
-  public static final ChoreoTraj H_BUMP_H_Intake_45 =
-      new ChoreoTraj(
-          "H_BUMP_H_Intake_45",
-          OptionalInt.empty(),
-          0.58535,
-          new Pose2d(6.1, 2.2, Rotation2d.fromRadians(1.571)),
-          new Pose2d(7.4, 1.627, Rotation2d.fromRadians(0.785)));
-  public static final ChoreoTraj H_Intake_45_H_BUMP =
-      new ChoreoTraj(
-          "H_Intake_45_H_BUMP",
-          OptionalInt.empty(),
-          1.51423,
-          new Pose2d(7.4, 1.627, Rotation2d.fromRadians(0.785)),
-          new Pose2d(6.1, 2.2, Rotation2d.fromRadians(1.571)));
-  public static final ChoreoTraj H_Intake_45_D_BUMP =
-      new ChoreoTraj(
-          "H_Intake_45_D_BUMP",
-          OptionalInt.empty(),
-          1.86566,
-          new Pose2d(7.4, 1.627, Rotation2d.fromRadians(0.785)),
-          new Pose2d(6.1, 5.9, Rotation2d.fromRadians(-1.571)));
   public static final ChoreoTraj D_BumpAllianceNeutral =
       new ChoreoTraj(
           "D_BumpAllianceNeutral",
           OptionalInt.empty(),
-          1.25161,
+          1.11273,
           new Pose2d(3.2, 5.9, Rotation2d.fromRadians(-1.571)),
           new Pose2d(5.7, 5.9, Rotation2d.fromRadians(-1.571)));
   public static final ChoreoTraj D_BumpNeutralAlliance =
       new ChoreoTraj(
           "D_BumpNeutralAlliance",
           OptionalInt.empty(),
-          1.45052,
+          1.28941,
           new Pose2d(6.1, 5.9, Rotation2d.fromRadians(-1.571)),
-          new Pose2d(3.2, 5.9, Rotation2d.fromRadians(-1.571)));
-  public static final ChoreoTraj D_Start_D_BUMP =
-      new ChoreoTraj(
-          "D_Start_D_BUMP",
-          OptionalInt.empty(),
-          0.35524,
-          new Pose2d(3.6, 5.9, Rotation2d.fromRadians(-1.571)),
-          new Pose2d(3.2, 5.9, Rotation2d.fromRadians(-1.571)));
-  public static final ChoreoTraj D_Start_D_Depot =
-      new ChoreoTraj(
-          "D_Start_D_Depot",
-          OptionalInt.empty(),
-          0.99343,
-          new Pose2d(3.6, 5.9, Rotation2d.fromRadians(-1.571)),
-          new Pose2d(1.1, 5.97, Rotation2d.fromRadians(3.142)));
-  public static final ChoreoTraj D_Depot_D_BUMP =
-      new ChoreoTraj(
-          "D_Depot_D_BUMP",
-          OptionalInt.empty(),
-          0.76895,
-          new Pose2d(1.1, 5.97, Rotation2d.fromRadians(3.142)),
           new Pose2d(3.2, 5.9, Rotation2d.fromRadians(-1.571)));
   public static final ChoreoTraj D_BUMP_D_Intake_45 =
       new ChoreoTraj(
@@ -115,6 +38,13 @@ public record ChoreoTraj(
           0.75639,
           new Pose2d(6.1, 5.9, Rotation2d.fromRadians(-1.571)),
           new Pose2d(7.4, 6.5, Rotation2d.fromRadians(-0.785)));
+  public static final ChoreoTraj D_Depot_D_BUMP =
+      new ChoreoTraj(
+          "D_Depot_D_BUMP",
+          OptionalInt.empty(),
+          0.76895,
+          new Pose2d(1.1, 5.97, Rotation2d.fromRadians(3.142)),
+          new Pose2d(3.2, 5.9, Rotation2d.fromRadians(-1.571)));
   public static final ChoreoTraj D_Intake_45_D_BUMP =
       new ChoreoTraj(
           "D_Intake_45_D_BUMP",
@@ -129,6 +59,76 @@ public record ChoreoTraj(
           1.84685,
           new Pose2d(7.4, 6.5, Rotation2d.fromRadians(-0.785)),
           new Pose2d(6.1, 2.2, Rotation2d.fromRadians(1.571)));
+  public static final ChoreoTraj D_Start_D_BUMP =
+      new ChoreoTraj(
+          "D_Start_D_BUMP",
+          OptionalInt.empty(),
+          0.35524,
+          new Pose2d(3.6, 5.9, Rotation2d.fromRadians(-1.571)),
+          new Pose2d(3.2, 5.9, Rotation2d.fromRadians(-1.571)));
+  public static final ChoreoTraj D_Start_D_Depot =
+      new ChoreoTraj(
+          "D_Start_D_Depot",
+          OptionalInt.empty(),
+          0.99343,
+          new Pose2d(3.6, 5.9, Rotation2d.fromRadians(-1.571)),
+          new Pose2d(1.1, 5.97, Rotation2d.fromRadians(3.142)));
+  public static final ChoreoTraj H_BumpAllianceNeutral =
+      new ChoreoTraj(
+          "H_BumpAllianceNeutral",
+          OptionalInt.empty(),
+          1.11204,
+          new Pose2d(3.2, 2.2, Rotation2d.fromRadians(1.571)),
+          new Pose2d(5.7, 2.2, Rotation2d.fromRadians(1.571)));
+  public static final ChoreoTraj H_BumpNeutralAlliance =
+      new ChoreoTraj(
+          "H_BumpNeutralAlliance",
+          OptionalInt.empty(),
+          1.28919,
+          new Pose2d(6.1, 2.2, Rotation2d.fromRadians(1.571)),
+          new Pose2d(3.2, 2.2, Rotation2d.fromRadians(1.571)));
+  public static final ChoreoTraj H_BUMP_H_Intake_45 =
+      new ChoreoTraj(
+          "H_BUMP_H_Intake_45",
+          OptionalInt.empty(),
+          0.58535,
+          new Pose2d(6.1, 2.2, Rotation2d.fromRadians(1.571)),
+          new Pose2d(7.4, 1.627, Rotation2d.fromRadians(0.785)));
+  public static final ChoreoTraj H_HumanPlayer_H_BUMP =
+      new ChoreoTraj(
+          "H_HumanPlayer_H_BUMP",
+          OptionalInt.empty(),
+          0.75564,
+          new Pose2d(1.5, 0.65, Rotation2d.fromRadians(3.142)),
+          new Pose2d(3.2, 2.2, Rotation2d.fromRadians(1.571)));
+  public static final ChoreoTraj H_Intake_45_D_BUMP =
+      new ChoreoTraj(
+          "H_Intake_45_D_BUMP",
+          OptionalInt.empty(),
+          1.83238,
+          new Pose2d(7.4, 1.627, Rotation2d.fromRadians(0.785)),
+          new Pose2d(6.1, 5.9, Rotation2d.fromRadians(-1.571)));
+  public static final ChoreoTraj H_Intake_45_H_BUMP =
+      new ChoreoTraj(
+          "H_Intake_45_H_BUMP",
+          OptionalInt.empty(),
+          1.51423,
+          new Pose2d(7.4, 1.627, Rotation2d.fromRadians(0.785)),
+          new Pose2d(6.1, 2.2, Rotation2d.fromRadians(1.571)));
+  public static final ChoreoTraj H_Start_H_BUMP =
+      new ChoreoTraj(
+          "H_Start_H_BUMP",
+          OptionalInt.empty(),
+          0.35524,
+          new Pose2d(3.6, 2.2, Rotation2d.fromRadians(1.571)),
+          new Pose2d(3.2, 2.2, Rotation2d.fromRadians(1.571)));
+  public static final ChoreoTraj H_Start_H_HumanPlayer =
+      new ChoreoTraj(
+          "H_Start_H_HumanPlayer",
+          OptionalInt.empty(),
+          0.96973,
+          new Pose2d(3.6, 2.2, Rotation2d.fromRadians(1.571)),
+          new Pose2d(1.5, 0.65, Rotation2d.fromRadians(3.142)));
 
   /**
    * A map between trajectory names and their corresponding data. This allows for trajectory data to
@@ -136,22 +136,22 @@ public record ChoreoTraj(
    */
   public static final Map<String, ChoreoTraj> ALL_TRAJECTORIES =
       Map.ofEntries(
-          Map.entry("H_BumpAllianceNeutral", H_BumpAllianceNeutral),
-          Map.entry("H_BumpNeutralAlliance", H_BumpNeutralAlliance),
-          Map.entry("H_Start_H_BUMP", H_Start_H_BUMP),
-          Map.entry("H_Start_H_HumanPlayer", H_Start_H_HumanPlayer),
-          Map.entry("H_HumanPlayer_H_BUMP", H_HumanPlayer_H_BUMP),
-          Map.entry("H_BUMP_H_Intake_45", H_BUMP_H_Intake_45),
-          Map.entry("H_Intake_45_H_BUMP", H_Intake_45_H_BUMP),
-          Map.entry("H_Intake_45_D_BUMP", H_Intake_45_D_BUMP),
           Map.entry("D_BumpAllianceNeutral", D_BumpAllianceNeutral),
           Map.entry("D_BumpNeutralAlliance", D_BumpNeutralAlliance),
+          Map.entry("D_BUMP_D_Intake_45", D_BUMP_D_Intake_45),
+          Map.entry("D_Depot_D_BUMP", D_Depot_D_BUMP),
+          Map.entry("D_Intake_45_D_BUMP", D_Intake_45_D_BUMP),
+          Map.entry("D_Intake_45_H_BUMP", D_Intake_45_H_BUMP),
           Map.entry("D_Start_D_BUMP", D_Start_D_BUMP),
           Map.entry("D_Start_D_Depot", D_Start_D_Depot),
-          Map.entry("D_Depot_D_BUMP", D_Depot_D_BUMP),
-          Map.entry("D_BUMP_D_Intake_45", D_BUMP_D_Intake_45),
-          Map.entry("D_Intake_45_D_BUMP", D_Intake_45_D_BUMP),
-          Map.entry("D_Intake_45_H_BUMP", D_Intake_45_H_BUMP));
+          Map.entry("H_BumpAllianceNeutral", H_BumpAllianceNeutral),
+          Map.entry("H_BumpNeutralAlliance", H_BumpNeutralAlliance),
+          Map.entry("H_BUMP_H_Intake_45", H_BUMP_H_Intake_45),
+          Map.entry("H_HumanPlayer_H_BUMP", H_HumanPlayer_H_BUMP),
+          Map.entry("H_Intake_45_D_BUMP", H_Intake_45_D_BUMP),
+          Map.entry("H_Intake_45_H_BUMP", H_Intake_45_H_BUMP),
+          Map.entry("H_Start_H_BUMP", H_Start_H_BUMP),
+          Map.entry("H_Start_H_HumanPlayer", H_Start_H_HumanPlayer));
 
   /**
    * Looks up the ChoreoTraj segment of the given overall ChoreoTraj. WARNING: will raise an
