@@ -255,7 +255,7 @@ public class Drive extends SubsystemBase {
           break;
       }
 
-      Logger.recordOutput("DriveState", driveState);
+      Logger.recordOutput("States/DriveState", driveState);
       Logger.recordOutput("Speed Cap", speedCap);
     }
 

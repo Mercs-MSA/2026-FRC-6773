@@ -4,8 +4,6 @@ import static edu.wpi.first.units.Units.InchesPerSecond;
 
 import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.LinearVelocity;
-import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.Constants;
 import org.littletonrobotics.junction.AutoLogOutput;
@@ -55,13 +53,6 @@ public class Indexer extends SubsystemBase {
         setKickerTangentialVelocity(Constants.fuelLaunchVelocity);
         break;
     }
-  }
-
-  public Command setIndexerStateCommand(IndexerState state) {
-    return Commands.runOnce(
-        () -> {
-          indexerState = state;
-        }); // TODO: Make run instead of runOnce?
   }
 
   public void setIndexerState(IndexerState state) {

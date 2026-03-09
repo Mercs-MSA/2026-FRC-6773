@@ -95,8 +95,8 @@ public class Robot extends LoggedRobot {
   /** This function is called once when the robot is disabled. */
   @Override
   public void disabledInit() {
-    robotContainer.resetState();
-    robotContainer.updateManager();
+    // robotContainer.resetState();
+    // robotContainer.updateManager();
   }
 
   /** This function is called periodically when disabled. */
@@ -117,7 +117,7 @@ public class Robot extends LoggedRobot {
   /** This function is called periodically during autonomous. */
   @Override
   public void autonomousPeriodic() {
-    robotContainer.updateManager();
+    // robotContainer.updateManager();
   }
 
   /** This function is called once when teleop is enabled. */
@@ -136,7 +136,7 @@ public class Robot extends LoggedRobot {
   @Override
   public void teleopPeriodic() {
 
-    robotContainer.updateManager();
+    // robotContainer.updateManager();
     Logger.recordOutput(
         "In Alliance Zone", ZoneUtil.ALLIANCE_ZONE.contains(robotContainer.getDrive()::getPose));
     Logger.recordOutput(

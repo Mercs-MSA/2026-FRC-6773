@@ -6,6 +6,7 @@ package frc.robot.subsystems.shooter;
 
 import static edu.wpi.first.units.Units.Degrees;
 import static edu.wpi.first.units.Units.Inches;
+import static edu.wpi.first.units.Units.RPM;
 import static edu.wpi.first.units.Units.Radians;
 import static edu.wpi.first.units.Units.RadiansPerSecond;
 import static edu.wpi.first.units.Units.Rotations;
@@ -42,7 +43,7 @@ public class Shooter extends SubsystemBase {
     SHOOT_FIXED
   }
 
-  public ShooterState shooterState = ShooterState.IDLE_HUB;
+  public ShooterState shooterState = ShooterState.STOW;
 
   private final ShooterTurretIO turretHardware;
   private final ShooterTurretIOInputsAutoLogged turretInputs =
@@ -123,9 +124,9 @@ public class Shooter extends SubsystemBase {
         flywheelVel = 0.0;
         break;
       case IDLE:
-        azimuthAngle = Angle.ofBaseUnits(0, Radians);
+        azimuthAngle = Rotations.of(getTurretPosition());
         azimuthVelocity = RadiansPerSecond.of(0);
-        hoodAngle = Rotation2d.kZero;
+        hoodAngle = getHoodPosition();
         flywheelVel = 8.0;
         break;
       case IDLE_HUB:
@@ -219,6 +220,11 @@ public class Shooter extends SubsystemBase {
     setHoodPosition(hoodAngle);
     setFlywheelVelocityRPS(flywheelVel);
 
+    Logger.recordOutput("FlywheelDebug/targetFlywheelVelRPS", flywheelVel);
+    Logger.recordOutput(
+        "FlywheelDebug/flywheelRPS", getFlywheelVelocities()[0].in(RotationsPerSecond));
+    Logger.recordOutput("FlywheelDebug/flwheelRamped?", isFlywheelAtThreshold());
+
     Logger.recordOutput("States/ShooterState", shooterState);
   }
 
@@ -257,6 +263,10 @@ public class Shooter extends SubsystemBase {
     }
   }
 
+  public boolean isFlywheelAtThreshold() {
+    return getFlywheelVelocities()[0].in(RPM) >= ShooterConstants.flywheelThreshold.in(RPM);
+  }
+
   public void setTurretVoltage(double voltage) {
     turretHardware.setVoltage(voltage);
   }
@@ -293,7 +303,7 @@ public class Shooter extends SubsystemBase {
     hoodHardware.setBrakeMode(value);
   }
 
-  @AutoLogOutput(key = "Shooter/Turret/MeasuredPositionRad")
+  @AutoLogOutput(key = "Shooter/Turret/MeasuredPositionRot")
   public double getTurretPosition() {
     return turretInputs.position.getRotations();
   }
@@ -308,7 +318,6 @@ public class Shooter extends SubsystemBase {
     return hoodInputs.position;
   }
 
-  @AutoLogOutput(key = "Shooter/Hood/HoodPosition")
   public AngularVelocity[] getFlywheelVelocities() {
     return new AngularVelocity[] {flywheelInputs.leftVelocity, flywheelInputs.rightVelocity};
   }

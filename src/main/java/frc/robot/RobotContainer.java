@@ -18,11 +18,12 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
-import frc.robot.RobotManager.IntakeManagerState;
-import frc.robot.RobotManager.RobotScoringState;
-import frc.robot.commands.AutonCommands;
+// import frc.robot.RobotManager.IntakeManagerState;
+// import frc.robot.RobotManager.RobotScoringState;
+// import frc.robot.commands.AutonCommands;
 import frc.robot.commands.DriveCommands;
 import frc.robot.commands.TeleopCommands;
+// import frc.robot.commands.TeleopCommands;
 import frc.robot.constants.Constants;
 import frc.robot.constants.FieldConstants;
 import frc.robot.subsystems.drive.Drive;
@@ -40,6 +41,7 @@ import frc.robot.subsystems.indexer.IndexerKickerIOTalonFX;
 import frc.robot.subsystems.indexer.IndexerSpindexerIOSim;
 import frc.robot.subsystems.indexer.IndexerSpindexerIOTalonFX;
 import frc.robot.subsystems.intake.Intake;
+import frc.robot.subsystems.intake.Intake.IntakeState;
 import frc.robot.subsystems.intake.IntakeConstants;
 import frc.robot.subsystems.intake.IntakePivotIOSim;
 import frc.robot.subsystems.intake.IntakePivotIOTalonFX;
@@ -81,10 +83,10 @@ public class RobotContainer {
   // Controller
   private final CommandXboxController controller = new CommandXboxController(0);
 
-  private final AutonCommands autonCommands;
+  //   private final AutonCommands autonCommands;
   private final TeleopCommands teleopCommands;
 
-  private RobotManager manager;
+  //   private RobotManager manager;
 
   // Dashboard inputs
   private final LoggedDashboardChooser<Command> autoChooser;
@@ -229,17 +231,18 @@ public class RobotContainer {
         shooter = new Shooter(null, null, null, null, null);
         break;
     }
-    manager = new RobotManager(drive, intake, indexer, transfer, shooter);
-    teleopCommands = new TeleopCommands(drive, intake, indexer, transfer, shooter, manager);
-    autonCommands = new AutonCommands(drive, intake, indexer, transfer, shooter, manager);
+    // manager = new RobotManager(drive, intake, indexer, transfer, shooter);
+    teleopCommands = new TeleopCommands(drive, intake, indexer, transfer, shooter);
+    // autonCommands = new AutonCommands(drive, intake, indexer, transfer, shooter, manager);
 
     // Set up auto routines
     autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
 
-    autoChooser.addOption("Left Path", autonCommands.getAutonomousSequence("LEFT_45"));
-    autoChooser.addOption("Right Path", autonCommands.getAutonomousSequence("RIGHT_45"));
-    autoChooser.addOption("Left Across Path", autonCommands.getAutonomousSequence("LEFT_FULL"));
-    autoChooser.addOption("Right Across Path", autonCommands.getAutonomousSequence("RIGHT_FULL"));
+    // autoChooser.addOption("Left Path", autonCommands.getAutonomousSequence("LEFT_45"));
+    // autoChooser.addOption("Right Path", autonCommands.getAutonomousSequence("RIGHT_45"));
+    // autoChooser.addOption("Left Across Path", autonCommands.getAutonomousSequence("LEFT_FULL"));
+    // autoChooser.addOption("Right Across Path",
+    // autonCommands.getAutonomousSequence("RIGHT_FULL"));
 
     // autoChooser.addOption("Test Path", autonCommands.getPathCommand("TuningPath"));
     // autoChooser.addOption("Center Bump Path", autonCommands.getAutonomousSequence("CENTER"));
@@ -313,22 +316,30 @@ public class RobotContainer {
                     drive)
                 .ignoringDisable(true));
 
-    controller.rightTrigger().whileTrue(shooter.startShooter()).onFalse(shooter.idleShooter());
-
+    // controller.rightTrigger().whileTrue(shooter.startShooter()).onFalse(shooter.idleShooter());
     controller
-        .rightTrigger(0.1)
-        .onTrue(teleopCommands.runShoot())
-        .onFalse(teleopCommands.stopShoot());
-
+        .rightTrigger()
+        .whileTrue(teleopCommands.shootCommand())
+        .onFalse(teleopCommands.stopShootCommand());
     controller
-        .leftStick()
-        .onTrue(teleopCommands.toggleFixedShooting(true))
-        .onFalse(teleopCommands.toggleFixedShooting(false));
+        .leftTrigger()
+        .onTrue(teleopCommands.intakeCommand(IntakeState.INTAKING))
+        .onFalse(teleopCommands.intakeCommand(IntakeState.IDLE));
 
-    controller
-        .leftTrigger(0.1)
-        .onTrue(teleopCommands.runIntake())
-        .onFalse(teleopCommands.stopIntake());
+    // controller
+    //     .rightTrigger(0.1)
+    //     .onTrue(teleopCommands.runShoot())
+    //     .onFalse(teleopCommands.stopShoot());
+
+    // controller
+    //     .leftStick()
+    //     .onTrue(teleopCommands.toggleFixedShooting(true))
+    //     .onFalse(teleopCommands.toggleFixedShooting(false));
+
+    // controller
+    //     .leftTrigger(0.1)
+    //     .onTrue(teleopCommands.runIntake())
+    //     .onFalse(teleopCommands.stopIntake());
   }
 
   /**
@@ -344,12 +355,12 @@ public class RobotContainer {
     return drive;
   }
 
-  public void updateManager() {
-    manager.periodicManager();
-  }
+  //   public void updateManager() {
+  //     manager.periodicManager();
+  //   }
 
-  public void resetState() {
-    manager.robotState = RobotScoringState.IDLE;
-    manager.intakeState = IntakeManagerState.IDLE;
-  }
+  //   public void resetState() {
+  //     manager.robotState = RobotScoringState.IDLE;
+  //     manager.intakeState = IntakeManagerState.IDLE;
+  //   }
 }

@@ -1,10 +1,13 @@
 package frc.robot.subsystems.shooter;
 
+import static edu.wpi.first.units.Units.RPM;
+
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.system.plant.DCMotor;
+import edu.wpi.first.units.measure.AngularVelocity;
 import frc.robot.constants.Constants;
 
 public class ShooterConstants { // TODO: CLEANUP
@@ -17,6 +20,8 @@ public class ShooterConstants { // TODO: CLEANUP
   public static final Rotation2d turretPositionTolerance = new Rotation2d(Math.toRadians(0.5));
 
   public static Transform3d robotToTurret = new Transform3d(-0.14, 0.14, 0.545, Rotation3d.kZero);
+
+  public static AngularVelocity flywheelThreshold = RPM.of(2300);
 
   public record ShooterFlywheelHardware(
       int flyWheelMotorLeftId, int flyWheelMotorRightId, double gearing) {}

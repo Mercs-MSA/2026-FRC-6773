@@ -47,7 +47,7 @@ public class ShooterFlywheelIOSim implements ShooterFlywheelIO {
 
   @Override
   public void setVelocityRPS(double velocity) {
-    flywheelLeft.setAngularVelocity(velocity);
+    flywheelLeft.setAngularVelocity(velocity * 2 * Math.PI);
   }
 
   @Override

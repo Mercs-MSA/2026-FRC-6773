@@ -1,8 +1,7 @@
 package frc.robot.subsystems.intake;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import java.util.function.Supplier;
 import org.littletonrobotics.junction.AutoLogOutput;
@@ -11,7 +10,7 @@ import org.littletonrobotics.junction.Logger;
 public class Intake extends SubsystemBase { // TODO: Tunable Numbers as needed
   public enum IntakeState {
     STOW(() -> Rotation2d.fromRotations(0.0), 0),
-    IDLE(() -> Rotation2d.fromRotations(0.0), -1),
+    IDLE(() -> Rotation2d.fromRotations(0.2), -1),
     AGITATE(() -> Rotation2d.fromRotations(0.2), -5),
     INTAKING(() -> Rotation2d.fromRotations(0.2), -16);
 
@@ -76,12 +75,21 @@ public class Intake extends SubsystemBase { // TODO: Tunable Numbers as needed
           agitateTimestamp = System.currentTimeMillis();
           resetAgitate = false;
         }
-        double a = 0.035;
-        double lim = intakeState.getPivotPos().getRotations();
+        // double a = 0.035;
+        // double lim = intakeState.getPivotPos().getRotations();
+        // pivotGoal =
+        // Rotation2d.fromRotations(
+        // a * Math.cos(4 * Math.PI * (System.currentTimeMillis() - agitateTimestamp) /
+        // 1000)
+        // + (lim - a));
+        double m = 0.05;
         pivotGoal =
             Rotation2d.fromRotations(
-                a * Math.cos(4 * Math.PI * (System.currentTimeMillis() - agitateTimestamp))
-                    + (lim - a));
+                MathUtil.clamp(
+                    (-m * ((System.currentTimeMillis() - agitateTimestamp) / 1000)
+                        + IntakeState.IDLE.getPivotPos().getRotations()),
+                    IntakeState.STOW.getPivotPos().getRotations(),
+                    IntakeState.IDLE.getPivotPos().getRotations()));
         break;
       case INTAKING:
         resetAgitate = true;
@@ -95,13 +103,8 @@ public class Intake extends SubsystemBase { // TODO: Tunable Numbers as needed
 
     setPivotPosition(pivotGoal);
     setRollerVoltage(intakeState.getRollerVol());
-  }
 
-  public Command setIntakeStateCommand(IntakeState state) {
-    return Commands.runOnce(
-        () -> {
-          intakeState = state;
-        }); // TODO: Make run instead of runOnce?
+    Logger.recordOutput("agitate timer", (System.currentTimeMillis() - agitateTimestamp) / 1000);
   }
 
   public void setIntakeState(IntakeState state) {
