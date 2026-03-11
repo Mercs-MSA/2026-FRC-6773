@@ -18,6 +18,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
+import frc.robot.commands.AutonCommands;
 // import frc.robot.RobotManager.IntakeManagerState;
 // import frc.robot.RobotManager.RobotScoringState;
 // import frc.robot.commands.AutonCommands;
@@ -83,7 +84,7 @@ public class RobotContainer {
   // Controller
   private final CommandXboxController controller = new CommandXboxController(0);
 
-  //   private final AutonCommands autonCommands;
+  private final AutonCommands autonCommands;
   private final TeleopCommands teleopCommands;
 
   //   private RobotManager manager;
@@ -233,16 +234,21 @@ public class RobotContainer {
     }
     // manager = new RobotManager(drive, intake, indexer, transfer, shooter);
     teleopCommands = new TeleopCommands(drive, intake, indexer, transfer, shooter);
-    // autonCommands = new AutonCommands(drive, intake, indexer, transfer, shooter, manager);
+    autonCommands = new AutonCommands(drive, intake, indexer, transfer, shooter);
 
     // Set up auto routines
     autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
 
-    // autoChooser.addOption("Left Path", autonCommands.getAutonomousSequence("LEFT_45"));
-    // autoChooser.addOption("Right Path", autonCommands.getAutonomousSequence("RIGHT_45"));
-    // autoChooser.addOption("Left Across Path", autonCommands.getAutonomousSequence("LEFT_FULL"));
-    // autoChooser.addOption("Right Across Path",
-    // autonCommands.getAutonomousSequence("RIGHT_FULL"));
+    autoChooser.addOption("Left Path", autonCommands.getAutonomousSequence("LEFT_45"));
+    autoChooser.addOption("Right Path", autonCommands.getAutonomousSequence("RIGHT_45"));
+    autoChooser.addOption("Left Across Path", autonCommands.getAutonomousSequence("LEFT_FULL"));
+    autoChooser.addOption("Right Across Path", autonCommands.getAutonomousSequence("RIGHT_FULL"));
+    autoChooser.addOption("Right TEST Path", autonCommands.getAutonomousSequence("RIGHT_TEST"));
+    autoChooser.addOption("Left TEST Path", autonCommands.getAutonomousSequence("LEFT_TEST"));
+    autoChooser.addOption(
+        "Right FULL TEST Path", autonCommands.getAutonomousSequence("RIGHT_FULL_TEST"));
+    autoChooser.addOption(
+        "Left FULL TEST Path", autonCommands.getAutonomousSequence("LEFT_FULL_TEST"));
 
     // autoChooser.addOption("Test Path", autonCommands.getPathCommand("TuningPath"));
     // autoChooser.addOption("Center Bump Path", autonCommands.getAutonomousSequence("CENTER"));

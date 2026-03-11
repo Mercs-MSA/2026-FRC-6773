@@ -11,6 +11,13 @@
      "val":2.25
     }
    },
+   "SpeedThroughBalls":{
+    "dimension":"LinVel",
+    "var":{
+     "exp":"4 m / s",
+     "val":4.0
+    }
+   },
    "WINDBACK_DIST":{
     "dimension":"Number",
     "var":{
@@ -194,8 +201,8 @@
      "val":3.2
     },
     "y":{
-     "exp":"2.2 m",
-     "val":2.2
+     "exp":"2.5 m",
+     "val":2.5
     },
     "heading":{
      "exp":"H_Start.heading",
@@ -209,7 +216,7 @@
     },
     "y":{
      "exp":"H_BumpAlliance.y",
-     "val":2.2
+     "val":2.5
     },
     "heading":{
      "exp":"H_BumpAlliance.heading",
@@ -306,8 +313,8 @@
      "val":3.6
     },
     "y":{
-     "exp":"2.2 m",
-     "val":2.2
+     "exp":"H_BumpAlliance.y",
+     "val":2.5
     },
     "heading":{
      "exp":"90 deg",
