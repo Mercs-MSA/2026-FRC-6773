@@ -3,8 +3,6 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-// import frc.robot.RobotManager;
-// import frc.robot.RobotManager.*;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.indexer.Indexer;
 import frc.robot.subsystems.indexer.Indexer.IndexerState;
@@ -16,8 +14,6 @@ import frc.robot.subsystems.transfer.Transfer.TransferState;
 import java.util.function.Supplier;
 
 public class TeleopCommands {
-
-  private Drive drive;
   private Intake intake;
   private Indexer indexer;
   private Transfer transfer;
@@ -34,7 +30,6 @@ public class TeleopCommands {
       Drive drive, Intake intake, Indexer indexer, Transfer transfer, Shooter shooter
       // ,RobotManager manager
       ) {
-    this.drive = drive;
     this.intake = intake;
     this.indexer = indexer;
     this.transfer = transfer;
