@@ -11,8 +11,8 @@ import edu.wpi.first.units.measure.AngularVelocity;
 import frc.robot.constants.Constants;
 
 public class ShooterConstants { // TODO: CLEANUP
-  public static final Rotation2d turretMaxLimit = Rotation2d.fromDegrees(160);
-  public static final Rotation2d turretMinLimit = Rotation2d.fromDegrees(-160);
+  public static final Rotation2d turretMaxLimit = Rotation2d.fromDegrees(180);
+  public static final Rotation2d turretMinLimit = Rotation2d.fromDegrees(-180);
 
   public static final Rotation2d hoodMaxLimit = new Rotation2d(-1);
   public static final Rotation2d hoodMinLimit = new Rotation2d(1);
@@ -77,7 +77,7 @@ public class ShooterConstants { // TODO: CLEANUP
           );
 
   public static final ShooterTurretHardware turretHardware =
-      new ShooterTurretHardware(53, 54, 102d / 25d);
+      new ShooterTurretHardware(53, 54, (102d / 25d) * 5d);
 
   public static final TurretMotorConfiguration turretConfigs =
       new TurretMotorConfiguration(false, true, true, 60, 50, 12, -12, NeutralModeValue.Brake);
@@ -98,7 +98,7 @@ public class ShooterConstants { // TODO: CLEANUP
   public static final HoodGains hoodGains = new HoodGains(70, 0, 0, 0.1, 0, 0);
   public static final TurretGains turretGains =
       switch (Constants.currentMode) {
-        case REAL -> new TurretGains(50, 0.0, 0.5, 3.0, 0.0, 0.0);
+        case REAL -> new TurretGains(00, 0.0, 0.0, 0.0, 0.0, 0.0);
         case SIM -> new TurretGains(5, 0.0, 0.01, 0.0, 0.0, 0.0);
         default -> new TurretGains(0.0, 0.0, 0.0, 0.0, 0.0, 0.0);
       };

@@ -25,7 +25,7 @@ public class TransferConstants {
       new TransferHardware( // TODO: Gearing
           52, 18d / 24d, 1.5);
 
-  public static final TransferGains transferGains = new TransferGains(0, 0, 0, 0.1, 0);
+  public static final TransferGains transferGains = new TransferGains(0, 0, 0, 0.105, 0);
 
   public static final TransferTalonFXConfiguration transferTalonFXConfiguration =
       new TransferTalonFXConfiguration(

@@ -10,9 +10,9 @@ import org.littletonrobotics.junction.Logger;
 public class Intake extends SubsystemBase { // TODO: Tunable Numbers as needed
   public enum IntakeState {
     STOW(() -> Rotation2d.fromRotations(0.0), 0),
-    IDLE(() -> Rotation2d.fromRotations(0.2), -1),
-    AGITATE(() -> Rotation2d.fromRotations(0.2), -5),
-    INTAKING(() -> Rotation2d.fromRotations(0.2), -16);
+    IDLE(() -> Rotation2d.fromRotations(0.23), -1),
+    AGITATE(() -> Rotation2d.fromRotations(0.0), -5),
+    INTAKING(() -> Rotation2d.fromRotations(0.23), -7);
 
     private Supplier<Rotation2d> pivotPos;
     private double rollerVol;
@@ -88,7 +88,7 @@ public class Intake extends SubsystemBase { // TODO: Tunable Numbers as needed
                 MathUtil.clamp(
                     (-m * ((System.currentTimeMillis() - agitateTimestamp) / 1000)
                         + IntakeState.IDLE.getPivotPos().getRotations()),
-                    IntakeState.STOW.getPivotPos().getRotations(),
+                    intakeState.getPivotPos().getRotations(),
                     IntakeState.IDLE.getPivotPos().getRotations()));
         break;
       case INTAKING:

@@ -36,9 +36,9 @@ public class ZoneUtil {
   public static final BaseZone LEFT_PASS_ZONE = RIGHT_PASS_ZONE.mirroredY();
   public static final BaseZone ALLIANCE_ZONE =
       new BaseZone(
-          AllianceFlipUtil.applyX(0),
+          AllianceFlipUtil.applyX(-2),
           AllianceFlipUtil.applyX(FieldConstants.LinesVertical.allianceZone),
-          0.0,
+          -2.0,
           FieldConstants.fieldWidth);
 
   public static interface Zone {

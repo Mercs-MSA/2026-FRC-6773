@@ -39,15 +39,15 @@ public class IndexerConstants {
 
   public static final SpindexerHardware spindexerHardware =
       new SpindexerHardware( // TODO: Gearing
-          43, 18d / 24d, 3);
+          43, 10d / 1d, 3);
 
   public static final KickerHardware kickerHardware =
       new KickerHardware( // TODO: Gearing
-          51, 18d / 24d, 2);
+          44, 18d / 24d, 2);
 
-  public static final SpindexerGains spindexerGains = new SpindexerGains(0, 0, 0, 0.1, 0);
+  public static final SpindexerGains spindexerGains = new SpindexerGains(0, 0, 0, 0.105, 0);
 
-  public static final KickerGains kickerGains = new KickerGains(0, 0, 0, 0.1, 0);
+  public static final KickerGains kickerGains = new KickerGains(0, 0, 0, 0.105, 0);
 
   public static final SpindexerTalonFXConfiguration spindexerTalonFXConfiguration =
       new SpindexerTalonFXConfiguration(
@@ -65,8 +65,8 @@ public class IndexerConstants {
           false, // Invert
           true, // Enable stator current limiting
           true, // Enable supply current limiting
-          60.0, // Stator limit
-          50.0, // Supply limit
+          100.0, // Stator limit
+          90.0, // Supply limit
           12.0, // Peak forward voltage
           -12.0, // Peak reverse voltage
           NeutralModeValue.Coast); // Idle mode

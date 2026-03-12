@@ -46,13 +46,14 @@ public class IntakeConstants {
 
   public record IntakeSimulationConfiguration(DCMotor motorType, double measurementStdDevs) {}
 
-  public static RollerHardware rollerHardware = new RollerHardware(41, 18d / 24d);
+  public static RollerHardware rollerHardware =
+      new RollerHardware(41, 18d / 24d); // TODO: fix gear ratio
 
-  public static PivotHardware pivotHardware = new PivotHardware(42, 15d / 1d);
+  public static PivotHardware pivotHardware = new PivotHardware(42, 24d / 1d);
 
   public static PivotGains pivotGains =
       new PivotGains(
-          0, // p
+          20, // p
           0, // i
           0, // d
           0, // s
@@ -66,7 +67,7 @@ public class IntakeConstants {
 
   public static final PivotTalonFXConfiguration kPivotMotorConfiguration =
       new PivotTalonFXConfiguration(
-          false, // Invert
+          true, // Invert
           true, // Enable stator current limiting
           true, // Enable supply current limiting
           60.0, // Stator limit
@@ -77,7 +78,7 @@ public class IntakeConstants {
 
   public static final RollerTalonFXConfiguration kRollerMotorConfiguration =
       new RollerTalonFXConfiguration(
-          false, // Invert
+          true, // Invert
           true, // Enable stator current limiting
           true, // Enable supply current limiting
           60.0, // Stator limit
