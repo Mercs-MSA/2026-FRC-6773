@@ -5,6 +5,7 @@
   "waypoints":[
     {"x":3.6, "y":2.05, "heading":1.5707963267948966, "intervals":8, "split":false, "fixTranslation":true, "fixHeading":true, "overrideIntervals":false},
     {"x":3.2, "y":2.05, "heading":1.5707963267948966, "intervals":30, "split":false, "fixTranslation":true, "fixHeading":true, "overrideIntervals":false},
+    {"x":6.1, "y":2.05, "heading":1.5707963267948966, "intervals":13, "split":true, "fixTranslation":true, "fixHeading":false, "overrideIntervals":false},
     {"x":6.460867404937744, "y":1.8266005516052248, "heading":0.8604015159202749, "intervals":14, "split":false, "fixTranslation":true, "fixHeading":false, "overrideIntervals":false},
     {"x":6.943414211273193, "y":1.7231976985931396, "heading":0.4290288222752945, "intervals":16, "split":false, "fixTranslation":true, "fixHeading":true, "overrideIntervals":false},
     {"x":7.634048938751221, "y":2.0897347927093506, "heading":0.0, "intervals":18, "split":false, "fixTranslation":true, "fixHeading":false, "overrideIntervals":false},

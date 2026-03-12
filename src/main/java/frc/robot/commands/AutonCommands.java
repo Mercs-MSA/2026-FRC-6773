@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import frc.robot.subsystems.climb.Climb;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.indexer.Indexer;
 import frc.robot.subsystems.intake.Intake;
@@ -22,8 +23,13 @@ public class AutonCommands extends TeleopCommands {
   private Drive drive;
 
   public AutonCommands(
-      Drive drive, Intake intake, Indexer indexer, Transfer transfer, Shooter shooter) {
-    super(drive, intake, indexer, transfer, shooter);
+      Drive drive,
+      Intake intake,
+      Indexer indexer,
+      Transfer transfer,
+      Shooter shooter,
+      Climb climb) {
+    super(drive, intake, indexer, transfer, shooter, climb);
     this.drive = drive;
   }
 

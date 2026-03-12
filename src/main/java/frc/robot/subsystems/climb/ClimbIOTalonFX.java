@@ -4,6 +4,7 @@ import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.NeutralOut;
+import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
@@ -115,5 +116,10 @@ public class ClimbIOTalonFX implements ClimbIO {
       climbMotor.setNeutralMode(newMode);
       currentMode = newMode;
     }
+  }
+
+  @Override
+  public void setPosition(double pos) {
+    climbMotor.setControl(new PositionVoltage(pos));
   }
 }

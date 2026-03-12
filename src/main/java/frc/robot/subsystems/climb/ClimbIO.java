@@ -12,6 +12,7 @@ public interface ClimbIO {
     public double supplyCurrentAmps = 0.0;
     public double statorCurrentAmps = 0.0;
     public double temperatureCelsius = 0.0;
+    public double position = 0.0;
   }
 
   /**
@@ -39,4 +40,6 @@ public interface ClimbIO {
    * @param enableBrake
    */
   public default void setBrakeMode(boolean enableBrake) {}
+
+  public default void setPosition(double position) {}
 }

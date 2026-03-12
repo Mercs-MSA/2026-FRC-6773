@@ -3,6 +3,8 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.robot.subsystems.climb.Climb;
+import frc.robot.subsystems.climb.Climb.ClimbState;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.indexer.Indexer;
 import frc.robot.subsystems.indexer.Indexer.IndexerState;
@@ -18,6 +20,8 @@ public class TeleopCommands {
   private Indexer indexer;
   private Transfer transfer;
   private Shooter shooter;
+  private Climb climber;
+
   // private RobotManager manager;
 
   boolean fixedShooting = false;
@@ -27,13 +31,18 @@ public class TeleopCommands {
   Trigger flywheelRamp;
 
   public TeleopCommands(
-      Drive drive, Intake intake, Indexer indexer, Transfer transfer, Shooter shooter
-      // ,RobotManager manager
-      ) {
+      Drive drive,
+      Intake intake,
+      Indexer indexer,
+      Transfer transfer,
+      Shooter shooter,
+      Climb climb) {
+
     this.intake = intake;
     this.indexer = indexer;
     this.transfer = transfer;
     this.shooter = shooter;
+    this.climber = climb;
     // this.manager = manager;
 
     intakeStateSupplier = intake::getIntakeState;
@@ -77,6 +86,13 @@ public class TeleopCommands {
     return Commands.runOnce(
         () -> {
           indexer.setIndexerState(state);
+        });
+  }
+
+  public Command climbCommand(ClimbState state) {
+    return Commands.runOnce(
+        () -> {
+          climber.setClimbState(state);
         });
   }
 
