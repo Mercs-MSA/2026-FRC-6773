@@ -11,6 +11,7 @@ import frc.robot.subsystems.indexer.Indexer.IndexerState;
 import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.intake.Intake.IntakeState;
 import frc.robot.subsystems.shooter.Shooter;
+import frc.robot.subsystems.shooter.Shooter.ShooterState;
 import frc.robot.subsystems.transfer.Transfer;
 import frc.robot.subsystems.transfer.Transfer.TransferState;
 import java.util.function.Supplier;
@@ -90,10 +91,20 @@ public class TeleopCommands {
   }
 
   public Command climbCommand(ClimbState state) {
-    return Commands.runOnce(
+    Command initial = Commands.runOnce(
         () -> {
           climber.setClimbState(state);
         });
+    if (state != ClimbState.STOW)
+    {
+      return initial.andThen(() -> {
+        shooter.setShooterState(ShooterState.IDLE);
+        intake.setIntakeState(IntakeState.STOW);
+        indexer.setIndexerState(IndexerState.IDLE);
+        transfer.setTransferState(TransferState.IDLE);
+      });
+    }
+    return initial;
   }
 
   // public Command runIntake() {
