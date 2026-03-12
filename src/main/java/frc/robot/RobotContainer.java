@@ -18,6 +18,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
+import frc.robot.commands.AutonCommands;
 // import frc.robot.RobotManager.IntakeManagerState;
 // import frc.robot.RobotManager.RobotScoringState;
 // import frc.robot.commands.AutonCommands;
@@ -26,6 +27,11 @@ import frc.robot.commands.TeleopCommands;
 // import frc.robot.commands.TeleopCommands;
 import frc.robot.constants.Constants;
 import frc.robot.constants.FieldConstants;
+import frc.robot.subsystems.climb.Climb;
+import frc.robot.subsystems.climb.ClimbConstants;
+import frc.robot.subsystems.climb.ClimbIOSim;
+import frc.robot.subsystems.climb.ClimbIOTalonFX;
+import frc.robot.subsystems.climb.Climb.ClimbState;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.drive.Drive.DriveState;
 import frc.robot.subsystems.drive.DriveConstants;
@@ -63,6 +69,7 @@ import frc.robot.subsystems.vision.Vision;
 import frc.robot.subsystems.vision.VisionIO;
 import frc.robot.subsystems.vision.VisionIOLimelight;
 import frc.robot.util.geometry.AllianceFlipUtil;
+import java.util.function.DoubleSupplier;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 /**
@@ -79,11 +86,13 @@ public class RobotContainer {
   private final Transfer transfer;
   private final Intake intake;
   private final Shooter shooter;
+  private final Climb climber;
 
   // Controller
   private final CommandXboxController controller = new CommandXboxController(0);
+  private final CommandXboxController opController = new CommandXboxController(1);
 
-  //   private final AutonCommands autonCommands;
+  private final AutonCommands autonCommands;
   private final TeleopCommands teleopCommands;
 
   //   private RobotManager manager;
@@ -159,6 +168,14 @@ public class RobotContainer {
                     TransferConstants.transferGains,
                     TransferConstants.transferTalonFXConfiguration,
                     TransferConstants.statusSignalUpdateFrequencyHz));
+
+        climber =
+            new Climb(
+                new ClimbIOTalonFX(
+                    ClimbConstants.climbHardware,
+                    ClimbConstants.climbTalonFXConfiguration,
+                    ClimbConstants.statusSignalUpdateFrequencyHz),
+                getClimbAdjustmentDoubleSupplier());
         break;
 
       case SIM:
@@ -209,6 +226,15 @@ public class RobotContainer {
                     0.02,
                     TransferConstants.transferHardware,
                     TransferConstants.transferSimulationConfiguration));
+
+        climber =
+            new Climb(
+                new ClimbIOSim(
+                    0.02,
+                    ClimbConstants.climbHardware,
+                    ClimbConstants.climbSimulationConfiguration),
+                getClimbAdjustmentDoubleSupplier());
+
         break;
 
       default:
@@ -229,20 +255,27 @@ public class RobotContainer {
         indexer = new Indexer(null, null);
         transfer = new Transfer(null);
         shooter = new Shooter(null, null, null, null, null);
+
+        climber = new Climb(null, null);
         break;
     }
     // manager = new RobotManager(drive, intake, indexer, transfer, shooter);
-    teleopCommands = new TeleopCommands(drive, intake, indexer, transfer, shooter);
-    // autonCommands = new AutonCommands(drive, intake, indexer, transfer, shooter, manager);
+    teleopCommands = new TeleopCommands(drive, intake, indexer, transfer, shooter, climber);
+    autonCommands = new AutonCommands(drive, intake, indexer, transfer, shooter, climber);
 
     // Set up auto routines
     autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
 
-    // autoChooser.addOption("Left Path", autonCommands.getAutonomousSequence("LEFT_45"));
-    // autoChooser.addOption("Right Path", autonCommands.getAutonomousSequence("RIGHT_45"));
-    // autoChooser.addOption("Left Across Path", autonCommands.getAutonomousSequence("LEFT_FULL"));
-    // autoChooser.addOption("Right Across Path",
-    // autonCommands.getAutonomousSequence("RIGHT_FULL"));
+    autoChooser.addOption("Left Path", autonCommands.getAutonomousSequence("LEFT_45"));
+    autoChooser.addOption("Right Path", autonCommands.getAutonomousSequence("RIGHT_45"));
+    autoChooser.addOption("Left Across Path", autonCommands.getAutonomousSequence("LEFT_FULL"));
+    autoChooser.addOption("Right Across Path", autonCommands.getAutonomousSequence("RIGHT_FULL"));
+    autoChooser.addOption("Right TEST Path", autonCommands.getAutonomousSequence("RIGHT_TEST"));
+    autoChooser.addOption("Left TEST Path", autonCommands.getAutonomousSequence("LEFT_TEST"));
+    autoChooser.addOption(
+        "Right FULL TEST Path", autonCommands.getAutonomousSequence("RIGHT_FULL_TEST"));
+    autoChooser.addOption(
+        "Left FULL TEST Path", autonCommands.getAutonomousSequence("LEFT_FULL_TEST"));
 
     // autoChooser.addOption("Test Path", autonCommands.getPathCommand("TuningPath"));
     // autoChooser.addOption("Center Bump Path", autonCommands.getAutonomousSequence("CENTER"));
@@ -326,6 +359,8 @@ public class RobotContainer {
         .onTrue(teleopCommands.intakeCommand(IntakeState.INTAKING))
         .onFalse(teleopCommands.intakeCommand(IntakeState.IDLE));
 
+    opController.leftBumper().onTrue(teleopCommands.climbCommand(ClimbState.TELEOP_CLIMB));
+    opController.rightBumper().onTrue(teleopCommands.climbCommand(ClimbState.STOW));
     // controller
     //     .rightTrigger(0.1)
     //     .onTrue(teleopCommands.runShoot())
@@ -363,4 +398,19 @@ public class RobotContainer {
   //     manager.robotState = RobotScoringState.IDLE;
   //     manager.intakeState = IntakeManagerState.IDLE;
   //   }
+
+  public DoubleSupplier getClimbAdjustmentDoubleSupplier() {
+    return () -> {
+        double val = opController.getLeftY();
+        if (Math.abs(val) < 0.1)
+        {
+            return 0.0;
+        }
+        if (val > 0.0) {
+            return val * 3.0 + ClimbConstants.climbVoltage;
+        } else {
+            return val * 3.0 + ClimbConstants.descendClimbVoltage;
+        }
+    };
+  }
 }
