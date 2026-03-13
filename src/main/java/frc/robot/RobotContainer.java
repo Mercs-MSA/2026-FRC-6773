@@ -28,10 +28,10 @@ import frc.robot.commands.TeleopCommands;
 import frc.robot.constants.Constants;
 import frc.robot.constants.FieldConstants;
 import frc.robot.subsystems.climb.Climb;
+import frc.robot.subsystems.climb.Climb.ClimbState;
 import frc.robot.subsystems.climb.ClimbConstants;
 import frc.robot.subsystems.climb.ClimbIOSim;
 import frc.robot.subsystems.climb.ClimbIOTalonFX;
-import frc.robot.subsystems.climb.Climb.ClimbState;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.drive.Drive.DriveState;
 import frc.robot.subsystems.drive.DriveConstants;
@@ -401,16 +401,15 @@ public class RobotContainer {
 
   public DoubleSupplier getClimbAdjustmentDoubleSupplier() {
     return () -> {
-        double val = opController.getLeftY();
-        if (Math.abs(val) < 0.1)
-        {
-            return 0.0;
-        }
-        if (val > 0.0) {
-            return val * 3.0 + ClimbConstants.climbVoltage;
-        } else {
-            return val * 3.0 + ClimbConstants.descendClimbVoltage;
-        }
+      double val = opController.getLeftY();
+      if (Math.abs(val) < 0.1) {
+        return 0.0;
+      }
+      if (val > 0.0) {
+        return val * 3.0 + ClimbConstants.climbVoltage;
+      } else {
+        return val * 3.0 + ClimbConstants.descendClimbVoltage;
+      }
     };
   }
 }

@@ -1,6 +1,5 @@
 package frc.robot.subsystems.intake;
 
-import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import java.util.function.Supplier;
@@ -30,6 +29,12 @@ public class Intake extends SubsystemBase { // TODO: Tunable Numbers as needed
       return rollerVol;
     }
   }
+
+  private final double HOPPER_RETRACTION_POINT = 0.11; // rotations
+
+  private final double AGITATE_AMPLITUDE = 0.035; // rotations
+
+  private final double LINEAR_RETRACTION_TIME = 3.0;
 
   public IntakeState intakeState;
 
@@ -75,21 +80,26 @@ public class Intake extends SubsystemBase { // TODO: Tunable Numbers as needed
           agitateTimestamp = System.currentTimeMillis();
           resetAgitate = false;
         }
-        // double a = 0.035;
-        // double lim = intakeState.getPivotPos().getRotations();
-        // pivotGoal =
-        // Rotation2d.fromRotations(
-        // a * Math.cos(4 * Math.PI * (System.currentTimeMillis() - agitateTimestamp) /
-        // 1000)
-        // + (lim - a));
-        double m = 0.05;
-        pivotGoal =
-            Rotation2d.fromRotations(
-                MathUtil.clamp(
-                    (-m * ((System.currentTimeMillis() - agitateTimestamp) / 1000)
-                        + IntakeState.IDLE.getPivotPos().getRotations()),
-                    intakeState.getPivotPos().getRotations(),
-                    IntakeState.IDLE.getPivotPos().getRotations()));
+
+        double x = (System.currentTimeMillis() - agitateTimestamp) / 1000;
+
+        double i = HOPPER_RETRACTION_POINT;
+
+        double a = AGITATE_AMPLITUDE;
+
+        double b = IntakeState.IDLE.getPivotPos().getRotations();
+
+        double m = (i - b) / LINEAR_RETRACTION_TIME;
+
+        if (x < 0.0) {
+          x = 0.0;
+        }
+        if (x <= LINEAR_RETRACTION_TIME) {
+          pivotGoal = Rotation2d.fromRotations(m * x + b);
+        } else {
+          pivotGoal = Rotation2d.fromRotations(a * Math.cos(2 * Math.PI * x) + (i - a));
+        }
+
         break;
       case INTAKING:
         resetAgitate = true;

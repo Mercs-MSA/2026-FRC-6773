@@ -91,18 +91,19 @@ public class TeleopCommands {
   }
 
   public Command climbCommand(ClimbState state) {
-    Command initial = Commands.runOnce(
-        () -> {
-          climber.setClimbState(state);
-        });
-    if (state != ClimbState.STOW)
-    {
-      return initial.andThen(() -> {
-        shooter.setShooterState(ShooterState.IDLE);
-        intake.setIntakeState(IntakeState.STOW);
-        indexer.setIndexerState(IndexerState.IDLE);
-        transfer.setTransferState(TransferState.IDLE);
-      });
+    Command initial =
+        Commands.runOnce(
+            () -> {
+              climber.setClimbState(state);
+            });
+    if (state != ClimbState.STOW) {
+      return initial.andThen(
+          () -> {
+            shooter.setShooterState(ShooterState.IDLE);
+            intake.setIntakeState(IntakeState.STOW);
+            indexer.setIndexerState(IndexerState.IDLE);
+            transfer.setTransferState(TransferState.IDLE);
+          });
     }
     return initial;
   }
