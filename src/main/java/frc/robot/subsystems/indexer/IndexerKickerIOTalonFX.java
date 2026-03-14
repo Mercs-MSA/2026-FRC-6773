@@ -125,7 +125,7 @@ public class IndexerKickerIOTalonFX implements IndexerKickerIO {
   @Override
   public void setTangentialVelocity(LinearVelocity velocity) {
     setAngularVelocity(
-        RotationsPerSecond.of(velocity.in(InchesPerSecond) / 2 * wheelRadius * Math.PI));
+        RotationsPerSecond.of(velocity.in(InchesPerSecond) / (2 * wheelRadius * Math.PI)));
   }
 
   @Override

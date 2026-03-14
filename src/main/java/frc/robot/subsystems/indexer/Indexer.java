@@ -1,6 +1,7 @@
 package frc.robot.subsystems.indexer;
 
 import static edu.wpi.first.units.Units.InchesPerSecond;
+import static edu.wpi.first.units.Units.RotationsPerSecond;
 
 import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.LinearVelocity;
@@ -49,7 +50,7 @@ public class Indexer extends SubsystemBase {
         stopSpindexer();
         break;
       case INDEXING:
-        setSpindexerTangentialVelocity(Constants.fuelLaunchVelocity);
+        setSpindexerAngularVelocity(RotationsPerSecond.of(100));
         setKickerTangentialVelocity(Constants.fuelLaunchVelocity);
         break;
     }

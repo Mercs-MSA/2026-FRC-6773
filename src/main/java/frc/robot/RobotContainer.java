@@ -27,11 +27,7 @@ import frc.robot.commands.TeleopCommands;
 // import frc.robot.commands.TeleopCommands;
 import frc.robot.constants.Constants;
 import frc.robot.constants.FieldConstants;
-import frc.robot.subsystems.climb.Climb;
-import frc.robot.subsystems.climb.Climb.ClimbState;
 import frc.robot.subsystems.climb.ClimbConstants;
-import frc.robot.subsystems.climb.ClimbIOSim;
-import frc.robot.subsystems.climb.ClimbIOTalonFX;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.drive.Drive.DriveState;
 import frc.robot.subsystems.drive.DriveConstants;
@@ -41,6 +37,7 @@ import frc.robot.subsystems.drive.ModuleIO;
 import frc.robot.subsystems.drive.ModuleIOSim;
 import frc.robot.subsystems.drive.ModuleIOTalonFX;
 import frc.robot.subsystems.indexer.Indexer;
+import frc.robot.subsystems.indexer.Indexer.IndexerState;
 import frc.robot.subsystems.indexer.IndexerConstants;
 import frc.robot.subsystems.indexer.IndexerKickerIOSim;
 import frc.robot.subsystems.indexer.IndexerKickerIOTalonFX;
@@ -86,7 +83,7 @@ public class RobotContainer {
   private final Transfer transfer;
   private final Intake intake;
   private final Shooter shooter;
-  private final Climb climber;
+  //   private final Climb climber;
 
   // Controller
   private final CommandXboxController controller = new CommandXboxController(0);
@@ -169,13 +166,13 @@ public class RobotContainer {
                     TransferConstants.transferTalonFXConfiguration,
                     TransferConstants.statusSignalUpdateFrequencyHz));
 
-        climber =
-            new Climb(
-                new ClimbIOTalonFX(
-                    ClimbConstants.climbHardware,
-                    ClimbConstants.climbTalonFXConfiguration,
-                    ClimbConstants.statusSignalUpdateFrequencyHz),
-                getClimbAdjustmentDoubleSupplier());
+        // climber =
+        //     new Climb(
+        //         new ClimbIOTalonFX(
+        //             ClimbConstants.climbHardware,
+        //             ClimbConstants.climbTalonFXConfiguration,
+        //             ClimbConstants.statusSignalUpdateFrequencyHz),
+        //         getClimbAdjustmentDoubleSupplier());
         break;
 
       case SIM:
@@ -227,13 +224,13 @@ public class RobotContainer {
                     TransferConstants.transferHardware,
                     TransferConstants.transferSimulationConfiguration));
 
-        climber =
-            new Climb(
-                new ClimbIOSim(
-                    0.02,
-                    ClimbConstants.climbHardware,
-                    ClimbConstants.climbSimulationConfiguration),
-                getClimbAdjustmentDoubleSupplier());
+        // climber =
+        //     new Climb(
+        //         new ClimbIOSim(
+        //             0.02,
+        //             ClimbConstants.climbHardware,
+        //             ClimbConstants.climbSimulationConfiguration),
+        //         getClimbAdjustmentDoubleSupplier());
 
         break;
 
@@ -256,12 +253,20 @@ public class RobotContainer {
         transfer = new Transfer(null);
         shooter = new Shooter(null, null, null, null, null);
 
-        climber = new Climb(null, null);
+        // climber = new Climb(null, null);
         break;
     }
     // manager = new RobotManager(drive, intake, indexer, transfer, shooter);
-    teleopCommands = new TeleopCommands(drive, intake, indexer, transfer, shooter, climber);
-    autonCommands = new AutonCommands(drive, intake, indexer, transfer, shooter, climber);
+    teleopCommands =
+        new TeleopCommands(
+            drive, intake, indexer, transfer, shooter
+            // , climber
+            );
+    autonCommands =
+        new AutonCommands(
+            drive, intake, indexer, transfer, shooter
+            // , climber
+            );
 
     // Set up auto routines
     autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
@@ -314,9 +319,9 @@ public class RobotContainer {
     drive.setDefaultCommand(
         DriveCommands.joystickDriveXLock(
             drive,
-            () -> -controller.getLeftY(),
-            () -> -controller.getLeftX(),
-            () -> -controller.getRightX()));
+            () -> controller.getLeftY(),
+            () -> controller.getLeftX(),
+            () -> controller.getRightX()));
 
     controller
         .leftStick()
@@ -324,8 +329,8 @@ public class RobotContainer {
         .whileTrue(
             DriveCommands.joystickDriveAtAngle(
                 drive,
-                () -> -controller.getLeftY(),
-                () -> -controller.getLeftX(),
+                () -> controller.getLeftY(),
+                () -> controller.getLeftX(),
                 () ->
                     drive.interpolateAngle(
                         new Pose2d(
@@ -353,28 +358,20 @@ public class RobotContainer {
     controller
         .rightTrigger()
         .whileTrue(teleopCommands.shootCommand())
-        .onFalse(teleopCommands.stopShootCommand());
+        .onFalse(teleopCommands.stopShootCommand())
+        .whileFalse(
+            Commands.run(
+                () -> {
+                  indexer.setIndexerState(IndexerState.IDLE);
+                }));
     controller
         .leftTrigger()
         .onTrue(teleopCommands.intakeCommand(IntakeState.INTAKING))
         .onFalse(teleopCommands.intakeCommand(IntakeState.IDLE));
 
-    opController.leftBumper().onTrue(teleopCommands.climbCommand(ClimbState.TELEOP_CLIMB));
-    opController.rightBumper().onTrue(teleopCommands.climbCommand(ClimbState.STOW));
+    // opController.leftBumper().onTrue(teleopCommands.climbCommand(ClimbState.TELEOP_CLIMB));
+    // opController.rightBumper().onTrue(teleopCommands.climbCommand(ClimbState.STOW));
     // controller
-    //     .rightTrigger(0.1)
-    //     .onTrue(teleopCommands.runShoot())
-    //     .onFalse(teleopCommands.stopShoot());
-
-    // controller
-    //     .leftStick()
-    //     .onTrue(teleopCommands.toggleFixedShooting(true))
-    //     .onFalse(teleopCommands.toggleFixedShooting(false));
-
-    // controller
-    //     .leftTrigger(0.1)
-    //     .onTrue(teleopCommands.runIntake())
-    //     .onFalse(teleopCommands.stopIntake());
   }
 
   /**

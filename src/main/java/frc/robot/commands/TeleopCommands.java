@@ -3,15 +3,12 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-import frc.robot.subsystems.climb.Climb;
-import frc.robot.subsystems.climb.Climb.ClimbState;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.indexer.Indexer;
 import frc.robot.subsystems.indexer.Indexer.IndexerState;
 import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.intake.Intake.IntakeState;
 import frc.robot.subsystems.shooter.Shooter;
-import frc.robot.subsystems.shooter.Shooter.ShooterState;
 import frc.robot.subsystems.transfer.Transfer;
 import frc.robot.subsystems.transfer.Transfer.TransferState;
 import java.util.function.Supplier;
@@ -21,7 +18,7 @@ public class TeleopCommands {
   private Indexer indexer;
   private Transfer transfer;
   private Shooter shooter;
-  private Climb climber;
+  // private Climb climber;
 
   // private RobotManager manager;
 
@@ -32,18 +29,15 @@ public class TeleopCommands {
   Trigger flywheelRamp;
 
   public TeleopCommands(
-      Drive drive,
-      Intake intake,
-      Indexer indexer,
-      Transfer transfer,
-      Shooter shooter,
-      Climb climb) {
+      Drive drive, Intake intake, Indexer indexer, Transfer transfer, Shooter shooter
+      // ,  Climb climb
+      ) {
 
     this.intake = intake;
     this.indexer = indexer;
     this.transfer = transfer;
     this.shooter = shooter;
-    this.climber = climb;
+    // this.climber = climb;
     // this.manager = manager;
 
     intakeStateSupplier = intake::getIntakeState;
@@ -90,23 +84,23 @@ public class TeleopCommands {
         });
   }
 
-  public Command climbCommand(ClimbState state) {
-    Command initial =
-        Commands.runOnce(
-            () -> {
-              climber.setClimbState(state);
-            });
-    if (state != ClimbState.STOW) {
-      return initial.andThen(
-          () -> {
-            shooter.setShooterState(ShooterState.IDLE);
-            intake.setIntakeState(IntakeState.STOW);
-            indexer.setIndexerState(IndexerState.IDLE);
-            transfer.setTransferState(TransferState.IDLE);
-          });
-    }
-    return initial;
-  }
+  // public Command climbCommand(ClimbState state) {
+  //   Command initial =
+  //       Commands.runOnce(
+  //           () -> {
+  //             climber.setClimbState(state);
+  //           });
+  //   if (state != ClimbState.STOW) {
+  //     return initial.andThen(
+  //         () -> {
+  //           shooter.setShooterState(ShooterState.IDLE);
+  //           intake.setIntakeState(IntakeState.STOW);
+  //           indexer.setIndexerState(IndexerState.IDLE);
+  //           transfer.setTransferState(TransferState.IDLE);
+  //         });
+  //   }
+  //   return initial;
+  // }
 
   // public Command runIntake() {
   //   return manager.setIntakeCommand(IntakeManagerState.INTAKING);

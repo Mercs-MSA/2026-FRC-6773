@@ -5,8 +5,8 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.system.plant.DCMotor;
 
 public class IntakeConstants {
-  public static final Rotation2d pivotMaxLimit = Rotation2d.fromRotations(0.2);
-  public static final Rotation2d pivotMinLimit = Rotation2d.fromRotations(0.0);
+  public static final Rotation2d pivotMaxLimit = Rotation2d.fromRotations(0.24);
+  public static final Rotation2d pivotMinLimit = Rotation2d.fromRotations(-0.05);
 
   public record RollerHardware(int rollerID, double gearing) {}
 
@@ -81,11 +81,11 @@ public class IntakeConstants {
           true, // Invert
           true, // Enable stator current limiting
           true, // Enable supply current limiting
-          60.0, // Stator limit
-          50.0, // Supply limit
+          80.0, // Stator limit
+          70.0, // Supply limit
           12.0, // Peak forward voltage
           -12.0, // Peak reverse voltage
-          NeutralModeValue.Coast); // Idle mode
+          NeutralModeValue.Brake); // Idle mode
 
   public static final IntakeSimulationConfiguration pivotSimulationConfiguration =
       new IntakeSimulationConfiguration(DCMotor.getKrakenX60(1), 0.002);

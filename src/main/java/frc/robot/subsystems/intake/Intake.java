@@ -9,7 +9,7 @@ import org.littletonrobotics.junction.Logger;
 public class Intake extends SubsystemBase { // TODO: Tunable Numbers as needed
   public enum IntakeState {
     STOW(() -> Rotation2d.fromRotations(0.0), 0),
-    IDLE(() -> Rotation2d.fromRotations(0.23), -1),
+    IDLE(() -> Rotation2d.fromRotations(0.23), 0),
     AGITATE(() -> Rotation2d.fromRotations(0.0), -5),
     INTAKING(() -> Rotation2d.fromRotations(0.23), -7);
 
@@ -30,11 +30,12 @@ public class Intake extends SubsystemBase { // TODO: Tunable Numbers as needed
     }
   }
 
-  private final double HOPPER_RETRACTION_POINT = 0.11; // rotations
+  private final double HOPPER_RETRACTION_POINT =
+      IntakeState.INTAKING.getPivotPos().getRotations(); // rotations
 
-  private final double AGITATE_AMPLITUDE = 0.035; // rotations
+  private final double AGITATE_AMPLITUDE = 0.11; // rotations
 
-  private final double LINEAR_RETRACTION_TIME = 3.0;
+  private final double LINEAR_RETRACTION_TIME = 0.0; // seconds
 
   public IntakeState intakeState;
 
