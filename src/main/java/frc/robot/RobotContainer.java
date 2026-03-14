@@ -319,9 +319,9 @@ public class RobotContainer {
     drive.setDefaultCommand(
         DriveCommands.joystickDriveXLock(
             drive,
-            () -> controller.getLeftY(),
-            () -> controller.getLeftX(),
-            () -> controller.getRightX()));
+            () -> -1 * controller.getLeftY(),
+            () -> -1 * controller.getLeftX(),
+            () -> -1 * controller.getRightX()));
 
     controller
         .leftStick()
@@ -329,8 +329,8 @@ public class RobotContainer {
         .whileTrue(
             DriveCommands.joystickDriveAtAngle(
                 drive,
-                () -> controller.getLeftY(),
-                () -> controller.getLeftX(),
+                () -> -1 * controller.getLeftY(),
+                () -> -1 * controller.getLeftX(),
                 () ->
                     drive.interpolateAngle(
                         new Pose2d(
@@ -367,6 +367,11 @@ public class RobotContainer {
     controller
         .leftTrigger()
         .onTrue(teleopCommands.intakeCommand(IntakeState.INTAKING))
+        .onFalse(teleopCommands.intakeCommand(IntakeState.IDLE));
+
+    controller
+        .rightBumper()
+        .onTrue(teleopCommands.intakeCommand(IntakeState.OUTTAKING))
         .onFalse(teleopCommands.intakeCommand(IntakeState.IDLE));
 
     // opController.leftBumper().onTrue(teleopCommands.climbCommand(ClimbState.TELEOP_CLIMB));

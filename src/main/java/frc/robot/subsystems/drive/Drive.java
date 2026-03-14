@@ -418,7 +418,8 @@ public class Drive extends SubsystemBase {
     return pose2
         .getTranslation()
         .minus(pose1.getTranslation()) // Vector from point1 to point2
-        .getAngle();
+        .getAngle()
+        .rotateBy(Rotation2d.k180deg);
   }
 
   public boolean checkInAllianceZone(Pose2d robotPose) {

@@ -11,7 +11,8 @@ public class Intake extends SubsystemBase { // TODO: Tunable Numbers as needed
     STOW(() -> Rotation2d.fromRotations(0.0), 0),
     IDLE(() -> Rotation2d.fromRotations(0.23), 0),
     AGITATE(() -> Rotation2d.fromRotations(0.0), -5),
-    INTAKING(() -> Rotation2d.fromRotations(0.23), -7);
+    INTAKING(() -> Rotation2d.fromRotations(0.23), -7),
+    OUTTAKING(() -> Rotation2d.fromRotations(0.23), 12);
 
     private Supplier<Rotation2d> pivotPos;
     private double rollerVol;
@@ -33,7 +34,7 @@ public class Intake extends SubsystemBase { // TODO: Tunable Numbers as needed
   private final double HOPPER_RETRACTION_POINT =
       IntakeState.INTAKING.getPivotPos().getRotations(); // rotations
 
-  private final double AGITATE_AMPLITUDE = 0.11; // rotations
+  private final double AGITATE_AMPLITUDE = 0.085; // rotations
 
   private final double LINEAR_RETRACTION_TIME = 0.0; // seconds
 
@@ -98,11 +99,15 @@ public class Intake extends SubsystemBase { // TODO: Tunable Numbers as needed
         if (x <= LINEAR_RETRACTION_TIME) {
           pivotGoal = Rotation2d.fromRotations(m * x + b);
         } else {
-          pivotGoal = Rotation2d.fromRotations(a * Math.cos(2 * Math.PI * x) + (i - a));
+          pivotGoal = Rotation2d.fromRotations(a * Math.cos(1 * Math.PI * x) + (i - a));
         }
 
         break;
       case INTAKING:
+        resetAgitate = true;
+        pivotGoal = intakeState.getPivotPos();
+        break;
+      case OUTTAKING:
         resetAgitate = true;
         pivotGoal = intakeState.getPivotPos();
         break;

@@ -100,8 +100,8 @@ public class DriveConstants {
   private static final double trackWidthX = 21.5;
   private static final double trackWidthY = 21.5;
 
-  private static final boolean kInvertLeftSide = false;
-  private static final boolean kInvertRightSide = true;
+  private static final boolean kInvertLeftSide = true;
+  private static final boolean kInvertRightSide = false;
 
   private static final int kPigeonId = 10;
 
