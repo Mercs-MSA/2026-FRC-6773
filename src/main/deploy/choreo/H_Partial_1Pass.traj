@@ -11,7 +11,7 @@
     {"x":7.634048938751221, "y":2.0897347927093506, "heading":0.0, "intervals":18, "split":false, "fixTranslation":true, "fixHeading":false, "overrideIntervals":false},
     {"x":7.778802871704102, "y":3.3, "heading":1.5707963267948966, "intervals":16, "split":false, "fixTranslation":true, "fixHeading":true, "overrideIntervals":false},
     {"x":6.1, "y":2.7, "heading":1.5707963267948966, "intervals":33, "split":true, "fixTranslation":true, "fixHeading":false, "overrideIntervals":false},
-    {"x":3.2, "y":2.7, "heading":1.5707963267948966, "intervals":28, "split":false, "fixTranslation":true, "fixHeading":true, "overrideIntervals":false},
+    {"x":3.2, "y":2.7, "heading":1.5707963267948966, "intervals":28, "split":true, "fixTranslation":true, "fixHeading":true, "overrideIntervals":false},
     {"x":1.6060124635696411, "y":0.673910915851593, "heading":3.141592653589793, "intervals":27, "split":true, "fixTranslation":true, "fixHeading":true, "overrideIntervals":false},
     {"x":1.970377802848816, "y":2.302168607711792, "heading":0.0, "intervals":12, "split":false, "fixTranslation":false, "fixHeading":false, "overrideIntervals":false},
     {"x":2.017137050628662, "y":3.374791383743286, "heading":0.0, "intervals":11, "split":false, "fixTranslation":true, "fixHeading":false, "overrideIntervals":false},
@@ -44,7 +44,7 @@
     {"x":{"exp":"7.634048938751221 m", "val":7.634048938751221}, "y":{"exp":"2.0897347927093506 m", "val":2.0897347927093506}, "heading":{"exp":"0 deg", "val":0.0}, "intervals":18, "split":false, "fixTranslation":true, "fixHeading":false, "overrideIntervals":false},
     {"x":{"exp":"7.778802871704102 m", "val":7.778802871704102}, "y":{"exp":"3.3 m", "val":3.3}, "heading":{"exp":"1.5707963267948966 rad", "val":1.5707963267948966}, "intervals":16, "split":false, "fixTranslation":true, "fixHeading":true, "overrideIntervals":false},
     {"x":{"exp":"H_BumpNeutral.x", "val":6.1}, "y":{"exp":"H_BumpNeutral.y + 0.2 m", "val":2.7}, "heading":{"exp":"H_BumpNeutral.heading", "val":1.5707963267948966}, "intervals":33, "split":true, "fixTranslation":true, "fixHeading":false, "overrideIntervals":false},
-    {"x":{"exp":"H_BumpAlliance.x", "val":3.2}, "y":{"exp":"H_BumpAlliance.y + 0.2 m", "val":2.7}, "heading":{"exp":"H_BumpAlliance.heading", "val":1.5707963267948966}, "intervals":28, "split":false, "fixTranslation":true, "fixHeading":true, "overrideIntervals":false},
+    {"x":{"exp":"H_BumpAlliance.x", "val":3.2}, "y":{"exp":"H_BumpAlliance.y + 0.2 m", "val":2.7}, "heading":{"exp":"H_BumpAlliance.heading", "val":1.5707963267948966}, "intervals":28, "split":true, "fixTranslation":true, "fixHeading":true, "overrideIntervals":false},
     {"x":{"exp":"1.6060124635696411 m", "val":1.6060124635696411}, "y":{"exp":"0.673910915851593 m", "val":0.673910915851593}, "heading":{"exp":"180 deg", "val":3.141592653589793}, "intervals":27, "split":true, "fixTranslation":true, "fixHeading":true, "overrideIntervals":false},
     {"x":{"exp":"1.970377802848816 m", "val":1.970377802848816}, "y":{"exp":"2.302168607711792 m", "val":2.302168607711792}, "heading":{"exp":"0 deg", "val":0.0}, "intervals":12, "split":false, "fixTranslation":false, "fixHeading":false, "overrideIntervals":false},
     {"x":{"exp":"2.017137050628662 m", "val":2.017137050628662}, "y":{"exp":"3.374791383743286 m", "val":3.374791383743286}, "heading":{"exp":"0 deg", "val":0.0}, "intervals":11, "split":false, "fixTranslation":true, "fixHeading":false, "overrideIntervals":false},
@@ -324,7 +324,7 @@
     {"t":7.1988, "x":1.64063, "y":3.37864, "heading":0.0, "vx":-0.99613, "vy":-0.08526, "omega":0.0, "ax":10.45437, "ay":0.89479, "alpha":0.0, "fx":[136.33318,136.33318,136.33318,136.33318], "fy":[11.66879,11.66879,11.66879,11.66879]},
     {"t":7.24194, "x":1.60738, "y":3.3758, "heading":0.0, "vx":-0.5451, "vy":-0.04666, "omega":0.0, "ax":12.63487, "ay":1.08142, "alpha":0.0, "fx":[164.76861,164.76861,164.76861,164.76861], "fy":[14.10258,14.10258,14.10258,14.10258]},
     {"t":7.28509, "x":1.59562, "y":3.37479, "heading":0.0, "vx":0.0, "vy":0.0, "omega":0.0, "ax":0.0, "ay":0.0, "alpha":0.0, "fx":[0.0,0.0,0.0,0.0], "fy":[0.0,0.0,0.0,0.0]}],
-  "splits":[0,38,115,176]
+  "splits":[0,38,115,148,176]
  },
  "events":[]
 }

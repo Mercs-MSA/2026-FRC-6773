@@ -153,4 +153,9 @@ public class IntakePivotIOTalonFX implements IntakePivotIO {
       currentMode = newMode;
     }
   }
+
+  @Override
+  public Angle getPosition() {
+    return pivotMotor.getPosition().getValue();
+  }
 }

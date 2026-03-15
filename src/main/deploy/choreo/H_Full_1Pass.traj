@@ -11,7 +11,7 @@
     {"x":7.733908176422119, "y":2.086496353149414, "heading":0.0, "intervals":25, "split":false, "fixTranslation":true, "fixHeading":false, "overrideIntervals":false},
     {"x":7.806491851806641, "y":5.746217250823975, "heading":1.5707963267948966, "intervals":16, "split":false, "fixTranslation":true, "fixHeading":true, "overrideIntervals":false},
     {"x":5.974467754364014, "y":5.809390544891357, "heading":1.5707963267948966, "intervals":31, "split":true, "fixTranslation":true, "fixHeading":false, "overrideIntervals":false},
-    {"x":3.283287048339844, "y":5.809390544891357, "heading":1.5707963267948966, "intervals":28, "split":false, "fixTranslation":true, "fixHeading":true, "overrideIntervals":false},
+    {"x":3.283287048339844, "y":5.809390544891357, "heading":1.5707963267948966, "intervals":28, "split":true, "fixTranslation":true, "fixHeading":true, "overrideIntervals":false},
     {"x":1.180797100067139, "y":5.94807243347168, "heading":3.141592653589793, "intervals":8, "split":true, "fixTranslation":true, "fixHeading":true, "overrideIntervals":false},
     {"x":1.468680739402771, "y":5.557507514953613, "heading":0.0, "intervals":19, "split":false, "fixTranslation":true, "fixHeading":false, "overrideIntervals":false},
     {"x":1.912879467010498, "y":5.0131449699401855, "heading":0.0, "intervals":17, "split":false, "fixTranslation":false, "fixHeading":false, "overrideIntervals":false},
@@ -49,7 +49,7 @@
     {"x":{"exp":"7.733908176422119 m", "val":7.733908176422119}, "y":{"exp":"2.086496353149414 m", "val":2.086496353149414}, "heading":{"exp":"0 deg", "val":0.0}, "intervals":25, "split":false, "fixTranslation":true, "fixHeading":false, "overrideIntervals":false},
     {"x":{"exp":"7.806491851806641 m", "val":7.806491851806641}, "y":{"exp":"5.746217250823975 m", "val":5.746217250823975}, "heading":{"exp":"1.5707963267948966 rad", "val":1.5707963267948966}, "intervals":16, "split":false, "fixTranslation":true, "fixHeading":true, "overrideIntervals":false},
     {"x":{"exp":"5.974467754364014 m", "val":5.974467754364014}, "y":{"exp":"5.809390544891357 m", "val":5.809390544891357}, "heading":{"exp":"H_BumpNeutral.heading", "val":1.5707963267948966}, "intervals":31, "split":true, "fixTranslation":true, "fixHeading":false, "overrideIntervals":false},
-    {"x":{"exp":"3.2832870483398438 m", "val":3.283287048339844}, "y":{"exp":"5.809390544891357 m", "val":5.809390544891357}, "heading":{"exp":"H_BumpAlliance.heading", "val":1.5707963267948966}, "intervals":28, "split":false, "fixTranslation":true, "fixHeading":true, "overrideIntervals":false},
+    {"x":{"exp":"3.2832870483398438 m", "val":3.283287048339844}, "y":{"exp":"5.809390544891357 m", "val":5.809390544891357}, "heading":{"exp":"H_BumpAlliance.heading", "val":1.5707963267948966}, "intervals":28, "split":true, "fixTranslation":true, "fixHeading":true, "overrideIntervals":false},
     {"x":{"exp":"1.1807971000671387 m", "val":1.180797100067139}, "y":{"exp":"5.94807243347168 m", "val":5.94807243347168}, "heading":{"exp":"180 deg", "val":3.141592653589793}, "intervals":8, "split":true, "fixTranslation":true, "fixHeading":true, "overrideIntervals":false},
     {"x":{"exp":"1.468680739402771 m", "val":1.468680739402771}, "y":{"exp":"5.557507514953613 m", "val":5.557507514953613}, "heading":{"exp":"0 deg", "val":0.0}, "intervals":19, "split":false, "fixTranslation":true, "fixHeading":false, "overrideIntervals":false},
     {"x":{"exp":"1.912879467010498 m", "val":1.912879467010498}, "y":{"exp":"5.0131449699401855 m", "val":5.0131449699401855}, "heading":{"exp":"0 deg", "val":0.0}, "intervals":17, "split":false, "fixTranslation":false, "fixHeading":false, "overrideIntervals":false},
@@ -343,7 +343,7 @@
     {"t":7.46218, "x":1.60784, "y":4.4867, "heading":0.0, "vx":-0.99955, "vy":0.02183, "omega":0.0, "ax":9.42111, "ay":-0.20574, "alpha":0.0, "fx":[122.85857,122.85857,122.85857,122.85857], "fy":[-2.68304,-2.68304,-2.68304,-2.68304]},
     {"t":7.5074, "x":1.57226, "y":4.48747, "heading":0.0, "vx":-0.57347, "vy":0.01252, "omega":0.0, "ax":12.67998, "ay":-0.27691, "alpha":0.0, "fx":[165.35688,165.35688,165.35688,165.35688], "fy":[-3.61113,-3.61113,-3.61113,-3.61113]},
     {"t":7.55263, "x":1.5593, "y":4.48776, "heading":0.0, "vx":0.0, "vy":0.0, "omega":0.0, "ax":0.0, "ay":0.0, "alpha":0.0, "fx":[0.0,0.0,0.0,0.0], "fy":[0.0,0.0,0.0,0.0]}],
-  "splits":[0,38,124,183]
+  "splits":[0,38,124,155,183]
  },
  "events":[]
 }

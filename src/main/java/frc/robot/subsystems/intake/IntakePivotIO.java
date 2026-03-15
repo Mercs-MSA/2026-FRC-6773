@@ -1,6 +1,7 @@
 package frc.robot.subsystems.intake;
 
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.units.measure.Angle;
 import org.littletonrobotics.junction.AutoLog;
 
 public interface IntakePivotIO {
@@ -33,6 +34,12 @@ public interface IntakePivotIO {
    */
   public default void setPosition(Rotation2d position) {}
 
+  /**
+   * @return the position of the mechanism
+   */
+  public default Angle getPosition() {
+    return null;
+  }
   /**
    * Commands the hardware to stop. When using TalonFX, this commands the motors to a Neutral
    * control
