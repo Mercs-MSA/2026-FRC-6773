@@ -61,9 +61,9 @@ public class ShooterTurretIOTalonFX implements ShooterTurretIO {
     turretCANcoder = new CANcoder(hardware.cancoderID(), canbus);
 
     canCoderConfiguration.MagnetSensor.SensorDirection =
-        // SensorDirectionValue.CounterClockwise_Positive;
-        SensorDirectionValue.Clockwise_Positive; // TODO: check
-    canCoderConfiguration.MagnetSensor.MagnetOffset = 0.413330078125; // DO NOT CHANGE THIS PLEAASEE
+        SensorDirectionValue.CounterClockwise_Positive; 
+    canCoderConfiguration.MagnetSensor.MagnetOffset = -0.2080078125; // DO NOT CHANGE THIS
+    // PLEAASEE
     canCoderConfiguration.MagnetSensor.AbsoluteSensorDiscontinuityPoint = 0.5;
     turretCANcoder.getConfigurator().apply(canCoderConfiguration);
 
@@ -101,7 +101,7 @@ public class ShooterTurretIOTalonFX implements ShooterTurretIO {
     motorConfiguration.Feedback.FeedbackRemoteSensorID = turretCANcoder.getDeviceID();
 
     motorConfiguration.Feedback.SensorToMechanismRatio = hardware.gearing();
-    motorConfiguration.Feedback.RotorToSensorRatio = 1.0;
+    motorConfiguration.Feedback.RotorToSensorRatio = 5.0;
 
     motorConfiguration.ClosedLoopGeneral.ContinuousWrap = false;
 
