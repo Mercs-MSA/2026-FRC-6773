@@ -271,16 +271,7 @@ public class RobotContainer {
     // Set up auto routines
     autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
 
-    autoChooser.addOption("Left Path", autonCommands.getAutonomousSequence("LEFT_45"));
-    autoChooser.addOption("Right Path", autonCommands.getAutonomousSequence("RIGHT_45"));
-    autoChooser.addOption("Left Across Path", autonCommands.getAutonomousSequence("LEFT_FULL"));
-    autoChooser.addOption("Right Across Path", autonCommands.getAutonomousSequence("RIGHT_FULL"));
-    autoChooser.addOption("Right TEST Path", autonCommands.getAutonomousSequence("RIGHT_TEST"));
-    autoChooser.addOption("Left TEST Path", autonCommands.getAutonomousSequence("LEFT_TEST"));
-    autoChooser.addOption(
-        "Right FULL TEST Path", autonCommands.getAutonomousSequence("RIGHT_FULL_TEST"));
-    autoChooser.addOption(
-        "Left FULL TEST Path", autonCommands.getAutonomousSequence("LEFT_FULL_TEST"));
+    autonCommands.registerAutoOptions(autoChooser);
 
     // autoChooser.addOption("Test Path", autonCommands.getPathCommand("TuningPath"));
     // autoChooser.addOption("Center Bump Path", autonCommands.getAutonomousSequence("CENTER"));

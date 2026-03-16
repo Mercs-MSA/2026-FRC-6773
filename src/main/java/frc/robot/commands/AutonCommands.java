@@ -15,22 +15,24 @@ import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.intake.Intake.IntakeState;
 import frc.robot.subsystems.shooter.Shooter;
 import frc.robot.subsystems.transfer.Transfer;
+import frc.robot.subsystems.transfer.Transfer.TransferState;
 import java.util.Optional;
+import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 public class AutonCommands extends TeleopCommands {
 
   private Drive drive;
+  private Shooter shooter;
+  private Intake intake;
+  private Transfer transfer;
 
   public AutonCommands(
-      Drive drive, Intake intake, Indexer indexer, Transfer transfer, Shooter shooter
-      // ,
-      // Climb climb
-      ) {
-    super(
-        drive, intake, indexer, transfer, shooter
-        // , climb
-        );
+      Drive drive, Intake intake, Indexer indexer, Transfer transfer, Shooter shooter) {
+    super(drive, intake, indexer, transfer, shooter);
     this.drive = drive;
+    this.shooter = shooter;
+    this.intake = intake;
+    this.transfer = transfer;
   }
 
   public Command getPathCommand(String pathName) {
@@ -69,6 +71,24 @@ public class AutonCommands extends TeleopCommands {
     }
   }
 
+  private static final String[] AUTO_OPTIONS = {
+    "LEFT_45",
+    "RIGHT_45",
+    "LEFT_FULL",
+    "RIGHT_FULL",
+    "RIGHT_TEST",
+    "LEFT_TEST",
+    "RIGHT_FULL_TEST",
+    "LEFT_FULL_TEST",
+    "SHUNT_LEFT",
+  };
+
+  public void registerAutoOptions(LoggedDashboardChooser<Command> autoChooser) {
+    for (String option : AUTO_OPTIONS) {
+      autoChooser.addOption(option, getAutonomousSequence(option));
+    }
+  }
+
   public Command getAutonomousSequence(String startChoice) {
     SequentialCommandGroup autonCommand = new SequentialCommandGroup();
 
@@ -97,6 +117,7 @@ public class AutonCommands extends TeleopCommands {
         autonCommand.addCommands(getPathCommand("H_Intake_45_H_BUMP"));
         autonCommand.addCommands(intakeCommand(IntakeState.STOW));
         autonCommand.addCommands(getPathCommand("H_BumpNeutralAlliance"));
+        autonCommand.addCommands(stopDrive());
         autonCommand.addCommands(shootCommand());
         break;
       case "LEFT_45":
@@ -132,9 +153,23 @@ public class AutonCommands extends TeleopCommands {
       case "LEFT_TEST":
         autonCommand.addCommands(getAutonCommandSegments("D_Partial_1Pass"));
         break;
+      case "SHUNT_LEFT":
+        String quick = "H_Shunt_Grab";
+        autonCommand.addCommands(getPathCommand(quick, 0));
+        autonCommand.addCommands(intakeCommand(IntakeState.INTAKING));
+        autonCommand.addCommands(getPathCommand(quick, 1));
+        autonCommand.addCommands(intakeCommand(IntakeState.OUTTAKING));
+        autonCommand.addCommands(getPathCommand(quick, 2));
+        autonCommand.addCommands(intakeCommand(IntakeState.INTAKING));
+        autonCommand.addCommands(getPathCommand(quick, 3));
+        autonCommand.addCommands(intakeCommand(IntakeState.STOW));
+        autonCommand.addCommands(getPathCommand(quick, 4));
+        autonCommand.addCommands(intakeCommand(IntakeState.INTAKING));
+        autonCommand.addCommands(shootCommand());
+        autonCommand.addCommands(getPathCommand(quick, 5));
+
       default:
         DriverStation.reportError("Big oops: Invalid Start Pos", false);
-        // Do nothing auton
         break;
     }
 
@@ -178,5 +213,24 @@ public class AutonCommands extends TeleopCommands {
     command.addCommands(stopShootCommand());
 
     return command;
+  }
+
+  public Command stopDrive() {
+    return Commands.runOnce(
+        () -> {
+          drive.stop();
+        });
+  }
+
+  @Override
+  public Command shootCommand() {
+    return Commands.parallel(
+        shooter.startShooterOnce(),
+        Commands.runOnce(
+            () -> {
+              if (!intakeStateSupplier.get().equals(IntakeState.INTAKING))
+                intake.setIntakeState(IntakeState.AGITATE);
+              transfer.setTransferState(TransferState.TRANSFERRING);
+            }));
   }
 }

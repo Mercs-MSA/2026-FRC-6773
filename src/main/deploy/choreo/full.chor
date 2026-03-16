@@ -209,6 +209,20 @@
      "val":1.5707963267948966
     }
    },
+   "H_BumpAlliance_Low":{
+    "x":{
+     "exp":"H_BumpAlliance.x",
+     "val":3.2
+    },
+    "y":{
+     "exp":"H_Start_Low.y",
+     "val":2.1
+    },
+    "heading":{
+     "exp":"H_BumpAlliance.heading",
+     "val":1.5707963267948966
+    }
+   },
    "H_BumpNeutral":{
     "x":{
      "exp":"H_BumpAlliance.x + 2.9 m",
@@ -220,6 +234,20 @@
     },
     "heading":{
      "exp":"H_BumpAlliance.heading",
+     "val":1.5707963267948966
+    }
+   },
+   "H_BumpNeutral_Low":{
+    "x":{
+     "exp":"H_BumpNeutral.x",
+     "val":6.1
+    },
+    "y":{
+     "exp":"H_Start_Low.y",
+     "val":2.1
+    },
+    "heading":{
+     "exp":"H_BumpNeutral.heading",
      "val":1.5707963267948966
     }
    },
@@ -318,6 +346,20 @@
     },
     "heading":{
      "exp":"90 deg",
+     "val":1.5707963267948966
+    }
+   },
+   "H_Start_Low":{
+    "x":{
+     "exp":"H_Start.x",
+     "val":3.6
+    },
+    "y":{
+     "exp":"2.1 m",
+     "val":2.1
+    },
+    "heading":{
+     "exp":"H_Start.heading",
      "val":1.5707963267948966
     }
    }

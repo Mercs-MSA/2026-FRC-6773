@@ -47,15 +47,22 @@ public class Intake extends SubsystemBase { // TODO: Tunable Numbers as needed
   private final LoggedNetworkBoolean usePiecewiseAgitation =
       new LoggedNetworkBoolean("/Intake/UsePiecewiseAgitation", true);
 
-  //This value represents what percent of time the intake will be at the bottom position (0 to 1), the rest of the time it will be going up and down
+  // This value represents what percent of time the intake will be at the bottom position (0 to 1),
+  // the rest of the time it will be going up and down
   private final LoggedNetworkNumber agitateT = new LoggedNetworkNumber("/Intake/AgitateT", 0.285);
-  //This value represents how smooth the transition between the flat portions and the sin portions will be.
-  // 0 is no transition, 1 is a very smooth transition. 
-  // Non-zero values of C will cause the actual value of T to be higher than it is here, higher values = more T
+  // This value represents how smooth the transition between the flat portions and the sin portions
+  // will be.
+  // 0 is no transition, 1 is a very smooth transition.
+  // Non-zero values of C will cause the actual value of T to be higher than it is here, higher
+  // values = more T
   private final LoggedNetworkNumber agitateC = new LoggedNetworkNumber("/Intake/AgitateC", 1.0);
-  //This value is a multiplier to make the overall sin function go faster.
+  // This value is a multiplier to make the overall sin function go faster.
   private final LoggedNetworkNumber agitateFreq =
       new LoggedNetworkNumber("/Intake/AgitateFreq", 1.0);
+
+  private final LoggedNetworkNumber amplitude =
+      new LoggedNetworkNumber("/Intake/Amplitude", 1.0);
+
   public IntakeState intakeState;
 
   private Rotation2d pivotGoal;
@@ -163,7 +170,7 @@ public class Intake extends SubsystemBase { // TODO: Tunable Numbers as needed
     } else {
       h = z / (1 - t);
     }
-    return 1.0 - h;
+    return 1.0 - amplitude.getAsDouble() * h;
   }
 
   public void setIntakeState(IntakeState state) {

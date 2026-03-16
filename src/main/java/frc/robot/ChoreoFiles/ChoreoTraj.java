@@ -20,7 +20,14 @@ public record ChoreoTraj(
     Pose2d initialPoseBlue,
     Pose2d endPoseBlue
 ) {
-    public static final ChoreoTraj D_BumpAllianceNeutral = new ChoreoTraj(
+    public static final ChoreoTraj C_Climb = new ChoreoTraj(
+	    "C_Climb",
+	    OptionalInt.empty(),
+	    2.01053,
+	    new Pose2d(3.575, 3.75, Rotation2d.fromRadians(3.142)),
+	    new Pose2d(1.7, 3.3, Rotation2d.fromRadians(0))
+	);
+	public static final ChoreoTraj D_BumpAllianceNeutral = new ChoreoTraj(
 	    "D_BumpAllianceNeutral",
 	    OptionalInt.empty(),
 	    1.11273,
@@ -363,13 +370,63 @@ public record ChoreoTraj(
 	    new Pose2d(3.6, 2.5, Rotation2d.fromRadians(1.571)),
 	    new Pose2d(1.5, 0.65, Rotation2d.fromRadians(3.142))
 	);
+	public static final ChoreoTraj H_Shunt_Grab = new ChoreoTraj(
+	    "H_Shunt_Grab",
+	    OptionalInt.empty(),
+	    10.22098,
+	    new Pose2d(3.6, 2.1, Rotation2d.fromRadians(1.571)),
+	    new Pose2d(0.693, 0.594, Rotation2d.fromRadians(3.142))
+	);
+	public static final ChoreoTraj H_Shunt_Grab$0 = new ChoreoTraj(
+	    "H_Shunt_Grab",
+	    OptionalInt.of(0),
+	    1.75453,
+	    new Pose2d(3.6, 2.1, Rotation2d.fromRadians(1.571)),
+	    new Pose2d(6.136, 2.105, Rotation2d.fromRadians(1.571))
+	);
+	public static final ChoreoTraj H_Shunt_Grab$1 = new ChoreoTraj(
+	    "H_Shunt_Grab",
+	    OptionalInt.of(1),
+	    2.67058,
+	    new Pose2d(6.136, 2.105, Rotation2d.fromRadians(1.571)),
+	    new Pose2d(8.263, 0.523, Rotation2d.fromRadians(3.142))
+	);
+	public static final ChoreoTraj H_Shunt_Grab$2 = new ChoreoTraj(
+	    "H_Shunt_Grab",
+	    OptionalInt.of(2),
+	    0.8878399999999997,
+	    new Pose2d(8.263, 0.523, Rotation2d.fromRadians(3.142)),
+	    new Pose2d(5.756, 0.513, Rotation2d.fromRadians(3.142))
+	);
+	public static final ChoreoTraj H_Shunt_Grab$3 = new ChoreoTraj(
+	    "H_Shunt_Grab",
+	    OptionalInt.of(3),
+	    1.1110800000000003,
+	    new Pose2d(5.756, 0.513, Rotation2d.fromRadians(3.142)),
+	    new Pose2d(5.789, 3.388, Rotation2d.fromRadians(1.559))
+	);
+	public static final ChoreoTraj H_Shunt_Grab$4 = new ChoreoTraj(
+	    "H_Shunt_Grab",
+	    OptionalInt.of(4),
+	    1.6139799999999997,
+	    new Pose2d(5.789, 3.388, Rotation2d.fromRadians(1.559)),
+	    new Pose2d(3.2, 2.75, Rotation2d.fromRadians(1.571))
+	);
+	public static final ChoreoTraj H_Shunt_Grab$5 = new ChoreoTraj(
+	    "H_Shunt_Grab",
+	    OptionalInt.of(5),
+	    2.182970000000001,
+	    new Pose2d(3.2, 2.75, Rotation2d.fromRadians(1.571)),
+	    new Pose2d(0.693, 0.594, Rotation2d.fromRadians(3.142))
+	);
 
     /**
      * A map between trajectory names and their corresponding data.
      * This allows for trajectory data to be looked up with strings during runtime.
      */
     public static final Map<String, ChoreoTraj> ALL_TRAJECTORIES = Map.ofEntries(
-    	Map.entry("D_BumpAllianceNeutral", D_BumpAllianceNeutral),
+    	Map.entry("C_Climb", C_Climb),
+		Map.entry("D_BumpAllianceNeutral", D_BumpAllianceNeutral),
 		Map.entry("D_BumpNeutralAlliance", D_BumpNeutralAlliance),
 		Map.entry("D_BUMP_D_Intake_45", D_BUMP_D_Intake_45),
 		Map.entry("D_Depot_D_BUMP", D_Depot_D_BUMP),
@@ -417,7 +474,14 @@ public record ChoreoTraj(
 		Map.entry("H_Partial_1Pass_copy1$3", H_Partial_1Pass_copy1$3),
 		Map.entry("H_Partial_1Pass_copy1$4", H_Partial_1Pass_copy1$4),
 		Map.entry("H_Start_H_BUMP", H_Start_H_BUMP),
-		Map.entry("H_Start_H_HumanPlayer", H_Start_H_HumanPlayer)
+		Map.entry("H_Start_H_HumanPlayer", H_Start_H_HumanPlayer),
+		Map.entry("H_Shunt_Grab", H_Shunt_Grab),
+		Map.entry("H_Shunt_Grab$0", H_Shunt_Grab$0),
+		Map.entry("H_Shunt_Grab$1", H_Shunt_Grab$1),
+		Map.entry("H_Shunt_Grab$2", H_Shunt_Grab$2),
+		Map.entry("H_Shunt_Grab$3", H_Shunt_Grab$3),
+		Map.entry("H_Shunt_Grab$4", H_Shunt_Grab$4),
+		Map.entry("H_Shunt_Grab$5", H_Shunt_Grab$5)
     );
 
     /**

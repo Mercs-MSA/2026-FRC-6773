@@ -241,6 +241,15 @@ public class Shooter extends SubsystemBase {
         });
   }
 
+  public Command startShooterOnce() {
+    return Commands.runOnce(
+        () -> {
+          if (allianceZoneTrigger.getAsBoolean()) setShooterState(ShooterState.SHOOT_HUB);
+          if (leftPassTrigger.getAsBoolean()) setShooterState(ShooterState.SHOOT_PASS_L);
+          if (rightPassTrigger.getAsBoolean()) setShooterState(ShooterState.SHOOT_PASS_R);
+        });
+  }
+
   public Command idleShooter() {
     return Commands.runOnce(
         () -> {
