@@ -121,24 +121,16 @@ public class AutonCommands extends TeleopCommands {
         break;
 
       case "RIGHT_TEST":
-        for (int i = 0; i < 4; i++) {
-          autonCommand.addCommands(getPathCommand("H_Partial_1Pass", i));
-        }
+        autonCommand.addCommands(getAutonCommandSegments("H_Partial_1Pass"));
         break;
       case "RIGHT_FULL_TEST":
-        for (int i = 0; i < 4; i++) {
-          autonCommand.addCommands(getPathCommand("H_Full_1Pass", i));
-        }
+        autonCommand.addCommands(getAutonCommandSegments("H_Full_1Pass"));
         break;
       case "LEFT_FULL_TEST":
-        for (int i = 0; i < 4; i++) {
-          autonCommand.addCommands(getPathCommand("D_Full_1Pass", i));
-        }
+        autonCommand.addCommands(getAutonCommandSegments("D_Full_1Pass"));
         break;
       case "LEFT_TEST":
-        for (int i = 0; i < 4; i++) {
-          autonCommand.addCommands(getPathCommand("D_Partial_1Pass", i));
-        }
+        autonCommand.addCommands(getAutonCommandSegments("D_Partial_1Pass"));
         break;
       default:
         DriverStation.reportError("Big oops: Invalid Start Pos", false);
@@ -166,4 +158,25 @@ public class AutonCommands extends TeleopCommands {
   // Alliance.Blue));
   //                           });
   // }
+
+  public Command getAutonCommandSegments(String overallName) {
+    SequentialCommandGroup command = new SequentialCommandGroup();
+    command.addCommands(getPathCommand(overallName, 0));
+    command.addCommands(intakeCommand(IntakeState.INTAKING));
+
+    command.addCommands(getPathCommand(overallName, 1));
+    command.addCommands(intakeCommand(IntakeState.IDLE));
+
+    command.addCommands(getPathCommand(overallName, 2));
+    command.addCommands(shootCommand());
+
+    command.addCommands(getPathCommand(overallName, 3));
+    command.addCommands(intakeCommand(IntakeState.INTAKING));
+
+    command.addCommands(Commands.waitSeconds(5));
+    command.addCommands(intakeCommand(IntakeState.STOW));
+    command.addCommands(stopShootCommand());
+
+    return command;
+  }
 }

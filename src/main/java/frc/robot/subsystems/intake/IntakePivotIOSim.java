@@ -3,6 +3,7 @@ package frc.robot.subsystems.intake;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.system.plant.LinearSystemId;
+import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.wpilibj.simulation.DCMotorSim;
 import frc.robot.subsystems.intake.IntakeConstants.IntakeSimulationConfiguration;
 import frc.robot.subsystems.intake.IntakeConstants.PivotHardware;
@@ -51,5 +52,10 @@ public class IntakePivotIOSim implements IntakePivotIO {
   @Override
   public void stop() {
     setVoltage(0.0);
+  }
+
+  @Override
+  public Angle getPosition() {
+    return pivotMotor.getAngularPosition();
   }
 }

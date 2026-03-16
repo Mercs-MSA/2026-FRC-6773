@@ -1,10 +1,15 @@
 package frc.robot.subsystems.intake;
 
+import static edu.wpi.first.units.Units.Degrees;
+
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import java.util.function.Supplier;
 import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.Logger;
+import org.littletonrobotics.junction.networktables.LoggedNetworkBoolean;
+import org.littletonrobotics.junction.networktables.LoggedNetworkNumber;
 
 public class Intake extends SubsystemBase { // TODO: Tunable Numbers as needed
   public enum IntakeState {
@@ -38,6 +43,19 @@ public class Intake extends SubsystemBase { // TODO: Tunable Numbers as needed
 
   private final double LINEAR_RETRACTION_TIME = 0.0; // seconds
 
+  // Piecewise agitation parameters (see Desmos: https://www.desmos.com/calculator/ogflv9fvuk)
+  private final LoggedNetworkBoolean usePiecewiseAgitation =
+      new LoggedNetworkBoolean("/Intake/UsePiecewiseAgitation", true);
+
+  //This value represents what percent of time the intake will be at the bottom position (0 to 1), the rest of the time it will be going up and down
+  private final LoggedNetworkNumber agitateT = new LoggedNetworkNumber("/Intake/AgitateT", 0.285);
+  //This value represents how smooth the transition between the flat portions and the sin portions will be.
+  // 0 is no transition, 1 is a very smooth transition. 
+  // Non-zero values of C will cause the actual value of T to be higher than it is here, higher values = more T
+  private final LoggedNetworkNumber agitateC = new LoggedNetworkNumber("/Intake/AgitateC", 1.0);
+  //This value is a multiplier to make the overall sin function go faster.
+  private final LoggedNetworkNumber agitateFreq =
+      new LoggedNetworkNumber("/Intake/AgitateFreq", 1.0);
   public IntakeState intakeState;
 
   private Rotation2d pivotGoal;
@@ -91,15 +109,18 @@ public class Intake extends SubsystemBase { // TODO: Tunable Numbers as needed
 
         double b = IntakeState.IDLE.getPivotPos().getRotations();
 
-        double m = (i - b) / LINEAR_RETRACTION_TIME;
-
         if (x < 0.0) {
           x = 0.0;
         }
-        if (x <= LINEAR_RETRACTION_TIME) {
+        if (LINEAR_RETRACTION_TIME > 0.0 && x <= LINEAR_RETRACTION_TIME) {
+          double m = (i - b) / LINEAR_RETRACTION_TIME;
           pivotGoal = Rotation2d.fromRotations(m * x + b);
+        } else if (usePiecewiseAgitation.get()) {
+          double hVal = piecewiseH(x * agitateFreq.get());
+          pivotGoal = Rotation2d.fromRotations(a * (2 * hVal - 1) + (i - a));
         } else {
-          pivotGoal = Rotation2d.fromRotations(a * Math.cos(1 * Math.PI * x) + (i - a));
+          pivotGoal =
+              Rotation2d.fromRotations(a * Math.cos(agitateFreq.get() * Math.PI * x) + (i - a));
         }
 
         break;
@@ -121,6 +142,28 @@ public class Intake extends SubsystemBase { // TODO: Tunable Numbers as needed
     setRollerVoltage(intakeState.getRollerVol());
 
     Logger.recordOutput("agitate timer", (System.currentTimeMillis() - agitateTimestamp) / 1000);
+    // Logger.recordOutput("Intake/Position", pivotHardware.getPosition().);
+  }
+
+  /** Piecewise smooth agitation waveform H(x) */
+  // @AutoLogOutput(key="INTAKE)
+  private double piecewiseH(double x) {
+    double t = MathUtil.clamp(agitateT.get(), 0.0, 0.999);
+    double c = Math.max(agitateC.get(), 0.001);
+    double epsilon = c * (1 - t);
+    double sinVal = Math.sin(x);
+    double z = sinVal * sinVal - t;
+
+    double h;
+    if (z <= 0) {
+      h = 0;
+    } else if (z < epsilon) {
+      double u = z / epsilon;
+      h = (z / (1 - t)) * (3 * u * u - 2 * u * u * u);
+    } else {
+      h = z / (1 - t);
+    }
+    return 1.0 - h;
   }
 
   public void setIntakeState(IntakeState state) {
@@ -137,6 +180,11 @@ public class Intake extends SubsystemBase { // TODO: Tunable Numbers as needed
 
   public void setRollerVoltage(double voltage) {
     rollerHardware.setVoltage(voltage);
+  }
+
+  @AutoLogOutput(key = "Intake/POSITIONDEGREES")
+  public double getPivotPositionDegrees() {
+    return pivotHardware.getPosition().abs(Degrees);
   }
 
   public void stopRollers() {
