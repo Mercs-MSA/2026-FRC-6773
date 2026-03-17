@@ -60,8 +60,7 @@ public class Intake extends SubsystemBase { // TODO: Tunable Numbers as needed
   private final LoggedNetworkNumber agitateFreq =
       new LoggedNetworkNumber("/Intake/AgitateFreq", 1.0);
 
-  private final LoggedNetworkNumber amplitude =
-      new LoggedNetworkNumber("/Intake/Amplitude", 1.0);
+  private final LoggedNetworkNumber amplitude = new LoggedNetworkNumber("/Intake/Amplitude", 1.0);
 
   public IntakeState intakeState;
 

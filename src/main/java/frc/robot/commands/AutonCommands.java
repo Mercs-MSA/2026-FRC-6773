@@ -17,7 +17,6 @@ import frc.robot.subsystems.shooter.Shooter;
 import frc.robot.subsystems.transfer.Transfer;
 import frc.robot.subsystems.transfer.Transfer.TransferState;
 import java.util.Optional;
-import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 public class AutonCommands extends TeleopCommands {
 
@@ -68,24 +67,6 @@ public class AutonCommands extends TeleopCommands {
     } catch (Exception e) {
       e.printStackTrace();
       return Optional.empty();
-    }
-  }
-
-  private static final String[] AUTO_OPTIONS = {
-    "LEFT_45",
-    "RIGHT_45",
-    "LEFT_FULL",
-    "RIGHT_FULL",
-    "RIGHT_TEST",
-    "LEFT_TEST",
-    "RIGHT_FULL_TEST",
-    "LEFT_FULL_TEST",
-    "SHUNT_LEFT",
-  };
-
-  public void registerAutoOptions(LoggedDashboardChooser<Command> autoChooser) {
-    for (String option : AUTO_OPTIONS) {
-      autoChooser.addOption(option, getAutonomousSequence(option));
     }
   }
 
