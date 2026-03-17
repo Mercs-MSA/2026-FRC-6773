@@ -68,10 +68,7 @@ public class ShooterConstants { // TODO: CLEANUP
   public static final ShooterFlywheelHardware flywheelHardware =
       new ShooterFlywheelHardware(56, 57, 6000d / 4800d);
 
-  public static final ShooterHoodHardware hoodHardware =
-      new ShooterHoodHardware(
-          55, 163.28
-          );
+  public static final ShooterHoodHardware hoodHardware = new ShooterHoodHardware(55, 163.28);
 
   public static final ShooterTurretHardware turretHardware = new ShooterTurretHardware(53, 54, 10d);
 
@@ -94,7 +91,7 @@ public class ShooterConstants { // TODO: CLEANUP
   public static final HoodGains hoodGains = new HoodGains(70, 0, 0, 0.1, 0, 0);
   public static final TurretGains turretGains =
       switch (Constants.currentMode) {
-        case REAL -> new TurretGains(45, 0.0, 0.0, 1.0, 0.0, 0.0); //TODO: kS
+        case REAL -> new TurretGains(20, 0.0, 0.0, 1.0, 0.0, 0.0); // TODO: kS, p = 45
         case SIM -> new TurretGains(5, 0.0, 0.01, 0.0, 0.0, 0.0);
         default -> new TurretGains(0.0, 0.0, 0.0, 0.0, 0.0, 0.0);
       };

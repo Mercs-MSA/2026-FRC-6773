@@ -103,7 +103,10 @@ public class Shooter extends SubsystemBase {
         new Pose2d(
             turretBotPose.getX(),
             turretBotPose.getY(),
-            turretBotPose.getRotation().plus(Rotation2d.fromRotations(getTurretPosition())));
+            turretBotPose
+                .getRotation()
+                .plus(Rotation2d.fromRotations(getTurretPosition()))
+                .plus(Rotation2d.kCCW_Pi_2));
 
     Logger.recordOutput("Shooter/Turret/TurretPose", turretPoseOut);
 
