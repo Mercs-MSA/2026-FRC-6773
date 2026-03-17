@@ -53,7 +53,7 @@ public class IntakeConstants {
 
   public static PivotGains pivotGains =
       new PivotGains(
-          20, // p
+          25, // p
           0, // i
           0, // d
           0, // s

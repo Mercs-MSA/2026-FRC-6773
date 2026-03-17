@@ -127,7 +127,10 @@ public class ShooterTurretCalculator {
       Pose2d robot, Angle fieldRelativeAngle, Angle currentAngle) {
     double angle =
         MathUtil.inputModulus(
-            new Rotation2d(fieldRelativeAngle).minus(robot.getRotation()).getRotations(),
+            new Rotation2d(fieldRelativeAngle)
+                .minus(robot.getRotation())
+                .minus(Rotation2d.fromDegrees(90))
+                .getRotations(),
             -0.5,
             0.5);
     double current = currentAngle.in(Rotations);

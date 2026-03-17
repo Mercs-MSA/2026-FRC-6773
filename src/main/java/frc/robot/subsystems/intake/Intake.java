@@ -49,16 +49,16 @@ public class Intake extends SubsystemBase { // TODO: Tunable Numbers as needed
 
   // This value represents what percent of time the intake will be at the bottom position (0 to 1),
   // the rest of the time it will be going up and down
-  private final LoggedNetworkNumber agitateT = new LoggedNetworkNumber("/Intake/AgitateT", 0.285);
+  private final LoggedNetworkNumber agitateT = new LoggedNetworkNumber("/Intake/AgitateT", 0);
   // This value represents how smooth the transition between the flat portions and the sin portions
   // will be.
   // 0 is no transition, 1 is a very smooth transition.
   // Non-zero values of C will cause the actual value of T to be higher than it is here, higher
   // values = more T
-  private final LoggedNetworkNumber agitateC = new LoggedNetworkNumber("/Intake/AgitateC", 1.0);
+  private final LoggedNetworkNumber agitateC = new LoggedNetworkNumber("/Intake/AgitateC", 0.75);
   // This value is a multiplier to make the overall sin function go faster.
   private final LoggedNetworkNumber agitateFreq =
-      new LoggedNetworkNumber("/Intake/AgitateFreq", 1.0);
+      new LoggedNetworkNumber("/Intake/AgitateFreq", 16.0);
 
   private final LoggedNetworkNumber amplitude = new LoggedNetworkNumber("/Intake/Amplitude", 1.0);
 

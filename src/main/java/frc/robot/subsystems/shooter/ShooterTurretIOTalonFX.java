@@ -61,7 +61,7 @@ public class ShooterTurretIOTalonFX implements ShooterTurretIO {
     turretCANcoder = new CANcoder(hardware.cancoderID(), canbus);
 
     canCoderConfiguration.MagnetSensor.SensorDirection =
-        SensorDirectionValue.CounterClockwise_Positive; 
+        SensorDirectionValue.CounterClockwise_Positive;
     canCoderConfiguration.MagnetSensor.MagnetOffset = -0.2080078125; // DO NOT CHANGE THIS
     // PLEAASEE
     canCoderConfiguration.MagnetSensor.AbsoluteSensorDiscontinuityPoint = 0.5;
