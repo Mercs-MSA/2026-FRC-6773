@@ -11,8 +11,8 @@ import edu.wpi.first.units.measure.AngularVelocity;
 import frc.robot.constants.Constants;
 
 public class ShooterConstants { // TODO: CLEANUP
-  public static final Rotation2d turretMaxLimit = Rotation2d.fromDegrees(180);
-  public static final Rotation2d turretMinLimit = Rotation2d.fromDegrees(-180);
+  public static final Rotation2d turretMaxLimit = Rotation2d.fromDegrees(182);
+  public static final Rotation2d turretMinLimit = Rotation2d.fromDegrees(-182);
 
   public static final Rotation2d turretPositionTolerance = new Rotation2d(Math.toRadians(0.5));
 
@@ -92,7 +92,7 @@ public class ShooterConstants { // TODO: CLEANUP
   public static final TurretGains turretGains =
       switch (Constants.currentMode) {
         case REAL -> new TurretGains(20, 0.0, 0.0, 1.0, 0.0, 0.0); // TODO: kS, p = 45
-        case SIM -> new TurretGains(5, 0.0, 0.01, 0.0, 0.0, 0.0);
+        case SIM -> new TurretGains(5, 0.0, 0.01, 0.0, 5.0, 0.0);
         default -> new TurretGains(0.0, 0.0, 0.0, 0.0, 0.0, 0.0);
       };
 

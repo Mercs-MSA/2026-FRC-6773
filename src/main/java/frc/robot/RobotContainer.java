@@ -147,7 +147,9 @@ public class RobotContainer {
                     IntakeConstants.pivotHardware,
                     IntakeConstants.pivotGains,
                     IntakeConstants.kPivotMotorConfiguration,
-                    IntakeConstants.kStatusSignalUpdateFrequencyHz));
+                    IntakeConstants.kStatusSignalUpdateFrequencyHz),
+                    drive::getPose,
+                    drive::getFieldVelocity);
         indexer =
             new Indexer(
                 new IndexerSpindexerIOTalonFX(
@@ -208,7 +210,9 @@ public class RobotContainer {
                 new IntakePivotIOSim(
                     0.02,
                     IntakeConstants.pivotHardware,
-                    IntakeConstants.pivotSimulationConfiguration));
+                    IntakeConstants.pivotSimulationConfiguration),
+                    drive::getPose,
+                    drive::getFieldVelocity);
         indexer =
             new Indexer(
                 new IndexerSpindexerIOSim(
@@ -250,7 +254,7 @@ public class RobotContainer {
                 // RobotState.getInstance()::addVisionObservation,
                 drive::addVisionMeasurement, new VisionIO() {}, new VisionIO() {});
 
-        intake = new Intake(null, null);
+        intake = new Intake(null, null, null, null);
         indexer = new Indexer(null, null);
         transfer = new Transfer(null);
         shooter = new Shooter(null, null, null, null, null);
