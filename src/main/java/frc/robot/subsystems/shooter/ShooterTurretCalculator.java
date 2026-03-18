@@ -46,31 +46,31 @@ public class ShooterTurretCalculator {
   public static final InterpolatingDoubleTreeMap TOF_MAP = new InterpolatingDoubleTreeMap();
 
   static {
-    SHOT_MAP.put(5.5, new ShotData(RPM.of(75 * 60), Degrees.of(20)));
+    SHOT_MAP.put(5.5, new ShotData(RPM.of(72 * 60), Degrees.of(20)));
     TOF_MAP.put(5.5, 1.31);
 
-    SHOT_MAP.put(5.18, new ShotData(RPM.of(70 * 60), Degrees.of(20)));
+    SHOT_MAP.put(5.18, new ShotData(RPM.of(67 * 60), Degrees.of(20)));
     TOF_MAP.put(5.18, 1.4);
 
-    SHOT_MAP.put(4.55, new ShotData(RPM.of(70 * 60), Degrees.of(18)));
+    SHOT_MAP.put(4.55, new ShotData(RPM.of(67 * 60), Degrees.of(18)));
     TOF_MAP.put(4.55, 1.420);
 
-    SHOT_MAP.put(4.082, new ShotData(RPM.of(65 * 60), Degrees.of(16)));
+    SHOT_MAP.put(4.082, new ShotData(RPM.of(62 * 60), Degrees.of(16)));
     TOF_MAP.put(4.082, 1.32);
 
-    SHOT_MAP.put(3.483, new ShotData(RPM.of(60 * 60), Degrees.of(14)));
+    SHOT_MAP.put(3.483, new ShotData(RPM.of(57 * 60), Degrees.of(14)));
     TOF_MAP.put(3.483, 1.28);
 
-    SHOT_MAP.put(3.022, new ShotData(RPM.of(60 * 60), Degrees.of(12)));
+    SHOT_MAP.put(3.022, new ShotData(RPM.of(57 * 60), Degrees.of(12)));
     TOF_MAP.put(3.022, 1.3676767);
 
-    SHOT_MAP.put(2.58, new ShotData(RPM.of(55 * 60), Degrees.of(10)));
+    SHOT_MAP.put(2.58, new ShotData(RPM.of(52 * 60), Degrees.of(10)));
     TOF_MAP.put(2.58, 1.29);
 
-    SHOT_MAP.put(2.012, new ShotData(RPM.of(55 * 60), Degrees.of(2)));
+    SHOT_MAP.put(2.012, new ShotData(RPM.of(52 * 60), Degrees.of(2)));
     TOF_MAP.put(2.012, 1.25);
 
-    SHOT_MAP.put(1.5, new ShotData(RPM.of(50 * 60), Degrees.of(0)));
+    SHOT_MAP.put(1.5, new ShotData(RPM.of(47 * 60), Degrees.of(0)));
     TOF_MAP.put(1.5, 1.23);
   }
 

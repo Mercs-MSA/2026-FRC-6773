@@ -39,8 +39,8 @@ public class DriveConstants {
           .withKP(15)
           .withKI(0)
           .withKD(0.1)
-          .withKS(2.84737)
-          .withKV(1.20109) // TODO: Make pidf tunablenumbers in
+          .withKS(3.65467)
+          .withKV(0.93886) // TODO: Make pidf tunablenumbers in
           .withKA(0.05);
   // The closed-loop output type to use for the steer motors;
   // This affects the PID/FF gains for the steer motors
@@ -95,7 +95,7 @@ public class DriveConstants {
 
   private static final double kDriveGearRatio = 6.026785714285714;
   private static final double kSteerGearRatio = 26.09090909090909;
-  private static final Distance kWheelRadius = Inches.of(1.719);
+  private static final Distance kWheelRadius = Inches.of(1.79);
 
   private static final double trackWidthX = 21.5;
   private static final double trackWidthY = 21.5;
