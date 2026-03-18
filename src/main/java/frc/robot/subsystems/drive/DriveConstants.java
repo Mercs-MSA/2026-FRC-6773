@@ -177,7 +177,7 @@ public class DriveConstants {
   private static final int kBackLeftDriveMotorId = 13;
   private static final int kBackLeftSteerMotorId = 23;
   private static final int kBackLeftEncoderId = 33;
-  private static final Angle kBackLeftEncoderOffset = Rotations.of(0.31787109375);
+  private static final Angle kBackLeftEncoderOffset = Rotations.of(-0.1728515625);
   private static final boolean kBackLeftSteerMotorInverted = false;
   private static final boolean kBackLeftEncoderInverted = false;
 

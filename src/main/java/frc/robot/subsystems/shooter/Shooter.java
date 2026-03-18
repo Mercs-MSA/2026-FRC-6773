@@ -35,8 +35,9 @@ public class Shooter extends SubsystemBase {
 
   public enum ShooterState {
     STOW,
-    IDLE,
     IDLE_HUB,
+    IDLE_L,
+    IDLE_R,
     SHOOT_PASS_L,
     SHOOT_PASS_R,
     SHOOT_HUB,
@@ -81,8 +82,8 @@ public class Shooter extends SubsystemBase {
     leftPassTrigger = ZoneUtil.LEFT_PASS_ZONE.contains(poseSupplier);
 
     allianceZoneTrigger.onTrue(Commands.runOnce(() -> setShooterState(ShooterState.IDLE_HUB)));
-    rightPassTrigger.onTrue(Commands.runOnce(() -> setShooterState(ShooterState.IDLE)));
-    leftPassTrigger.onTrue(Commands.runOnce(() -> setShooterState(ShooterState.IDLE)));
+    rightPassTrigger.onTrue(Commands.runOnce(() -> setShooterState(ShooterState.IDLE_R)));
+    leftPassTrigger.onTrue(Commands.runOnce(() -> setShooterState(ShooterState.IDLE_L)));
     // TODO: visualizer
   }
 
@@ -126,10 +127,36 @@ public class Shooter extends SubsystemBase {
         hoodAngle = Rotation2d.kZero;
         flywheelVel = 0.0;
         break;
-      case IDLE:
-        azimuthAngle = Rotations.of(getTurretPosition());
-        azimuthVelocity = RadiansPerSecond.of(0);
-        hoodAngle = getHoodPosition();
+      case IDLE_L:
+        calculatedShot =
+            ShooterTurretCalculator.iterativeMovingShotFromMap(
+                robotPose,
+                fieldSpeeds,
+                FieldConstants.Hub.topCenterPoint.plus(new Translation3d(-2.5, 3, -1.2)),
+                2);
+        azimuthAngle =
+            ShooterTurretCalculator.calculateAzimuthAngle(
+                robotPose,
+                calculatedShot.target(),
+                Angle.ofBaseUnits(getTurretPosition(), Rotations));
+        azimuthVelocity = RadiansPerSecond.of(-fieldSpeeds.omegaRadiansPerSecond);
+        hoodAngle = Rotation2d.fromDegrees(calculatedShot.getHoodAngle().in(Degrees));
+        flywheelVel = 8.0;
+        break;
+      case IDLE_R:
+        calculatedShot =
+            ShooterTurretCalculator.iterativeMovingShotFromMap(
+                robotPose,
+                fieldSpeeds,
+                FieldConstants.Hub.topCenterPoint.plus(new Translation3d(-2.5, -3, -1.2)),
+                2);
+        azimuthAngle =
+            ShooterTurretCalculator.calculateAzimuthAngle(
+                robotPose,
+                calculatedShot.target(),
+                Angle.ofBaseUnits(getTurretPosition(), Rotations));
+        azimuthVelocity = RadiansPerSecond.of(-fieldSpeeds.omegaRadiansPerSecond);
+        hoodAngle = Rotation2d.fromDegrees(calculatedShot.getHoodAngle().in(Degrees));
         flywheelVel = 8.0;
         break;
       case IDLE_HUB:
@@ -166,7 +193,7 @@ public class Shooter extends SubsystemBase {
             ShooterTurretCalculator.iterativeMovingShotFromMap(
                 robotPose,
                 fieldSpeeds,
-                FieldConstants.Hub.topCenterPoint.plus(new Translation3d(0, 3, 0)),
+                FieldConstants.Hub.topCenterPoint.plus(new Translation3d(-2.5, 3, -1.2)),
                 2);
         azimuthAngle =
             ShooterTurretCalculator.calculateAzimuthAngle(
@@ -185,7 +212,7 @@ public class Shooter extends SubsystemBase {
             ShooterTurretCalculator.iterativeMovingShotFromMap(
                 robotPose,
                 fieldSpeeds,
-                FieldConstants.Hub.topCenterPoint.plus(new Translation3d(0, -3, 0)),
+                FieldConstants.Hub.topCenterPoint.plus(new Translation3d(-2.5, -3, -1.2)),
                 2);
         azimuthAngle =
             ShooterTurretCalculator.calculateAzimuthAngle(
@@ -257,8 +284,8 @@ public class Shooter extends SubsystemBase {
     return Commands.runOnce(
         () -> {
           if (allianceZoneTrigger.getAsBoolean()) setShooterState(ShooterState.IDLE_HUB);
-          if (leftPassTrigger.getAsBoolean()) setShooterState(ShooterState.IDLE);
-          if (rightPassTrigger.getAsBoolean()) setShooterState(ShooterState.IDLE);
+          if (leftPassTrigger.getAsBoolean()) setShooterState(ShooterState.IDLE_L);
+          if (rightPassTrigger.getAsBoolean()) setShooterState(ShooterState.IDLE_R);
         });
   }
 
