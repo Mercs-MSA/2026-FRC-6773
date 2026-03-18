@@ -11,7 +11,6 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.util.ZoneUtil;
-
 import java.util.function.Supplier;
 import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.Logger;
@@ -44,7 +43,8 @@ public class Intake extends SubsystemBase { // TODO: Tunable Numbers as needed
     }
   }
 
-  private final double HOPPER_RETRACTION_POINT = IntakeState.INTAKING.getPivotPos().getRotations(); // rotations
+  private final double HOPPER_RETRACTION_POINT =
+      IntakeState.INTAKING.getPivotPos().getRotations(); // rotations
 
   private final double AGITATE_AMPLITUDE = 0.085; // rotations
 
@@ -52,8 +52,8 @@ public class Intake extends SubsystemBase { // TODO: Tunable Numbers as needed
 
   // Piecewise agitation parameters (see Desmos:
   // https://www.desmos.com/calculator/ogflv9fvuk)
-  private final LoggedNetworkBoolean usePiecewiseAgitation = new LoggedNetworkBoolean("/Intake/UsePiecewiseAgitation",
-      true);
+  private final LoggedNetworkBoolean usePiecewiseAgitation =
+      new LoggedNetworkBoolean("/Intake/UsePiecewiseAgitation", true);
 
   // This value represents what percent of time the intake will be at the bottom
   // position (0 to 1),
@@ -68,7 +68,8 @@ public class Intake extends SubsystemBase { // TODO: Tunable Numbers as needed
   // values = more T
   private final LoggedNetworkNumber agitateC = new LoggedNetworkNumber("/Intake/AgitateC", 0.75);
   // This value is a multiplier to make the overall sin function go faster.
-  private final LoggedNetworkNumber agitateFreq = new LoggedNetworkNumber("/Intake/AgitateFreq", 16.0);
+  private final LoggedNetworkNumber agitateFreq =
+      new LoggedNetworkNumber("/Intake/AgitateFreq", 16.0);
 
   private final LoggedNetworkNumber amplitude = new LoggedNetworkNumber("/Intake/Amplitude", 1.0);
 
@@ -88,7 +89,10 @@ public class Intake extends SubsystemBase { // TODO: Tunable Numbers as needed
   private final IntakePivotIO pivotHardware;
   private final IntakePivotIOInputsAutoLogged pivotInputs = new IntakePivotIOInputsAutoLogged();
 
-  public Intake(IntakeRollerIO rollerIO, IntakePivotIO pivotIO, Supplier<Pose2d> poseSupplier,
+  public Intake(
+      IntakeRollerIO rollerIO,
+      IntakePivotIO pivotIO,
+      Supplier<Pose2d> poseSupplier,
       Supplier<ChassisSpeeds> fieldSpeedsSupplier) {
     rollerHardware = rollerIO;
     pivotHardware = pivotIO;
@@ -147,7 +151,8 @@ public class Intake extends SubsystemBase { // TODO: Tunable Numbers as needed
           double hVal = piecewiseH(x * agitateFreq.get());
           pivotGoal = Rotation2d.fromRotations(a * (2 * hVal - 1) + (i - a));
         } else {
-          pivotGoal = Rotation2d.fromRotations(a * Math.cos(agitateFreq.get() * Math.PI * x) + (i - a));
+          pivotGoal =
+              Rotation2d.fromRotations(a * Math.cos(agitateFreq.get() * Math.PI * x) + (i - a));
         }
 
         break;

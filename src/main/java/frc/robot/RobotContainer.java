@@ -148,8 +148,8 @@ public class RobotContainer {
                     IntakeConstants.pivotGains,
                     IntakeConstants.kPivotMotorConfiguration,
                     IntakeConstants.kStatusSignalUpdateFrequencyHz),
-                    drive::getPose,
-                    drive::getFieldVelocity);
+                drive::getPose,
+                drive::getFieldVelocity);
         indexer =
             new Indexer(
                 new IndexerSpindexerIOTalonFX(
@@ -211,8 +211,8 @@ public class RobotContainer {
                     0.02,
                     IntakeConstants.pivotHardware,
                     IntakeConstants.pivotSimulationConfiguration),
-                    drive::getPose,
-                    drive::getFieldVelocity);
+                drive::getPose,
+                drive::getFieldVelocity);
         indexer =
             new Indexer(
                 new IndexerSpindexerIOSim(

@@ -149,6 +149,9 @@ public class ShooterTurretCalculator {
     double predictedX = target.getX() - fieldSpeeds.vxMetersPerSecond * timeOfFlight.in(Seconds);
     double predictedY = target.getY() - fieldSpeeds.vyMetersPerSecond * timeOfFlight.in(Seconds);
 
+    Logger.recordOutput(
+        "Turret/lookAheadPose", new Pose2d(predictedX, predictedY, Rotation2d.kZero));
+
     return new Translation3d(predictedX, predictedY, target.getZ());
   }
 
