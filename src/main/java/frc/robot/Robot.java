@@ -97,6 +97,7 @@ public class Robot extends LoggedRobot {
   public void disabledInit() {
     // robotContainer.resetState();
     // robotContainer.updateManager();
+    robotContainer.resetSubsystems();
   }
 
   /** This function is called periodically when disabled. */

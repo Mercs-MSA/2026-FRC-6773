@@ -9,8 +9,11 @@ import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
+import frc.robot.ChoreoFiles.ChoreoTraj;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.indexer.Indexer;
+import frc.robot.subsystems.indexer.Indexer.IndexerState;
 import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.intake.Intake.IntakeState;
 import frc.robot.subsystems.shooter.Shooter;
@@ -123,6 +126,11 @@ public class AutonCommands extends TeleopCommands {
         break;
 
       case "RIGHT_TEST":
+        autonCommand.addCommands(
+            Commands.runOnce(
+                () -> {
+                  drive.setPose(ChoreoTraj.H_Partial_1Pass.initialPoseBlue());
+                }));
         autonCommand.addCommands(getAutonCommandSegments("H_Partial_1Pass"));
         break;
       case "RIGHT_FULL_TEST":
@@ -132,6 +140,11 @@ public class AutonCommands extends TeleopCommands {
         autonCommand.addCommands(getAutonCommandSegments("D_Full_1Pass"));
         break;
       case "LEFT_TEST":
+        autonCommand.addCommands(
+            Commands.runOnce(
+                () -> {
+                  drive.setPose(ChoreoTraj.D_Partial_1Pass.initialPoseBlue());
+                }));
         autonCommand.addCommands(getAutonCommandSegments("D_Partial_1Pass"));
         break;
       case "SHUNT_LEFT":
@@ -177,6 +190,7 @@ public class AutonCommands extends TeleopCommands {
 
   public Command getAutonCommandSegments(String overallName) {
     SequentialCommandGroup command = new SequentialCommandGroup();
+
     command.addCommands(getPathCommand(overallName, 0));
     command.addCommands(intakeCommand(IntakeState.INTAKING));
 
@@ -184,14 +198,22 @@ public class AutonCommands extends TeleopCommands {
     command.addCommands(intakeCommand(IntakeState.IDLE));
 
     command.addCommands(getPathCommand(overallName, 2));
+    command.addCommands(
+        Commands.runOnce(
+            () -> {
+              drive.stop();
+            }));
+    command.addCommands(stopShootCommand());
+    command.addCommands(new WaitCommand(3));
+    command.addCommands(indexCommand(IndexerState.INDEXING));
     command.addCommands(shootCommand());
 
-    command.addCommands(getPathCommand(overallName, 3));
-    command.addCommands(intakeCommand(IntakeState.INTAKING));
+    // command.addCommands(getPathCommand(overallName, 3));
+    // command.addCommands(intakeCommand(IntakeState.INTAKING));
 
-    command.addCommands(Commands.waitSeconds(5));
-    command.addCommands(intakeCommand(IntakeState.STOW));
-    command.addCommands(stopShootCommand());
+    // command.addCommands(Commands.waitSeconds(5));
+    // command.addCommands(intakeCommand(IntakeState.STOW));
+    // command.addCommands(stopShootCommand());
 
     return command;
   }

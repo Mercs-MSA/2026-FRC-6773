@@ -51,6 +51,7 @@ import frc.robot.subsystems.intake.IntakePivotIOTalonFX;
 import frc.robot.subsystems.intake.IntakeRollerIOSim;
 import frc.robot.subsystems.intake.IntakeRollerIOTalonFX;
 import frc.robot.subsystems.shooter.Shooter;
+import frc.robot.subsystems.shooter.Shooter.ShooterState;
 import frc.robot.subsystems.shooter.ShooterConstants;
 import frc.robot.subsystems.shooter.ShooterFlywheelIOSim;
 import frc.robot.subsystems.shooter.ShooterFlywheelIOTalonFX;
@@ -59,6 +60,7 @@ import frc.robot.subsystems.shooter.ShooterHoodIOTalonFX;
 import frc.robot.subsystems.shooter.ShooterTurretIOSim;
 import frc.robot.subsystems.shooter.ShooterTurretIOTalonFX;
 import frc.robot.subsystems.transfer.Transfer;
+import frc.robot.subsystems.transfer.Transfer.TransferState;
 import frc.robot.subsystems.transfer.TransferConstants;
 import frc.robot.subsystems.transfer.TransferIOSim;
 import frc.robot.subsystems.transfer.TransferIOTalonFX;
@@ -419,5 +421,12 @@ public class RobotContainer {
         return val * 3.0 + ClimbConstants.descendClimbVoltage;
       }
     };
+  }
+
+  public void resetSubsystems() {
+    shooter.setShooterState(ShooterState.STOW);
+    intake.setIntakeState(IntakeState.STOW);
+    indexer.setIndexerState(IndexerState.IDLE);
+    transfer.setTransferState(TransferState.IDLE);
   }
 }
