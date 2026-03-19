@@ -46,7 +46,7 @@ public class ShooterTurretCalculator {
   public static final InterpolatingDoubleTreeMap TOF_MAP = new InterpolatingDoubleTreeMap();
 
   static {
-    SHOT_MAP.put(5.5, new ShotData(RPM.of(72 * 60), Degrees.of(20)));
+    SHOT_MAP.put(5.5, new ShotData(RPM.of(71 * 60), Degrees.of(20)));
     TOF_MAP.put(5.5, 1.31);
 
     SHOT_MAP.put(5.18, new ShotData(RPM.of(67 * 60), Degrees.of(20)));
@@ -55,7 +55,7 @@ public class ShooterTurretCalculator {
     SHOT_MAP.put(4.55, new ShotData(RPM.of(67 * 60), Degrees.of(18)));
     TOF_MAP.put(4.55, 1.420);
 
-    SHOT_MAP.put(4.082, new ShotData(RPM.of(62 * 60), Degrees.of(16)));
+    SHOT_MAP.put(4.082, new ShotData(RPM.of(64 * 60), Degrees.of(16)));
     TOF_MAP.put(4.082, 1.32);
 
     SHOT_MAP.put(3.483, new ShotData(RPM.of(57 * 60), Degrees.of(14)));

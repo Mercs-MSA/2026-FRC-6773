@@ -131,7 +131,7 @@ public class AutonCommands extends TeleopCommands {
                 () -> {
                   drive.setPose(ChoreoTraj.H_Partial_1Pass.initialPoseBlue());
                 }));
-        autonCommand.addCommands(getAutonCommandSegments("H_Partial_1Pass"));
+        autonCommand.addCommands(humanPlayerAuton("H_Partial_1Pass"));
         break;
       case "RIGHT_FULL_TEST":
         autonCommand.addCommands(getAutonCommandSegments("H_Full_1Pass"));
@@ -204,10 +204,53 @@ public class AutonCommands extends TeleopCommands {
               drive.stop();
             }));
     command.addCommands(stopShootCommand());
-    command.addCommands(new WaitCommand(3));
+    command.addCommands(new WaitCommand(1.5));
     command.addCommands(indexCommand(IndexerState.INDEXING));
     command.addCommands(shootCommand());
 
+    // command.addCommands(getPathCommand(overallName, 3));
+    // command.addCommands(intakeCommand(IntakeState.INTAKING));
+
+    // command.addCommands(Commands.waitSeconds(5));
+    // command.addCommands(intakeCommand(IntakeState.STOW));
+    // command.addCommands(stopShootCommand());
+
+    return command;
+  }
+
+  public Command humanPlayerAuton(String name) {
+    SequentialCommandGroup command = new SequentialCommandGroup();
+
+    command.addCommands(getPathCommand(name, 0));
+    command.addCommands(intakeCommand(IntakeState.INTAKING));
+
+    command.addCommands(getPathCommand(name, 1));
+    command.addCommands(intakeCommand(IntakeState.IDLE));
+
+    command.addCommands(getPathCommand(name, 2));
+    // command.addCommands(
+    //     Commands.runOnce(
+    //         () -> {
+    //           drive.stop();
+    //         }));
+    command.addCommands(intakeCommand(IntakeState.INTAKING));
+    command.addCommands(
+        Commands.parallel(
+            new WaitCommand(0.5)
+                .andThen(indexCommand(IndexerState.INDEXING).andThen(shootCommand())),
+            stopShootCommand(),
+            getPathCommand(name, 3)
+                .andThen(
+                    Commands.runOnce(
+                        () -> {
+                          drive.stop();
+                        }))));
+    // command.addCommands(getPathCommand(name, 3));
+    // command.addCommands(
+    //     Commands.runOnce(
+    //         () -> {
+    //           drive.stop();
+    //         }));
     // command.addCommands(getPathCommand(overallName, 3));
     // command.addCommands(intakeCommand(IntakeState.INTAKING));
 
