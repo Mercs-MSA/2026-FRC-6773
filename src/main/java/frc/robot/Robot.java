@@ -28,6 +28,8 @@ public class Robot extends LoggedRobot {
   private Command autonomousCommand;
   private RobotContainer robotContainer;
 
+  private boolean justFinishedAuto = false;
+
   public Robot() {
     // Record metadata
     Logger.recordMetadata("ProjectName", BuildConstants.MAVEN_NAME);
@@ -97,7 +99,10 @@ public class Robot extends LoggedRobot {
   public void disabledInit() {
     // robotContainer.resetState();
     // robotContainer.updateManager();
-    robotContainer.resetSubsystems();
+    if (justFinishedAuto) {
+      justFinishedAuto = false;
+      robotContainer.resetSubsystems();
+    }
   }
 
   /** This function is called periodically when disabled. */
@@ -107,6 +112,7 @@ public class Robot extends LoggedRobot {
   /** This autonomous runs the autonomous command selected by your {@link RobotContainer} class. */
   @Override
   public void autonomousInit() {
+    justFinishedAuto = true;
     autonomousCommand = robotContainer.getAutonomousCommand();
 
     // schedule the autonomous command (example)
@@ -124,6 +130,7 @@ public class Robot extends LoggedRobot {
   /** This function is called once when teleop is enabled. */
   @Override
   public void teleopInit() {
+    justFinishedAuto = false;
     // This makes sure that the autonomous stops running when
     // teleop starts running. If you want the autonomous to
     // continue until interrupted by another command, remove

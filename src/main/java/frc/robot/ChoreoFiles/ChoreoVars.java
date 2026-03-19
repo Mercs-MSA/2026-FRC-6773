@@ -10,7 +10,7 @@ import edu.wpi.first.units.measure.*;
  * change these values in the Choreo GUI.
  */
 public final class ChoreoVars {
-  public static final LinearVelocity SpeedOverBump = Units.MetersPerSecond.of(2.25);
+  public static final LinearVelocity SpeedOverBump = Units.MetersPerSecond.of(2);
   public static final LinearVelocity SpeedThroughBalls = Units.MetersPerSecond.of(4);
   public static final double WINDBACK_DIST = 2.6;
 

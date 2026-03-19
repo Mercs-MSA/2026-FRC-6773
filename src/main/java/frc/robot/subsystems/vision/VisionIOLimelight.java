@@ -7,6 +7,8 @@
 
 package frc.robot.subsystems.vision;
 
+import static frc.robot.subsystems.vision.VisionConstants.*;
+
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
@@ -26,6 +28,8 @@ import java.util.function.Supplier;
 public class VisionIOLimelight implements VisionIO {
   private final Supplier<Rotation2d> rotationSupplier;
   private final DoubleArrayPublisher orientationPublisher;
+  private final DoubleArrayPublisher fiducialIdFilterPublisher;
+  private final double[] validFiducialIds;
 
   private final DoubleSubscriber latencySubscriber;
   private final DoubleSubscriber txSubscriber;
@@ -49,6 +53,19 @@ public class VisionIOLimelight implements VisionIO {
     megatag1Subscriber = table.getDoubleArrayTopic("botpose_wpiblue").subscribe(new double[] {});
     megatag2Subscriber =
         table.getDoubleArrayTopic("botpose_orb_wpiblue").subscribe(new double[] {});
+
+    // Set up fiducial ID filtering
+    fiducialIdFilterPublisher = table.getDoubleArrayTopic("fiducial_id_filters_set").publish();
+    if (!ignoredTagIds.isEmpty()) {
+      validFiducialIds =
+          aprilTagLayout.getTags().stream()
+              .mapToInt(tag -> tag.ID)
+              .filter(id -> !ignoredTagIds.contains(id))
+              .mapToDouble(id -> (double) id)
+              .toArray();
+    } else {
+      validFiducialIds = new double[0];
+    }
   }
 
   @Override
@@ -66,6 +83,9 @@ public class VisionIOLimelight implements VisionIO {
     // Update orientation for MegaTag 2
     orientationPublisher.accept(
         new double[] {rotationSupplier.get().getDegrees(), 0.0, 0.0, 0.0, 0.0, 0.0});
+    if (validFiducialIds.length > 0) {
+      fiducialIdFilterPublisher.accept(validFiducialIds);
+    }
     NetworkTableInstance.getDefault()
         .flush(); // Increases network traffic but recommended by Limelight
 
@@ -74,9 +94,15 @@ public class VisionIOLimelight implements VisionIO {
     List<PoseObservation> poseObservations = new LinkedList<>();
     for (var rawSample : megatag1Subscriber.readQueue()) {
       if (rawSample.value.length == 0) continue;
+      boolean hasValidTag = false;
       for (int i = 11; i < rawSample.value.length; i += 7) {
-        tagIds.add((int) rawSample.value[i]);
+        int tagId = (int) rawSample.value[i];
+        if (!ignoredTagIds.contains(tagId)) {
+          tagIds.add(tagId);
+          hasValidTag = true;
+        }
       }
+      if (!hasValidTag && !ignoredTagIds.isEmpty()) continue;
       poseObservations.add(
           new PoseObservation(
               // Timestamp, based on server timestamp of publish and latency
@@ -100,9 +126,15 @@ public class VisionIOLimelight implements VisionIO {
     }
     for (var rawSample : megatag2Subscriber.readQueue()) {
       if (rawSample.value.length == 0) continue;
+      boolean hasValidTag = false;
       for (int i = 11; i < rawSample.value.length; i += 7) {
-        tagIds.add((int) rawSample.value[i]);
+        int tagId = (int) rawSample.value[i];
+        if (!ignoredTagIds.contains(tagId)) {
+          tagIds.add(tagId);
+          hasValidTag = true;
+        }
       }
+      if (!hasValidTag && !ignoredTagIds.isEmpty()) continue;
       poseObservations.add(
           new PoseObservation(
               // Timestamp, based on server timestamp of publish and latency

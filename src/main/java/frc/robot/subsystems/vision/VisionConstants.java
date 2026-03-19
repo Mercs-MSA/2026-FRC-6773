@@ -9,6 +9,7 @@ package frc.robot.subsystems.vision;
 
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFields;
+import java.util.Set;
 // import edu.wpi.first.math.geometry.Rotation3d;
 // import edu.wpi.first.math.geometry.Transform3d;
 
@@ -21,6 +22,9 @@ public class VisionConstants {
   public static String camera0Name = "limelight-top";
   public static String camera1Name = "limelight-back";
   public static String camera2Name = "limelight-right";
+
+  // Tag IDs to ignore for pose estimation (leave empty to use all tags)
+  public static Set<Integer> ignoredTagIds = Set.of(26, 23, 31, 32, 30, 29);
 
   // Robot to camera transforms
   // (Not used by Limelight, configure in web UI instead)

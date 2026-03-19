@@ -30,7 +30,7 @@
     {"from":"last", "to":null, "data":{"type":"StopPoint", "props":{}}, "enabled":false},
     {"from":"first", "to":"last", "data":{"type":"KeepInRectangle", "props":{"x":{"exp":"0 m", "val":0.0}, "y":{"exp":"0 m", "val":0.0}, "w":{"exp":"16.541 m", "val":16.541}, "h":{"exp":"8.0692 m", "val":8.0692}}}, "enabled":false},
     {"from":0, "to":2, "data":{"type":"KeepInLane", "props":{"tolerance":{"exp":"0.01 m", "val":0.01}}}, "enabled":false},
-    {"from":3, "to":"last", "data":{"type":"MaxVelocity", "props":{"max":{"exp":"SpeedOverBump", "val":2.25}}}, "enabled":true},
+    {"from":3, "to":"last", "data":{"type":"MaxVelocity", "props":{"max":{"exp":"SpeedOverBump", "val":2.0}}}, "enabled":true},
     {"from":4, "to":"last", "data":{"type":"MaxAngularVelocity", "props":{"max":{"exp":"0 rad / s", "val":0.0}}}, "enabled":true},
     {"from":0, "to":2, "data":{"type":"KeepInRectangle", "props":{"x":{"exp":"-22.80442789196968 mm", "val":-0.02280442789196968}, "y":{"exp":"0 m", "val":0.0}, "w":{"exp":"8.26408450677991 m", "val":8.26408450677991}, "h":{"exp":"7.1108399629592896 m", "val":7.1108399629592896}}}, "enabled":true}],
   "targetDt":{

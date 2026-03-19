@@ -21,9 +21,9 @@ public class Intake extends SubsystemBase { // TODO: Tunable Numbers as needed
   public enum IntakeState {
     STOW(() -> Rotation2d.fromRotations(0.0), 0),
     IDLE(() -> Rotation2d.fromRotations(0.23), 0),
-    BUMP(() -> Rotation2d.fromRotations(0.16), -12),
+    BUMP(() -> Rotation2d.fromRotations(0.16), -7),
     AGITATE(() -> Rotation2d.fromRotations(0.0), -5),
-    INTAKING(() -> Rotation2d.fromRotations(0.23), -12),
+    INTAKING(() -> Rotation2d.fromRotations(0.23), -7),
     OUTTAKING(() -> Rotation2d.fromRotations(0.23), 12);
 
     private Supplier<Rotation2d> pivotPos;
@@ -100,7 +100,12 @@ public class Intake extends SubsystemBase { // TODO: Tunable Numbers as needed
 
     bumpTrigger =
         ZoneUtil.BUMP_ZONES.willContain(poseSupplier, fieldSpeedsSupplier, Seconds.of(0.3));
-    bumpTrigger.onTrue(Commands.runOnce(() -> setIntakeState(IntakeState.BUMP)));
+    bumpTrigger.onTrue(
+        Commands.runOnce(
+            () -> {
+              if (getIntakeState() != IntakeState.STOW && getIntakeState() != IntakeState.IDLE)
+                setIntakeState(IntakeState.BUMP);
+            }));
     bumpTrigger.onFalse(Commands.runOnce(() -> setIntakeState(IntakeState.IDLE)));
     bumpTrigger.debounce(0.5);
   }
