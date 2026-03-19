@@ -92,7 +92,7 @@ public class ShooterConstants { // TODO: CLEANUP
   public static final TurretGains turretGains =
       switch (Constants.currentMode) {
         case REAL -> new TurretGains(20, 0.0, 0.0, 1.0, 0.0, 0.0); // TODO: kS, p = 45
-        case SIM -> new TurretGains(5, 0.0, 0.01, 0.0, 5.0, 0.0);
+        case SIM -> new TurretGains(5, 0.0, 0.01, 0.0, 10.0, 0.0);
         default -> new TurretGains(0.0, 0.0, 0.0, 0.0, 0.0, 0.0);
       };
 

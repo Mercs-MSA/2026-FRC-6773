@@ -46,8 +46,7 @@ public class IntakeConstants {
 
   public record IntakeSimulationConfiguration(DCMotor motorType, double measurementStdDevs) {}
 
-  public static RollerHardware rollerHardware =
-      new RollerHardware(41, 18d / 24d); // TODO: fix gear ratio
+  public static RollerHardware rollerHardware = new RollerHardware(41, 3 * (24d / 18d));
 
   public static PivotHardware pivotHardware = new PivotHardware(42, 24d / 1d);
 
