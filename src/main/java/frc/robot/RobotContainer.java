@@ -327,9 +327,9 @@ public class RobotContainer {
     drive.setDefaultCommand(
         DriveCommands.joystickDriveXLock(
             drive,
-            () -> -1 * controller.getLeftY(),
-            () -> -1 * controller.getLeftX(),
-            () -> -1 * controller.getRightX()));
+            () -> squareInput(-1 * controller.getLeftY()),
+            () -> squareInput(-1 * controller.getLeftX()),
+            () -> squareInput(-1 * controller.getRightX())));
 
     controller
         .leftStick()
@@ -428,5 +428,9 @@ public class RobotContainer {
     intake.setIntakeState(IntakeState.STOW);
     indexer.setIndexerState(IndexerState.IDLE);
     transfer.setTransferState(TransferState.IDLE);
+  }
+
+  public static double squareInput(double value){
+    return Math.copySign(value * value, value);
   }
 }
