@@ -21,7 +21,7 @@ public class Intake extends SubsystemBase { // TODO: Tunable Numbers as needed
   public enum IntakeState {
     STOW(() -> Rotation2d.fromRotations(0.0), 0),
     IDLE(() -> Rotation2d.fromRotations(0.23), 0),
-    BUMP(() -> Rotation2d.fromRotations(0.16), -12),
+    BUMP(() -> Rotation2d.fromRotations(0.21), -12),
     AGITATE(() -> Rotation2d.fromRotations(0.0), -5),
     INTAKING(() -> Rotation2d.fromRotations(0.23), -12),
     OUTTAKING(() -> Rotation2d.fromRotations(0.23), 12);
@@ -89,6 +89,8 @@ public class Intake extends SubsystemBase { // TODO: Tunable Numbers as needed
   private final IntakePivotIO pivotHardware;
   private final IntakePivotIOInputsAutoLogged pivotInputs = new IntakePivotIOInputsAutoLogged();
 
+  public boolean wasIntakingBefore = false;
+
   public Intake(
       IntakeRollerIO rollerIO,
       IntakePivotIO pivotIO,
@@ -106,7 +108,13 @@ public class Intake extends SubsystemBase { // TODO: Tunable Numbers as needed
               if (getIntakeState() != IntakeState.STOW && getIntakeState() != IntakeState.IDLE)
                 setIntakeState(IntakeState.BUMP);
             }));
-    bumpTrigger.onFalse(Commands.runOnce(() -> setIntakeState(IntakeState.IDLE)));
+    bumpTrigger.onFalse(
+        Commands.runOnce(
+            () -> {
+              IntakeState newState = IntakeState.IDLE;
+              if (wasIntakingBefore) newState = IntakeState.INTAKING;
+              setIntakeState(newState);
+            }));
     bumpTrigger.debounce(0.5);
   }
 
@@ -122,10 +130,12 @@ public class Intake extends SubsystemBase { // TODO: Tunable Numbers as needed
 
     switch (intakeState) {
       case STOW:
+        wasIntakingBefore = false;
         resetAgitate = true;
         pivotGoal = intakeState.getPivotPos();
         break;
       case IDLE:
+        wasIntakingBefore = false;
         resetAgitate = true;
         pivotGoal = intakeState.getPivotPos();
         break;
@@ -134,6 +144,7 @@ public class Intake extends SubsystemBase { // TODO: Tunable Numbers as needed
         pivotGoal = intakeState.getPivotPos();
         break;
       case AGITATE: // https://www.desmos.com/calculator/ogflv9fvuk agitation visual
+        wasIntakingBefore = false;
         if (resetAgitate) {
           agitateTimestamp = System.currentTimeMillis();
           resetAgitate = false;
@@ -163,10 +174,12 @@ public class Intake extends SubsystemBase { // TODO: Tunable Numbers as needed
 
         break;
       case INTAKING:
+        wasIntakingBefore = true;
         resetAgitate = true;
         pivotGoal = intakeState.getPivotPos();
         break;
       case OUTTAKING:
+        wasIntakingBefore = false;
         resetAgitate = true;
         pivotGoal = intakeState.getPivotPos();
         break;
@@ -241,6 +254,10 @@ public class Intake extends SubsystemBase { // TODO: Tunable Numbers as needed
 
   public void setRollerBrakeMode(boolean enableBrake) {
     rollerHardware.setBrakeMode(enableBrake);
+  }
+
+  public boolean getWasIntake() {
+    return wasIntakingBefore;
   }
 
   @AutoLogOutput(key = "States/IntakeState")

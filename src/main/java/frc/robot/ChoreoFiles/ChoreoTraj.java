@@ -273,22 +273,22 @@ public record ChoreoTraj(
       new ChoreoTraj(
           "H_Partial_1Pass",
           OptionalInt.empty(),
-          13.85262,
+          12.06264,
           new Pose2d(3.439, 2.255, Rotation2d.fromRadians(0.785)),
-          new Pose2d(1.596, 3.375, Rotation2d.fromRadians(0)));
+          new Pose2d(0.507, 0.653, Rotation2d.fromRadians(3.142)));
   public static final ChoreoTraj H_Partial_1Pass$0 =
       new ChoreoTraj(
           "H_Partial_1Pass",
           OptionalInt.of(0),
-          2.9541,
+          2.95411,
           new Pose2d(3.439, 2.255, Rotation2d.fromRadians(0.785)),
-          new Pose2d(7.58, 0.769, Rotation2d.fromRadians(0.787)));
+          new Pose2d(7.58, 0.769, Rotation2d.fromRadians(0.786)));
   public static final ChoreoTraj H_Partial_1Pass$1 =
       new ChoreoTraj(
           "H_Partial_1Pass",
           OptionalInt.of(1),
           4.12571,
-          new Pose2d(7.58, 0.769, Rotation2d.fromRadians(0.787)),
+          new Pose2d(7.58, 0.769, Rotation2d.fromRadians(0.786)),
           new Pose2d(6.1, 2.4, Rotation2d.fromRadians(2.356)));
   public static final ChoreoTraj H_Partial_1Pass$2 =
       new ChoreoTraj(
@@ -301,16 +301,9 @@ public record ChoreoTraj(
       new ChoreoTraj(
           "H_Partial_1Pass",
           OptionalInt.of(3),
-          3.521420000000001,
+          3.5214300000000005,
           new Pose2d(3.2, 2.4, Rotation2d.fromRadians(2.356)),
           new Pose2d(0.507, 0.653, Rotation2d.fromRadians(3.142)));
-  public static final ChoreoTraj H_Partial_1Pass$4 =
-      new ChoreoTraj(
-          "H_Partial_1Pass",
-          OptionalInt.of(4),
-          1.7899999999999991,
-          new Pose2d(0.507, 0.653, Rotation2d.fromRadians(3.142)),
-          new Pose2d(1.596, 3.375, Rotation2d.fromRadians(0)));
   public static final ChoreoTraj H_Partial_1Pass_copy1 =
       new ChoreoTraj(
           "H_Partial_1Pass_copy1",
@@ -464,7 +457,6 @@ public record ChoreoTraj(
           Map.entry("H_Partial_1Pass$1", H_Partial_1Pass$1),
           Map.entry("H_Partial_1Pass$2", H_Partial_1Pass$2),
           Map.entry("H_Partial_1Pass$3", H_Partial_1Pass$3),
-          Map.entry("H_Partial_1Pass$4", H_Partial_1Pass$4),
           Map.entry("H_Partial_1Pass_copy1", H_Partial_1Pass_copy1),
           Map.entry("H_Partial_1Pass_copy1$0", H_Partial_1Pass_copy1$0),
           Map.entry("H_Partial_1Pass_copy1$1", H_Partial_1Pass_copy1$1),
