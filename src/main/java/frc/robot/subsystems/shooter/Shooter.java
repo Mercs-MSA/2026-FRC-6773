@@ -12,6 +12,7 @@ import static edu.wpi.first.units.Units.RadiansPerSecond;
 import static edu.wpi.first.units.Units.Rotations;
 import static edu.wpi.first.units.Units.RotationsPerSecond;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -45,7 +46,8 @@ public class Shooter extends SubsystemBase {
     SHOOT_PASS_L,
     SHOOT_PASS_R,
     SHOOT_HUB,
-    SHOOT_FIXED
+    SHOOT_FIXED,
+    MANUAL,
   }
 
   public final LoggedNetworkNumber hoodAngleCust = new LoggedNetworkNumber("Shooter/HoodAngle", 0);
@@ -53,6 +55,10 @@ public class Shooter extends SubsystemBase {
       new LoggedNetworkNumber("Shooter/FlywheelVel", 0);
   public final LoggedNetworkBoolean useCustom =
       new LoggedNetworkBoolean("Shooter/UseCustoms", false);
+  public final LoggedNetworkBoolean useManual =
+      new LoggedNetworkBoolean("Shooter/Use_Manual", false);
+  public final LoggedNetworkBoolean useBiases =
+      new LoggedNetworkBoolean("Shooter/Use_Biases", false);
 
   public ShooterState shooterState = ShooterState.STOW;
 
@@ -69,6 +75,10 @@ public class Shooter extends SubsystemBase {
 
   private final Supplier<Pose2d> poseSupplier;
   private final Supplier<ChassisSpeeds> fieldSpeedsSupplier;
+
+  public double turretBias = 0.0;
+  public double flywheelBias = 0.0;
+  public double hoodBias = 0.0;
 
   Trigger allianceZoneTrigger;
   Trigger leftPassTrigger;
@@ -145,7 +155,9 @@ public class Shooter extends SubsystemBase {
     AngularVelocity azimuthVelocity;
     Rotation2d hoodAngle;
     double flywheelVel;
-
+    if (useManual.getAsBoolean()) {
+      shooterState = ShooterState.MANUAL;
+    }
     switch (shooterState) {
       case STOW:
         azimuthAngle = Angle.ofBaseUnits(0, Radians);
@@ -264,6 +276,22 @@ public class Shooter extends SubsystemBase {
                     calculatedShot.getExitVelocity(), Distance.ofBaseUnits(2, Inches))
                 .in(RotationsPerSecond);
         break;
+      case MANUAL:
+        calculatedShot =
+            ShooterTurretCalculator.iterativeMovingShotFromMap(
+                robotPose,
+                fieldSpeeds,
+                FieldConstants.Hub.topCenterPoint.plus(new Translation3d(-2.5, -3, -1.2)),
+                2);
+        azimuthAngle =
+            ShooterTurretCalculator.calculateAzimuthAngle(
+                robotPose,
+                calculatedShot.target(),
+                Angle.ofBaseUnits(getTurretPosition(), Rotations));
+        azimuthVelocity = RadiansPerSecond.of(-fieldSpeeds.omegaRadiansPerSecond);
+        hoodAngle = Rotation2d.fromRotations(0.251);
+        flywheelVel = 58;
+        break;
       default:
         azimuthAngle = Angle.ofBaseUnits(0, Radians);
         azimuthVelocity = RadiansPerSecond.of(0);
@@ -272,15 +300,30 @@ public class Shooter extends SubsystemBase {
         break;
     }
 
-    setTurretSetpoint(azimuthAngle, azimuthVelocity);
+    if (useBiases.getAsBoolean()) {
+      setTurretSetpoint(
+          azimuthAngle.plus(Angle.ofBaseUnits(turretBias, Rotations)), azimuthVelocity);
 
-    if (!useCustom.getAsBoolean()) {
-      setHoodPosition(hoodAngle);
-      setFlywheelVelocityRPS(flywheelVel);
+      if (!useCustom.getAsBoolean()) {
+        double value = hoodAngle.getRotations() + hoodBias;
+        setHoodPosition(new Rotation2d(MathUtil.clamp(value, 0, 20d / 360d)));
+        setFlywheelVelocityRPS(flywheelVel + flywheelBias);
+      } else {
+        setHoodPosition(new Rotation2d(hoodAngleCust.getAsDouble()));
+        setFlywheelVelocityRPS(flywheelVelCust.getAsDouble());
+      }
     } else {
-      setHoodPosition(new Rotation2d(hoodAngleCust.getAsDouble()));
-      setFlywheelVelocityRPS(flywheelVelCust.getAsDouble());
+      setTurretSetpoint(azimuthAngle, azimuthVelocity);
+
+      if (!useCustom.getAsBoolean()) {
+        setHoodPosition(hoodAngle);
+        setFlywheelVelocityRPS(flywheelVel);
+      } else {
+        setHoodPosition(new Rotation2d(hoodAngleCust.getAsDouble()));
+        setFlywheelVelocityRPS(flywheelVelCust.getAsDouble());
+      }
     }
+
     Logger.recordOutput("FlywheelDebug/targetFlywheelVelRPS", flywheelVel);
     Logger.recordOutput(
         "FlywheelDebug/flywheelRPS", getFlywheelVelocities()[0].in(RotationsPerSecond));
