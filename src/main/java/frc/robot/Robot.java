@@ -144,15 +144,18 @@ public class Robot extends LoggedRobot {
   @Override
   public void teleopPeriodic() {
 
+    Logger.recordOutput("RED ALLIANCE ZONE", ZoneUtil.RED_ALLIANCE_ZONE.getCorners());
+    Logger.recordOutput("BLUE ALLIANCE ZONE", ZoneUtil.BLUE_ALLIANCE_ZONE.getCorners());
+
     // robotContainer.updateManager();
-    Logger.recordOutput(
-        "In Alliance Zone", ZoneUtil.ALLIANCE_ZONE.contains(robotContainer.getDrive()::getPose));
-    Logger.recordOutput(
-        "In Left Neutral Zone",
-        ZoneUtil.LEFT_PASS_ZONE.contains(robotContainer.getDrive()::getPose));
-    Logger.recordOutput(
-        "In Right Neutral Zone",
-        ZoneUtil.RIGHT_PASS_ZONE.contains(robotContainer.getDrive()::getPose));
+    // Logger.recordOutput(
+    //     "In Alliance Zone", ZoneUtil.ALLIANCE_ZONE.contains(robotContainer.getDrive()::getPose));
+    // Logger.recordOutput(
+    //     "In Left Neutral Zone",
+    //     ZoneUtil.LEFT_PASS_ZONE.contains(robotContainer.getDrive()::getPose));
+    // Logger.recordOutput(
+    //     "In Right Neutral Zone",
+    //     ZoneUtil.RIGHT_PASS_ZONE.contains(robotContainer.getDrive()::getPose));
   }
 
   /** This function is called once when test mode is enabled. */

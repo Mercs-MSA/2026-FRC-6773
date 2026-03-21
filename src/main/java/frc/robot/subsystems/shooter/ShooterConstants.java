@@ -11,7 +11,7 @@ import edu.wpi.first.units.measure.AngularVelocity;
 import frc.robot.constants.Constants;
 
 public class ShooterConstants { // TODO: CLEANUP
-  public static final Rotation2d turretMaxLimit = Rotation2d.fromDegrees(182);
+  public static final Rotation2d turretMaxLimit = Rotation2d.fromDegrees(185);
   public static final Rotation2d turretMinLimit = Rotation2d.fromDegrees(-182);
 
   public static final Rotation2d turretPositionTolerance = new Rotation2d(Math.toRadians(0.5));

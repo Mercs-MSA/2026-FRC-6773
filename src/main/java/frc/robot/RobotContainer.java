@@ -7,6 +7,7 @@
 
 package frc.robot;
 
+import static edu.wpi.first.units.Units.Meters;
 import static frc.robot.subsystems.vision.VisionConstants.*;
 
 import com.pathplanner.lib.auto.AutoBuilder;
@@ -57,6 +58,7 @@ import frc.robot.subsystems.shooter.ShooterFlywheelIOSim;
 import frc.robot.subsystems.shooter.ShooterFlywheelIOTalonFX;
 import frc.robot.subsystems.shooter.ShooterHoodIOSim;
 import frc.robot.subsystems.shooter.ShooterHoodIOTalonFX;
+import frc.robot.subsystems.shooter.ShooterTurretCalculator;
 import frc.robot.subsystems.shooter.ShooterTurretIOSim;
 import frc.robot.subsystems.shooter.ShooterTurretIOTalonFX;
 import frc.robot.subsystems.transfer.Transfer;
@@ -69,6 +71,7 @@ import frc.robot.subsystems.vision.VisionIO;
 import frc.robot.subsystems.vision.VisionIOLimelight;
 import frc.robot.util.geometry.AllianceFlipUtil;
 import java.util.function.DoubleSupplier;
+import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 /**
@@ -448,5 +451,12 @@ public class RobotContainer {
 
   public static double squareInput(double value) {
     return Math.copySign(value * value, value);
+  }
+
+  @AutoLogOutput(key = "Drive/DistanceToHub")
+  public double getHubDist() {
+    return ShooterTurretCalculator.getDistanceToTarget(
+            shooter.getTurretFieldPose(), FieldConstants.Hub.topCenterPoint)
+        .in(Meters);
   }
 }

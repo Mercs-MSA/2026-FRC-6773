@@ -20,6 +20,8 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.Distance;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -30,6 +32,8 @@ import frc.robot.util.ZoneUtil;
 import java.util.function.Supplier;
 import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.Logger;
+import org.littletonrobotics.junction.networktables.LoggedNetworkBoolean;
+import org.littletonrobotics.junction.networktables.LoggedNetworkNumber;
 
 public class Shooter extends SubsystemBase {
 
@@ -43,6 +47,12 @@ public class Shooter extends SubsystemBase {
     SHOOT_HUB,
     SHOOT_FIXED
   }
+
+  public final LoggedNetworkNumber hoodAngleCust = new LoggedNetworkNumber("Shooter/HoodAngle", 0);
+  public final LoggedNetworkNumber flywheelVelCust =
+      new LoggedNetworkNumber("Shooter/FlywheelVel", 0);
+  public final LoggedNetworkBoolean useCustom =
+      new LoggedNetworkBoolean("Shooter/UseCustoms", false);
 
   public ShooterState shooterState = ShooterState.STOW;
 
@@ -64,6 +74,8 @@ public class Shooter extends SubsystemBase {
   Trigger leftPassTrigger;
   Trigger rightPassTrigger;
 
+  private final Supplier<Alliance> isBlue;
+
   /** Creates a new Shooter. */
   public Shooter(
       ShooterFlywheelIO flywheelHardwareIO,
@@ -77,9 +89,23 @@ public class Shooter extends SubsystemBase {
     this.poseSupplier = poseSupplier;
     this.fieldSpeedsSupplier = fieldSpeedsSupplier;
 
-    allianceZoneTrigger = ZoneUtil.ALLIANCE_ZONE.contains(poseSupplier);
-    rightPassTrigger = ZoneUtil.RIGHT_PASS_ZONE.contains(poseSupplier);
-    leftPassTrigger = ZoneUtil.LEFT_PASS_ZONE.contains(poseSupplier);
+    isBlue =
+        () -> {
+          return DriverStation.getAlliance().get();
+        };
+
+    allianceZoneTrigger =
+        isBlue.get().equals(Alliance.Red)
+            ? ZoneUtil.RED_ALLIANCE_ZONES.contains(poseSupplier)
+            : ZoneUtil.BLUE_ALLIANCE_ZONES.contains(poseSupplier);
+    rightPassTrigger =
+        isBlue.get().equals(Alliance.Red)
+            ? ZoneUtil.RED_RIGHT_PASS_ZONE.contains(poseSupplier)
+            : ZoneUtil.BLUE_RIGHT_PASS_ZONE.contains(poseSupplier);
+    leftPassTrigger =
+        isBlue.get().equals(Alliance.Red)
+            ? ZoneUtil.RED_LEFT_PASS_ZONE.contains(poseSupplier)
+            : ZoneUtil.BLUE_LEFT_PASS_ZONE.contains(poseSupplier);
 
     allianceZoneTrigger.onTrue(Commands.runOnce(() -> setShooterState(ShooterState.IDLE_HUB)));
     rightPassTrigger.onTrue(Commands.runOnce(() -> setShooterState(ShooterState.IDLE_R)));
@@ -247,9 +273,14 @@ public class Shooter extends SubsystemBase {
     }
 
     setTurretSetpoint(azimuthAngle, azimuthVelocity);
-    setHoodPosition(hoodAngle);
-    setFlywheelVelocityRPS(flywheelVel);
 
+    if (!useCustom.getAsBoolean()) {
+      setHoodPosition(hoodAngle);
+      setFlywheelVelocityRPS(flywheelVel);
+    } else {
+      setHoodPosition(new Rotation2d(hoodAngleCust.getAsDouble()));
+      setFlywheelVelocityRPS(flywheelVelCust.getAsDouble());
+    }
     Logger.recordOutput("FlywheelDebug/targetFlywheelVelRPS", flywheelVel);
     Logger.recordOutput(
         "FlywheelDebug/flywheelRPS", getFlywheelVelocities()[0].in(RotationsPerSecond));
@@ -363,5 +394,19 @@ public class Shooter extends SubsystemBase {
 
   public void setTurretSetpoint(Angle angle, AngularVelocity angvel) {
     turretHardware.setTurretSetpoint(angle, angvel);
+  }
+
+  public Pose2d getTurretFieldPose() {
+    Pose2d turretBotPose =
+        new Pose3d(poseSupplier.get()).transformBy(ShooterConstants.robotToTurret).toPose2d();
+    Pose2d turretPoseOut =
+        new Pose2d(
+            turretBotPose.getX(),
+            turretBotPose.getY(),
+            turretBotPose
+                .getRotation()
+                .plus(Rotation2d.fromRotations(getTurretPosition()))
+                .plus(Rotation2d.kCCW_Pi_2));
+    return turretPoseOut;
   }
 }

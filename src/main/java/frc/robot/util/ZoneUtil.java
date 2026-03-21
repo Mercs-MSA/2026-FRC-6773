@@ -10,7 +10,6 @@ import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.units.measure.Time;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.constants.FieldConstants;
-import frc.robot.util.geometry.AllianceFlipUtil;
 import java.util.function.Supplier;
 
 public class ZoneUtil {
@@ -27,19 +26,50 @@ public class ZoneUtil {
   public static final PredictiveXZoneCollection BUMP_ZONES =
       new PredictiveXZoneCollection(BLUE_BOTTOM_BUMP, BLUE_TOP_BUMP, RED_BOTTOM_BUMP, RED_TOP_BUMP);
 
-  public static final BaseZone RIGHT_PASS_ZONE =
+  public static final BaseZone BLUE_RIGHT_PASS_ZONE =
       new BaseZone(
-          AllianceFlipUtil.applyX(FieldConstants.LinesVertical.neutralZoneNear),
-          AllianceFlipUtil.applyX(FieldConstants.LinesVertical.neutralZoneFar),
-          AllianceFlipUtil.applyY(0.0),
-          AllianceFlipUtil.applyY(FieldConstants.LinesHorizontal.center));
-  public static final BaseZone LEFT_PASS_ZONE = RIGHT_PASS_ZONE.mirroredY();
-  public static final BaseZone ALLIANCE_ZONE =
+          FieldConstants.LinesVertical.neutralZoneNear,
+          FieldConstants.fieldLength,
+          0.0,
+          FieldConstants.LinesHorizontal.center);
+  public static final BaseZone BLUE_LEFT_PASS_ZONE = BLUE_RIGHT_PASS_ZONE.mirroredY();
+
+  public static final BaseZone BLUE_ALLIANCE_ZONE =
+      new BaseZone(-2, FieldConstants.LinesVertical.allianceZone, -2.0, FieldConstants.fieldWidth);
+
+  public static final BaseZone BLUE_ALLIANCE_TRENCH_ZONE_RIGHT =
       new BaseZone(
-          AllianceFlipUtil.applyX(-2),
-          AllianceFlipUtil.applyX(FieldConstants.LinesVertical.allianceZone),
-          -2.0,
+          FieldConstants.LinesVertical.allianceZone,
+          FieldConstants.LinesVertical.hubCenter,
+          0,
+          FieldConstants.LinesHorizontal.rightTrenchOpenEnd);
+
+  public static final BaseZone BLUE_ALLIANCE_TRENCH_ZONE_LEFT =
+      new BaseZone(
+          FieldConstants.LinesVertical.allianceZone,
+          FieldConstants.LinesVertical.hubCenter,
+          FieldConstants.LinesHorizontal.leftTrenchOpenStart,
           FieldConstants.fieldWidth);
+
+  public static final BaseZone RED_LEFT_PASS_ZONE = BLUE_RIGHT_PASS_ZONE.mirroredX();
+
+  public static final BaseZone RED_RIGHT_PASS_ZONE = BLUE_LEFT_PASS_ZONE.mirroredX();
+
+  public static final BaseZone RED_ALLIANCE_ZONE = BLUE_ALLIANCE_ZONE.mirroredX();
+
+  public static final BaseZone RED_ALLIANCE_TRENCH_ZONE_RIGHT =
+      BLUE_ALLIANCE_TRENCH_ZONE_LEFT.mirroredX();
+
+  public static final BaseZone RED_ALLIANCE_TRENCH_ZONE_LEFT =
+      BLUE_ALLIANCE_TRENCH_ZONE_RIGHT.mirroredX();
+
+  public static final ZoneCollection BLUE_ALLIANCE_ZONES =
+      new ZoneCollection(
+          BLUE_ALLIANCE_ZONE, BLUE_ALLIANCE_TRENCH_ZONE_RIGHT, BLUE_ALLIANCE_TRENCH_ZONE_LEFT);
+
+  public static final ZoneCollection RED_ALLIANCE_ZONES =
+      new ZoneCollection(
+          RED_ALLIANCE_ZONE, RED_ALLIANCE_TRENCH_ZONE_RIGHT, RED_ALLIANCE_TRENCH_ZONE_LEFT);
 
   public static interface Zone {
     public Trigger contains(Supplier<Pose2d> pose);
