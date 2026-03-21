@@ -13,7 +13,8 @@ import org.littletonrobotics.junction.Logger;
 public class Indexer extends SubsystemBase {
   public enum IndexerState {
     IDLE,
-    INDEXING
+    INDEXING,
+    JAM
   }
 
   public IndexerState indexerState;
@@ -53,6 +54,8 @@ public class Indexer extends SubsystemBase {
         setSpindexerAngularVelocity(RotationsPerSecond.of(100));
         setKickerTangentialVelocity(Constants.fuelLaunchVelocity);
         break;
+      case JAM:
+        setSpindexerAngularVelocity(RotationsPerSecond.of(-30));
     }
   }
 

@@ -329,7 +329,7 @@ public class RobotContainer {
             drive,
             () -> squareInput(-1 * controller.getLeftY()),
             () -> squareInput(-1 * controller.getLeftX()),
-            () -> squareInput(-1 * controller.getRightX())));
+            () -> -1 * controller.getRightX()));
 
     controller
         .leftStick()
@@ -383,6 +383,21 @@ public class RobotContainer {
         .onFalse(teleopCommands.intakeCommand(IntakeState.IDLE));
 
     controller.leftBumper().onTrue(teleopCommands.intakeCommand(IntakeState.STOW));
+
+    opController
+        .rightTrigger()
+        .whileTrue(
+            Commands.run(
+                () -> {
+                  indexer.setSpindexerVoltage(-4.0);
+                }));
+    opController
+        .rightTrigger()
+        .onFalse(
+            (Commands.run(
+                () -> {
+                  indexer.setSpindexerVoltage(0.0);
+                })));
     // opController.leftBumper().onTrue(teleopCommands.climbCommand(ClimbState.TELEOP_CLIMB));
     // opController.rightBumper().onTrue(teleopCommands.climbCommand(ClimbState.STOW));
     // controller
@@ -431,7 +446,7 @@ public class RobotContainer {
     transfer.setTransferState(TransferState.IDLE);
   }
 
-  public static double squareInput(double value){
+  public static double squareInput(double value) {
     return Math.copySign(value * value, value);
   }
 }

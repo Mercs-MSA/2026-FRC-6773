@@ -69,7 +69,7 @@ public class Intake extends SubsystemBase { // TODO: Tunable Numbers as needed
   private final LoggedNetworkNumber agitateC = new LoggedNetworkNumber("/Intake/AgitateC", 0.75);
   // This value is a multiplier to make the overall sin function go faster.
   private final LoggedNetworkNumber agitateFreq =
-      new LoggedNetworkNumber("/Intake/AgitateFreq", 16.0);
+      new LoggedNetworkNumber("/Intake/AgitateFreq", 11.0);
 
   private final LoggedNetworkNumber amplitude = new LoggedNetworkNumber("/Intake/Amplitude", 1.0);
 
