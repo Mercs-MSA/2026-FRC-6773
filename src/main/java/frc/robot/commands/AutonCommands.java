@@ -18,6 +18,8 @@ import frc.robot.subsystems.intake.Intake.IntakeState;
 import frc.robot.subsystems.shooter.Shooter;
 import frc.robot.subsystems.transfer.Transfer;
 import frc.robot.subsystems.transfer.Transfer.TransferState;
+import frc.robot.util.geometry.AllianceFlipUtil;
+
 import java.util.Optional;
 
 public class AutonCommands extends TeleopCommands {
@@ -128,7 +130,7 @@ public class AutonCommands extends TeleopCommands {
         autonCommand.addCommands(
             Commands.runOnce(
                 () -> {
-                  drive.setPose(ChoreoTraj.H_Partial_1Pass.initialPoseBlue());
+                  drive.setPose(AllianceFlipUtil.apply(ChoreoTraj.H_Partial_1Pass.initialPoseBlue()));
                 }));
         autonCommand.addCommands(humanPlayerAuton("H_Partial_1Pass"));
         break;
@@ -142,7 +144,7 @@ public class AutonCommands extends TeleopCommands {
         autonCommand.addCommands(
             Commands.runOnce(
                 () -> {
-                  drive.setPose(ChoreoTraj.D_Partial_1Pass.initialPoseBlue());
+                  drive.setPose(AllianceFlipUtil.apply(ChoreoTraj.D_Partial_1Pass.initialPoseBlue()));
                 }));
         autonCommand.addCommands(getAutonCommandSegments("D_Partial_1Pass"));
         break;
