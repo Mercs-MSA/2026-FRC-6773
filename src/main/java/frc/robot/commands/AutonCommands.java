@@ -9,7 +9,6 @@ import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.ChoreoFiles.ChoreoTraj;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.indexer.Indexer;
@@ -204,7 +203,7 @@ public class AutonCommands extends TeleopCommands {
               drive.stop();
             }));
     command.addCommands(stopShootCommand());
-    command.addCommands(new WaitCommand(1.5));
+    // command.addCommands(new WaitCommand(1.5));
     command.addCommands(indexCommand(IndexerState.INDEXING));
     command.addCommands(shootCommand());
 
@@ -228,23 +227,30 @@ public class AutonCommands extends TeleopCommands {
     command.addCommands(intakeCommand(IntakeState.IDLE));
 
     command.addCommands(getPathCommand(name, 2));
+
+    command.addCommands(stopShootCommand());
+    // command.addCommands(new WaitCommand(1.5));
+    command.addCommands(
+        Commands.parallel(
+            indexCommand(IndexerState.INDEXING), shootCommand(), getPathCommand(name, 3)));
+
     // command.addCommands(
     //     Commands.runOnce(
     //         () -> {
     //           drive.stop();
     //         }));
-    command.addCommands(intakeCommand(IntakeState.INTAKING));
-    command.addCommands(
-        Commands.parallel(
-            new WaitCommand(0.5)
-                .andThen(indexCommand(IndexerState.INDEXING).andThen(shootCommand())),
-            stopShootCommand(),
-            getPathCommand(name, 3)
-                .andThen(
-                    Commands.runOnce(
-                        () -> {
-                          drive.stop();
-                        }))));
+    // command.addCommands(intakeCommand(IntakeState.INTAKING));
+    // command.addCommands(
+    // Commands.parallel(
+    //     new WaitCommand(0.5)
+    //         .andThen(indexCommand(IndexerState.INDEXING).andThen(shootCommand())),
+    //     stopShootCommand(),
+    //     getPathCommand(name, 3)
+    //         .andThen(
+    //             Commands.runOnce(
+    //                 () -> {
+    //                   drive.stop();
+    //                 }))));
     // command.addCommands(getPathCommand(name, 3));
     // command.addCommands(
     //     Commands.runOnce(

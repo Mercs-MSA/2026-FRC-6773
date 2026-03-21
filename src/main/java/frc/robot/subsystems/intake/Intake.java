@@ -103,8 +103,7 @@ public class Intake extends SubsystemBase { // TODO: Tunable Numbers as needed
     bumpTrigger.onTrue(
         Commands.runOnce(
             () -> {
-              if (getIntakeState() != IntakeState.STOW && getIntakeState() != IntakeState.IDLE)
-                setIntakeState(IntakeState.BUMP);
+              setIntakeState(IntakeState.BUMP);
             }));
     bumpTrigger.onFalse(Commands.runOnce(() -> setIntakeState(IntakeState.IDLE)));
     bumpTrigger.debounce(0.5);
