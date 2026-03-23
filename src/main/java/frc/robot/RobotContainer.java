@@ -395,20 +395,20 @@ public class RobotContainer {
 
     controller.leftBumper().onTrue(teleopCommands.intakeCommand(IntakeState.STOW));
 
-    opController
-        .rightTrigger()
-        .whileTrue(
-            Commands.run(
-                () -> {
-                  indexer.setSpindexerVoltage(-4.0);
-                }));
-    opController
-        .rightTrigger()
-        .onFalse(
-            (Commands.run(
-                () -> {
-                  indexer.setSpindexerVoltage(0.0);
-                })));
+    // opController
+    //     .rightTrigger()
+    //     .whileTrue(
+    //         Commands.run(
+    //             () -> {
+    //               indexer.setSpindexerVoltage(-4.0);
+    //             }));
+    // opController
+    //     .rightTrigger()
+    //     .onFalse(
+    //         (Commands.run(
+    //             () -> {
+    //               indexer.setSpindexerVoltage(0.0);
+    //             })));
 
     opController
         .leftBumper()

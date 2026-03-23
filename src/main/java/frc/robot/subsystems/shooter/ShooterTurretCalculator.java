@@ -48,34 +48,35 @@ public class ShooterTurretCalculator {
   public static Pose2d lastLookAhead = new Pose2d();
 
   static {
-    SHOT_MAP.put(5.5, new ShotData(RPM.of(71 * 60), Degrees.of(20)));
-    TOF_MAP.put(5.5, 1.31);
+    SHOT_MAP.put(5.5, new ShotData(RPM.of(74 * 60), Degrees.of(20)));
+    TOF_MAP.put(5.5, 1.46);
 
-    SHOT_MAP.put(5.18, new ShotData(RPM.of(67 * 60), Degrees.of(20)));
-    TOF_MAP.put(5.18, 1.4);
+    SHOT_MAP.put(5.18, new ShotData(RPM.of(70 * 60), Degrees.of(19)));
+    TOF_MAP.put(5.18, 1.37);
 
     SHOT_MAP.put(4.55, new ShotData(RPM.of(65 * 60), Degrees.of(18)));
-    TOF_MAP.put(4.55, 1.420);
+    TOF_MAP.put(4.55, 1.25);
 
     SHOT_MAP.put(4.082, new ShotData(RPM.of(64 * 60), Degrees.of(16)));
-    TOF_MAP.put(4.082, 1.32);
+    TOF_MAP.put(4.082, 1.26);
 
     SHOT_MAP.put(3.483, new ShotData(RPM.of(60 * 60), Degrees.of(12)));
-    TOF_MAP.put(3.483, 1.28);
+    TOF_MAP.put(3.483, 1.24);
 
     SHOT_MAP.put(3.022, new ShotData(RPM.of(57 * 60), Degrees.of(12)));
-    TOF_MAP.put(3.022, 1.3676767);
+    TOF_MAP.put(3.022, 1.22);
 
     SHOT_MAP.put(2.7, new ShotData(RPM.of(55 * 60), Degrees.of(10)));
+    TOF_MAP.put(2.7, 1.18);
 
     SHOT_MAP.put(2.58, new ShotData(RPM.of(52 * 60), Degrees.of(8)));
-    TOF_MAP.put(2.58, 1.29);
+    TOF_MAP.put(2.58, 1.15);
 
     SHOT_MAP.put(2.012, new ShotData(RPM.of(52 * 60), Degrees.of(5)));
-    TOF_MAP.put(2.012, 1.25);
+    TOF_MAP.put(2.012, 1.09);
 
-    SHOT_MAP.put(1.253, new ShotData(RPM.of(50 * 60), Degrees.of(3)));
-    TOF_MAP.put(1.253, 1.23);
+    SHOT_MAP.put(1.253, new ShotData(RPM.of(50 * 60), Degrees.of(1)));
+    TOF_MAP.put(1.253, 1.01);
   }
 
   public static Distance getDistanceToTarget(Pose2d robot, Translation3d target) {
