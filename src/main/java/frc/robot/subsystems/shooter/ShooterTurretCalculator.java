@@ -45,6 +45,8 @@ public class ShooterTurretCalculator {
       new InterpolatingTreeMap<>(InverseInterpolator.forDouble(), ShotData::interpolate);
   public static final InterpolatingDoubleTreeMap TOF_MAP = new InterpolatingDoubleTreeMap();
 
+  public static Pose2d lastLookAhead = new Pose2d();
+
   static {
     SHOT_MAP.put(5.5, new ShotData(RPM.of(71 * 60), Degrees.of(20)));
     TOF_MAP.put(5.5, 1.31);
@@ -231,6 +233,7 @@ public class ShooterTurretCalculator {
     // target accordingly
     for (int i = 0; i < iterations; i++) {
       predictedTarget = predictTargetPos(target, fieldSpeeds, timeOfFlight);
+      lastLookAhead = new Pose2d(predictedTarget.getX(), predictedTarget.getY(), Rotation2d.kZero);
       distance = getDistanceToTarget(robot, predictedTarget).in(Meters);
       shot = SHOT_MAP.get(distance);
       shot = new ShotData(shot.exitVelocity, shot.hoodAngle, predictedTarget);

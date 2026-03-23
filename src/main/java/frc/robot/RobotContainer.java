@@ -13,8 +13,12 @@ import static frc.robot.subsystems.vision.VisionConstants.*;
 import com.pathplanner.lib.auto.AutoBuilder;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -70,6 +74,8 @@ import frc.robot.subsystems.vision.Vision;
 import frc.robot.subsystems.vision.VisionIO;
 import frc.robot.subsystems.vision.VisionIOLimelight;
 import frc.robot.util.geometry.AllianceFlipUtil;
+import java.util.ArrayList;
+import java.util.Optional;
 import java.util.function.DoubleSupplier;
 import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
@@ -101,6 +107,8 @@ public class RobotContainer {
 
   // Dashboard inputs
   private final LoggedDashboardChooser<Command> autoChooser;
+  private Field2d field = new Field2d();
+  private Field2d trajField = new Field2d();
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -387,20 +395,68 @@ public class RobotContainer {
 
     controller.leftBumper().onTrue(teleopCommands.intakeCommand(IntakeState.STOW));
 
-    // opController
-    //     .rightTrigger()
-    //     .whileTrue(
-    //         Commands.run(
-    //             () -> {
-    //               indexer.setSpindexerVoltage(-4.0);
-    //             }));
-    // opController
-    //     .rightTrigger()
-    //     .onFalse(
-    //         (Commands.run(
-    //             () -> {
-    //               indexer.setSpindexerVoltage(0.0);
-    //             })));
+    opController
+        .rightTrigger()
+        .whileTrue(
+            Commands.run(
+                () -> {
+                  indexer.setSpindexerVoltage(-4.0);
+                }));
+    opController
+        .rightTrigger()
+        .onFalse(
+            (Commands.run(
+                () -> {
+                  indexer.setSpindexerVoltage(0.0);
+                })));
+
+    opController
+        .leftBumper()
+        .onTrue(
+            Commands.runOnce(
+                () -> {
+                  shooter.turretBias -= 0.05;
+                }));
+
+    opController
+        .rightBumper()
+        .onTrue(
+            Commands.runOnce(
+                () -> {
+                  shooter.turretBias += 0.05;
+                }));
+
+    opController
+        .povUp()
+        .onTrue(
+            Commands.runOnce(
+                () -> {
+                  shooter.hoodBias += 0.002;
+                }));
+
+    opController
+        .povDown()
+        .onTrue(
+            Commands.runOnce(
+                () -> {
+                  shooter.hoodBias -= 0.002;
+                }));
+
+    opController
+        .povRight()
+        .onTrue(
+            Commands.runOnce(
+                () -> {
+                  shooter.flywheelBias += 5;
+                }));
+    opController
+        .povLeft()
+        .onTrue(
+            Commands.runOnce(
+                () -> {
+                  shooter.flywheelBias -= 5;
+                }));
+
     // opController.leftBumper().onTrue(teleopCommands.climbCommand(ClimbState.TELEOP_CLIMB));
     // opController.rightBumper().onTrue(teleopCommands.climbCommand(ClimbState.STOW));
     // controller
@@ -458,5 +514,92 @@ public class RobotContainer {
     return ShooterTurretCalculator.getDistanceToTarget(
             shooter.getTurretFieldPose(), FieldConstants.Hub.topCenterPoint)
         .in(Meters);
+  }
+
+  public void updateDisplays() {
+    field.setRobotPose(drive.getPose());
+    ArrayList<Pose2d> trajPoses = new ArrayList<>();
+    Pose2d zerodDrive =
+        new Pose2d(drive.getPose().getX(), drive.getPose().getY(), Rotation2d.kZero);
+    for (double i = 0; i <= 8; i++) {
+      trajPoses.add(zerodDrive.interpolate(ShooterTurretCalculator.lastLookAhead, i / 8.0));
+    }
+    field.getObject("Traj").setPoses(trajPoses);
+    SmartDashboard.putData("Field/Field", field);
+
+    SmartDashboard.putString("Field/Data", DriverStation.getGameSpecificMessage());
+    SmartDashboard.putBoolean("Field/IsActive", isHubActive());
+  }
+
+  public boolean isHubActive() {
+    double matchTime = DriverStation.getMatchTime();
+    Optional<Alliance> alliance = DriverStation.getAlliance();
+    // If we have no alliance, we cannot be enabled, therefore no hub.
+    if (alliance.isEmpty()) {
+      return false;
+    }
+    // Hub is always enabled in autonomous.
+    if (DriverStation.isAutonomousEnabled()) {
+      putPhaseTimeLeft(matchTime);
+      return true;
+    }
+    // At this point, if we're not teleop enabled, there is no hub.
+    if (!DriverStation.isTeleopEnabled()) {
+      return false;
+    }
+
+    // We're teleop enabled, compute.
+    String gameData = DriverStation.getGameSpecificMessage();
+    // If we have no game data, we cannot compute, assume hub is active, as its likely early in
+    // teleop.
+    if (gameData.isEmpty()) {
+      return true;
+    }
+    boolean redInactiveFirst = false;
+    switch (gameData.charAt(0)) {
+      case 'R' -> redInactiveFirst = true;
+      case 'B' -> redInactiveFirst = false;
+      default -> {
+        // If we have invalid game data, assume hub is active.
+        return true;
+      }
+    }
+
+    // Shift was is active for blue if red won auto, or red if blue won auto.
+    boolean shift1Active =
+        switch (alliance.get()) {
+          case Red -> !redInactiveFirst;
+          case Blue -> redInactiveFirst;
+        };
+
+    if (matchTime > 130) {
+      putPhaseTimeLeft(matchTime - (130 - (shift1Active ? 25 : 0)));
+      // Transition shift, hub is active.
+      return true;
+    } else if (matchTime > 105) {
+      putPhaseTimeLeft(matchTime - 105);
+      // Shift 1
+      return shift1Active;
+    } else if (matchTime > 80) {
+      putPhaseTimeLeft(matchTime - 80);
+      // Shift 2
+      return !shift1Active;
+    } else if (matchTime > 55) {
+      putPhaseTimeLeft(matchTime - 55);
+      // Shift 3
+      return shift1Active;
+    } else if (matchTime > 30) {
+      putPhaseTimeLeft(matchTime - 30);
+      // Shift 4
+      return !shift1Active;
+    } else {
+      putPhaseTimeLeft(matchTime);
+      // End game, hub always active.
+      return true;
+    }
+  }
+
+  public void putPhaseTimeLeft(double timeLeft) {
+    SmartDashboard.putNumber("Field/PhaseTimeLeft", timeLeft);
   }
 }
