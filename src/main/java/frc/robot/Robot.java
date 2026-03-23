@@ -147,6 +147,9 @@ public class Robot extends LoggedRobot {
     Logger.recordOutput("RED ALLIANCE ZONE", ZoneUtil.RED_ALLIANCE_ZONE.getCorners());
     Logger.recordOutput("BLUE ALLIANCE ZONE", ZoneUtil.BLUE_ALLIANCE_ZONE.getCorners());
 
+    Logger.recordOutput("TRENCH ZONE1", ZoneUtil.BLUE_ALLIANCE_TRENCH_ZONE_RIGHT.getCorners());
+    Logger.recordOutput("TRENCH ZONE2", ZoneUtil.BLUE_ALLIANCE_TRENCH_ZONE_LEFT.getCorners());
+
     // robotContainer.updateManager();
     // Logger.recordOutput(
     //     "In Alliance Zone", ZoneUtil.ALLIANCE_ZONE.contains(robotContainer.getDrive()::getPose));

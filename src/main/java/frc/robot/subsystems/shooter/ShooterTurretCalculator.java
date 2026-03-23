@@ -58,21 +58,21 @@ public class ShooterTurretCalculator {
     SHOT_MAP.put(4.082, new ShotData(RPM.of(64 * 60), Degrees.of(16)));
     TOF_MAP.put(4.082, 1.32);
 
-    SHOT_MAP.put(3.483, new ShotData(RPM.of(57 * 60), Degrees.of(14)));
+    SHOT_MAP.put(3.483, new ShotData(RPM.of(60 * 60), Degrees.of(12)));
     TOF_MAP.put(3.483, 1.28);
 
     SHOT_MAP.put(3.022, new ShotData(RPM.of(57 * 60), Degrees.of(12)));
     TOF_MAP.put(3.022, 1.3676767);
 
-    SHOT_MAP.put(2.7, new ShotData(RPM.of(55 * 60), Degrees.of(12)));
+    SHOT_MAP.put(2.7, new ShotData(RPM.of(55 * 60), Degrees.of(10)));
 
-    SHOT_MAP.put(2.58, new ShotData(RPM.of(52 * 60), Degrees.of(10)));
+    SHOT_MAP.put(2.58, new ShotData(RPM.of(52 * 60), Degrees.of(8)));
     TOF_MAP.put(2.58, 1.29);
 
-    SHOT_MAP.put(2.012, new ShotData(RPM.of(52 * 60), Degrees.of(2)));
+    SHOT_MAP.put(2.012, new ShotData(RPM.of(52 * 60), Degrees.of(5)));
     TOF_MAP.put(2.012, 1.25);
 
-    SHOT_MAP.put(1.253, new ShotData(RPM.of(50 * 60), Degrees.of(0)));
+    SHOT_MAP.put(1.253, new ShotData(RPM.of(50 * 60), Degrees.of(3)));
     TOF_MAP.put(1.253, 1.23);
   }
 
@@ -160,7 +160,8 @@ public class ShooterTurretCalculator {
   // see https://www.desmos.com/calculator/ezjqolho6g
   public static ShotData calculateShotFromFunnelClearance(
       Pose2d robot, Translation3d actualTarget, Translation3d predictedTarget) {
-    double x_dist = getDistanceToTarget(robot, predictedTarget).in(Inches);
+    Pose2d turretPose = (new Pose3d(robot).transformBy(robotToTurret)).toPose2d();
+    double x_dist = getDistanceToTarget(turretPose, predictedTarget).in(Inches);
     double y_dist = predictedTarget.getMeasureZ().minus(robotToTurret.getMeasureZ()).in(Inches);
     double g = 386;
     double r =
@@ -219,7 +220,8 @@ public class ShooterTurretCalculator {
   public static ShotData iterativeMovingShotFromMap(
       Pose2d robot, ChassisSpeeds fieldSpeeds, Translation3d target, int iterations) {
     target = AllianceFlipUtil.apply(target);
-    double distance = getDistanceToTarget(robot, target).in(Meters);
+    Pose2d turretPose = (new Pose3d(robot).transformBy(robotToTurret)).toPose2d();
+    double distance = getDistanceToTarget(turretPose, target).in(Meters);
     ShotData shot = SHOT_MAP.get(distance);
     shot = new ShotData(shot.exitVelocity, shot.hoodAngle, target);
     Time timeOfFlight = Seconds.of(TOF_MAP.get(distance));

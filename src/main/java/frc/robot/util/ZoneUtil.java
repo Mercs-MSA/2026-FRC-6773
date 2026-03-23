@@ -42,13 +42,13 @@ public class ZoneUtil {
           FieldConstants.LinesVertical.allianceZone,
           FieldConstants.LinesVertical.hubCenter,
           0,
-          FieldConstants.LinesHorizontal.rightTrenchOpenEnd);
+          FieldConstants.LinesHorizontal.rightTrenchOpenStart);
 
   public static final BaseZone BLUE_ALLIANCE_TRENCH_ZONE_LEFT =
       new BaseZone(
           FieldConstants.LinesVertical.allianceZone,
           FieldConstants.LinesVertical.hubCenter,
-          FieldConstants.LinesHorizontal.leftTrenchOpenStart,
+          FieldConstants.LinesHorizontal.leftTrenchOpenEnd,
           FieldConstants.fieldWidth);
 
   public static final BaseZone RED_LEFT_PASS_ZONE = BLUE_RIGHT_PASS_ZONE.mirroredX();
