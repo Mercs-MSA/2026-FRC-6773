@@ -16,12 +16,14 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.GenericHID;
+import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.commands.AutonCommands;
 // import frc.robot.RobotManager.IntakeManagerState;
@@ -109,6 +111,8 @@ public class RobotContainer {
   private final LoggedDashboardChooser<Command> autoChooser;
   private Field2d field = new Field2d();
   private Field2d trajField = new Field2d();
+
+  private Trigger rumbleTrigger;
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -286,6 +290,29 @@ public class RobotContainer {
             drive, intake, indexer, transfer, shooter
             // , climber
             );
+    rumbleTrigger =
+        new Trigger(
+            () -> {
+              Pose2d accels = drive.getAccelComponents();
+              if (accels.getTranslation().getNorm() > 6) {
+                return true;
+              }
+              // if (accels.getRotation().getDegrees() > ) {
+              //   return true;
+              // }
+              return false;
+            });
+
+    rumbleTrigger.onTrue(
+        Commands.runOnce(
+            () -> {
+              controller.setRumble(RumbleType.kBothRumble, 0.5);
+            }));
+    rumbleTrigger.onFalse(
+        Commands.runOnce(
+            () -> {
+              controller.setRumble(RumbleType.kBothRumble, 0);
+            }));
 
     // Set up auto routines
     autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());

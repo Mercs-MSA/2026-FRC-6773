@@ -32,10 +32,13 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.system.plant.DCMotor;
+import edu.wpi.first.units.measure.AngularAcceleration;
+import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.wpilibj.Alert;
 import edu.wpi.first.wpilibj.Alert.AlertType;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -71,6 +74,17 @@ public class Drive extends SubsystemBase {
   public DriveState driveState = DriveState.IDLE;
 
   public double speedCap = Double.MAX_VALUE;
+
+  public double lastVelX;
+  public double lastVelY;
+  public Pose2d lastPose;
+  public Timer timer;
+  public double accelerationX;
+  public double accelerationY;
+  public AngularVelocity lastOmega;
+  public AngularAcceleration alpha;
+
+  private static final double kAccelFilterAlpha = 0.15;
 
   private Trigger bumpTrigger;
 
@@ -178,10 +192,18 @@ public class Drive extends SubsystemBase {
     bumpTrigger.onTrue(Commands.runOnce(() -> setDriveState(DriveState.BUMP)));
     bumpTrigger.onFalse(Commands.runOnce(() -> setDriveState(DriveState.DRIVING)));
     bumpTrigger.debounce(0.5);
+    timer = new Timer();
+    timer.start();
+    lastPose = getPose();
+    lastVelX = 0;
+    lastVelY = 0;
+    lastOmega = AngularVelocity.ofBaseUnits(0, RadiansPerSecond);
+    alpha = AngularAcceleration.ofBaseUnits(0, RadiansPerSecondPerSecond);
   }
 
   @Override
   public void periodic() {
+
     odometryLock.lock(); // Prevents odometry updates while reading data
     gyroIO.updateInputs(gyroInputs);
     Logger.processInputs("Drive/Gyro", gyroInputs);
@@ -257,6 +279,37 @@ public class Drive extends SubsystemBase {
 
       Logger.recordOutput("States/DriveState", driveState);
       Logger.recordOutput("Speed Cap", speedCap);
+    }
+
+    // Calculate acceleration outside the odometry sample loop to avoid near-zero dT
+    if (timer.get() != 0) {
+      double dT = timer.get();
+      double distanceX = getPose().getX() - lastPose.getX();
+      double distanceY = getPose().getY() - lastPose.getY();
+      double thisVelX = distanceX / dT;
+      double thisVelY = distanceY / dT;
+      double rawAccelX = (thisVelX - lastVelX) / dT;
+      double rawAccelY = (thisVelY - lastVelY) / dT;
+
+      // Low-pass filter to reduce jitter
+      accelerationX = kAccelFilterAlpha * rawAccelX + (1 - kAccelFilterAlpha) * accelerationX;
+      accelerationY = kAccelFilterAlpha * rawAccelY + (1 - kAccelFilterAlpha) * accelerationY;
+
+      lastVelX = thisVelX;
+      lastVelY = thisVelY;
+
+      Rotation2d angDis = getPose().getRotation().minus(lastPose.getRotation());
+      AngularVelocity omega =
+          AngularVelocity.ofBaseUnits(angDis.getRadians() / dT, RadiansPerSecond);
+      double rawAlpha = (omega.magnitude() - lastOmega.magnitude()) / dT;
+      alpha =
+          AngularAcceleration.ofBaseUnits(
+              kAccelFilterAlpha * rawAlpha
+                  + (1 - kAccelFilterAlpha) * alpha.in(RadiansPerSecondPerSecond),
+              RadiansPerSecondPerSecond);
+      lastOmega = omega;
+      lastPose = getPose();
+      timer.reset();
     }
 
     // Update gyro alert
@@ -407,6 +460,13 @@ public class Drive extends SubsystemBase {
   /** Returns the maximum linear speed in meters per sec. */
   public double getMaxLinearSpeedMetersPerSec() {
     return DriveConstants.kSpeedAt12Volts.in(MetersPerSecond);
+  }
+
+  // Returns a Pose2d containing linear accelerations in meters and angular acceleration in radians
+  @AutoLogOutput(key = "Drive/Accels")
+  public Pose2d getAccelComponents() {
+    return new Pose2d(
+        accelerationX, accelerationY, Rotation2d.fromRadians(alpha.abs(DegreesPerSecondPerSecond)));
   }
 
   /** Returns the maximum angular speed in radians per sec. */
