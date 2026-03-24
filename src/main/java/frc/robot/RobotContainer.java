@@ -565,6 +565,11 @@ public class RobotContainer {
     if (alliance.isEmpty()) {
       return false;
     }
+
+    if (DriverStation.isDisabled()) {
+      putPhaseTimeLeft(0);
+      return false;
+    }
     // Hub is always enabled in autonomous.
     if (DriverStation.isAutonomousEnabled()) {
       putPhaseTimeLeft(matchTime);
