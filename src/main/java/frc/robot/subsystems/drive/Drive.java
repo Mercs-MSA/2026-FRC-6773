@@ -287,26 +287,28 @@ public class Drive extends SubsystemBase {
       double distanceX = getPose().getX() - lastPose.getX();
       double distanceY = getPose().getY() - lastPose.getY();
       double thisVelX = distanceX / dT;
+      thisVelX = getFieldVelocity().vxMetersPerSecond;
       double thisVelY = distanceY / dT;
+      thisVelY = getFieldVelocity().vyMetersPerSecond;
       double rawAccelX = (thisVelX - lastVelX) / dT;
       double rawAccelY = (thisVelY - lastVelY) / dT;
 
       // Low-pass filter to reduce jitter
       accelerationX = kAccelFilterAlpha * rawAccelX + (1 - kAccelFilterAlpha) * accelerationX;
       accelerationY = kAccelFilterAlpha * rawAccelY + (1 - kAccelFilterAlpha) * accelerationY;
+      // accelerationX = rawAccelX;
+      // accelerationY = rawAccelY;
 
       lastVelX = thisVelX;
       lastVelY = thisVelY;
 
       Rotation2d angDis = getPose().getRotation().minus(lastPose.getRotation());
       AngularVelocity omega =
-          AngularVelocity.ofBaseUnits(angDis.getRadians() / dT, RadiansPerSecond);
-      double rawAlpha = (omega.magnitude() - lastOmega.magnitude()) / dT;
-      alpha =
-          AngularAcceleration.ofBaseUnits(
-              kAccelFilterAlpha * rawAlpha
-                  + (1 - kAccelFilterAlpha) * alpha.in(RadiansPerSecondPerSecond),
-              RadiansPerSecondPerSecond);
+          AngularVelocity.ofBaseUnits(getFieldVelocity().omegaRadiansPerSecond, RadiansPerSecond);
+
+      double rawAlpha = (getFieldVelocity().omegaRadiansPerSecond - lastOmega.magnitude()) / dT;
+
+      alpha = AngularAcceleration.ofBaseUnits(rawAlpha, RadiansPerSecondPerSecond);
       lastOmega = omega;
       lastPose = getPose();
       timer.reset();
