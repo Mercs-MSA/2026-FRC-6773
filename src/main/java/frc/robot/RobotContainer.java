@@ -317,16 +317,23 @@ public class RobotContainer {
     // Set up auto routines
     autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
 
-    autoChooser.addOption("LEFT_45", autonCommands.getAutonomousSequence("LEFT_45"));
-    autoChooser.addOption("RIGHT_45", autonCommands.getAutonomousSequence("RIGHT_45"));
-    autoChooser.addOption("LEFT_FULL", autonCommands.getAutonomousSequence("LEFT_FULL"));
-    autoChooser.addOption("RIGHT_FULL", autonCommands.getAutonomousSequence("RIGHT_FULL"));
-    autoChooser.addOption("RIGHT_TEST", autonCommands.getAutonomousSequence("RIGHT_TEST"));
-    autoChooser.addOption("LEFT_TEST", autonCommands.getAutonomousSequence("LEFT_TEST"));
+    // autoChooser.addOption("LEFT_45", autonCommands.getAutonomousSequence("LEFT_45"));
+    // autoChooser.addOption("RIGHT_45", autonCommands.getAutonomousSequence("RIGHT_45"));
+    // autoChooser.addOption("LEFT_FULL", autonCommands.getAutonomousSequence("LEFT_FULL"));
+    // autoChooser.addOption("RIGHT_FULL", autonCommands.getAutonomousSequence("RIGHT_FULL"));
+    // autoChooser.addOption("RIGHT_TEST", autonCommands.getAutonomousSequence("RIGHT_TEST"));
+    // autoChooser.addOption("LEFT_TEST", autonCommands.getAutonomousSequence("LEFT_TEST"));
+    // autoChooser.addOption(
+    //     "RIGHT_FULL_TEST", autonCommands.getAutonomousSequence("RIGHT_FULL_TEST"));
+    // autoChooser.addOption("LEFT_FULL_TEST",
+    // autonCommands.getAutonomousSequence("LEFT_FULL_TEST"));
+    // autoChooser.addOption("SHUNT_LEFT", autonCommands.getAutonomousSequence("SHUNT_LEFT"));
+
     autoChooser.addOption(
-        "RIGHT_FULL_TEST", autonCommands.getAutonomousSequence("RIGHT_FULL_TEST"));
-    autoChooser.addOption("LEFT_FULL_TEST", autonCommands.getAutonomousSequence("LEFT_FULL_TEST"));
-    autoChooser.addOption("SHUNT_LEFT", autonCommands.getAutonomousSequence("SHUNT_LEFT"));
+        "Right Side 1 Pass No Output", autonCommands.getAutonomousSequence("RIGHT_NO_OUTPOST"));
+    autoChooser.addOption(
+        "Right Side 1 Pass + Outpost", autonCommands.getAutonomousSequence("RIGHT_TEST"));
+    autoChooser.addOption("Left Side 1 Pass", autonCommands.getAutonomousSequence("LEFT_TEST"));
 
     // autoChooser.addOption("Test Path", autonCommands.getPathCommand("TuningPath"));
     // autoChooser.addOption("Center Bump Path", autonCommands.getAutonomousSequence("CENTER"));
@@ -563,6 +570,11 @@ public class RobotContainer {
     Optional<Alliance> alliance = DriverStation.getAlliance();
     // If we have no alliance, we cannot be enabled, therefore no hub.
     if (alliance.isEmpty()) {
+      return false;
+    }
+
+    if (DriverStation.isDisabled()) {
+      putPhaseTimeLeft(0);
       return false;
     }
     // Hub is always enabled in autonomous.

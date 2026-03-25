@@ -135,6 +135,15 @@ public class AutonCommands extends TeleopCommands {
                 }));
         autonCommand.addCommands(humanPlayerAuton("H_Partial_1Pass"));
         break;
+      case "RIGHT_NO_OUTPOST":
+        autonCommand.addCommands(
+            Commands.runOnce(
+                () -> {
+                  drive.setPose(
+                      AllianceFlipUtil.apply(ChoreoTraj.H_Partial_2Pass.initialPoseBlue()));
+                }));
+        autonCommand.addCommands(getAutonCommandSegments("H_Partial_2Pass"));
+        break;
       case "RIGHT_FULL_TEST":
         autonCommand.addCommands(getAutonCommandSegments("H_Full_1Pass"));
         break;
@@ -151,7 +160,6 @@ public class AutonCommands extends TeleopCommands {
         autonCommand.addCommands(getAutonCommandSegments("D_Partial_1Pass"));
         // autonCommand.addCommands(getDepotSide());
         break;
-
       case "SHUNT_LEFT":
         String quick = "H_Shunt_Grab";
         autonCommand.addCommands(getPathCommand(quick, 0));
