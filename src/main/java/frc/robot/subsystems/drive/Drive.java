@@ -279,15 +279,15 @@ public class Drive extends SubsystemBase {
 
       Logger.recordOutput("States/DriveState", driveState);
       Logger.recordOutput("Speed Cap", speedCap);
-
-      Logger.recordOutput("Drive/RobotSpeed", Math.sqrt(Math.pow(getFieldVelocity().vxMetersPerSecond, 2) + Math.pow(getFieldVelocity().vyMetersPerSecond, 2)));
-      Logger.recordOutput("Drive/RobotAcceleration", Math.sqrt(Math.pow(accelerationX, 2) + Math.pow(accelerationY, 2)));
-
     }
 
     // Calculate acceleration outside the odometry sample loop to avoid near-zero dT
     if (timer.get() != 0) {
       double dT = timer.get();
+      if (dT < 0.005) { // skip if less than 5ms
+        timer.reset();
+        return; // or just skip the accel block
+      }
       double distanceX = getPose().getX() - lastPose.getX();
       double distanceY = getPose().getY() - lastPose.getY();
       double thisVelX = distanceX / dT;
@@ -316,6 +316,15 @@ public class Drive extends SubsystemBase {
       lastPose = getPose();
       timer.reset();
     }
+
+    Logger.recordOutput(
+        "Drive/RobotSpeed",
+        Math.sqrt(
+            Math.pow(getFieldVelocity().vxMetersPerSecond, 2)
+                + Math.pow(getFieldVelocity().vyMetersPerSecond, 2)));
+    Logger.recordOutput(
+        "Drive/RobotAcceleration",
+        Math.sqrt(Math.pow(accelerationX, 2) + Math.pow(accelerationY, 2)));
 
     // Update gyro alert
     gyroDisconnectedAlert.set(!gyroInputs.connected && Constants.currentMode != Mode.SIM);
