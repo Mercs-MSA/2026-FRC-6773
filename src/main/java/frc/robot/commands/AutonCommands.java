@@ -157,8 +157,8 @@ public class AutonCommands extends TeleopCommands {
                   drive.setPose(
                       AllianceFlipUtil.apply(ChoreoTraj.D_Partial_1Pass.initialPoseBlue()));
                 }));
-        autonCommand.addCommands(getAutonCommandSegments("D_Partial_1Pass"));
-        // autonCommand.addCommands(getDepotSide());
+        // autonCommand.addCommands(getAutonCommandSegments("D_Partial_1Pass"));
+        autonCommand.addCommands(getDepotSide());
         break;
       case "SHUNT_LEFT":
         String quick = "H_Shunt_Grab";
@@ -245,16 +245,14 @@ public class AutonCommands extends TeleopCommands {
     command.addCommands(getPathCommand(quick, 2));
     command.addCommands(stopDrive());
     command.addCommands(stopShootCommand());
-    Command com =
-        Commands.parallel(
-            intakeCommand(IntakeState.OUTTAKING),
-            indexCommand(IndexerState.INDEXING),
-            shootCommand());
+
+    Command com = Commands.parallel(indexCommand(IndexerState.INDEXING), shootAndOuttakeCommand());
     command.addCommands(com);
-    command.addCommands(new WaitCommand(1));
+    command.addCommands(new WaitCommand(2.5));
     command.addCommands(intakeCommand(IntakeState.INTAKING));
     command.addCommands(getPathCommand(quick, 3));
     command.addCommands(stopDrive());
+    command.addCommands(intakeCommand(IntakeState.AGITATE));
     // command.addCommands(new WaitCommand(1.5));
     return command;
   }
@@ -324,6 +322,17 @@ public class AutonCommands extends TeleopCommands {
             () -> {
               if (!intakeStateSupplier.get().equals(IntakeState.INTAKING))
                 intake.setIntakeState(IntakeState.AGITATE);
+              transfer.setTransferState(TransferState.TRANSFERRING);
+            }));
+  }
+
+  public Command shootAndOuttakeCommand() {
+    return Commands.parallel(
+        shooter.startShooterOnce(),
+        Commands.runOnce(
+            () -> {
+              if (!intakeStateSupplier.get().equals(IntakeState.INTAKING))
+                intake.setIntakeState(IntakeState.OUTTAKING);
               transfer.setTransferState(TransferState.TRANSFERRING);
             }));
   }
