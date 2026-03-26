@@ -30,6 +30,7 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.constants.FieldConstants;
 import frc.robot.subsystems.shooter.ShooterTurretCalculator.ShotData;
 import frc.robot.util.ZoneUtil;
+import java.util.function.BooleanSupplier;
 import java.util.function.Supplier;
 import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.Logger;
@@ -40,6 +41,7 @@ public class Shooter extends SubsystemBase {
 
   public enum ShooterState {
     STOW,
+    IDLE_FIXED,
     IDLE_HUB,
     IDLE_L,
     IDLE_R,
@@ -47,6 +49,7 @@ public class Shooter extends SubsystemBase {
     SHOOT_PASS_R,
     SHOOT_HUB,
     SHOOT_FIXED,
+    SHOOT_TRENCH_LOCK,
     MANUAL,
   }
 
@@ -54,11 +57,14 @@ public class Shooter extends SubsystemBase {
   public final LoggedNetworkNumber flywheelVelCust =
       new LoggedNetworkNumber("Shooter/FlywheelVel", 0);
   public final LoggedNetworkBoolean useCustom =
-      new LoggedNetworkBoolean("Shooter/UseCustoms", false);
+      new LoggedNetworkBoolean("Shooter/Use Customs", false);
   public final LoggedNetworkBoolean useManual =
-      new LoggedNetworkBoolean("Shooter/Use_Manual", false);
+      new LoggedNetworkBoolean("Shooter/Use Manual", false);
   public final LoggedNetworkBoolean useBiases =
-      new LoggedNetworkBoolean("Shooter/Use_Biases", false);
+      new LoggedNetworkBoolean("Shooter/Use Biases", false);
+
+  public final LoggedNetworkBoolean fixedShoot =
+      new LoggedNetworkBoolean("Shooter/Fixed Turret", false);
 
   public ShooterState shooterState = ShooterState.STOW;
 
@@ -84,6 +90,8 @@ public class Shooter extends SubsystemBase {
   Trigger leftPassTrigger;
   Trigger rightPassTrigger;
 
+  BooleanSupplier fixedShooter;
+
   private final Supplier<Alliance> isBlue;
 
   /** Creates a new Shooter. */
@@ -98,6 +106,11 @@ public class Shooter extends SubsystemBase {
     hoodHardware = hoodHardwareIO;
     this.poseSupplier = poseSupplier;
     this.fieldSpeedsSupplier = fieldSpeedsSupplier;
+    fixedShooter = () -> fixedShoot.getAsBoolean();
+    Trigger fixShooter = new Trigger(fixedShooter);
+    fixShooter.onTrue(Commands.runOnce(() -> setShooterState(ShooterState.IDLE_FIXED)));
+    fixShooter.onFalse(Commands.runOnce(() -> setShooterState(ShooterState.IDLE_HUB)));
+
 
     isBlue =
         () -> {
@@ -164,6 +177,12 @@ public class Shooter extends SubsystemBase {
         azimuthVelocity = RadiansPerSecond.of(0);
         hoodAngle = Rotation2d.kZero;
         flywheelVel = 0.0;
+        break;
+      case IDLE_FIXED:
+        azimuthAngle = Rotations.of(getTurretPosition());
+        azimuthVelocity = RadiansPerSecond.of(0);
+        hoodAngle = getHoodPosition();
+        flywheelVel = 8.0;
         break;
       case IDLE_L:
         calculatedShot =
@@ -268,7 +287,7 @@ public class Shooter extends SubsystemBase {
         calculatedShot =
             ShooterTurretCalculator.iterativeMovingShotFromMap(
                 robotPose, fieldSpeeds, FieldConstants.Hub.topCenterPoint, 2);
-        azimuthAngle = Angle.ofBaseUnits(0, Radians);
+        azimuthAngle = Rotations.of(getTurretPosition());
         azimuthVelocity = RadiansPerSecond.of(0);
         hoodAngle = Rotation2d.fromDegrees(calculatedShot.getHoodAngle().in(Degrees));
         flywheelVel =
@@ -339,27 +358,39 @@ public class Shooter extends SubsystemBase {
   public Command startShooter() {
     return Commands.run(
         () -> {
-          if (allianceZoneTrigger.getAsBoolean()) setShooterState(ShooterState.SHOOT_HUB);
-          if (leftPassTrigger.getAsBoolean()) setShooterState(ShooterState.SHOOT_PASS_L);
-          if (rightPassTrigger.getAsBoolean()) setShooterState(ShooterState.SHOOT_PASS_R);
+          if (fixedShooter.getAsBoolean()) {
+            setShooterState(ShooterState.SHOOT_FIXED);
+          } else {
+            if (allianceZoneTrigger.getAsBoolean()) setShooterState(ShooterState.SHOOT_HUB);
+            if (leftPassTrigger.getAsBoolean()) setShooterState(ShooterState.SHOOT_PASS_L);
+            if (rightPassTrigger.getAsBoolean()) setShooterState(ShooterState.SHOOT_PASS_R);
+          }
         });
   }
 
   public Command startShooterOnce() {
     return Commands.runOnce(
         () -> {
-          if (allianceZoneTrigger.getAsBoolean()) setShooterState(ShooterState.SHOOT_HUB);
-          if (leftPassTrigger.getAsBoolean()) setShooterState(ShooterState.SHOOT_PASS_L);
-          if (rightPassTrigger.getAsBoolean()) setShooterState(ShooterState.SHOOT_PASS_R);
+          if (fixedShooter.getAsBoolean()) {
+            setShooterState(ShooterState.SHOOT_FIXED);
+          } else {
+            if (allianceZoneTrigger.getAsBoolean()) setShooterState(ShooterState.SHOOT_HUB);
+            if (leftPassTrigger.getAsBoolean()) setShooterState(ShooterState.SHOOT_PASS_L);
+            if (rightPassTrigger.getAsBoolean()) setShooterState(ShooterState.SHOOT_PASS_R);
+          }
         });
   }
 
   public Command idleShooter() {
     return Commands.runOnce(
         () -> {
-          if (allianceZoneTrigger.getAsBoolean()) setShooterState(ShooterState.IDLE_HUB);
-          if (leftPassTrigger.getAsBoolean()) setShooterState(ShooterState.IDLE_L);
-          if (rightPassTrigger.getAsBoolean()) setShooterState(ShooterState.IDLE_R);
+          if (fixedShooter.getAsBoolean()) {
+            setShooterState(ShooterState.IDLE_FIXED);
+          } else {
+            if (allianceZoneTrigger.getAsBoolean()) setShooterState(ShooterState.IDLE_HUB);
+            if (leftPassTrigger.getAsBoolean()) setShooterState(ShooterState.IDLE_L);
+            if (rightPassTrigger.getAsBoolean()) setShooterState(ShooterState.IDLE_R);
+          }
         });
   }
 

@@ -8,11 +8,13 @@
 package frc.robot;
 
 import static edu.wpi.first.units.Units.Meters;
+import static edu.wpi.first.units.Units.Milliseconds;
 import static frc.robot.subsystems.vision.VisionConstants.*;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.GenericHID;
@@ -282,7 +284,7 @@ public class RobotContainer {
     // manager = new RobotManager(drive, intake, indexer, transfer, shooter);
     teleopCommands =
         new TeleopCommands(
-            drive, intake, indexer, transfer, shooter
+            drive, intake, indexer, transfer, shooter, controller.rightTrigger()
             // , climber
             );
     autonCommands =
@@ -393,16 +395,23 @@ public class RobotContainer {
                 drive,
                 () -> -1 * controller.getLeftY(),
                 () -> -1 * controller.getLeftX(),
-                () ->
-                    drive.interpolateAngle(
-                        new Pose2d(
-                            drive.getPose().getX(), drive.getPose().getY(), Rotation2d.kZero),
-                        new Pose2d(
-                            AllianceFlipUtil.applyX(FieldConstants.Hub.topCenterPoint.getX()),
-                            AllianceFlipUtil.applyY(FieldConstants.Hub.topCenterPoint.getY()),
-                            Rotation2d.kZero))
-                // .plus(new Rotation2d(Math.PI))
-                ))
+                () -> {
+                  // Calculate turret field pose to get direction to goal
+                  Pose2d turretFieldPose = shooter.getTurretFieldPose();
+                  Translation2d goalPosition =
+                      new Translation2d(
+                          AllianceFlipUtil.applyX(FieldConstants.Hub.topCenterPoint.getX()),
+                          AllianceFlipUtil.applyY(FieldConstants.Hub.topCenterPoint.getY()));
+
+                  // Get angle from turret to goal
+                  Rotation2d angleToGoal =
+                      goalPosition.minus(turretFieldPose.getTranslation()).getAngle();
+
+                  // Calculate desired robot rotation (account for turret offset and orientation)
+                  return angleToGoal
+                      .minus(Rotation2d.kCCW_Pi_2) // Account for turret pointing forward
+                      .minus(Rotation2d.fromRotations(shooter.getTurretPosition()));
+                }))
         .onFalse(Commands.runOnce(() -> drive.setDriveState(DriveState.DRIVING)));
 
     // Reset gyro to 0° when B button is pressed
@@ -416,16 +425,20 @@ public class RobotContainer {
                     drive)
                 .ignoringDisable(true));
 
-    // controller.rightTrigger().whileTrue(shooter.startShooter()).onFalse(shooter.idleShooter());
     controller
         .rightTrigger()
         .whileTrue(teleopCommands.shootCommand())
-        .onFalse(teleopCommands.stopShootCommand())
         .onFalse(
-            Commands.runOnce(
-                () -> {
-                  indexer.setIndexerState(IndexerState.IDLE);
-                }));
+            Commands.sequence(
+                    Commands.runOnce(
+                        () -> {
+                          indexer.setIndexerState(IndexerState.FLUSH);
+                        }),
+                    teleopCommands.stopAgitateCommand(),
+                    Commands.waitTime(Milliseconds.of(500)),
+                    teleopCommands.stopShootCommand())
+                .onlyWhile(controller.rightTrigger().negate()));
+
     opController
         .rightTrigger()
         .whileTrue(
@@ -442,6 +455,7 @@ public class RobotContainer {
                     indexer.setIndexerState(IndexerState.IDLE);
                   }
                 }));
+
     controller
         .leftTrigger()
         .onTrue(teleopCommands.intakeCommand(IntakeState.INTAKING))
@@ -453,21 +467,6 @@ public class RobotContainer {
         .onFalse(teleopCommands.intakeCommand(IntakeState.IDLE));
 
     controller.leftBumper().onTrue(teleopCommands.intakeCommand(IntakeState.STOW));
-
-    // opController
-    // .rightTrigger()
-    // .whileTrue(
-    // Commands.run(
-    // () -> {
-    // indexer.setSpindexerVoltage(-4.0);
-    // }));
-    // opController
-    // .rightTrigger()
-    // .onFalse(
-    // (Commands.run(
-    // () -> {
-    // indexer.setSpindexerVoltage(0.0);
-    // })));
 
     opController
         .leftBumper()
