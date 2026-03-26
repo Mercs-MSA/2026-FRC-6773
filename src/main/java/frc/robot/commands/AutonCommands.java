@@ -142,7 +142,9 @@ public class AutonCommands extends TeleopCommands {
                   drive.setPose(
                       AllianceFlipUtil.apply(ChoreoTraj.H_Partial_2Pass.initialPoseBlue()));
                 }));
-        autonCommand.addCommands(getAutonCommandSegments("H_Partial_2Pass"));
+        // autonCommand.addCommands(getAutonCommandSegments("H_Partial_2Pass"));
+        autonCommand.addCommands(getHumanSide());
+
         break;
       case "RIGHT_FULL_TEST":
         autonCommand.addCommands(getAutonCommandSegments("H_Full_1Pass"));
@@ -233,6 +235,32 @@ public class AutonCommands extends TeleopCommands {
 
   public Command getDepotSide() {
     String quick = "D_Partial_1Pass";
+
+    SequentialCommandGroup command = new SequentialCommandGroup();
+
+    command.addCommands(getPathCommand(quick, 0));
+    command.addCommands(intakeCommand(IntakeState.INTAKING));
+
+    command.addCommands(getPathCommand(quick, 1));
+    command.addCommands(intakeCommand(IntakeState.IDLE));
+
+    command.addCommands(getPathCommand(quick, 2));
+    command.addCommands(stopDrive());
+    command.addCommands(stopShootCommand());
+
+    Command com = Commands.parallel(indexCommand(IndexerState.INDEXING), shootAndOuttakeCommand());
+    command.addCommands(com);
+    command.addCommands(new WaitCommand(2.5));
+    command.addCommands(intakeCommand(IntakeState.INTAKING));
+    command.addCommands(getPathCommand(quick, 3));
+    command.addCommands(stopDrive());
+    command.addCommands(intakeCommand(IntakeState.AGITATE));
+    // command.addCommands(new WaitCommand(1.5));
+    return command;
+  }
+
+  public Command getHumanSide() {
+    String quick = "H_Partial_2Pass";
 
     SequentialCommandGroup command = new SequentialCommandGroup();
 

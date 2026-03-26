@@ -280,9 +280,14 @@ public class Drive extends SubsystemBase {
       Logger.recordOutput("States/DriveState", driveState);
       Logger.recordOutput("Speed Cap", speedCap);
 
-      Logger.recordOutput("Drive/RobotSpeed", Math.sqrt(Math.pow(getFieldVelocity().vxMetersPerSecond, 2) + Math.pow(getFieldVelocity().vyMetersPerSecond, 2)));
-      Logger.recordOutput("Drive/RobotAcceleration", Math.sqrt(Math.pow(accelerationX, 2) + Math.pow(accelerationY, 2)));
-
+      Logger.recordOutput(
+          "Drive/RobotSpeed",
+          Math.sqrt(
+              Math.pow(getFieldVelocity().vxMetersPerSecond, 2)
+                  + Math.pow(getFieldVelocity().vyMetersPerSecond, 2)));
+      Logger.recordOutput(
+          "Drive/RobotAcceleration",
+          Math.sqrt(Math.pow(accelerationX, 2) + Math.pow(accelerationY, 2)));
     }
 
     // Calculate acceleration outside the odometry sample loop to avoid near-zero dT
