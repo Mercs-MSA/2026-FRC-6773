@@ -25,7 +25,7 @@ public final class Constants {
 
   public static boolean disableHAL = false;
 
-  public static LinearVelocity fuelLaunchVelocity = FeetPerSecond.of(50);
+  public static LinearVelocity fuelLaunchVelocity = FeetPerSecond.of(55);
 
   public static void disableHAL() {
     disableHAL = true;

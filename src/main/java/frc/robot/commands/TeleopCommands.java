@@ -43,7 +43,7 @@ public class TeleopCommands {
     intakeStateSupplier = intake::getIntakeState;
 
     flywheelRamp = new Trigger(shooter::isFlywheelAtThreshold);
-    flywheelRamp.onTrue(indexCommand(IndexerState.INDEXING));
+    flywheelRamp.whileTrue(indexCommand(IndexerState.INDEXING));
     // flywheelRamp.onFalse(indexCommand(IndexerState.IDLE));
   }
 

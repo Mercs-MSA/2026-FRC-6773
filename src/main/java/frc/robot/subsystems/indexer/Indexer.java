@@ -55,7 +55,8 @@ public class Indexer extends SubsystemBase {
         setKickerTangentialVelocity(Constants.fuelLaunchVelocity);
         break;
       case JAM:
-        setSpindexerAngularVelocity(RotationsPerSecond.of(-30));
+        setKickerTangentialVelocity(Constants.fuelLaunchVelocity.times(-0.5));
+        setSpindexerAngularVelocity(RotationsPerSecond.of(-33));
     }
   }
 

@@ -96,7 +96,7 @@ public class RobotContainer {
   private final Transfer transfer;
   private final Intake intake;
   private final Shooter shooter;
-  //   private final Climb climber;
+  // private final Climb climber;
 
   // Controller
   private final CommandXboxController controller = new CommandXboxController(0);
@@ -105,7 +105,7 @@ public class RobotContainer {
   private final AutonCommands autonCommands;
   private final TeleopCommands teleopCommands;
 
-  //   private RobotManager manager;
+  // private RobotManager manager;
 
   // Dashboard inputs
   private final LoggedDashboardChooser<Command> autoChooser;
@@ -188,12 +188,12 @@ public class RobotContainer {
                     TransferConstants.statusSignalUpdateFrequencyHz));
 
         // climber =
-        //     new Climb(
-        //         new ClimbIOTalonFX(
-        //             ClimbConstants.climbHardware,
-        //             ClimbConstants.climbTalonFXConfiguration,
-        //             ClimbConstants.statusSignalUpdateFrequencyHz),
-        //         getClimbAdjustmentDoubleSupplier());
+        // new Climb(
+        // new ClimbIOTalonFX(
+        // ClimbConstants.climbHardware,
+        // ClimbConstants.climbTalonFXConfiguration,
+        // ClimbConstants.statusSignalUpdateFrequencyHz),
+        // getClimbAdjustmentDoubleSupplier());
         break;
 
       case SIM:
@@ -248,12 +248,12 @@ public class RobotContainer {
                     TransferConstants.transferSimulationConfiguration));
 
         // climber =
-        //     new Climb(
-        //         new ClimbIOSim(
-        //             0.02,
-        //             ClimbConstants.climbHardware,
-        //             ClimbConstants.climbSimulationConfiguration),
-        //         getClimbAdjustmentDoubleSupplier());
+        // new Climb(
+        // new ClimbIOSim(
+        // 0.02,
+        // ClimbConstants.climbHardware,
+        // ClimbConstants.climbSimulationConfiguration),
+        // getClimbAdjustmentDoubleSupplier());
 
         break;
 
@@ -298,7 +298,7 @@ public class RobotContainer {
                 return true;
               }
               // if (accels.getRotation().getDegrees() > ) {
-              //   return true;
+              // return true;
               // }
               return false;
             });
@@ -317,17 +317,24 @@ public class RobotContainer {
     // Set up auto routines
     autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
 
-    // autoChooser.addOption("LEFT_45", autonCommands.getAutonomousSequence("LEFT_45"));
-    // autoChooser.addOption("RIGHT_45", autonCommands.getAutonomousSequence("RIGHT_45"));
-    // autoChooser.addOption("LEFT_FULL", autonCommands.getAutonomousSequence("LEFT_FULL"));
-    // autoChooser.addOption("RIGHT_FULL", autonCommands.getAutonomousSequence("RIGHT_FULL"));
-    // autoChooser.addOption("RIGHT_TEST", autonCommands.getAutonomousSequence("RIGHT_TEST"));
-    // autoChooser.addOption("LEFT_TEST", autonCommands.getAutonomousSequence("LEFT_TEST"));
+    // autoChooser.addOption("LEFT_45",
+    // autonCommands.getAutonomousSequence("LEFT_45"));
+    // autoChooser.addOption("RIGHT_45",
+    // autonCommands.getAutonomousSequence("RIGHT_45"));
+    // autoChooser.addOption("LEFT_FULL",
+    // autonCommands.getAutonomousSequence("LEFT_FULL"));
+    // autoChooser.addOption("RIGHT_FULL",
+    // autonCommands.getAutonomousSequence("RIGHT_FULL"));
+    // autoChooser.addOption("RIGHT_TEST",
+    // autonCommands.getAutonomousSequence("RIGHT_TEST"));
+    // autoChooser.addOption("LEFT_TEST",
+    // autonCommands.getAutonomousSequence("LEFT_TEST"));
     // autoChooser.addOption(
-    //     "RIGHT_FULL_TEST", autonCommands.getAutonomousSequence("RIGHT_FULL_TEST"));
+    // "RIGHT_FULL_TEST", autonCommands.getAutonomousSequence("RIGHT_FULL_TEST"));
     // autoChooser.addOption("LEFT_FULL_TEST",
     // autonCommands.getAutonomousSequence("LEFT_FULL_TEST"));
-    // autoChooser.addOption("SHUNT_LEFT", autonCommands.getAutonomousSequence("SHUNT_LEFT"));
+    // autoChooser.addOption("SHUNT_LEFT",
+    // autonCommands.getAutonomousSequence("SHUNT_LEFT"));
 
     autoChooser.addOption(
         "Right Side 1 Pass No Output", autonCommands.getAutonomousSequence("RIGHT_NO_OUTPOST"));
@@ -335,8 +342,10 @@ public class RobotContainer {
         "Right Side 1 Pass + Outpost", autonCommands.getAutonomousSequence("RIGHT_TEST"));
     autoChooser.addOption("Left Side 1 Pass", autonCommands.getAutonomousSequence("LEFT_TEST"));
 
-    // autoChooser.addOption("Test Path", autonCommands.getPathCommand("TuningPath"));
-    // autoChooser.addOption("Center Bump Path", autonCommands.getAutonomousSequence("CENTER"));
+    // autoChooser.addOption("Test Path",
+    // autonCommands.getPathCommand("TuningPath"));
+    // autoChooser.addOption("Center Bump Path",
+    // autonCommands.getAutonomousSequence("CENTER"));
 
     // Set up SysId routines
     autoChooser.addOption(
@@ -412,10 +421,26 @@ public class RobotContainer {
         .rightTrigger()
         .whileTrue(teleopCommands.shootCommand())
         .onFalse(teleopCommands.stopShootCommand())
-        .whileFalse(
-            Commands.run(
+        .onFalse(
+            Commands.runOnce(
                 () -> {
                   indexer.setIndexerState(IndexerState.IDLE);
+                }));
+    opController
+        .rightTrigger()
+        .whileTrue(
+            Commands.run(
+                () -> {
+                  indexer.setIndexerState(IndexerState.JAM);
+                }))
+        .onFalse(
+            Commands.runOnce(
+                () -> {
+                  if (controller.rightTrigger().getAsBoolean()) {
+                    indexer.setIndexerState(IndexerState.INDEXING);
+                  } else {
+                    indexer.setIndexerState(IndexerState.IDLE);
+                  }
                 }));
     controller
         .leftTrigger()
@@ -430,19 +455,19 @@ public class RobotContainer {
     controller.leftBumper().onTrue(teleopCommands.intakeCommand(IntakeState.STOW));
 
     // opController
-    //     .rightTrigger()
-    //     .whileTrue(
-    //         Commands.run(
-    //             () -> {
-    //               indexer.setSpindexerVoltage(-4.0);
-    //             }));
+    // .rightTrigger()
+    // .whileTrue(
+    // Commands.run(
+    // () -> {
+    // indexer.setSpindexerVoltage(-4.0);
+    // }));
     // opController
-    //     .rightTrigger()
-    //     .onFalse(
-    //         (Commands.run(
-    //             () -> {
-    //               indexer.setSpindexerVoltage(0.0);
-    //             })));
+    // .rightTrigger()
+    // .onFalse(
+    // (Commands.run(
+    // () -> {
+    // indexer.setSpindexerVoltage(0.0);
+    // })));
 
     opController
         .leftBumper()
@@ -509,14 +534,14 @@ public class RobotContainer {
     return drive;
   }
 
-  //   public void updateManager() {
-  //     manager.periodicManager();
-  //   }
+  // public void updateManager() {
+  // manager.periodicManager();
+  // }
 
-  //   public void resetState() {
-  //     manager.robotState = RobotScoringState.IDLE;
-  //     manager.intakeState = IntakeManagerState.IDLE;
-  //   }
+  // public void resetState() {
+  // manager.robotState = RobotScoringState.IDLE;
+  // manager.intakeState = IntakeManagerState.IDLE;
+  // }
 
   public DoubleSupplier getClimbAdjustmentDoubleSupplier() {
     return () -> {
@@ -589,7 +614,8 @@ public class RobotContainer {
 
     // We're teleop enabled, compute.
     String gameData = DriverStation.getGameSpecificMessage();
-    // If we have no game data, we cannot compute, assume hub is active, as its likely early in
+    // If we have no game data, we cannot compute, assume hub is active, as its
+    // likely early in
     // teleop.
     if (gameData.isEmpty()) {
       return true;
