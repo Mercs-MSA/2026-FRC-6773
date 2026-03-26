@@ -56,12 +56,9 @@ public class Shooter extends SubsystemBase {
   public final LoggedNetworkNumber hoodAngleCust = new LoggedNetworkNumber("Shooter/HoodAngle", 0);
   public final LoggedNetworkNumber flywheelVelCust =
       new LoggedNetworkNumber("Shooter/FlywheelVel", 0);
-  public final LoggedNetworkBoolean useCustom =
-      new LoggedNetworkBoolean("Shooter/Use Customs", false);
-  public final LoggedNetworkBoolean useManual =
-      new LoggedNetworkBoolean("Shooter/Use Manual", false);
-  public final LoggedNetworkBoolean useBiases =
-      new LoggedNetworkBoolean("Shooter/Use Biases", false);
+  public final LoggedNetworkBoolean useCustom;
+  public final LoggedNetworkBoolean useManual;
+  public final LoggedNetworkBoolean useBiases;
 
   public final LoggedNetworkBoolean fixedShoot =
       new LoggedNetworkBoolean("Shooter/Fixed Turret", false);
@@ -101,6 +98,10 @@ public class Shooter extends SubsystemBase {
       ShooterHoodIO hoodHardwareIO,
       Supplier<Pose2d> poseSupplier,
       Supplier<ChassisSpeeds> fieldSpeedsSupplier) {
+
+    useCustom = new LoggedNetworkBoolean("Shooter/Use Customs", false);
+    useBiases = new LoggedNetworkBoolean("Shooter/Use Biases", false);
+    useManual = new LoggedNetworkBoolean("Shooter/Use Manual", false);
     flywheelHardware = flywheelHardwareIO;
     turretHardware = turretHardwareIO;
     hoodHardware = hoodHardwareIO;
@@ -319,7 +320,8 @@ public class Shooter extends SubsystemBase {
     }
 
     if (useBiases.getAsBoolean()) {
-      if (shooterState != ShooterState.MANUAL) setTurretSetpoint(
+      if (shooterState != ShooterState.MANUAL)
+        setTurretSetpoint(
             azimuthAngle.plus(Angle.ofBaseUnits(turretBias, Rotations)), azimuthVelocity);
       if (!useCustom.getAsBoolean()) {
         double value = hoodAngle.getRotations() + hoodBias;
