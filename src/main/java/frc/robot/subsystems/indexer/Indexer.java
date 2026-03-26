@@ -14,7 +14,8 @@ public class Indexer extends SubsystemBase {
   public enum IndexerState {
     IDLE,
     INDEXING,
-    JAM
+    JAM,
+    FLUSH
   }
 
   public IndexerState indexerState;
@@ -57,6 +58,11 @@ public class Indexer extends SubsystemBase {
       case JAM:
         setKickerTangentialVelocity(Constants.fuelLaunchVelocity.times(-0.5));
         setSpindexerAngularVelocity(RotationsPerSecond.of(-33));
+        break;
+      case FLUSH:
+        setKickerTangentialVelocity(Constants.fuelLaunchVelocity);
+        stopSpindexer();
+        break;
     }
   }
 

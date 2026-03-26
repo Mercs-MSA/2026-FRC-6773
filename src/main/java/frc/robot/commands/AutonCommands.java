@@ -31,7 +31,7 @@ public class AutonCommands extends TeleopCommands {
 
   public AutonCommands(
       Drive drive, Intake intake, Indexer indexer, Transfer transfer, Shooter shooter) {
-    super(drive, intake, indexer, transfer, shooter);
+    super(drive, intake, indexer, transfer, shooter, () -> false);
     this.drive = drive;
     this.shooter = shooter;
     this.intake = intake;
