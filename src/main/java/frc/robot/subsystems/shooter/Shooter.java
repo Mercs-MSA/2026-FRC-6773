@@ -111,7 +111,6 @@ public class Shooter extends SubsystemBase {
     fixShooter.onTrue(Commands.runOnce(() -> setShooterState(ShooterState.IDLE_FIXED)));
     fixShooter.onFalse(Commands.runOnce(() -> setShooterState(ShooterState.IDLE_HUB)));
 
-
     isBlue =
         () -> {
           return DriverStation.getAlliance().get();
@@ -320,9 +319,8 @@ public class Shooter extends SubsystemBase {
     }
 
     if (useBiases.getAsBoolean()) {
-      setTurretSetpoint(
-          azimuthAngle.plus(Angle.ofBaseUnits(turretBias, Rotations)), azimuthVelocity);
-
+      if (shooterState != ShooterState.MANUAL) setTurretSetpoint(
+            azimuthAngle.plus(Angle.ofBaseUnits(turretBias, Rotations)), azimuthVelocity);
       if (!useCustom.getAsBoolean()) {
         double value = hoodAngle.getRotations() + hoodBias;
         setHoodPosition(new Rotation2d(MathUtil.clamp(value, 0, 20d / 360d)));
@@ -332,7 +330,7 @@ public class Shooter extends SubsystemBase {
         setFlywheelVelocityRPS(flywheelVelCust.getAsDouble());
       }
     } else {
-      setTurretSetpoint(azimuthAngle, azimuthVelocity);
+      if (shooterState != ShooterState.MANUAL) setTurretSetpoint(azimuthAngle, azimuthVelocity);
 
       if (!useCustom.getAsBoolean()) {
         setHoodPosition(hoodAngle);
