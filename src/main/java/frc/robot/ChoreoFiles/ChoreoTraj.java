@@ -157,13 +157,6 @@ public record ChoreoTraj(
           0.99343,
           new Pose2d(3.6, 5.9, Rotation2d.fromRadians(-1.571)),
           new Pose2d(1.1, 5.97, Rotation2d.fromRadians(3.142)));
-  public static final ChoreoTraj H_BumpAllianceNeutral =
-      new ChoreoTraj(
-          "H_BumpAllianceNeutral",
-          OptionalInt.empty(),
-          1.11204,
-          new Pose2d(3.2, 2.5, Rotation2d.fromRadians(1.571)),
-          new Pose2d(5.7, 2.5, Rotation2d.fromRadians(1.571)));
   public static final ChoreoTraj H_BumpNeutralAlliance =
       new ChoreoTraj(
           "H_BumpNeutralAlliance",
@@ -301,21 +294,21 @@ public record ChoreoTraj(
       new ChoreoTraj(
           "H_Partial_1Pass_copy1",
           OptionalInt.empty(),
-          7.82657,
+          7.56777,
           new Pose2d(3.6, 2.05, Rotation2d.fromRadians(1.571)),
           new Pose2d(1.596, 3.375, Rotation2d.fromRadians(0)));
   public static final ChoreoTraj H_Partial_1Pass_copy1$0 =
       new ChoreoTraj(
           "H_Partial_1Pass_copy1",
           OptionalInt.of(0),
-          1.88689,
+          1.62406,
           new Pose2d(3.6, 2.05, Rotation2d.fromRadians(1.571)),
           new Pose2d(6.1, 2.05, Rotation2d.fromRadians(1.571)));
   public static final ChoreoTraj H_Partial_1Pass_copy1$1 =
       new ChoreoTraj(
           "H_Partial_1Pass_copy1",
           OptionalInt.of(1),
-          2.0824100000000003,
+          2.08644,
           new Pose2d(6.1, 2.05, Rotation2d.fromRadians(1.571)),
           new Pose2d(6.1, 2.7, Rotation2d.fromRadians(1.571)));
   public static final ChoreoTraj H_Partial_1Pass_copy1$2 =
@@ -343,37 +336,37 @@ public record ChoreoTraj(
       new ChoreoTraj(
           "H_Partial_2Pass",
           OptionalInt.empty(),
-          10.396,
-          new Pose2d(3.439, 2.255, Rotation2d.fromRadians(0.785)),
-          new Pose2d(0.697, 0.657, Rotation2d.fromRadians(3.142)));
+          10.48404,
+          new Pose2d(3.513, 2.452, Rotation2d.fromRadians(0.785)),
+          new Pose2d(0.647, 0.557, Rotation2d.fromRadians(-3.142)));
   public static final ChoreoTraj H_Partial_2Pass$0 =
       new ChoreoTraj(
           "H_Partial_2Pass",
           OptionalInt.of(0),
-          2.36634,
-          new Pose2d(3.439, 2.255, Rotation2d.fromRadians(0.785)),
-          new Pose2d(7.726, 0.582, Rotation2d.fromRadians(1.838)));
+          2.0277,
+          new Pose2d(3.513, 2.452, Rotation2d.fromRadians(0.785)),
+          new Pose2d(7.128, 0.794, Rotation2d.fromRadians(1.571)));
   public static final ChoreoTraj H_Partial_2Pass$1 =
       new ChoreoTraj(
           "H_Partial_2Pass",
           OptionalInt.of(1),
-          2.50725,
-          new Pose2d(7.726, 0.582, Rotation2d.fromRadians(1.838)),
-          new Pose2d(5.819, 2.452, Rotation2d.fromRadians(2.356)));
+          3.52512,
+          new Pose2d(7.128, 0.794, Rotation2d.fromRadians(1.571)),
+          new Pose2d(5.819, 2.452, Rotation2d.fromRadians(-2.356)));
   public static final ChoreoTraj H_Partial_2Pass$2 =
       new ChoreoTraj(
           "H_Partial_2Pass",
           OptionalInt.of(2),
-          1.3606800000000003,
-          new Pose2d(5.819, 2.452, Rotation2d.fromRadians(2.356)),
-          new Pose2d(3.2, 2.452, Rotation2d.fromRadians(2.356)));
+          1.3171300000000006,
+          new Pose2d(5.819, 2.452, Rotation2d.fromRadians(-2.356)),
+          new Pose2d(2.791, 2.464, Rotation2d.fromRadians(-2.356)));
   public static final ChoreoTraj H_Partial_2Pass$3 =
       new ChoreoTraj(
           "H_Partial_2Pass",
           OptionalInt.of(3),
-          4.16173,
-          new Pose2d(3.2, 2.452, Rotation2d.fromRadians(2.356)),
-          new Pose2d(0.697, 0.657, Rotation2d.fromRadians(3.142)));
+          3.61409,
+          new Pose2d(2.791, 2.464, Rotation2d.fromRadians(-2.356)),
+          new Pose2d(0.647, 0.557, Rotation2d.fromRadians(-3.142)));
   public static final ChoreoTraj H_Shunt_Grab =
       new ChoreoTraj(
           "H_Shunt_Grab",
@@ -464,7 +457,6 @@ public record ChoreoTraj(
           Map.entry("D_Partial_1Pass$3", D_Partial_1Pass$3),
           Map.entry("D_Start_D_BUMP", D_Start_D_BUMP),
           Map.entry("D_Start_D_Depot", D_Start_D_Depot),
-          Map.entry("H_BumpAllianceNeutral", H_BumpAllianceNeutral),
           Map.entry("H_BumpNeutralAlliance", H_BumpNeutralAlliance),
           Map.entry("H_BUMP_H_Intake_45", H_BUMP_H_Intake_45),
           Map.entry("H_Full_1Pass", H_Full_1Pass),

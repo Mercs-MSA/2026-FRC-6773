@@ -8,7 +8,7 @@
     {"x":5.7, "y":2.5, "heading":1.5707963267948966, "intervals":40, "split":false, "fixTranslation":true, "fixHeading":false, "overrideIntervals":false}],
   "constraints":[
     {"from":0, "to":2, "data":{"type":"KeepInLane", "props":{"tolerance":0.01}}, "enabled":true},
-    {"from":0, "to":2, "data":{"type":"MaxVelocity", "props":{"max":2.5}}, "enabled":true},
+`    {"from":0, "to":2, "data":{"type":"MaxVelocity", "props":{"max":2.5}}, "enabled":true},
     {"from":0, "to":2, "data":{"type":"MaxAngularVelocity", "props":{"max":0.0}}, "enabled":true},
     {"from":0, "to":2, "data":{"type":"MaxAcceleration", "props":{"max":1.0}}, "enabled":true}],
   "targetDt":0.05
