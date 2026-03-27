@@ -50,7 +50,7 @@ public class Shooter extends SubsystemBase {
     SHOOT_HUB,
     SHOOT_FIXED,
     SHOOT_TRENCH_LOCK,
-    MANUAL,
+    TRENCH_MANUAL,
   }
 
   public final LoggedNetworkNumber hoodAngleCust = new LoggedNetworkNumber("Shooter/HoodAngle", 0);
@@ -130,9 +130,33 @@ public class Shooter extends SubsystemBase {
             ? ZoneUtil.RED_LEFT_PASS_ZONE.contains(poseSupplier)
             : ZoneUtil.BLUE_LEFT_PASS_ZONE.contains(poseSupplier);
 
-    allianceZoneTrigger.onTrue(Commands.runOnce(() -> setShooterState(ShooterState.IDLE_HUB)));
-    rightPassTrigger.onTrue(Commands.runOnce(() -> setShooterState(ShooterState.IDLE_R)));
-    leftPassTrigger.onTrue(Commands.runOnce(() -> setShooterState(ShooterState.IDLE_L)));
+    allianceZoneTrigger.onTrue(
+        Commands.runOnce(
+            () -> {
+              if (fixedShooter.getAsBoolean()) {
+                setShooterState(ShooterState.IDLE_FIXED);
+              } else {
+                setShooterState(ShooterState.IDLE_HUB);
+              }
+            }));
+    rightPassTrigger.onTrue(
+        Commands.runOnce(
+            () -> {
+              if (fixedShooter.getAsBoolean()) {
+                setShooterState(ShooterState.IDLE_FIXED);
+              } else {
+                setShooterState(ShooterState.IDLE_R);
+              }
+            }));
+    leftPassTrigger.onTrue(
+        Commands.runOnce(
+            () -> {
+              if (fixedShooter.getAsBoolean()) {
+                setShooterState(ShooterState.IDLE_FIXED);
+              } else {
+                setShooterState(ShooterState.IDLE_L);
+              }
+            }));
     // TODO: visualizer
   }
 
@@ -169,7 +193,7 @@ public class Shooter extends SubsystemBase {
     Rotation2d hoodAngle;
     double flywheelVel;
     if (useManual.getAsBoolean()) {
-      shooterState = ShooterState.MANUAL;
+      shooterState = ShooterState.TRENCH_MANUAL;
     }
     switch (shooterState) {
       case STOW:
@@ -295,14 +319,8 @@ public class Shooter extends SubsystemBase {
                     calculatedShot.getExitVelocity(), Distance.ofBaseUnits(2, Inches))
                 .in(RotationsPerSecond);
         break;
-      case MANUAL:
-        calculatedShot =
-            ShooterTurretCalculator.iterativeMovingShotFromMap(
-                robotPose,
-                fieldSpeeds,
-                FieldConstants.Hub.topCenterPoint.plus(new Translation3d(-2.5, -3, -1.2)),
-                2);
-        azimuthAngle = Angle.ofBaseUnits(0, Rotations);
+      case TRENCH_MANUAL:
+        azimuthAngle = Rotations.of(getTurretPosition());
         azimuthVelocity = RadiansPerSecond.of(-fieldSpeeds.omegaRadiansPerSecond);
         hoodAngle = Rotation2d.fromRotations(0.251);
         flywheelVel = 58;
@@ -316,7 +334,7 @@ public class Shooter extends SubsystemBase {
     }
 
     if (useBiases.getAsBoolean()) {
-      if (shooterState != ShooterState.MANUAL)
+      if (shooterState != ShooterState.TRENCH_MANUAL)
         setTurretSetpoint(
             azimuthAngle.plus(Angle.ofBaseUnits(turretBias, Rotations)), azimuthVelocity);
       if (!useCustom.getAsBoolean()) {
@@ -328,7 +346,7 @@ public class Shooter extends SubsystemBase {
         setFlywheelVelocityRPS(flywheelVelCust.getAsDouble());
       }
     } else {
-      if (shooterState != ShooterState.MANUAL) setTurretSetpoint(azimuthAngle, azimuthVelocity);
+      if (shooterState != ShooterState.TRENCH_MANUAL) setTurretSetpoint(azimuthAngle, azimuthVelocity);
 
       if (!useCustom.getAsBoolean()) {
         setHoodPosition(hoodAngle);
