@@ -112,9 +112,9 @@ public record ChoreoTraj(
       new ChoreoTraj(
           "D_Partial_1Pass",
           OptionalInt.empty(),
-          9.86111,
+          11.23565,
           new Pose2d(3.455, 5.655, Rotation2d.fromRadians(-0.785)),
-          new Pose2d(1.062, 7.223, Rotation2d.fromRadians(2.356)));
+          new Pose2d(0.647, 7.612, Rotation2d.fromRadians(3.142)));
   public static final ChoreoTraj D_Partial_1Pass$0 =
       new ChoreoTraj(
           "D_Partial_1Pass",
@@ -140,9 +140,9 @@ public record ChoreoTraj(
       new ChoreoTraj(
           "D_Partial_1Pass",
           OptionalInt.of(3),
-          2.6741400000000004,
+          4.04868,
           new Pose2d(2.915, 5.418, Rotation2d.fromRadians(2.356)),
-          new Pose2d(1.062, 7.223, Rotation2d.fromRadians(2.356)));
+          new Pose2d(0.647, 7.612, Rotation2d.fromRadians(3.142)));
   public static final ChoreoTraj D_Start_D_BUMP =
       new ChoreoTraj(
           "D_Start_D_BUMP",

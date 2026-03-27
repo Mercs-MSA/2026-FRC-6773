@@ -97,7 +97,7 @@ public class RobotContainer {
   private final Indexer indexer;
   private final Transfer transfer;
   private final Intake intake;
-  private final Shooter shooter;
+  public final Shooter shooter;
   // private final Climb climber;
 
   // Controller

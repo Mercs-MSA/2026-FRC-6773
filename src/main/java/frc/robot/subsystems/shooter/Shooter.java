@@ -302,11 +302,7 @@ public class Shooter extends SubsystemBase {
                 fieldSpeeds,
                 FieldConstants.Hub.topCenterPoint.plus(new Translation3d(-2.5, -3, -1.2)),
                 2);
-        azimuthAngle =
-            ShooterTurretCalculator.calculateAzimuthAngle(
-                robotPose,
-                calculatedShot.target(),
-                Angle.ofBaseUnits(getTurretPosition(), Rotations));
+        azimuthAngle = Angle.ofBaseUnits(0, Rotations);
         azimuthVelocity = RadiansPerSecond.of(-fieldSpeeds.omegaRadiansPerSecond);
         hoodAngle = Rotation2d.fromRotations(0.251);
         flywheelVel = 58;
