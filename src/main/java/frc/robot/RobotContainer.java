@@ -489,7 +489,7 @@ public class RobotContainer {
         .onTrue(
             Commands.runOnce(
                 () -> {
-                  shooter.hoodBias += 0.002;
+                  shooter.hoodBias += 0.05;
                 }));
 
     opController
@@ -497,7 +497,7 @@ public class RobotContainer {
         .onTrue(
             Commands.runOnce(
                 () -> {
-                  shooter.hoodBias -= 0.002;
+                  shooter.hoodBias -= 0.05;
                 }));
 
     opController
@@ -570,7 +570,7 @@ public class RobotContainer {
   @AutoLogOutput(key = "Drive/DistanceToHub")
   public double getHubDist() {
     return ShooterTurretCalculator.getDistanceToTarget(
-            shooter.getTurretFieldPose(), FieldConstants.Hub.topCenterPoint)
+            shooter.getTurretFieldPose(), AllianceFlipUtil.apply(FieldConstants.Hub.topCenterPoint))
         .in(Meters);
   }
 

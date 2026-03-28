@@ -24,8 +24,8 @@ public class VisionConstants {
   public static String camera2Name = "limelight-right";
 
   // Tag IDs to ignore for pose estimation (leave empty to use all tags)
-  public static Set<Integer> ignoredTagIds = Set.of(26, 23, 31, 32, 30, 29);
-
+  public static Set<Integer> ignoredTagIds = Set.of();
+  // 26, 23, 31, 32, 30, 29
   // Robot to camera transforms
   // (Not used by Limelight, configure in web UI instead)
   //   public static Transform3d robotToCamera0 =

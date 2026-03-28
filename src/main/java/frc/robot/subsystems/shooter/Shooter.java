@@ -170,6 +170,7 @@ public class Shooter extends SubsystemBase {
     Logger.processInputs("Shooter/Inputs/Turret", turretInputs);
     Logger.processInputs("Shooter/Inputs/Flywheel", flywheelInputs);
     Logger.processInputs("Shooter/Inputs/Hood", hoodInputs);
+    Logger.recordOutput("IsBlueSupplier", isBlue.get().toString());
 
     Pose2d turretBotPose =
         new Pose3d(poseSupplier.get()).transformBy(ShooterConstants.robotToTurret).toPose2d();
@@ -346,7 +347,8 @@ public class Shooter extends SubsystemBase {
         setFlywheelVelocityRPS(flywheelVelCust.getAsDouble());
       }
     } else {
-      if (shooterState != ShooterState.TRENCH_MANUAL) setTurretSetpoint(azimuthAngle, azimuthVelocity);
+      if (shooterState != ShooterState.TRENCH_MANUAL)
+        setTurretSetpoint(azimuthAngle, azimuthVelocity);
 
       if (!useCustom.getAsBoolean()) {
         setHoodPosition(hoodAngle);
