@@ -339,12 +339,12 @@ public class RobotContainer {
     // autonCommands.getAutonomousSequence("SHUNT_LEFT"));
 
     autoChooser.addOption(
-        "Right Side 1 Pass No Output", autonCommands.getAutonomousSequence("RIGHT_NO_OUTPOST"));
+        "Right Normal", autonCommands.getAutonomousSequence("RIGHT_NO_OUTPOST"));
     autoChooser.addOption(
-        "Right Side 1 Pass + Outpost", autonCommands.getAutonomousSequence("RIGHT_TEST"));
-    autoChooser.addOption("R No Shunt", autonCommands.getAutonomousSequence("RIGHT_NO_SHUNT"));
+        "Right HP", autonCommands.getAutonomousSequence("RIGHT_TEST"));
+    autoChooser.addOption("Right No Shunt", autonCommands.getAutonomousSequence("RIGHT_NO_SHUNT"));
 
-    autoChooser.addOption("Left Side 1 Pass", autonCommands.getAutonomousSequence("LEFT_TEST"));
+    autoChooser.addOption("Left", autonCommands.getAutonomousSequence("LEFT_TEST"));
 
     // autoChooser.addOption("Test Path",
     // autonCommands.getPathCommand("TuningPath"));

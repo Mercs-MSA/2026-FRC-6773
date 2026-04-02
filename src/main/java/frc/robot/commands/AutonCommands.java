@@ -26,6 +26,7 @@ import frc.robot.subsystems.transfer.Transfer.TransferState;
 import frc.robot.util.geometry.AllianceFlipUtil;
 import java.util.HashMap;
 import java.util.Optional;
+import java.util.function.BooleanSupplier;
 
 public class AutonCommands extends TeleopCommands {
 
@@ -261,14 +262,17 @@ public class AutonCommands extends TeleopCommands {
     command.addCommands(intakeCommand(IntakeState.IDLE));
 
     command.addCommands(getPathCommand(quick, 2));
-    command.addCommands(stopDrive());
+    
+    command.addCommands(getPathCommand(quick, 3));
+
+    command.addCommands(stopDrive()); 
     command.addCommands(stopShootCommand());
 
     Command com = Commands.parallel(indexCommand(IndexerState.INDEXING), shootAndOuttakeCommand());
     command.addCommands(com);
     command.addCommands(new WaitCommand(3.5));
     command.addCommands(intakeCommand(IntakeState.INTAKING));
-    command.addCommands(getPathCommand(quick, 3));
+    command.addCommands(getPathCommand(quick, 4));
     command.addCommands(stopDrive());
     command.addCommands(intakeCommand(IntakeState.AGITATE));
     // command.addCommands(new WaitCommand(1.5));
@@ -368,13 +372,14 @@ public class AutonCommands extends TeleopCommands {
     command.addCommands(intakeCommand(IntakeState.IDLE));
 
     command.addCommands(getPathCommand(quick, 2));
-    
+
     command.addCommands(getPathCommand(quick, 3));
 
     command.addCommands(stopDrive());
     command.addCommands(stopShootCommand());
 
-    Command com = Commands.parallel(indexCommand(IndexerState.INDEXING), shooter.startShooterOnce());
+    Command com =
+        Commands.parallel(indexCommand(IndexerState.INDEXING), shooter.startShooterOnce());
     command.addCommands(com);
     // command.addCommands(new WaitCommand(1.5));
     return command;
@@ -443,7 +448,8 @@ public class AutonCommands extends TeleopCommands {
         shooter.startShooterOnce(),
         Commands.runOnce(
             () -> {
-              if (!intakeStateSupplier.get().equals(IntakeState.INTAKING))
+              if (!intakeStateSupplier.get().equals(IntakeState.INTAKING)
+                  && !intakeStateSupplier.get().equals(IntakeState.OUTTAKING))
                 intake.setIntakeState(IntakeState.AGITATE);
               transfer.setTransferState(TransferState.TRANSFERRING);
             }));
@@ -475,14 +481,20 @@ public class AutonCommands extends TeleopCommands {
                   indexer.setIndexerState(IndexerState.FLUSH);
                 })
             .andThen(stopAgitateCommand())
-            .andThen(Commands.waitTime(Milliseconds.of(500)))
+            .andThen(Commands.waitTime(Milliseconds.of(100)))
             .andThen(stopShootCommand()));
 
+    BooleanSupplier accelCheck =
+        () -> {
+          return (drive.getAccelComponents().getTranslation().getNorm() > 3);
+        };
     return Commands.repeatingSequence(
-        Commands.select(
-            commandMap,
+        shootCommand(),
+        Commands.waitUntil(accelCheck),
+        commandMap.get(1),
+        Commands.waitUntil(
             () -> {
-              return (Integer) (drive.getAccelComponents().getTranslation().getNorm() < 3 ? 1 : 2);
+              return !accelCheck.getAsBoolean();
             }));
   }
 }
