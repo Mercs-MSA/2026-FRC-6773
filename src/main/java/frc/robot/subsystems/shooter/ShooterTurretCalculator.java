@@ -48,6 +48,21 @@ public class ShooterTurretCalculator {
   public static Pose2d lastLookAhead = new Pose2d();
 
   static {
+    SHOT_MAP.put(7.2, new ShotData(RPM.of(90 * 60), Degrees.of(20)));
+    TOF_MAP.put(7.2, 1.46);
+
+    SHOT_MAP.put(6.7, new ShotData(RPM.of(83 * 60), Degrees.of(20)));
+    TOF_MAP.put(6.7, 1.46);
+
+    SHOT_MAP.put(6.3, new ShotData(RPM.of(80 * 60), Degrees.of(20)));
+    TOF_MAP.put(6.3, 1.46);
+
+    SHOT_MAP.put(5.9, new ShotData(RPM.of(77 * 60), Degrees.of(20)));
+    TOF_MAP.put(5.9, 1.46);
+
+    SHOT_MAP.put(5.6, new ShotData(RPM.of(74 * 60), Degrees.of(20)));
+    TOF_MAP.put(5.6, 1.46);
+
     SHOT_MAP.put(5.5, new ShotData(RPM.of(74 * 60), Degrees.of(20)));
     TOF_MAP.put(5.5, 1.46);
 

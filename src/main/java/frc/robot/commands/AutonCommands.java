@@ -1,7 +1,5 @@
 package frc.robot.commands;
 
-import static edu.wpi.first.units.Units.Milliseconds;
-
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.path.PathPlannerPath;
 import com.pathplanner.lib.util.FlippingUtil;
@@ -24,9 +22,7 @@ import frc.robot.subsystems.shooter.Shooter;
 import frc.robot.subsystems.transfer.Transfer;
 import frc.robot.subsystems.transfer.Transfer.TransferState;
 import frc.robot.util.geometry.AllianceFlipUtil;
-import java.util.HashMap;
 import java.util.Optional;
-import java.util.function.BooleanSupplier;
 
 public class AutonCommands extends TeleopCommands {
 
@@ -151,7 +147,7 @@ public class AutonCommands extends TeleopCommands {
                       AllianceFlipUtil.apply(ChoreoTraj.H_Partial_2Pass.initialPoseBlue()));
                 }));
         // autonCommand.addCommands(getAutonCommandSegments("H_Partial_2Pass"));
-        autonCommand.addCommands(getHumanSideAccel());
+        autonCommand.addCommands(getHumanSide());
 
         break;
       case "RIGHT_NO_SHUNT":
@@ -354,7 +350,7 @@ public class AutonCommands extends TeleopCommands {
     restOfCommand.addCommands(stopDrive());
     restOfCommand.addCommands(intakeCommand(IntakeState.AGITATE));
 
-    command.addCommands(Commands.parallel(restOfCommand, runShootCheckCommand()));
+    // command.addCommands(Commands.parallel(restOfCommand, runShootCheckCommand()));
 
     // command.addCommands(new WaitCommand(1.5));
     return command;
@@ -471,30 +467,30 @@ public class AutonCommands extends TeleopCommands {
     return intakeCommand(state).withTimeout(seconds).andThen(intakeCommand(original));
   }
 
-  public Command runShootCheckCommand() {
-    HashMap<Integer, Command> commandMap = new HashMap<>();
-    commandMap.put(1, shootCommand());
-    commandMap.put(
-        2,
-        Commands.runOnce(
-                () -> {
-                  indexer.setIndexerState(IndexerState.FLUSH);
-                })
-            .andThen(stopAgitateCommand())
-            .andThen(Commands.waitTime(Milliseconds.of(100)))
-            .andThen(stopShootCommand()));
+  // public Command runShootCheckCommand() {
+  //   HashMap<Integer, Command> commandMap = new HashMap<>();
+  //   commandMap.put(1, shootCommand());
+  //   commandMap.put(
+  //       2,
+  //       Commands.runOnce(
+  //               () -> {
+  //                 indexer.setIndexerState(IndexerState.FLUSH);
+  //               })
+  //           .andThen(stopAgitateCommand())
+  //           .andThen(Commands.waitTime(Milliseconds.of(100)))
+  //           .andThen(stopShootCommand()));
 
-    BooleanSupplier accelCheck =
-        () -> {
-          return (drive.getAccelComponents().getTranslation().getNorm() > 3);
-        };
-    return Commands.repeatingSequence(
-        shootCommand(),
-        Commands.waitUntil(accelCheck),
-        commandMap.get(1),
-        Commands.waitUntil(
-            () -> {
-              return !accelCheck.getAsBoolean();
-            }));
-  }
+  //   BooleanSupplier accelCheck =
+  //       () -> {
+  //         return (drive.getAccelComponents().getTranslation().getNorm() > 3);
+  //       };
+  //   return Commands.repeatingSequence(
+  //       shootCommand(),
+  //       Commands.waitUntil(accelCheck),
+  //       commandMap.get(1),
+  //       Commands.waitUntil(
+  //           () -> {
+  //             return !accelCheck.getAsBoolean();
+  //           }));
+  // }
 }
