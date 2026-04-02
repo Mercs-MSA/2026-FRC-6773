@@ -262,10 +262,10 @@ public class AutonCommands extends TeleopCommands {
     command.addCommands(intakeCommand(IntakeState.IDLE));
 
     command.addCommands(getPathCommand(quick, 2));
-    
+
     command.addCommands(getPathCommand(quick, 3));
 
-    command.addCommands(stopDrive()); 
+    command.addCommands(stopDrive());
     command.addCommands(stopShootCommand());
 
     Command com = Commands.parallel(indexCommand(IndexerState.INDEXING), shootAndOuttakeCommand());

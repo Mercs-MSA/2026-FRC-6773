@@ -63,6 +63,8 @@ public class ZoneUtil {
   public static final BaseZone RED_ALLIANCE_TRENCH_ZONE_LEFT =
       BLUE_ALLIANCE_TRENCH_ZONE_RIGHT.mirroredX();
 
+  // public static final BaseZone
+
   public static final ZoneCollection BLUE_ALLIANCE_ZONES =
       new ZoneCollection(
           BLUE_ALLIANCE_ZONE, BLUE_ALLIANCE_TRENCH_ZONE_RIGHT, BLUE_ALLIANCE_TRENCH_ZONE_LEFT);
