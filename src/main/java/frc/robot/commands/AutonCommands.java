@@ -357,7 +357,7 @@ public class AutonCommands extends TeleopCommands {
   }
 
   public Command getHumanSideNoShunt() {
-    String quick = "H_Partial_2Pass";
+    String quick = "H_Partial_2Pass_NoShunt";
 
     SequentialCommandGroup command = new SequentialCommandGroup();
 
@@ -376,7 +376,9 @@ public class AutonCommands extends TeleopCommands {
 
     Command com =
         Commands.parallel(indexCommand(IndexerState.INDEXING), shooter.startShooterOnce());
-    command.addCommands(com);
+    Command com2 =
+        Commands.parallel(getPathCommand(quick, 4), Commands.waitSeconds(1).andThen(com));
+    command.addCommands(com2);
     // command.addCommands(new WaitCommand(1.5));
     return command;
   }
@@ -394,6 +396,7 @@ public class AutonCommands extends TeleopCommands {
 
     command.addCommands(stopShootCommand());
     // command.addCommands(new WaitCommand(1.5));
+    command.addCommands(intakeCommand(IntakeState.INTAKING));
     command.addCommands(
         Commands.parallel(
             indexCommand(IndexerState.INDEXING), shootCommand(), getPathCommand(name, 3)));

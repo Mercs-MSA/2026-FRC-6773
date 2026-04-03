@@ -323,7 +323,7 @@ public class Shooter extends SubsystemBase {
       case TRENCH_MANUAL:
         azimuthAngle = Rotations.of(getTurretPosition());
         azimuthVelocity = RadiansPerSecond.of(-fieldSpeeds.omegaRadiansPerSecond);
-        hoodAngle = Rotation2d.fromRotations(0.251);
+        hoodAngle = Rotation2d.fromDegrees(20);
         flywheelVel = 58;
         break;
       default:

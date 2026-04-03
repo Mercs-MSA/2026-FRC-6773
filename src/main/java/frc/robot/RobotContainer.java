@@ -341,7 +341,6 @@ public class RobotContainer {
     autoChooser.addOption("Right Normal", autonCommands.getAutonomousSequence("RIGHT_NO_OUTPOST"));
     autoChooser.addOption("Right HP", autonCommands.getAutonomousSequence("RIGHT_TEST"));
     autoChooser.addOption("Right No Shunt", autonCommands.getAutonomousSequence("RIGHT_NO_SHUNT"));
-
     autoChooser.addOption("Left", autonCommands.getAutonomousSequence("LEFT_TEST"));
 
     // autoChooser.addOption("Test Path",
