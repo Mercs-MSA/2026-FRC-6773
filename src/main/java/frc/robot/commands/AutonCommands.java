@@ -270,6 +270,7 @@ public class AutonCommands extends TeleopCommands {
     command.addCommands(intakeCommand(IntakeState.INTAKING));
     command.addCommands(getPathCommand(quick, 4));
     command.addCommands(stopDrive());
+    command.addCommands(Commands.waitSeconds(1.5));
     command.addCommands(intakeCommand(IntakeState.AGITATE));
     // command.addCommands(new WaitCommand(1.5));
     return command;
@@ -287,28 +288,18 @@ public class AutonCommands extends TeleopCommands {
     command.addCommands(intakeCommand(IntakeState.IDLE));
 
     command.addCommands(getPathCommand(quick, 2));
-    if (RobotBase.isSimulation()) {
-      command.addCommands(
-          Commands.runOnce(
-              () -> {
-                Pose2d current = drive.getPose()
-                    // .plus(new Transform2d(0.5, 0.5, Rotation2d.kZero))
-                    ;
-                double randomAngle = Math.random() * 2 * Math.PI;
-                drive.setPose(new Pose2d(current.getTranslation(), new Rotation2d(randomAngle)));
-              }));
-    }
     command.addCommands(getPathCommand(quick, 3));
 
     command.addCommands(stopDrive());
     command.addCommands(stopShootCommand());
-
+    // command.addCommands(Commands.waitSeconds(0.5));
     Command com = Commands.parallel(indexCommand(IndexerState.INDEXING), shootAndOuttakeCommand());
     command.addCommands(com);
     command.addCommands(new WaitCommand(2.5));
     command.addCommands(intakeCommand(IntakeState.INTAKING));
     command.addCommands(getPathCommand(quick, 4));
     command.addCommands(stopDrive());
+    command.addCommands(Commands.waitSeconds(1.5));
     command.addCommands(intakeCommand(IntakeState.AGITATE));
     // command.addCommands(new WaitCommand(1.5));
     return command;
