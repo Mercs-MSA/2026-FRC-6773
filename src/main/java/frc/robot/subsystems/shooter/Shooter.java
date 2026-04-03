@@ -214,7 +214,7 @@ public class Shooter extends SubsystemBase {
             ShooterTurretCalculator.iterativeMovingShotFromMap(
                 robotPose,
                 fieldSpeeds,
-                FieldConstants.Hub.topCenterPoint.plus(new Translation3d(-2.5, 2, -1.2)),
+                FieldConstants.Hub.topCenterPoint.plus(new Translation3d(-2.5, 2.5, -1.2)),
                 2);
         azimuthAngle =
             ShooterTurretCalculator.calculateAzimuthAngle(
@@ -230,7 +230,7 @@ public class Shooter extends SubsystemBase {
             ShooterTurretCalculator.iterativeMovingShotFromMap(
                 robotPose,
                 fieldSpeeds,
-                FieldConstants.Hub.topCenterPoint.plus(new Translation3d(-2.5, -2, -1.2)),
+                FieldConstants.Hub.topCenterPoint.plus(new Translation3d(-2.5, -2.5, -1.2)),
                 2);
         azimuthAngle =
             ShooterTurretCalculator.calculateAzimuthAngle(
@@ -275,7 +275,7 @@ public class Shooter extends SubsystemBase {
             ShooterTurretCalculator.iterativeMovingShotFromMap(
                 robotPose,
                 fieldSpeeds,
-                FieldConstants.Hub.topCenterPoint.plus(new Translation3d(-2.5, 3, -1.2)),
+                FieldConstants.Hub.topCenterPoint.plus(new Translation3d(-2.5, 2.5, -1.2)),
                 2);
         azimuthAngle =
             ShooterTurretCalculator.calculateAzimuthAngle(
@@ -294,7 +294,7 @@ public class Shooter extends SubsystemBase {
             ShooterTurretCalculator.iterativeMovingShotFromMap(
                 robotPose,
                 fieldSpeeds,
-                FieldConstants.Hub.topCenterPoint.plus(new Translation3d(-2.5, -3, -1.2)),
+                FieldConstants.Hub.topCenterPoint.plus(new Translation3d(-2.5, -2.5, -1.2)),
                 2);
         azimuthAngle =
             ShooterTurretCalculator.calculateAzimuthAngle(
