@@ -345,9 +345,9 @@ public record ChoreoTraj(
 	public static final ChoreoTraj H_Partial_2Pass = new ChoreoTraj(
 	    "H_Partial_2Pass",
 	    OptionalInt.empty(),
-	    10.5572,
+	    10.75647,
 	    new Pose2d(3.513, 2.452, Rotation2d.fromRadians(0.785)),
-	    new Pose2d(0.647, 0.557, Rotation2d.fromRadians(3.133))
+	    new Pose2d(0.647, 0.557, Rotation2d.fromRadians(-3.142))
 	);
 	public static final ChoreoTraj H_Partial_2Pass$0 = new ChoreoTraj(
 	    "H_Partial_2Pass",
@@ -359,30 +359,30 @@ public record ChoreoTraj(
 	public static final ChoreoTraj H_Partial_2Pass$1 = new ChoreoTraj(
 	    "H_Partial_2Pass",
 	    OptionalInt.of(1),
-	    3.525,
+	    3.47359,
 	    new Pose2d(7.128, 0.794, Rotation2d.fromRadians(1.571)),
-	    new Pose2d(5.819, 2.452, Rotation2d.fromRadians(-2.356))
+	    new Pose2d(5.792, 2.65, Rotation2d.fromRadians(-2.356))
 	);
 	public static final ChoreoTraj H_Partial_2Pass$2 = new ChoreoTraj(
 	    "H_Partial_2Pass",
 	    OptionalInt.of(2),
-	    1.1175800000000002,
-	    new Pose2d(5.819, 2.452, Rotation2d.fromRadians(-2.356)),
-	    new Pose2d(3.12, 2.466, Rotation2d.fromRadians(-2.356))
+	    1.1068800000000003,
+	    new Pose2d(5.792, 2.65, Rotation2d.fromRadians(-2.356)),
+	    new Pose2d(3.12, 2.65, Rotation2d.fromRadians(-2.356))
 	);
 	public static final ChoreoTraj H_Partial_2Pass$3 = new ChoreoTraj(
 	    "H_Partial_2Pass",
 	    OptionalInt.of(3),
-	    0.39449999999999985,
-	    new Pose2d(3.12, 2.466, Rotation2d.fromRadians(-2.356)),
-	    new Pose2d(2.772, 2.444, Rotation2d.fromRadians(-2.356))
+	    0.39473999999999965,
+	    new Pose2d(3.12, 2.65, Rotation2d.fromRadians(-2.356)),
+	    new Pose2d(2.772, 2.65, Rotation2d.fromRadians(-2.356))
 	);
 	public static final ChoreoTraj H_Partial_2Pass$4 = new ChoreoTraj(
 	    "H_Partial_2Pass",
 	    OptionalInt.of(4),
-	    3.49242,
-	    new Pose2d(2.772, 2.444, Rotation2d.fromRadians(-2.356)),
-	    new Pose2d(0.647, 0.557, Rotation2d.fromRadians(3.133))
+	    3.7535600000000002,
+	    new Pose2d(2.772, 2.65, Rotation2d.fromRadians(-2.356)),
+	    new Pose2d(0.647, 0.557, Rotation2d.fromRadians(-3.142))
 	);
 	public static final ChoreoTraj H_Partial_2Pass_Marked = new ChoreoTraj(
 	    "H_Partial_2Pass_Marked",

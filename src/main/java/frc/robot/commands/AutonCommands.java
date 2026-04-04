@@ -260,15 +260,17 @@ public class AutonCommands extends TeleopCommands {
     command.addCommands(getPathCommand(quick, 2));
 
     command.addCommands(getPathCommand(quick, 3));
-
+    
     command.addCommands(stopDrive());
     command.addCommands(stopShootCommand());
 
     Command com = Commands.parallel(indexCommand(IndexerState.INDEXING), shootAndOuttakeCommand());
     command.addCommands(com);
     command.addCommands(new WaitCommand(3.5));
+    command.addCommands(shootCommand());
     command.addCommands(intakeCommand(IntakeState.INTAKING));
     command.addCommands(getPathCommand(quick, 4));
+    command.addCommands(shootCommand());
     command.addCommands(stopDrive());
     command.addCommands(Commands.waitSeconds(1.5));
     command.addCommands(intakeCommand(IntakeState.AGITATE));
@@ -296,8 +298,11 @@ public class AutonCommands extends TeleopCommands {
     Command com = Commands.parallel(indexCommand(IndexerState.INDEXING), shootAndOuttakeCommand());
     command.addCommands(com);
     command.addCommands(new WaitCommand(2.5));
+    command.addCommands(shootCommand());
+
     command.addCommands(intakeCommand(IntakeState.INTAKING));
     command.addCommands(getPathCommand(quick, 4));
+    command.addCommands(shootCommand());
     command.addCommands(stopDrive());
     command.addCommands(Commands.waitSeconds(1.5));
     command.addCommands(intakeCommand(IntakeState.AGITATE));
