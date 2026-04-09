@@ -163,6 +163,62 @@ public class ShooterTurretCalculator {
     return Rotations.of(angle);
   }
 
+  // Calculate the velocity of the turret accounting for robot rotation
+  public static ChassisSpeeds getTurretVelocity(Pose2d robotPose, ChassisSpeeds fieldSpeeds) {
+    // Get turret position relative to robot center
+    Pose2d turretPose = (new Pose3d(robotPose).transformBy(robotToTurret)).toPose2d();
+
+    // Offset from robot center to turret
+    Translation2d offset = turretPose.getTranslation().minus(robotPose.getTranslation());
+
+    // When robot rotates, turret gets additional velocity: omega × offset
+    // In 2D: vx_additional = -omega * offset_y, vy_additional = omega * offset_x
+    double omega = fieldSpeeds.omegaRadiansPerSecond;
+    double vxAdditional = -omega * offset.getY();
+    double vyAdditional = omega * offset.getX();
+
+    // Total turret velocity
+    return new ChassisSpeeds(
+        fieldSpeeds.vxMetersPerSecond + vxAdditional,
+        fieldSpeeds.vyMetersPerSecond + vyAdditional,
+        omega);
+  }
+
+  // Move a target a set time in the future accounting for turret velocity
+  public static Translation3d predictTargetPos(
+      Translation3d target, Pose2d robotPose, ChassisSpeeds fieldSpeeds, Time timeOfFlight) {
+    ChassisSpeeds turretVelocity = getTurretVelocity(robotPose, fieldSpeeds);
+
+    double predictedX = target.getX() - turretVelocity.vxMetersPerSecond * timeOfFlight.in(Seconds);
+    double predictedY = target.getY() - turretVelocity.vyMetersPerSecond * timeOfFlight.in(Seconds);
+
+    Logger.recordOutput(
+        "Turret/lookAheadPose", new Pose2d(predictedX, predictedY, Rotation2d.kZero));
+
+    return new Translation3d(predictedX, predictedY, target.getZ());
+  }
+
+  // Calculate turret-centric azimuth velocity (accounts for rotation + linear motion effects)
+  public static AngularVelocity getTurretAzimuthVelocity(
+      Pose2d robot, Translation3d target, ChassisSpeeds fieldSpeeds) {
+    // Base counter-rotation to maintain aim during robot spin
+    double baseCounterRotation = -fieldSpeeds.omegaRadiansPerSecond;
+
+    // Additional compensation for linear motion changing azimuth
+    Pose2d turretPose = (new Pose3d(robot).transformBy(robotToTurret)).toPose2d();
+    Translation2d toTarget = target.toTranslation2d().minus(turretPose.getTranslation());
+    double distToTarget = toTarget.getNorm();
+
+    // Rate of azimuth change due to linear motion: dθ/dt = (v_perp) / distance
+    // v_perp is the component of velocity perpendicular to the target direction
+    double vPerp =
+        -fieldSpeeds.vxMetersPerSecond * Math.sin(toTarget.getAngle().getRadians())
+            + fieldSpeeds.vyMetersPerSecond * Math.cos(toTarget.getAngle().getRadians());
+    double azimuthChangeFromLinear = vPerp / Math.max(distToTarget, 0.1);
+
+    return RadiansPerSecond.of(baseCounterRotation + azimuthChangeFromLinear);
+  }
+
   // Move a target a set time in the future along a velocity defined by fieldSpeeds
   public static Translation3d predictTargetPos(
       Translation3d target, ChassisSpeeds fieldSpeeds, Time timeOfFlight) {
@@ -223,7 +279,7 @@ public class ShooterTurretCalculator {
     // Iterate the process, getting better time of flight estimations and updating the predicted
     // target accordingly
     for (int i = 0; i < iterations; i++) {
-      predictedTarget = predictTargetPos(target, fieldSpeeds, timeOfFlight);
+      predictedTarget = predictTargetPos(target, robot, fieldSpeeds, timeOfFlight);
       shot = calculateShotFromFunnelClearance(robot, target, predictedTarget);
       timeOfFlight =
           calculateTimeOfFlight(
@@ -248,7 +304,7 @@ public class ShooterTurretCalculator {
     // Iterate the process, getting better time of flight estimations and updating the predicted
     // target accordingly
     for (int i = 0; i < iterations; i++) {
-      predictedTarget = predictTargetPos(target, fieldSpeeds, timeOfFlight);
+      predictedTarget = predictTargetPos(target, robot, fieldSpeeds, timeOfFlight);
       lastLookAhead = new Pose2d(predictedTarget.getX(), predictedTarget.getY(), Rotation2d.kZero);
       distance = getDistanceToTarget(robot, predictedTarget).in(Meters);
       shot = SHOT_MAP.get(distance);

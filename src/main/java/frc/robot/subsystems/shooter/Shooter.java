@@ -221,7 +221,9 @@ public class Shooter extends SubsystemBase {
                 robotPose,
                 calculatedShot.target(),
                 Angle.ofBaseUnits(getTurretPosition(), Rotations));
-        azimuthVelocity = RadiansPerSecond.of(-fieldSpeeds.omegaRadiansPerSecond);
+        azimuthVelocity =
+            ShooterTurretCalculator.getTurretAzimuthVelocity(
+                robotPose, calculatedShot.target(), fieldSpeeds);
         hoodAngle = Rotation2d.fromDegrees(calculatedShot.getHoodAngle().in(Degrees));
         flywheelVel = 8.0;
         break;
@@ -237,7 +239,9 @@ public class Shooter extends SubsystemBase {
                 robotPose,
                 calculatedShot.target(),
                 Angle.ofBaseUnits(getTurretPosition(), Rotations));
-        azimuthVelocity = RadiansPerSecond.of(-fieldSpeeds.omegaRadiansPerSecond);
+        azimuthVelocity =
+            ShooterTurretCalculator.getTurretAzimuthVelocity(
+                robotPose, calculatedShot.target(), fieldSpeeds);
         hoodAngle = Rotation2d.fromDegrees(calculatedShot.getHoodAngle().in(Degrees));
         flywheelVel = 8.0;
         break;
@@ -250,7 +254,9 @@ public class Shooter extends SubsystemBase {
                 robotPose,
                 calculatedShot.target(),
                 Angle.ofBaseUnits(getTurretPosition(), Rotations));
-        azimuthVelocity = RadiansPerSecond.of(-fieldSpeeds.omegaRadiansPerSecond);
+        azimuthVelocity =
+            ShooterTurretCalculator.getTurretAzimuthVelocity(
+                robotPose, calculatedShot.target(), fieldSpeeds);
         hoodAngle = Rotation2d.fromDegrees(calculatedShot.getHoodAngle().in(Degrees));
         flywheelVel = 8.0;
         break;
@@ -263,7 +269,9 @@ public class Shooter extends SubsystemBase {
                 robotPose,
                 calculatedShot.target(),
                 Angle.ofBaseUnits(getTurretPosition(), Rotations));
-        azimuthVelocity = RadiansPerSecond.of(-fieldSpeeds.omegaRadiansPerSecond);
+        azimuthVelocity =
+            ShooterTurretCalculator.getTurretAzimuthVelocity(
+                robotPose, calculatedShot.target(), fieldSpeeds);
         hoodAngle = Rotation2d.fromDegrees(calculatedShot.getHoodAngle().in(Degrees));
         flywheelVel =
             ShooterTurretCalculator.linearToAngularVelocity(
@@ -282,7 +290,9 @@ public class Shooter extends SubsystemBase {
                 robotPose,
                 calculatedShot.target(),
                 Angle.ofBaseUnits(getTurretPosition(), Rotations));
-        azimuthVelocity = RadiansPerSecond.of(-fieldSpeeds.omegaRadiansPerSecond);
+        azimuthVelocity =
+            ShooterTurretCalculator.getTurretAzimuthVelocity(
+                robotPose, calculatedShot.target(), fieldSpeeds);
         hoodAngle = Rotation2d.fromDegrees(calculatedShot.getHoodAngle().in(Degrees));
         flywheelVel =
             ShooterTurretCalculator.linearToAngularVelocity(
@@ -301,7 +311,9 @@ public class Shooter extends SubsystemBase {
                 robotPose,
                 calculatedShot.target(),
                 Angle.ofBaseUnits(getTurretPosition(), Rotations));
-        azimuthVelocity = RadiansPerSecond.of(-fieldSpeeds.omegaRadiansPerSecond);
+        azimuthVelocity =
+            ShooterTurretCalculator.getTurretAzimuthVelocity(
+                robotPose, calculatedShot.target(), fieldSpeeds);
         hoodAngle = Rotation2d.fromDegrees(calculatedShot.getHoodAngle().in(Degrees));
         flywheelVel =
             ShooterTurretCalculator.linearToAngularVelocity(
