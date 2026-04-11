@@ -21,10 +21,10 @@ public class Intake extends SubsystemBase { // TODO: Tunable Numbers as needed
   public enum IntakeState {
     STOW(() -> Rotation2d.fromRotations(0.0), 0),
     IDLE(() -> Rotation2d.fromRotations(0.23), 0),
-    BUMP(() -> Rotation2d.fromRotations(0.21), -12),
+    BUMP(() -> Rotation2d.fromRotations(0.21), -9),
     AGITATE(() -> Rotation2d.fromRotations(0.0), -5),
-    INTAKING(() -> Rotation2d.fromRotations(0.23), -12),
-    OUTTAKING(() -> Rotation2d.fromRotations(0.23), 12);
+    INTAKING(() -> Rotation2d.fromRotations(0.23), -6),
+    OUTTAKING(() -> Rotation2d.fromRotations(0.23), 7);
 
     private Supplier<Rotation2d> pivotPos;
     private double rollerVol;
@@ -71,7 +71,7 @@ public class Intake extends SubsystemBase { // TODO: Tunable Numbers as needed
   private final LoggedNetworkNumber agitateFreq =
       new LoggedNetworkNumber("/Intake/AgitateFreq", 6.0);
 
-  private final LoggedNetworkNumber amplitude = new LoggedNetworkNumber("/Intake/Amplitude", 1.0);
+  private final LoggedNetworkNumber amplitude = new LoggedNetworkNumber("/Intake/Amplitude", 0.85);
 
   public IntakeState intakeState;
 

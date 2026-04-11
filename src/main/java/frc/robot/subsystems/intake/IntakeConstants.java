@@ -8,7 +8,7 @@ public class IntakeConstants {
   public static final Rotation2d pivotMaxLimit = Rotation2d.fromRotations(0.24);
   public static final Rotation2d pivotMinLimit = Rotation2d.fromRotations(-0.05);
 
-  public record RollerHardware(int rollerID, double gearing) {}
+  public record RollerHardware(int leftRollerID, int rightRollerID, double gearing) {}
 
   public record PivotHardware(int pivotID, double gearing) {}
 
@@ -46,7 +46,7 @@ public class IntakeConstants {
 
   public record IntakeSimulationConfiguration(DCMotor motorType, double measurementStdDevs) {}
 
-  public static RollerHardware rollerHardware = new RollerHardware(41, 3 * (24d / 18d));
+  public static RollerHardware rollerHardware = new RollerHardware(40, 41, 3 * (24d / 18d));
 
   public static PivotHardware pivotHardware = new PivotHardware(42, 24d / 1d);
 
