@@ -346,7 +346,8 @@ public class Shooter extends SubsystemBase {
         setFlywheelVelocityRPS(flywheelVelCust.getAsDouble());
       }
     } else {
-      if (shooterState != ShooterState.TRENCH_MANUAL) setTurretSetpoint(azimuthAngle, azimuthVelocity);
+      if (shooterState != ShooterState.TRENCH_MANUAL)
+        setTurretSetpoint(azimuthAngle, azimuthVelocity);
 
       if (!useCustom.getAsBoolean()) {
         setHoodPosition(hoodAngle);

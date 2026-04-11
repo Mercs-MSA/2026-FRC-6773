@@ -48,30 +48,38 @@ import frc.robot.subsystems.drive.ModuleIOTalonFX;
 import frc.robot.subsystems.indexer.Indexer;
 import frc.robot.subsystems.indexer.Indexer.IndexerState;
 import frc.robot.subsystems.indexer.IndexerConstants;
+import frc.robot.subsystems.indexer.IndexerKickerIO;
 import frc.robot.subsystems.indexer.IndexerKickerIOSim;
 import frc.robot.subsystems.indexer.IndexerKickerIOTalonFX;
+import frc.robot.subsystems.indexer.IndexerSpindexerIO;
 import frc.robot.subsystems.indexer.IndexerSpindexerIOSim;
 import frc.robot.subsystems.indexer.IndexerSpindexerIOTalonFX;
 import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.intake.Intake.IntakeState;
 import frc.robot.subsystems.intake.IntakeConstants;
+import frc.robot.subsystems.intake.IntakePivotIO;
 import frc.robot.subsystems.intake.IntakePivotIOSim;
 import frc.robot.subsystems.intake.IntakePivotIOTalonFX;
+import frc.robot.subsystems.intake.IntakeRollerIO;
 import frc.robot.subsystems.intake.IntakeRollerIOSim;
 import frc.robot.subsystems.intake.IntakeRollerIOTalonFX;
 import frc.robot.subsystems.shooter.Shooter;
 import frc.robot.subsystems.shooter.Shooter.ShooterState;
 import frc.robot.subsystems.shooter.ShooterConstants;
+import frc.robot.subsystems.shooter.ShooterFlywheelIO;
 import frc.robot.subsystems.shooter.ShooterFlywheelIOSim;
 import frc.robot.subsystems.shooter.ShooterFlywheelIOTalonFX;
+import frc.robot.subsystems.shooter.ShooterHoodIO;
 import frc.robot.subsystems.shooter.ShooterHoodIOSim;
 import frc.robot.subsystems.shooter.ShooterHoodIOTalonFX;
 import frc.robot.subsystems.shooter.ShooterTurretCalculator;
+import frc.robot.subsystems.shooter.ShooterTurretIO;
 import frc.robot.subsystems.shooter.ShooterTurretIOSim;
 import frc.robot.subsystems.shooter.ShooterTurretIOTalonFX;
 import frc.robot.subsystems.transfer.Transfer;
 import frc.robot.subsystems.transfer.Transfer.TransferState;
 import frc.robot.subsystems.transfer.TransferConstants;
+import frc.robot.subsystems.transfer.TransferIO;
 import frc.robot.subsystems.transfer.TransferIOSim;
 import frc.robot.subsystems.transfer.TransferIOTalonFX;
 import frc.robot.subsystems.vision.Vision;
@@ -273,10 +281,21 @@ public class RobotContainer {
                 // RobotState.getInstance()::addVisionObservation,
                 drive::addVisionMeasurement, new VisionIO() {}, new VisionIO() {});
 
-        intake = new Intake(null, null, null, null);
-        indexer = new Indexer(null, null);
-        transfer = new Transfer(null);
-        shooter = new Shooter(null, null, null, null, null);
+        intake =
+            new Intake(
+                new IntakeRollerIO() {},
+                new IntakePivotIO() {},
+                drive::getPose,
+                drive::getFieldVelocity);
+        indexer = new Indexer(new IndexerSpindexerIO() {}, new IndexerKickerIO() {});
+        transfer = new Transfer(new TransferIO() {});
+        shooter =
+            new Shooter(
+                new ShooterFlywheelIO() {},
+                new ShooterTurretIO() {},
+                new ShooterHoodIO() {},
+                drive::getPose,
+                drive::getFieldVelocity);
 
         // climber = new Climb(null, null);
         break;
