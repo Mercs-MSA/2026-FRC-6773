@@ -357,11 +357,11 @@ public class RobotContainer {
     // autoChooser.addOption("SHUNT_LEFT",
     // autonCommands.getAutonomousSequence("SHUNT_LEFT"));
 
-    autoChooser.addOption(
-        "Right Side 1 Pass No Output", autonCommands.getAutonomousSequence("RIGHT_NO_OUTPOST"));
-    autoChooser.addOption(
-        "Right Side 1 Pass + Outpost", autonCommands.getAutonomousSequence("RIGHT_TEST"));
-    autoChooser.addOption("Left Side 1 Pass", autonCommands.getAutonomousSequence("LEFT_TEST"));
+    autoChooser.addOption("Right Normal", autonCommands.getAutonomousSequence("RIGHT_NO_OUTPOST"));
+    autoChooser.addOption("Right HP", autonCommands.getAutonomousSequence("RIGHT_TEST"));
+    autoChooser.addOption("Right No Shunt", autonCommands.getAutonomousSequence("RIGHT_NO_SHUNT"));
+
+    autoChooser.addOption("Left", autonCommands.getAutonomousSequence("LEFT_TEST"));
 
     // autoChooser.addOption("Test Path",
     // autonCommands.getPathCommand("TuningPath"));
@@ -485,7 +485,7 @@ public class RobotContainer {
         .onTrue(teleopCommands.intakeCommand(IntakeState.OUTTAKING))
         .onFalse(teleopCommands.intakeCommand(IntakeState.IDLE));
 
-    controller.leftBumper().onTrue(teleopCommands.intakeCommand(IntakeState.STOW));
+    opController.leftTrigger().onTrue(teleopCommands.intakeCommand(IntakeState.STOW));
 
     opController
         .leftBumper()
@@ -508,7 +508,7 @@ public class RobotContainer {
         .onTrue(
             Commands.runOnce(
                 () -> {
-                  shooter.hoodBias += 0.002;
+                  shooter.hoodBias += 0.05;
                 }));
 
     opController
@@ -516,7 +516,7 @@ public class RobotContainer {
         .onTrue(
             Commands.runOnce(
                 () -> {
-                  shooter.hoodBias -= 0.002;
+                  shooter.hoodBias -= 0.05;
                 }));
 
     opController
@@ -589,7 +589,7 @@ public class RobotContainer {
   @AutoLogOutput(key = "Drive/DistanceToHub")
   public double getHubDist() {
     return ShooterTurretCalculator.getDistanceToTarget(
-            shooter.getTurretFieldPose(), FieldConstants.Hub.topCenterPoint)
+            shooter.getTurretFieldPose(), AllianceFlipUtil.apply(FieldConstants.Hub.topCenterPoint))
         .in(Meters);
   }
 

@@ -4,8 +4,10 @@ import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.path.PathPlannerPath;
 import com.pathplanner.lib.util.FlippingUtil;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
@@ -28,6 +30,7 @@ public class AutonCommands extends TeleopCommands {
   private Shooter shooter;
   private Intake intake;
   private Transfer transfer;
+  private Indexer indexer;
 
   public AutonCommands(
       Drive drive, Intake intake, Indexer indexer, Transfer transfer, Shooter shooter) {
@@ -36,6 +39,7 @@ public class AutonCommands extends TeleopCommands {
     this.shooter = shooter;
     this.intake = intake;
     this.transfer = transfer;
+    this.indexer = indexer;
   }
 
   public Command getPathCommand(String pathName) {
@@ -146,6 +150,15 @@ public class AutonCommands extends TeleopCommands {
         autonCommand.addCommands(getHumanSide());
 
         break;
+      case "RIGHT_NO_SHUNT":
+        autonCommand.addCommands(
+            Commands.runOnce(
+                () -> {
+                  drive.setPose(
+                      AllianceFlipUtil.apply(ChoreoTraj.H_Partial_2Pass_NoShunt.initialPoseBlue()));
+                }));
+        autonCommand.addCommands(getHumanSideNoShunt());
+        break;
       case "RIGHT_FULL_TEST":
         autonCommand.addCommands(getAutonCommandSegments("H_Full_1Pass"));
         break;
@@ -245,6 +258,9 @@ public class AutonCommands extends TeleopCommands {
     command.addCommands(intakeCommand(IntakeState.IDLE));
 
     command.addCommands(getPathCommand(quick, 2));
+
+    command.addCommands(getPathCommand(quick, 3));
+
     command.addCommands(stopDrive());
     command.addCommands(stopShootCommand());
 
@@ -252,7 +268,7 @@ public class AutonCommands extends TeleopCommands {
     command.addCommands(com);
     command.addCommands(new WaitCommand(3.5));
     command.addCommands(intakeCommand(IntakeState.INTAKING));
-    command.addCommands(getPathCommand(quick, 3));
+    command.addCommands(getPathCommand(quick, 4));
     command.addCommands(stopDrive());
     command.addCommands(intakeCommand(IntakeState.AGITATE));
     // command.addCommands(new WaitCommand(1.5));
@@ -271,6 +287,19 @@ public class AutonCommands extends TeleopCommands {
     command.addCommands(intakeCommand(IntakeState.IDLE));
 
     command.addCommands(getPathCommand(quick, 2));
+    if (RobotBase.isSimulation()) {
+      command.addCommands(
+          Commands.runOnce(
+              () -> {
+                Pose2d current = drive.getPose()
+                    // .plus(new Transform2d(0.5, 0.5, Rotation2d.kZero))
+                    ;
+                double randomAngle = Math.random() * 2 * Math.PI;
+                drive.setPose(new Pose2d(current.getTranslation(), new Rotation2d(randomAngle)));
+              }));
+    }
+    command.addCommands(getPathCommand(quick, 3));
+
     command.addCommands(stopDrive());
     command.addCommands(stopShootCommand());
 
@@ -278,9 +307,76 @@ public class AutonCommands extends TeleopCommands {
     command.addCommands(com);
     command.addCommands(new WaitCommand(2.5));
     command.addCommands(intakeCommand(IntakeState.INTAKING));
-    command.addCommands(getPathCommand(quick, 3));
+    command.addCommands(getPathCommand(quick, 4));
     command.addCommands(stopDrive());
     command.addCommands(intakeCommand(IntakeState.AGITATE));
+    // command.addCommands(new WaitCommand(1.5));
+    return command;
+  }
+
+  public Command getHumanSideAccel() {
+    String quick = "H_Partial_2Pass";
+
+    SequentialCommandGroup command = new SequentialCommandGroup();
+
+    command.addCommands(getPathCommand(quick, 0));
+    command.addCommands(intakeCommand(IntakeState.INTAKING));
+
+    command.addCommands(getPathCommand(quick, 1));
+    command.addCommands(intakeCommand(IntakeState.IDLE));
+
+    command.addCommands(getPathCommand(quick, 2));
+    // if (RobotBase.isSimulation()) {
+    //   command.addCommands(
+    //       Commands.runOnce(
+    //           () -> {
+    //             Pose2d current = drive.getPose()
+    //                 // .plus(new Transform2d(0.5, 0.5, Rotation2d.kZero))
+    //                 ;
+    //             double randomAngle = Math.random() * 2 * Math.PI;
+    //             drive.setPose(new Pose2d(current.getTranslation(), new Rotation2d(randomAngle)));
+    //           }));
+    // }
+    command.addCommands(getPathCommand(quick, 3));
+
+    command.addCommands(stopDrive());
+    command.addCommands(stopShootCommand());
+
+    SequentialCommandGroup restOfCommand = new SequentialCommandGroup();
+
+    restOfCommand.addCommands(new WaitCommand(2.5));
+    restOfCommand.addCommands(intakeCommand(IntakeState.INTAKING));
+    restOfCommand.addCommands(getPathCommand(quick, 4));
+    restOfCommand.addCommands(stopDrive());
+    restOfCommand.addCommands(intakeCommand(IntakeState.AGITATE));
+
+    // command.addCommands(Commands.parallel(restOfCommand, runShootCheckCommand()));
+
+    // command.addCommands(new WaitCommand(1.5));
+    return command;
+  }
+
+  public Command getHumanSideNoShunt() {
+    String quick = "H_Partial_2Pass";
+
+    SequentialCommandGroup command = new SequentialCommandGroup();
+
+    command.addCommands(getPathCommand(quick, 0));
+    command.addCommands(intakeCommand(IntakeState.INTAKING));
+
+    command.addCommands(getPathCommand(quick, 1));
+    command.addCommands(intakeCommand(IntakeState.IDLE));
+
+    command.addCommands(getPathCommand(quick, 2));
+
+    command.addCommands(getPathCommand(quick, 3));
+
+    command.addCommands(stopDrive());
+    command.addCommands(stopShootCommand());
+
+    Command com =
+        Commands.parallel(indexCommand(IndexerState.INDEXING), shooter.startShooterOnce());
+    command.addCommands(com);
     // command.addCommands(new WaitCommand(1.5));
     return command;
   }
@@ -348,7 +444,8 @@ public class AutonCommands extends TeleopCommands {
         shooter.startShooterOnce(),
         Commands.runOnce(
             () -> {
-              if (!intakeStateSupplier.get().equals(IntakeState.INTAKING))
+              if (!intakeStateSupplier.get().equals(IntakeState.INTAKING)
+                  && !intakeStateSupplier.get().equals(IntakeState.OUTTAKING))
                 intake.setIntakeState(IntakeState.AGITATE);
               transfer.setTransferState(TransferState.TRANSFERRING);
             }));
@@ -369,4 +466,31 @@ public class AutonCommands extends TeleopCommands {
     IntakeState original = intake.getIntakeState();
     return intakeCommand(state).withTimeout(seconds).andThen(intakeCommand(original));
   }
+
+  // public Command runShootCheckCommand() {
+  //   HashMap<Integer, Command> commandMap = new HashMap<>();
+  //   commandMap.put(1, shootCommand());
+  //   commandMap.put(
+  //       2,
+  //       Commands.runOnce(
+  //               () -> {
+  //                 indexer.setIndexerState(IndexerState.FLUSH);
+  //               })
+  //           .andThen(stopAgitateCommand())
+  //           .andThen(Commands.waitTime(Milliseconds.of(100)))
+  //           .andThen(stopShootCommand()));
+
+  //   BooleanSupplier accelCheck =
+  //       () -> {
+  //         return (drive.getAccelComponents().getTranslation().getNorm() > 3);
+  //       };
+  //   return Commands.repeatingSequence(
+  //       shootCommand(),
+  //       Commands.waitUntil(accelCheck),
+  //       commandMap.get(1),
+  //       Commands.waitUntil(
+  //           () -> {
+  //             return !accelCheck.getAsBoolean();
+  //           }));
+  // }
 }
