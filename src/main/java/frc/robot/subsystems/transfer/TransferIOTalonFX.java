@@ -64,6 +64,8 @@ public class TransferIOTalonFX implements TransferIO {
             ? InvertedValue.CounterClockwise_Positive
             : InvertedValue.Clockwise_Positive;
     motorConfiguration.MotorOutput.NeutralMode = configuration.neutralMode();
+    motorConfiguration.Feedback.SensorToMechanismRatio = hardware.gearing();
+    motorConfiguration.Feedback.RotorToSensorRatio = 1.0;
 
     velocity = transferMotor.getVelocity();
     supplyAmps = transferMotor.getSupplyCurrent();
