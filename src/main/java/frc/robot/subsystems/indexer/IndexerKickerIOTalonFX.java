@@ -64,6 +64,8 @@ public class IndexerKickerIOTalonFX implements IndexerKickerIO {
             ? InvertedValue.CounterClockwise_Positive
             : InvertedValue.Clockwise_Positive;
     motorConfiguration.MotorOutput.NeutralMode = configuration.neutralMode();
+    motorConfiguration.Feedback.SensorToMechanismRatio = hardware.gearing();
+    motorConfiguration.Feedback.RotorToSensorRatio = 1.0;
 
     velocity = kickerMotor.getVelocity();
     supplyAmps = kickerMotor.getSupplyCurrent();
@@ -82,7 +84,7 @@ public class IndexerKickerIOTalonFX implements IndexerKickerIO {
         statorAmps,
         temperatureCelsius);
 
-    // kickerMotor.optimizeBusUtilization(0.0, 1.0);
+    kickerMotor.optimizeBusUtilization(0.0, 1.0);
     kickerMotor.getConfigurator().apply(motorConfiguration, 1);
   }
 

@@ -3,10 +3,12 @@ package frc.robot.subsystems.intake;
 import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.controls.NeutralOut;
 import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
+import com.ctre.phoenix6.signals.MotorAlignmentValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.Current;
@@ -16,7 +18,8 @@ import frc.robot.subsystems.intake.IntakeConstants.RollerHardware;
 import frc.robot.subsystems.intake.IntakeConstants.RollerTalonFXConfiguration;
 
 public class IntakeRollerIOTalonFX implements IntakeRollerIO {
-  private final TalonFX rollerMotor;
+  private final TalonFX leftRollerMotor;
+  private final TalonFX rightRollerMotor;
 
   private NeutralModeValue currentMode = NeutralModeValue.Brake;
 
@@ -35,7 +38,10 @@ public class IntakeRollerIOTalonFX implements IntakeRollerIO {
       RollerHardware hardware,
       RollerTalonFXConfiguration configuration,
       double statusSignalUpdateFrequency) {
-    rollerMotor = new TalonFX(hardware.rollerID(), canbus);
+    leftRollerMotor = new TalonFX(hardware.leftRollerID(), canbus);
+    rightRollerMotor = new TalonFX(hardware.rightRollerID(), canbus);
+
+    leftRollerMotor.setControl(new Follower(hardware.rightRollerID(), MotorAlignmentValue.Opposed));
 
     motorConfiguration.CurrentLimits.SupplyCurrentLimitEnable =
         configuration.enableSupplyCurrentLimit();
@@ -54,11 +60,11 @@ public class IntakeRollerIOTalonFX implements IntakeRollerIO {
     motorConfiguration.Feedback.SensorToMechanismRatio = hardware.gearing();
     motorConfiguration.Feedback.RotorToSensorRatio = 1.0;
 
-    velocityRotPerSec = rollerMotor.getVelocity();
-    appliedVolts = rollerMotor.getMotorVoltage();
-    supplyCurrentAmps = rollerMotor.getSupplyCurrent();
-    statorCurrentAmps = rollerMotor.getStatorCurrent();
-    temperatureCelsius = rollerMotor.getDeviceTemp();
+    velocityRotPerSec = rightRollerMotor.getVelocity();
+    appliedVolts = rightRollerMotor.getMotorVoltage();
+    supplyCurrentAmps = rightRollerMotor.getSupplyCurrent();
+    statorCurrentAmps = rightRollerMotor.getStatorCurrent();
+    temperatureCelsius = rightRollerMotor.getDeviceTemp();
 
     BaseStatusSignal.setUpdateFrequencyForAll(
         statusSignalUpdateFrequency,
@@ -68,7 +74,11 @@ public class IntakeRollerIOTalonFX implements IntakeRollerIO {
         statorCurrentAmps,
         temperatureCelsius);
 
-    rollerMotor.getConfigurator().apply(motorConfiguration, 1);
+    rightRollerMotor.optimizeBusUtilization(0.0, 1.0);
+    leftRollerMotor.optimizeBusUtilization(0.0, 1.0);
+
+    rightRollerMotor.getConfigurator().apply(motorConfiguration, 1);
+    leftRollerMotor.getConfigurator().apply(motorConfiguration, 1);
   }
 
   public IntakeRollerIOTalonFX(
@@ -100,19 +110,19 @@ public class IntakeRollerIOTalonFX implements IntakeRollerIO {
 
   @Override
   public void setVoltage(double voltage) {
-    rollerMotor.setControl(motorControl.withOutput(voltage));
+    rightRollerMotor.setControl(motorControl.withOutput(voltage));
   }
 
   @Override
   public void stop() {
-    rollerMotor.setControl(new NeutralOut());
+    rightRollerMotor.setControl(new NeutralOut());
   }
 
   @Override
   public void setBrakeMode(boolean enableBrake) {
     NeutralModeValue newMode = enableBrake ? NeutralModeValue.Brake : NeutralModeValue.Coast;
     if (currentMode != newMode) {
-      rollerMotor.setNeutralMode(newMode);
+      rightRollerMotor.setNeutralMode(newMode);
       currentMode = newMode;
     }
   }

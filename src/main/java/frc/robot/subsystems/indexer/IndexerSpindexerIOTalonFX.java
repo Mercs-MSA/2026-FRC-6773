@@ -64,6 +64,8 @@ public class IndexerSpindexerIOTalonFX implements IndexerSpindexerIO {
             ? InvertedValue.CounterClockwise_Positive
             : InvertedValue.Clockwise_Positive;
     motorConfiguration.MotorOutput.NeutralMode = configuration.neutralMode();
+    motorConfiguration.Feedback.SensorToMechanismRatio = hardware.gearing();
+    motorConfiguration.Feedback.RotorToSensorRatio = 1.0;
 
     velocity = spindexerMotor.getVelocity();
     supplyAmps = spindexerMotor.getSupplyCurrent();
@@ -82,7 +84,7 @@ public class IndexerSpindexerIOTalonFX implements IndexerSpindexerIO {
         statorAmps,
         temperatureCelsius);
 
-    // spindexerMotor.optimizeBusUtilization(0.0, 1.0);
+    spindexerMotor.optimizeBusUtilization(0.0, 1.0);
     spindexerMotor.getConfigurator().apply(motorConfiguration, 1);
   }
 

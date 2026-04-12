@@ -96,7 +96,7 @@ public class ShooterHoodIOTalonFX implements ShooterHoodIO {
 
     // Optimize the CANBus utilization by explicitly telling all CAN signals we
     // are not using to simply not be sent over the CANBus
-    // kMotor.optimizeBusUtilization(0.0, 1.0);
+    hoodMotor.optimizeBusUtilization(0.0, 1.0);
     hoodMotor.getConfigurator().apply(motorConfiguration, 1);
   }
 
