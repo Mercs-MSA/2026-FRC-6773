@@ -22,9 +22,9 @@ public class Intake extends SubsystemBase { // TODO: Tunable Numbers as needed
     STOW(() -> Rotation2d.fromRotations(0.0), 0),
     IDLE(() -> Rotation2d.fromRotations(0.23), 0),
     BUMP(() -> Rotation2d.fromRotations(0.21), -12),
-    AGITATE(() -> Rotation2d.fromRotations(0.0), -5),
-    INTAKING(() -> Rotation2d.fromRotations(0.23), -12),
-    OUTTAKING(() -> Rotation2d.fromRotations(0.23), 12);
+    AGITATE(() -> Rotation2d.fromRotations(0.2), -5),
+    INTAKING(() -> Rotation2d.fromRotations(0.23), -6),
+    OUTTAKING(() -> Rotation2d.fromRotations(0.23), 7);
 
     private Supplier<Rotation2d> pivotPos;
     private double rollerVol;
@@ -44,16 +44,16 @@ public class Intake extends SubsystemBase { // TODO: Tunable Numbers as needed
   }
 
   private final double HOPPER_RETRACTION_POINT =
-      IntakeState.INTAKING.getPivotPos().getRotations(); // rotations
+      IntakeState.AGITATE.getPivotPos().getRotations(); // rotations
 
-  private final double AGITATE_AMPLITUDE = 0.085; // rotations
+  private final double AGITATE_AMPLITUDE = 0.045; // rotations
 
   private double LINEAR_RETRACTION_TIME = 0.0; // seconds
 
   // Piecewise agitation parameters (see Desmos:
   // https://www.desmos.com/calculator/ogflv9fvuk)
   private final LoggedNetworkBoolean usePiecewiseAgitation =
-      new LoggedNetworkBoolean("/Intake/UsePiecewiseAgitation", true);
+      new LoggedNetworkBoolean("/Intake/UsePiecewiseAgitation", false);
 
   // This value represents what percent of time the intake will be at the bottom
   // position (0 to 1),
@@ -69,7 +69,7 @@ public class Intake extends SubsystemBase { // TODO: Tunable Numbers as needed
   private final LoggedNetworkNumber agitateC = new LoggedNetworkNumber("/Intake/AgitateC", 0.75);
   // This value is a multiplier to make the overall sin function go faster.
   private final LoggedNetworkNumber agitateFreq =
-      new LoggedNetworkNumber("/Intake/AgitateFreq", 6.0);
+      new LoggedNetworkNumber("/Intake/AgitateFreq", 2.0);
 
   private final LoggedNetworkNumber amplitude = new LoggedNetworkNumber("/Intake/Amplitude", 1.0);
 
@@ -155,7 +155,7 @@ public class Intake extends SubsystemBase { // TODO: Tunable Numbers as needed
 
         double a = AGITATE_AMPLITUDE;
 
-        double b = IntakeState.IDLE.getPivotPos().getRotations();
+        double b = intakeState.getPivotPos().getRotations();
 
         if (x < 0.0) {
           x = 0.0;

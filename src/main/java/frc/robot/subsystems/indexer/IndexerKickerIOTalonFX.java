@@ -82,7 +82,7 @@ public class IndexerKickerIOTalonFX implements IndexerKickerIO {
         statorAmps,
         temperatureCelsius);
 
-    // kickerMotor.optimizeBusUtilization(0.0, 1.0);
+    kickerMotor.optimizeBusUtilization(0.0, 1.0);
     kickerMotor.getConfigurator().apply(motorConfiguration, 1);
   }
 

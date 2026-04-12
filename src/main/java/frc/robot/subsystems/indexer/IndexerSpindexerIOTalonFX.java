@@ -82,7 +82,7 @@ public class IndexerSpindexerIOTalonFX implements IndexerSpindexerIO {
         statorAmps,
         temperatureCelsius);
 
-    // spindexerMotor.optimizeBusUtilization(0.0, 1.0);
+    spindexerMotor.optimizeBusUtilization(0.0, 1.0);
     spindexerMotor.getConfigurator().apply(motorConfiguration, 1);
   }
 

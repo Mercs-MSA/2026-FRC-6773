@@ -2,9 +2,11 @@ package frc.robot.subsystems.indexer;
 
 import static edu.wpi.first.units.Units.InchesPerSecond;
 import static edu.wpi.first.units.Units.RotationsPerSecond;
+import static edu.wpi.first.units.Units.Seconds;
 
 import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.LinearVelocity;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.Constants;
 import org.littletonrobotics.junction.AutoLogOutput;
@@ -19,6 +21,10 @@ public class Indexer extends SubsystemBase {
   }
 
   public IndexerState indexerState;
+
+  private final Timer jammedTimer = new Timer();
+  private final Timer unJamTimer = new Timer();
+  private boolean jammed = false;
 
   private final IndexerSpindexerIO spindexerHardware;
   private final IndexerSpindexerIOInputsAutoLogged spindexerInputs =
@@ -46,6 +52,12 @@ public class Indexer extends SubsystemBase {
     Logger.recordOutput(
         "Indexer/KickerVelocityIPS", kickerInputs.linearVelocity.in(InchesPerSecond));
 
+    // Check for jams first (can override state)
+    if (indexerState == IndexerState.INDEXING) {
+      jamCheck(RotationsPerSecond.of(0.5));
+    }
+
+    // State machine
     switch (indexerState) {
       case IDLE:
         stopKicker();
@@ -66,12 +78,44 @@ public class Indexer extends SubsystemBase {
     }
   }
 
+  public void jamCheck(AngularVelocity threshold) {
+    if (jammedTimer.isRunning() && jammedTimer.hasElapsed(Seconds.of(0.4))) {
+      jammed = true;
+      unJamTimer.start();
+      jammedTimer.stop();
+      jammedTimer.reset();
+      setIndexerState(IndexerState.JAM);
+    }
+    if (jammed && unJamTimer.isRunning() && unJamTimer.hasElapsed(0.1)) {
+      jammed = false;
+      unJamTimer.stop();
+      unJamTimer.reset();
+      setIndexerState(IndexerState.INDEXING);
+    }
+    if ((getKickerVelocity().abs(RotationsPerSecond) < threshold.in(RotationsPerSecond)
+            || getSpindexerVelocity().abs(RotationsPerSecond) < threshold.in(RotationsPerSecond))
+        && !jammed) {
+      jammedTimer.start();
+    } else if (jammedTimer.isRunning()) {
+      jammedTimer.stop();
+      jammedTimer.reset();
+    }
+  }
+
   public void setIndexerState(IndexerState state) {
     indexerState = state;
   }
 
   public void setSpindexerVoltage(double voltage) {
     spindexerHardware.setVoltage(voltage);
+  }
+
+  public AngularVelocity getKickerVelocity() {
+    return kickerInputs.angularVelocity;
+  }
+
+  public AngularVelocity getSpindexerVelocity() {
+    return spindexerInputs.angularVelocity;
   }
 
   public void setKickerVoltage(double voltage) {

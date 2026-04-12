@@ -84,8 +84,8 @@ public class ShooterFlywheelIOTalonFX implements ShooterFlywheelIO {
         statorAmps,
         temperatureCelsius);
 
-    // flywheelMotorLeft.optimizeBusUtilization(0.0, 1.0);
-    // flywheelMotorRight.optimizeBusUtilization(0.0, 1.0);
+    flywheelMotorLeft.optimizeBusUtilization(0.0, 1.0);
+    flywheelMotorRight.optimizeBusUtilization(0.0, 1.0);
     flywheelMotorLeft.getConfigurator().apply(motorConfiguration, 1);
     flywheelMotorRight.getConfigurator().apply(motorConfiguration, 1);
   }

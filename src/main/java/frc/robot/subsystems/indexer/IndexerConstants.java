@@ -39,11 +39,11 @@ public class IndexerConstants {
 
   public static final SpindexerHardware spindexerHardware =
       new SpindexerHardware( // TODO: Gearing
-          43, 10d / 1d, 3);
+          43, 5 * (30 / 18), 3);
 
   public static final KickerHardware kickerHardware =
       new KickerHardware( // TODO: Gearing
-          44, 18d / 24d, 2);
+          44, 24d / 18d, 2);
 
   public static final SpindexerGains spindexerGains = new SpindexerGains(0, 0, 0, 0.105, 0);
 

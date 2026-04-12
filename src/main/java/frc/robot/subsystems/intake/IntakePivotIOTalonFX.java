@@ -98,6 +98,8 @@ public class IntakePivotIOTalonFX implements IntakePivotIO {
         supplyCurrentAmps,
         statorCurrentAmps,
         temperatureCelsius);
+
+    pivotMotor.optimizeBusUtilization(0.0, 1.0);
     pivotMotor.getConfigurator().apply(motorConfiguration, 1);
   }
 

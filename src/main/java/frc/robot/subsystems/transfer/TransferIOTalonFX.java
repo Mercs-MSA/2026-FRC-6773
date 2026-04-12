@@ -82,7 +82,7 @@ public class TransferIOTalonFX implements TransferIO {
         statorAmps,
         temperatureCelsius);
 
-    // transferMotor.optimizeBusUtilization(0.0, 1.0);
+    transferMotor.optimizeBusUtilization(0.0, 1.0);
     transferMotor.getConfigurator().apply(motorConfiguration, 1);
   }
 

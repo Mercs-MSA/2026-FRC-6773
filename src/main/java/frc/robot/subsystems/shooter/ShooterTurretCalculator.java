@@ -306,7 +306,7 @@ public class ShooterTurretCalculator {
     for (int i = 0; i < iterations; i++) {
       predictedTarget = predictTargetPos(target, robot, fieldSpeeds, timeOfFlight);
       lastLookAhead = new Pose2d(predictedTarget.getX(), predictedTarget.getY(), Rotation2d.kZero);
-      distance = getDistanceToTarget(robot, predictedTarget).in(Meters);
+      distance = getDistanceToTarget(turretPose, predictedTarget).in(Meters);
       shot = SHOT_MAP.get(distance);
       shot = new ShotData(shot.exitVelocity, shot.hoodAngle, predictedTarget);
       timeOfFlight = Seconds.of(TOF_MAP.get(distance));
