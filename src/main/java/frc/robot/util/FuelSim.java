@@ -340,6 +340,7 @@ public class FuelSim {
   protected double bumperHeight;
   protected ArrayList<SimIntake> intakes = new ArrayList<>();
   protected SimOuttake outtake;
+  protected SimLauncher launcher;
 
   protected int subticks = 5;
   protected double loggingFreqHz = 10;
@@ -526,7 +527,7 @@ public class FuelSim {
   /** Run the simulation forward 1 time step (0.02s) */
   public void stepSim() {
     for (int i = 0; i < subticks; i++) {
-      outtake.outtakeTick();
+
       for (Fuel fuel : fuels) {
         fuel.update(this.simulateAirResistance, this.subticks);
       }
@@ -536,6 +537,8 @@ public class FuelSim {
       if (robotPoseSupplier != null) {
         handleRobotCollisions(fuels);
         handleIntakes(fuels);
+        if (outtake != null) outtake.outtakeTick();
+        if (launcher != null) launcher.launchTick();
       }
     }
 
@@ -732,6 +735,27 @@ public class FuelSim {
       double bps,
       LinearVelocity ballVel) {
     outtake = new SimOuttake(xMin, xMax, yMin, yMax, outtaking, bps, ballVel);
+  }
+
+  /**
+   * Registers a launcher with the fuel simulator. Uses launchFuel to spawn projectiles with
+   * calculated trajectory based on hood angle, turret yaw, and exit velocity.
+   *
+   * @param shooting Supplier for whether the launcher is actively shooting
+   * @param exitVelocity Supplier for the current exit velocity
+   * @param hoodAngle Supplier for the current hood angle (0 = horizontal, 90 = vertical)
+   * @param turretYaw Supplier for the robot-relative turret yaw
+   * @param launchHeight Height to launch from
+   * @param bps Balls per second fire rate
+   */
+  public void registerLauncher(
+      BooleanSupplier shooting,
+      Supplier<LinearVelocity> exitVelocity,
+      Supplier<Angle> hoodAngle,
+      Supplier<Angle> turretYaw,
+      Distance launchHeight,
+      double bps) {
+    launcher = new SimLauncher(shooting, exitVelocity, hoodAngle, turretYaw, launchHeight, bps);
   }
 
   /**
@@ -1015,12 +1039,12 @@ public class FuelSim {
                   .get()
                   .plus(
                       new Transform2d(
-                          new Translation2d(yMax + 0.3, robotPoseSupplier.get().getRotation()),
+                          new Translation2d(
+                              (Math.random() * (xMax - xMin) + xMin),
+                              (Math.random() * (yMax - yMin) + yMin)),
                           Rotation2d.kZero))
                   .getTranslation());
-
           Translation3d spawn = new Translation3d(spawnLoc.getX(), spawnLoc.getY(), 0.075);
-
           Translation3d robotVel =
               new Translation3d(
                   robotFieldSpeedsSupplier.get().vxMetersPerSecond,
@@ -1030,16 +1054,51 @@ public class FuelSim {
           Translation2d linVel =
               new Translation2d(
                   robotFieldSpeedsSupplier.get().omegaRadiansPerSecond * yMax,
-                  robotPoseSupplier.get().getRotation());
+                  robotPoseSupplier.get().getRotation().plus(Rotation2d.kCCW_Pi_2));
 
-          robotVel.plus(new Translation3d(linVel));
+          robotVel = robotVel.plus(new Translation3d(linVel));
 
-          robotVel.plus(
-              new Translation3d(
-                  new Translation2d(
-                      ballSpeed.in(MetersPerSecond), robotPoseSupplier.get().getRotation())));
+          robotVel =
+              robotVel.plus(
+                  new Translation3d(
+                      new Translation2d(
+                          ballSpeed.in(MetersPerSecond), robotPoseSupplier.get().getRotation())));
 
-          spawnFuel(spawn, robotVel);
+          spawnFuel(spawn, robotVel.times(1));
+        }
+      }
+    }
+  }
+
+  protected class SimLauncher {
+    BooleanSupplier shooting;
+    Supplier<LinearVelocity> exitVelocity;
+    Supplier<Angle> hoodAngle;
+    Supplier<Angle> turretYaw;
+    Distance launchHeight;
+    double bps;
+
+    protected SimLauncher(
+        BooleanSupplier shooting,
+        Supplier<LinearVelocity> exitVelocity,
+        Supplier<Angle> hoodAngle,
+        Supplier<Angle> turretYaw,
+        Distance launchHeight,
+        double bps) {
+      this.shooting = shooting;
+      this.exitVelocity = exitVelocity;
+      this.hoodAngle = hoodAngle;
+      this.turretYaw = turretYaw;
+      this.launchHeight = launchHeight;
+      this.bps = bps;
+    }
+
+    protected void launchTick() {
+      if (shooting.getAsBoolean()) {
+        Time timestep = Millisecond.of(20 / subticks);
+        double chance = timestep.in(Seconds) / (1 / bps);
+        if (Math.random() < chance) {
+          launchFuel(exitVelocity.get(), hoodAngle.get(), turretYaw.get(), launchHeight);
         }
       }
     }

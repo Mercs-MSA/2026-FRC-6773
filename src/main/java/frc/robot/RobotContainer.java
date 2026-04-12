@@ -7,10 +7,12 @@
 
 package frc.robot;
 
+import static edu.wpi.first.units.Units.Degrees;
 import static edu.wpi.first.units.Units.Inches;
 import static edu.wpi.first.units.Units.Meters;
 import static edu.wpi.first.units.Units.MetersPerSecond;
 import static edu.wpi.first.units.Units.Milliseconds;
+import static edu.wpi.first.units.Units.Rotations;
 import static frc.robot.subsystems.vision.VisionConstants.*;
 
 import com.pathplanner.lib.auto.AutoBuilder;
@@ -279,20 +281,34 @@ public class RobotContainer {
             Meters.convertFrom(-11, Inches),
             Meters.convertFrom(11, Inches),
             () -> {
-              return (intake.getIntakeState() == IntakeState.INTAKING) && fuelSim.fuelCount() > 310;
+              return (intake.getIntakeState() == IntakeState.INTAKING) && fuelSim.fuelCount() > 318;
             });
 
         fuelSim.registerOuttake(
-            Meters.convertFrom(11, Inches),
+            Meters.convertFrom(24, Inches),
             Meters.convertFrom(25, Inches), // robot-centric coordinates for bounding box in meters
             Meters.convertFrom(-11, Inches),
             Meters.convertFrom(11, Inches),
             () -> {
               return (intake.getIntakeState() == IntakeState.OUTTAKING)
-                  && fuelSim.fuelCount() < 340;
+                  && fuelSim.fuelCount() < 348;
             },
             15,
             MetersPerSecond.of(2));
+
+        fuelSim.registerLauncher(
+            () -> {
+              return shooter.shooterState.name().startsWith("SHOOT")
+                  && shooter.isFlywheelAtThreshold()
+                  && fuelSim.fuelCount() < 408;
+            },
+            () ->
+                ShooterTurretCalculator.angularToLinearVelocity(
+                    shooter.getFlywheelVelocities()[0], Inches.of(2)),
+            () -> shooter.getHoodPosition().getMeasure(),
+            () -> Rotations.of(shooter.getTurretPosition()).plus(Degrees.of(90)),
+            Meters.of(ShooterConstants.robotToTurret.getTranslation().getZ()),
+            3);
 
         // (optional) BooleanSupplier for whether the intake should be active at a given
         // moment); // (optional) Runnable called whenever a fuel is intaked
