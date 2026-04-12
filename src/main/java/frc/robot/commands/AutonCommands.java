@@ -6,6 +6,7 @@ import com.pathplanner.lib.util.FlippingUtil;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
@@ -29,6 +30,7 @@ public class AutonCommands extends TeleopCommands {
   private Intake intake;
   private Transfer transfer;
   private Indexer indexer;
+  private Timer autonTimer;
 
   public AutonCommands(
       Drive drive, Intake intake, Indexer indexer, Transfer transfer, Shooter shooter) {
@@ -38,6 +40,7 @@ public class AutonCommands extends TeleopCommands {
     this.intake = intake;
     this.transfer = transfer;
     this.indexer = indexer;
+    autonTimer = new Timer();
   }
 
   public Command getPathCommand(String pathName) {
@@ -187,7 +190,9 @@ public class AutonCommands extends TeleopCommands {
         autonCommand.addCommands(intakeCommand(IntakeState.INTAKING));
         autonCommand.addCommands(shootCommand());
         autonCommand.addCommands(getPathCommand(quick, 5));
-
+        break;
+      case "RIGHT_SCAVENGER":
+        autonCommand.addCommands(humanCenterScavenger());
       default:
         DriverStation.reportError("Big oops: Invalid Start Pos", false);
         break;
@@ -424,6 +429,35 @@ public class AutonCommands extends TeleopCommands {
     // command.addCommands(Commands.waitSeconds(5));
     // command.addCommands(intakeCommand(IntakeState.STOW));
     // command.addCommands(stopShootCommand());
+
+    return command;
+  }
+
+  public Command humanCenterScavenger() {
+    String c = "KrishIdea";
+
+    SequentialCommandGroup command = new SequentialCommandGroup();
+
+    command.addCommands(
+        Commands.runOnce(
+            () -> {
+              autonTimer.restart();
+            }));
+    command.addCommands(
+        Commands.runOnce(
+            () -> drive.setPose(AllianceFlipUtil.apply(ChoreoTraj.KrishIdea.initialPoseBlue()))));
+    command.addCommands(getPathCommand(c, 0));
+    command.addCommands(stopDrive());
+    command.addCommands(
+        Commands.waitUntil(
+            () -> {
+              return autonTimer.hasElapsed(4);
+            }));
+
+    command.addCommands(intakeCommand(IntakeState.INTAKING));
+    command.addCommands(getPathCommand(c, 1));
+    command.addCommands(stopDrive());
+    command.addCommands(shootCommand());
 
     return command;
   }

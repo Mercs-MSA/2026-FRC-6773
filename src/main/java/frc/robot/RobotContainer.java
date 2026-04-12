@@ -7,7 +7,9 @@
 
 package frc.robot;
 
+import static edu.wpi.first.units.Units.Inches;
 import static edu.wpi.first.units.Units.Meters;
+import static edu.wpi.first.units.Units.MetersPerSecond;
 import static edu.wpi.first.units.Units.Milliseconds;
 import static frc.robot.subsystems.vision.VisionConstants.*;
 
@@ -77,6 +79,7 @@ import frc.robot.subsystems.transfer.TransferIOTalonFX;
 import frc.robot.subsystems.vision.Vision;
 import frc.robot.subsystems.vision.VisionIO;
 import frc.robot.subsystems.vision.VisionIOLimelight;
+import frc.robot.util.FuelSim;
 import frc.robot.util.geometry.AllianceFlipUtil;
 import java.util.ArrayList;
 import java.util.Optional;
@@ -115,6 +118,8 @@ public class RobotContainer {
   private Field2d trajField = new Field2d();
 
   private Trigger rumbleTrigger;
+
+  public FuelSim fuelSim;
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -257,6 +262,53 @@ public class RobotContainer {
         // ClimbConstants.climbSimulationConfiguration),
         // getClimbAdjustmentDoubleSupplier());
 
+        fuelSim = new FuelSim(""); // creates a new fuelSim of FuelSim
+        fuelSim.spawnStartingFuel(); // spawns fuel in the depots and neutral zone
+
+        // Register a robot for collision with fuel
+        fuelSim.registerRobot(
+            DriveConstants.getDimensions()[0], // from left to right in meters
+            DriveConstants.getDimensions()[1], // from front to back in meters
+            Meters.convertFrom(7.5, Inches), // from floor to top of bumpers in meters
+            drive::getPose, // Supplier<Pose2d> of robot pose
+            drive::getFieldVelocity); // Supplier<ChassisSpeeds> of field-centric chassis speeds
+        // Register an intake to remove fuel from the field as a rectangular bounding box
+        fuelSim.registerIntake(
+            Meters.convertFrom(11, Inches),
+            Meters.convertFrom(25, Inches), // robot-centric coordinates for bounding box in meters
+            Meters.convertFrom(-11, Inches),
+            Meters.convertFrom(11, Inches),
+            () -> {
+              return (intake.getIntakeState() == IntakeState.INTAKING) && fuelSim.fuelCount() > 310;
+            });
+
+        fuelSim.registerOuttake(
+            Meters.convertFrom(11, Inches),
+            Meters.convertFrom(25, Inches), // robot-centric coordinates for bounding box in meters
+            Meters.convertFrom(-11, Inches),
+            Meters.convertFrom(11, Inches),
+            () -> {
+              return (intake.getIntakeState() == IntakeState.OUTTAKING)
+                  && fuelSim.fuelCount() < 340;
+            },
+            15,
+            MetersPerSecond.of(2));
+
+        // (optional) BooleanSupplier for whether the intake should be active at a given
+        // moment); // (optional) Runnable called whenever a fuel is intaked
+
+        // fuelSim.setSubticks(); // sets the number of physics iterations to perform per 20ms loop.
+        // Default = 5
+
+        fuelSim
+            .start(); // enables the simulation to run (updateSim must still be called periodically)
+        // fuelSim.stop(); // stops the simulation running (updateSim will do nothing until start is
+        // called again)
+
+        fuelSim
+            .enableAirResistance(); // an additional drag force will be applied to fuel in physics
+        // update step
+
         break;
 
       default:
@@ -296,7 +348,7 @@ public class RobotContainer {
         new Trigger(
             () -> {
               Pose2d accels = drive.getAccelComponents();
-              if (accels.getTranslation().getNorm() > 6) {
+              if (accels.getTranslation().getNorm() > 6 && !DriverStation.isAutonomousEnabled()) {
                 return true;
               }
               // if (accels.getRotation().getDegrees() > ) {
@@ -341,6 +393,8 @@ public class RobotContainer {
     autoChooser.addOption("Right Normal", autonCommands.getAutonomousSequence("RIGHT_NO_OUTPOST"));
     autoChooser.addOption("Right HP", autonCommands.getAutonomousSequence("RIGHT_TEST"));
     autoChooser.addOption("Right No Shunt", autonCommands.getAutonomousSequence("RIGHT_NO_SHUNT"));
+    autoChooser.addOption(
+        "Right Scavenger", autonCommands.getAutonomousSequence("RIGHT_SCAVENGER"));
     autoChooser.addOption("Left", autonCommands.getAutonomousSequence("LEFT_TEST"));
 
     // autoChooser.addOption("Test Path",
@@ -413,6 +467,23 @@ public class RobotContainer {
                 }))
         .onFalse(Commands.runOnce(() -> drive.setDriveState(DriveState.DRIVING)));
 
+    /* CODE TO ADD ROBOT TURNING TOWARD ITS VELOCITY
+    controller
+        .leftStick()
+        .negate()
+        .and(() -> controller.rightStick().getAsBoolean())
+        .whileTrue(
+            DriveCommands.joystickDriveAtAngle(
+                drive,
+                () -> -1 * controller.getLeftY(),
+                () -> -1 * controller.getLeftX(),
+                () -> {
+                  return new Rotation2d(Math.atan2(controller.getLeftX(), controller.getLeftY()));
+                },
+                // drive::getFieldSpeedAngle,
+                32.0,
+                100));
+    */
     // Reset gyro to 0° when B button is pressed
     controller
         .b()

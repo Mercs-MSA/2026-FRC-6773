@@ -330,4 +330,8 @@ public class DriveConstants {
           modules);
     }
   }
+
+  public static double[] getDimensions() {
+    return new double[] {kBackRightXPos.abs(Meters) * 2, kBackRightYPos.abs(Meters) * 2};
+  }
 }

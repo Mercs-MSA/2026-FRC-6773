@@ -116,7 +116,8 @@ public class Robot extends LoggedRobot {
   public void autonomousInit() {
     justFinishedAuto = true;
     autonomousCommand = robotContainer.getAutonomousCommand();
-
+    robotContainer.fuelSim.clearFuel();
+    robotContainer.fuelSim.spawnStartingFuel();
     // schedule the autonomous command (example)
     if (autonomousCommand != null) {
       CommandScheduler.getInstance().schedule(autonomousCommand);
@@ -181,5 +182,7 @@ public class Robot extends LoggedRobot {
 
   /** This function is called periodically whilst in simulation. */
   @Override
-  public void simulationPeriodic() {}
+  public void simulationPeriodic() {
+    robotContainer.fuelSim.updateSim();
+  }
 }

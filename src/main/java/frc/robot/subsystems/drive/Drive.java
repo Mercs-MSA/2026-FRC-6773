@@ -528,4 +528,11 @@ public class Drive extends SubsystemBase {
       new Translation2d(DriveConstants.BackRight.LocationX, DriveConstants.BackRight.LocationY)
     };
   }
+
+  public Rotation2d getFieldSpeedAngle() {
+    ChassisSpeeds speeds = this.getFieldVelocity();
+    if (Math.hypot(speeds.vxMetersPerSecond, speeds.vyMetersPerSecond) < 0.5)
+      return this.getRotation();
+    return new Rotation2d(Math.atan2(speeds.vyMetersPerSecond, speeds.vxMetersPerSecond));
+  }
 }
