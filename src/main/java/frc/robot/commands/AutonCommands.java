@@ -193,6 +193,9 @@ public class AutonCommands extends TeleopCommands {
         break;
       case "RIGHT_SCAVENGER":
         autonCommand.addCommands(humanCenterScavenger());
+
+      case "Do_AUTON_STUFF":
+        autonCommand.addCommands(getAutonStuff());
       default:
         DriverStation.reportError("Big oops: Invalid Start Pos", false);
         break;
@@ -246,6 +249,47 @@ public class AutonCommands extends TeleopCommands {
     // command.addCommands(intakeCommand(IntakeState.STOW));
     // command.addCommands(stopShootCommand());
 
+    return command;
+  }
+
+  public Command getAutonStuff() {
+    String quick = "AutonStuff";
+
+    SequentialCommandGroup command = new SequentialCommandGroup();
+    command.addCommands(
+        Commands.runOnce(
+            () -> {
+              drive.setPose(AllianceFlipUtil.apply(ChoreoTraj.AutonStuff.initialPoseBlue()));
+            }));
+
+    command.addCommands(
+        Commands.runOnce(
+            () -> {
+              autonTimer.restart();
+            }));
+
+    command.addCommands(getPathCommand(quick, 0));
+    command.addCommands(intakeCommand(IntakeState.INTAKING));
+    command.addCommands(stopShootCommand());
+    command.addCommands(getPathCommand(quick, 1));
+    command.addCommands(intakeCommand(IntakeState.AGITATE));
+    command.addCommands(new WaitCommand(0.5));
+    command.addCommands(getPathCommand(quick, 2));
+
+    Command com =
+        Commands.parallel(
+            getPathCommand(quick, 3), indexCommand(IndexerState.INDEXING), shootCommand());
+    command.addCommands(com);
+
+    command.addCommands(stopDrive());
+    // ommand.addCommands(
+    // Commands.waitUntil(
+    //     () -> {
+    //       return autonTimer.hasElapsed(14);
+    //     }));
+    command.addCommands(new WaitCommand(8));
+    command.addCommands(stopShootCommand());
+    command.addCommands(getPathCommand(quick, 4));
     return command;
   }
 

@@ -141,7 +141,8 @@ public class RobotContainer {
                 drive::addVisionMeasurement,
                 new VisionIOLimelight(camera0Name, drive::getRotation),
                 new VisionIOLimelight(camera1Name, drive::getRotation),
-                new VisionIOLimelight(camera2Name, drive::getRotation));
+                new VisionIOLimelight(camera2Name, drive::getRotation),
+                new VisionIOLimelight(camera3Name, drive::getRotation));
         shooter =
             new Shooter(
                 new ShooterFlywheelIOTalonFX(
@@ -396,6 +397,8 @@ public class RobotContainer {
     autoChooser.addOption(
         "Right Scavenger", autonCommands.getAutonomousSequence("RIGHT_SCAVENGER"));
     autoChooser.addOption("Left", autonCommands.getAutonomousSequence("LEFT_TEST"));
+
+    autoChooser.addOption("Do Auton Stuff", autonCommands.getAutonomousSequence("Do_AUTON_STUFF"));
 
     // autoChooser.addOption("Test Path",
     // autonCommands.getPathCommand("TuningPath"));

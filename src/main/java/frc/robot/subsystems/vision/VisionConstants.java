@@ -22,6 +22,7 @@ public class VisionConstants {
   public static String camera0Name = "limelight-top";
   public static String camera1Name = "limelight-back";
   public static String camera2Name = "limelight-right";
+  public static String camera3Name = "limelight-left";
 
   // Tag IDs to ignore for pose estimation (leave empty to use all tags)
   public static Set<Integer> ignoredTagIds = Set.of(26, 23, 31, 32, 30, 29);
@@ -48,7 +49,8 @@ public class VisionConstants {
       new double[] {
         1.0, // Camera 0
         1.0, // Camera 1
-        1.0
+        1.0, // Camera 2
+        1.0, // Camera 3
       };
 
   // Multipliers to apply for MegaTag 2 observations
