@@ -34,6 +34,7 @@ import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.units.measure.LinearVelocity;
 import edu.wpi.first.units.measure.Time;
+import edu.wpi.first.wpilibj.Timer;
 import frc.robot.constants.FieldConstants;
 import frc.robot.util.geometry.AllianceFlipUtil;
 import org.littletonrobotics.junction.Logger;
@@ -46,6 +47,8 @@ public class ShooterTurretCalculator {
   public static final InterpolatingDoubleTreeMap TOF_MAP = new InterpolatingDoubleTreeMap();
 
   public static Pose2d lastLookAhead = new Pose2d();
+  public static Timer timer = new Timer();
+  public static Time sinceLastCalc = Seconds.of(0);
 
   static {
     SHOT_MAP.put(7.2, new ShotData(RPM.of(90 * 60), Degrees.of(20)));
@@ -293,6 +296,10 @@ public class ShooterTurretCalculator {
 
   public static ShotData iterativeMovingShotFromMap(
       Pose2d robot, ChassisSpeeds fieldSpeeds, Translation3d target, int iterations) {
+
+    sinceLastCalc = Seconds.of(timer.get());
+    Logger.recordOutput("Shooter/Latency", sinceLastCalc);
+    timer.restart();
     target = AllianceFlipUtil.apply(target);
     Pose2d turretPose = (new Pose3d(robot).transformBy(robotToTurret)).toPose2d();
     double distance = getDistanceToTarget(turretPose, target).in(Meters);
@@ -347,5 +354,9 @@ public class ShooterTurretCalculator {
           MathUtil.interpolate(start.hoodAngle, end.hoodAngle, t),
           end.target);
     }
+  }
+
+  public static double getLatency() {
+    return sinceLastCalc.in(Seconds);
   }
 }

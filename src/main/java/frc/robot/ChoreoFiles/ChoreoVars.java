@@ -14,6 +14,7 @@ public final class ChoreoVars {
     public static final LinearVelocity SpeedOverBump = Units.MetersPerSecond.of(2.5);
     public static final LinearVelocity SpeedThroughBalls = Units.MetersPerSecond.of(4);
     public static final double WINDBACK_DIST = 2.6;
+    public static final Angle flatAng = Units.Radians.of(0.3880438);
 
     public static final class Poses {
         public static final Pose2d C_Climb = new Pose2d(1.7, 3.3, Rotation2d.fromRadians(3.1415927));
