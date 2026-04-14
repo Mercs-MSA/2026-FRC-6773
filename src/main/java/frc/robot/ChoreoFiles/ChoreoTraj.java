@@ -21,6 +21,48 @@ public record ChoreoTraj(
     Pose2d initialPoseBlue,
     Pose2d endPoseBlue
 ) {
+    public static final ChoreoTraj AutonStuff = new ChoreoTraj(
+        "AutonStuff",
+        OptionalInt.empty(),
+        16.6257,
+        new Pose2d(3.4985, 2.29236, Rotation2d.fromRadians(0.7854)),
+        new Pose2d(5.8415, 2.46105, Rotation2d.fromRadians(0.7854))
+    );
+    public static final ChoreoTraj AutonStuff$0 = new ChoreoTraj(
+        "AutonStuff",
+        OptionalInt.of(0),
+        1.9169,
+        new Pose2d(3.4985, 2.29236, Rotation2d.fromRadians(0.7854)),
+        new Pose2d(6.86989, 1.88615, Rotation2d.fromRadians(0))
+    );
+    public static final ChoreoTraj AutonStuff$1 = new ChoreoTraj(
+        "AutonStuff",
+        OptionalInt.of(1),
+        5.18812,
+        new Pose2d(6.86989, 1.88615, Rotation2d.fromRadians(0)),
+        new Pose2d(3.29232, 2.63592, Rotation2d.fromRadians(-1.5708))
+    );
+    public static final ChoreoTraj AutonStuff$2 = new ChoreoTraj(
+        "AutonStuff",
+        OptionalInt.of(2),
+        0.3620700000000001,
+        new Pose2d(3.29232, 2.63592, Rotation2d.fromRadians(-1.5708)),
+        new Pose2d(2.94067, 2.72031, Rotation2d.fromRadians(-1.52532))
+    );
+    public static final ChoreoTraj AutonStuff$3 = new ChoreoTraj(
+        "AutonStuff",
+        OptionalInt.of(3),
+        6.4859599999999995,
+        new Pose2d(2.94067, 2.72031, Rotation2d.fromRadians(-1.52532)),
+        new Pose2d(3.30146, 2.45192, Rotation2d.fromRadians(0.7854))
+    );
+    public static final ChoreoTraj AutonStuff$4 = new ChoreoTraj(
+        "AutonStuff",
+        OptionalInt.of(4),
+        2.672649999999999,
+        new Pose2d(3.30146, 2.45192, Rotation2d.fromRadians(0.7854)),
+        new Pose2d(5.8415, 2.46105, Rotation2d.fromRadians(0.7854))
+    );
     public static final ChoreoTraj C_Climb = new ChoreoTraj(
         "C_Climb",
         OptionalInt.empty(),
@@ -346,44 +388,44 @@ public record ChoreoTraj(
     public static final ChoreoTraj H_Partial_2Pass = new ChoreoTraj(
         "H_Partial_2Pass",
         OptionalInt.empty(),
-        7.41153,
+        10.86255,
         new Pose2d(3.51341, 2.45167, Rotation2d.fromRadians(0.7854)),
-        new Pose2d(0.62434, 0.43756, Rotation2d.fromRadians(-3.11596))
+        new Pose2d(0.73957, 0.64957, Rotation2d.fromRadians(-2.75762))
     );
     public static final ChoreoTraj H_Partial_2Pass$0 = new ChoreoTraj(
         "H_Partial_2Pass",
         OptionalInt.of(0),
-        1.64648,
+        1.9877,
         new Pose2d(3.51341, 2.45167, Rotation2d.fromRadians(0.7854)),
-        new Pose2d(6.8386, 1.88163, Rotation2d.fromRadians(-0.14846))
+        new Pose2d(6.93173, 0.74985, Rotation2d.fromRadians(1.5708))
     );
     public static final ChoreoTraj H_Partial_2Pass$1 = new ChoreoTraj(
         "H_Partial_2Pass",
         OptionalInt.of(1),
-        2.6188300000000004,
-        new Pose2d(6.8386, 1.88163, Rotation2d.fromRadians(-0.14846)),
-        new Pose2d(5.79245, 2.65, Rotation2d.fromRadians(-3.13734))
+        3.81266,
+        new Pose2d(6.93173, 0.74985, Rotation2d.fromRadians(1.5708)),
+        new Pose2d(5.79245, 2.65, Rotation2d.fromRadians(-2.35619))
     );
     public static final ChoreoTraj H_Partial_2Pass$2 = new ChoreoTraj(
         "H_Partial_2Pass",
         OptionalInt.of(2),
-        0.9990899999999998,
-        new Pose2d(5.79245, 2.65, Rotation2d.fromRadians(-3.13734)),
+        1.10682,
+        new Pose2d(5.79245, 2.65, Rotation2d.fromRadians(-2.35619)),
         new Pose2d(3.12015, 2.65, Rotation2d.fromRadians(-2.35619))
     );
     public static final ChoreoTraj H_Partial_2Pass$3 = new ChoreoTraj(
         "H_Partial_2Pass",
         OptionalInt.of(3),
-        0.5388999999999999,
+        0.3929999999999998,
         new Pose2d(3.12015, 2.65, Rotation2d.fromRadians(-2.35619)),
-        new Pose2d(2.426, 1.67832, Rotation2d.fromRadians(-2.5214))
+        new Pose2d(2.77169, 2.65, Rotation2d.fromRadians(-1.8816))
     );
     public static final ChoreoTraj H_Partial_2Pass$4 = new ChoreoTraj(
         "H_Partial_2Pass",
         OptionalInt.of(4),
-        1.6082299999999998,
-        new Pose2d(2.426, 1.67832, Rotation2d.fromRadians(-2.5214)),
-        new Pose2d(0.62434, 0.43756, Rotation2d.fromRadians(-3.11596))
+        3.5623700000000005,
+        new Pose2d(2.77169, 2.65, Rotation2d.fromRadians(-1.8816)),
+        new Pose2d(0.73957, 0.64957, Rotation2d.fromRadians(-2.75762))
     );
     public static final ChoreoTraj H_Partial_2Pass_NoShunt = new ChoreoTraj(
         "H_Partial_2Pass_NoShunt",
@@ -504,19 +546,18 @@ public record ChoreoTraj(
         new Pose2d(6.09608, 2.44126, Rotation2d.fromRadians(0.7854)),
         new Pose2d(2.61612, 2.60145, Rotation2d.fromRadians(-2.33398))
     );
-    public static final ChoreoTraj NewPath = new ChoreoTraj(
-        "NewPath",
-        OptionalInt.empty(),
-        2.5083,
-        new Pose2d(3.64264, 2.31969, Rotation2d.fromRadians(0.17287)),
-        new Pose2d(6.35181, 4.09297, Rotation2d.fromRadians(-2.59379))
-    );
 
     /**
      * A map between trajectory names and their corresponding data.
      * This allows for trajectory data to be looked up with strings during runtime.
      */
     public static final Map<String, ChoreoTraj> ALL_TRAJECTORIES = Map.ofEntries(
+        Map.entry("AutonStuff", AutonStuff),
+        Map.entry("AutonStuff$0", AutonStuff$0),
+        Map.entry("AutonStuff$1", AutonStuff$1),
+        Map.entry("AutonStuff$2", AutonStuff$2),
+        Map.entry("AutonStuff$3", AutonStuff$3),
+        Map.entry("AutonStuff$4", AutonStuff$4),
         Map.entry("C_Climb", C_Climb),
         Map.entry("D_BumpAllianceNeutral", D_BumpAllianceNeutral),
         Map.entry("D_BumpNeutralAlliance", D_BumpNeutralAlliance),
@@ -585,8 +626,7 @@ public record ChoreoTraj(
         Map.entry("H_Start_H_BUMP", H_Start_H_BUMP),
         Map.entry("KrishIdea", KrishIdea),
         Map.entry("KrishIdea$0", KrishIdea$0),
-        Map.entry("KrishIdea$1", KrishIdea$1),
-        Map.entry("NewPath", NewPath)
+        Map.entry("KrishIdea$1", KrishIdea$1)
     );
 
     /**
