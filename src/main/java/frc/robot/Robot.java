@@ -116,8 +116,11 @@ public class Robot extends LoggedRobot {
   public void autonomousInit() {
     justFinishedAuto = true;
     autonomousCommand = robotContainer.getAutonomousCommand();
-    // robotContainer.fuelSim.clearFuel();
-    // robotContainer.fuelSim.spawnStartingFuel();
+    // if (Constants.currentMode == frc.robot.constants.Constants.Mode.SIM) {
+    //   robotContainer.fuelSim.clearFuel();
+    //   robotContainer.fuelSim.spawnStartingFuel();
+    // }
+
     // schedule the autonomous command (example)
     if (autonomousCommand != null) {
       CommandScheduler.getInstance().schedule(autonomousCommand);
