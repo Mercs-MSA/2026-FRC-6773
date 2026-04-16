@@ -705,10 +705,10 @@ public class RobotContainer {
       putPhaseTimeLeft(matchTime);
       return true;
     }
-    // At this point, if we're not teleop enabled, there is no hub.
-    if (!DriverStation.isTeleopEnabled()) {
-      return false;
-    }
+    // // At this point, if we're not teleop enabled, there is no hub.
+    // if (!DriverStation.isTeleopEnabled()) {
+    //   return false;
+    // }
 
     // We're teleop enabled, compute.
     String gameData = DriverStation.getGameSpecificMessage();
