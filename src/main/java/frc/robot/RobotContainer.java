@@ -567,6 +567,8 @@ public class RobotContainer {
 
     opController.leftTrigger().onTrue(teleopCommands.intakeCommand(IntakeState.STOW));
 
+    controller.leftBumper().onTrue(teleopCommands.intakeCommand(IntakeState.STOW));
+
     opController
         .leftBumper()
         .onTrue(

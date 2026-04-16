@@ -1,16 +1,12 @@
 package frc.robot.subsystems.intake;
 
 import static edu.wpi.first.units.Units.Degrees;
-import static edu.wpi.first.units.Units.Seconds;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
-import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import edu.wpi.first.wpilibj2.command.button.Trigger;
-import frc.robot.util.ZoneUtil;
 import java.util.function.Supplier;
 import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.Logger;
@@ -81,7 +77,7 @@ public class Intake extends SubsystemBase { // TODO: Tunable Numbers as needed
 
   private boolean resetAgitate = true;
 
-  private Trigger bumpTrigger;
+  // private Trigger bumpTrigger;
 
   private final IntakeRollerIO rollerHardware;
   private final IntakeRollerIOInputsAutoLogged rollerInputs = new IntakeRollerIOInputsAutoLogged();
@@ -100,21 +96,21 @@ public class Intake extends SubsystemBase { // TODO: Tunable Numbers as needed
     pivotHardware = pivotIO;
     intakeState = IntakeState.STOW;
 
-    bumpTrigger =
-        ZoneUtil.BUMP_ZONES.willContain(poseSupplier, fieldSpeedsSupplier, Seconds.of(0.3));
-    bumpTrigger.onTrue(
-        Commands.runOnce(
-            () -> {
-              setIntakeState(IntakeState.BUMP);
-            }));
-    bumpTrigger.onFalse(
-        Commands.runOnce(
-            () -> {
-              IntakeState newState = IntakeState.IDLE;
-              if (wasIntakingBefore) newState = IntakeState.INTAKING;
-              setIntakeState(newState);
-            }));
-    bumpTrigger.debounce(0.5);
+    // bumpTrigger =
+    //     ZoneUtil.BUMP_ZONES.willContain(poseSupplier, fieldSpeedsSupplier, Seconds.of(0.3));
+    // bumpTrigger.onTrue(
+    //     Commands.runOnce(
+    //         () -> {
+    //           setIntakeState(IntakeState.BUMP);
+    //         }));
+    // bumpTrigger.onFalse(
+    //     Commands.runOnce(
+    //         () -> {
+    //           IntakeState newState = IntakeState.IDLE;
+    //           if (wasIntakingBefore) newState = IntakeState.INTAKING;
+    //           setIntakeState(newState);
+    //         }));
+    // bumpTrigger.debounce(0.5);
   }
 
   @Override
@@ -138,10 +134,10 @@ public class Intake extends SubsystemBase { // TODO: Tunable Numbers as needed
         resetAgitate = true;
         pivotGoal = intakeState.getPivotPos();
         break;
-      case BUMP:
-        resetAgitate = true;
-        pivotGoal = intakeState.getPivotPos();
-        break;
+        // case BUMP:
+        //   resetAgitate = true;
+        //   pivotGoal = intakeState.getPivotPos();
+        //   break;
       case AGITATE: // https://www.desmos.com/calculator/ogflv9fvuk agitation visual
         wasIntakingBefore = false;
         if (resetAgitate) {
