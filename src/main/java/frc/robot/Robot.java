@@ -10,6 +10,7 @@ package frc.robot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.constants.Constants;
+import frc.robot.constants.Constants.Mode;
 import frc.robot.subsystems.shooter.Shooter.ShooterState;
 import frc.robot.util.ZoneUtil;
 import org.littletonrobotics.junction.LogFileUtil;
@@ -116,10 +117,10 @@ public class Robot extends LoggedRobot {
   public void autonomousInit() {
     justFinishedAuto = true;
     autonomousCommand = robotContainer.getAutonomousCommand();
-    // if (Constants.currentMode == frc.robot.constants.Constants.Mode.SIM) {
-    //   robotContainer.fuelSim.clearFuel();
-    //   robotContainer.fuelSim.spawnStartingFuel();
-    // }
+    if (Constants.currentMode == Mode.SIM) {
+      robotContainer.fuelSim.clearFuel();
+      robotContainer.fuelSim.spawnStartingFuel();
+    }
 
     // schedule the autonomous command (example)
     if (autonomousCommand != null) {

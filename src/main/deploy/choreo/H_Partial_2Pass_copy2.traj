@@ -1,5 +1,5 @@
 {
- "name":"H_Partial_2Pass",
+ "name":"H_Partial_2Pass_copy2",
  "version":3,
  "snapshot":{
   "waypoints":[
@@ -136,15 +136,16 @@
     {"from":12, "to":13, "data":{"type":"MaxAngularVelocity", "props":{"max":{"exp":"0 rad / s", "val":0.0}}}, "enabled":true},
     {"from":1, "to":4, "data":{"type":"MaxVelocity", "props":{"max":{"exp":"2.5 m / s", "val":2.5}}}, "enabled":true},
     {"from":12, "to":12, "data":{"type":"PointAt", "props":{"x":{"exp":"0 m", "val":0.0}, "y":{"exp":"0 m", "val":0.0}, "tolerance":{"exp":"100 deg", "val":1.7453292519943295}, "flip":false}}, "enabled":false},
-    {"from":11, "to":"last", "data":{"type":"MaxAcceleration", "props":{"max":{"exp":"1 m / s ^ 2", "val":1.0}}}, "enabled":true},
+    {"from":11, "to":"last", "data":{"type":"MaxAcceleration", "props":{"max":{"exp":"1 m / s ^ 2", "val":1.0}}}, "enabled":false},
     {"from":10, "to":11, "data":{"type":"MaxAcceleration", "props":{"max":{"exp":"1 m / s ^ 2", "val":1.0}}}, "enabled":false},
-    {"from":4, "to":10, "data":{"type":"StrafeDiff", "props":{}}, "enabled":true},
+    {"from":4, "to":10, "data":{"type":"StrafeDiff", "props":{}}, "enabled":false},
     {"from":9, "to":10, "data":{"type":"MaxAngularVelocity", "props":{"max":{"exp":"1 rad / s", "val":1.0}}}, "enabled":false},
     {"from":16, "to":16, "data":{"type":"MaxAngularVelocity", "props":{"max":{"exp":"0 rad / s", "val":0.0}}}, "enabled":false},
     {"from":9, "to":12, "data":{"type":"MaxVelocity", "props":{"max":{"exp":"2.2 m / s", "val":2.2}}}, "enabled":true},
     {"from":11, "to":12, "data":{"type":"MaxVelocity", "props":{"max":{"exp":"1 m / s", "val":1.0}}}, "enabled":true},
     {"from":3, "to":4, "data":{"type":"MaxVelocity", "props":{"max":{"exp":"1.75 m / s", "val":1.75}}}, "enabled":true},
-    {"from":14, "to":15, "data":{"type":"KeepInLane", "props":{"tolerance":{"exp":"0.01 m", "val":0.01}}}, "enabled":true}],
+    {"from":14, "to":15, "data":{"type":"KeepInLane", "props":{"tolerance":{"exp":"0.01 m", "val":0.01}}}, "enabled":true},
+    {"from":4, "to":10, "data":{"type":"FrontPivot", "props":{"d":{"exp":"25 in", "val":0.635}}}, "enabled":true}],
   "targetDt":{
    "exp":"0.05 s",
    "val":0.05

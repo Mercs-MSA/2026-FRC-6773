@@ -265,65 +265,69 @@ public class RobotContainer {
         // ClimbConstants.climbSimulationConfiguration),
         // getClimbAdjustmentDoubleSupplier());
 
-        // fuelSim = new FuelSim(""); // creates a new fuelSim of FuelSim
-        // fuelSim.spawnStartingFuel(); // spawns fuel in the depots and neutral zone
+        fuelSim = new FuelSim(""); // creates a new fuelSim of FuelSim
+        fuelSim.spawnStartingFuel(); // spawns fuel in the depots and neutral zone
 
-        // // Register a robot for collision with fuel
-        // fuelSim.registerRobot(
-        //     DriveConstants.getDimensions()[0], // from left to right in meters
-        //     DriveConstants.getDimensions()[1], // from front to back in meters
-        //     Meters.convertFrom(7.5, Inches), // from floor to top of bumpers in meters
-        //     drive::getPose, // Supplier<Pose2d> of robot pose
-        //     drive::getFieldVelocity); // Supplier<ChassisSpeeds> of field-centric chassis speeds
-        // // Register an intake to remove fuel from the field as a rectangular bounding box
-        // fuelSim.registerIntake(
-        //     Meters.convertFrom(11, Inches),
-        //     Meters.convertFrom(25, Inches), // robot-centric coordinates for bounding box in meters
-        //     Meters.convertFrom(-11, Inches),
-        //     Meters.convertFrom(11, Inches),
-        //     () -> {
-        //       return (intake.getIntakeState() == IntakeState.INTAKING) && fuelSim.fuelCount() > 318;
-        //     });
+        // Register a robot for collision with fuel
+        fuelSim.registerRobot(
+            DriveConstants.getDimensions()[0], // from left to right in meters
+            DriveConstants.getDimensions()[1], // from front to back in meters
+            Meters.convertFrom(7.5, Inches), // from floor to top of bumpers in meters
+            drive::getPose, // Supplier<Pose2d> of robot pose
+            drive::getFieldVelocity); // Supplier<ChassisSpeeds> of field-centric chassis speeds
+        // Register an intake to remove fuel from the field as a rectangular bounding box
+        fuelSim.registerIntake(
+            Meters.convertFrom(11, Inches),
+            Meters.convertFrom(25, Inches), // robot-centric coordinates for bounding box in
+            // meters
+            Meters.convertFrom(-11, Inches),
+            Meters.convertFrom(11, Inches),
+            () -> {
+              return (intake.getIntakeState() == IntakeState.INTAKING) && fuelSim.fuelCount() > 318;
+            });
 
-        // fuelSim.registerOuttake(
-        //     Meters.convertFrom(24, Inches),
-        //     Meters.convertFrom(25, Inches), // robot-centric coordinates for bounding box in meters
-        //     Meters.convertFrom(-11, Inches),
-        //     Meters.convertFrom(11, Inches),
-        //     () -> {
-        //       return (intake.getIntakeState() == IntakeState.OUTTAKING)
-        //           && fuelSim.fuelCount() < 348;
-        //     },
-        //     15,
-        //     MetersPerSecond.of(2));
+        fuelSim.registerOuttake(
+            Meters.convertFrom(24, Inches),
+            Meters.convertFrom(25, Inches), // robot-centric coordinates for bounding box in
+            // meters
+            Meters.convertFrom(-11, Inches),
+            Meters.convertFrom(11, Inches),
+            () -> {
+              return (intake.getIntakeState() == IntakeState.OUTTAKING)
+                  && fuelSim.fuelCount() < 348;
+            },
+            15,
+            MetersPerSecond.of(2));
 
-        // fuelSim.registerLauncher(
-        //     () -> {
-        //       return shooter.shooterState.name().startsWith("SHOOT")
-        //           && shooter.isFlywheelAtThreshold()
-        //           && fuelSim.fuelCount() < 408;
-        //     },
-        //     () ->
-        //         ShooterTurretCalculator.angularToLinearVelocity(
-        //             shooter.getFlywheelVelocities()[0], Inches.of(2)),
-        //     () -> shooter.getHoodPosition().getMeasure(),
-        //     () -> Rotations.of(shooter.getTurretPosition()).plus(Degrees.of(90)),
-        //     Meters.of(ShooterConstants.robotToTurret.getTranslation().getZ()),
-        //     3);
+        fuelSim.registerLauncher(
+            () -> {
+              return shooter.shooterState.name().startsWith("SHOOT")
+                  && shooter.isFlywheelAtThreshold()
+                  && fuelSim.fuelCount() < 408;
+            },
+            () ->
+                ShooterTurretCalculator.angularToLinearVelocity(
+                    shooter.getFlywheelVelocities()[0], Inches.of(2)),
+            () -> shooter.getHoodPosition().getMeasure(),
+            () -> Rotations.of(shooter.getTurretPosition()).plus(Degrees.of(90)),
+            Meters.of(ShooterConstants.robotToTurret.getTranslation().getZ()),
+            0);
 
-        // // (optional) BooleanSupplier for whether the intake should be active at a given
-        // // moment); // (optional) Runnable called whenever a fuel is intaked
+        // (optional) BooleanSupplier for whether the intake should be active at a given
+        // moment); // (optional) Runnable called whenever a fuel is intaked
 
-        // // fuelSim.setSubticks(); // sets the number of physics iterations to perform per 20ms loop.
-        // // Default = 5
+        // fuelSim.setSubticks(); // sets the number of physics iterations to perform per 20ms
+        // loop.
+        // Default = 5
 
-        // fuelSim
-        //     .start(); // enables the simulation to run (updateSim must still be called periodically)
-        // // fuelSim.stop(); // stops the simulation running (updateSim will do nothing until start is
-        // // called again)
+        fuelSim.start(); // enables the simulation to run (updateSim must still be called
+        // periodically)
+        // fuelSim.stop(); // stops the simulation running (updateSim will do nothing until start
+        // is
+        // called again)
 
-        // fuelSim
-        //     .enableAirResistance(); // an additional drag force will be applied to fuel in physics
+        fuelSim.enableAirResistance(); // an additional drag force will be applied to fuel in
+        // physics
         // update step
 
         break;
@@ -408,13 +412,19 @@ public class RobotContainer {
     // autonCommands.getAutonomousSequence("SHUNT_LEFT"));
 
     autoChooser.addOption("Right Normal", autonCommands.getAutonomousSequence("RIGHT_NO_OUTPOST"));
+    autoChooser.addOption(
+        "Right Normal - AMA", autonCommands.getAutonomousSequence("RIGHT_NO_OUTPOST_AMA"));
+
+    autoChooser.addOption("Right Close", autonCommands.getAutonomousSequence("RIGHT_CLOSE"));
     autoChooser.addOption("Right HP", autonCommands.getAutonomousSequence("RIGHT_TEST"));
     autoChooser.addOption("Right No Shunt", autonCommands.getAutonomousSequence("RIGHT_NO_SHUNT"));
     autoChooser.addOption(
         "Right Scavenger", autonCommands.getAutonomousSequence("RIGHT_SCAVENGER"));
     autoChooser.addOption("Left", autonCommands.getAutonomousSequence("LEFT_NEW"));
+    autoChooser.addOption("Left AMA", autonCommands.getAutonomousSequence("LEFT_TEST"));
 
-    // autoChooser.addOption("Do Auton Stuff", autonCommands.getAutonomousSequence("Do_AUTON_STUFF"));
+    // autoChooser.addOption("Do Auton Stuff",
+    // autonCommands.getAutonomousSequence("Do_AUTON_STUFF"));
 
     // autoChooser.addOption("Test Path",
     // autonCommands.getPathCommand("TuningPath"));

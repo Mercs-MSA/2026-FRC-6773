@@ -75,7 +75,7 @@ public class ShooterConstants { // TODO: CLEANUP
   public static final TurretMotorConfiguration turretConfigs =
       new TurretMotorConfiguration(false, true, true, 60, 50, 12, -12, NeutralModeValue.Brake);
   public static final FlywheelMotorConfiguration flywheelConfigs =
-      new FlywheelMotorConfiguration(true, false, false, 60, 50, 12, -12, NeutralModeValue.Coast);
+      new FlywheelMotorConfiguration(true, true, true, 80, 60, 12, -12, NeutralModeValue.Coast);
   public static final HoodMotorConfiguration hoodConfigs =
       new HoodMotorConfiguration(true, false, false, 60, 50, 12, -12, NeutralModeValue.Brake);
 

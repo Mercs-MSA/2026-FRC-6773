@@ -151,6 +151,15 @@ public class AutonCommands extends TeleopCommands {
         autonCommand.addCommands(getHumanSide());
 
         break;
+      case "RIGHT_NO_OUTPOST_AMA":
+        autonCommand.addCommands(
+            Commands.runOnce(
+                () -> {
+                  drive.setPose(
+                      AllianceFlipUtil.apply(ChoreoTraj.H_Partial_2PassAMA.initialPoseBlue()));
+                }));
+        autonCommand.addCommands(getHumanSideAMA());
+        break;
       case "RIGHT_NO_SHUNT":
         autonCommand.addCommands(
             Commands.runOnce(
@@ -196,6 +205,9 @@ public class AutonCommands extends TeleopCommands {
         break;
       case "Do_AUTON_STUFF":
         autonCommand.addCommands(getAutonStuff());
+        break;
+      case "RIGHT_CLOSE":
+        autonCommand.addCommands(getHumanSideClose());
         break;
       case "LEFT_NEW":
         autonCommand.addCommands(getDepotSideNew());
@@ -363,6 +375,85 @@ public class AutonCommands extends TeleopCommands {
     command.addCommands(shootIndex());
     command.addCommands(stopDrive());
     command.addCommands(Commands.waitSeconds(1.5));
+    command.addCommands(intakeCommand(IntakeState.AGITATE));
+    // command.addCommands(new WaitCommand(1.5));
+    return command;
+  }
+
+  public Command getHumanSideClose() {
+    String quick = "H_Partial_2Pass_Close2";
+
+    SequentialCommandGroup command = new SequentialCommandGroup();
+
+    command.addCommands(
+        Commands.runOnce(
+            () -> {
+              drive.setPose(
+                  AllianceFlipUtil.apply(ChoreoTraj.H_Partial_2Pass_Close2.initialPoseBlue()));
+            }));
+
+    command.addCommands(stopShootCommand());
+    command.addCommands(getPathCommand(quick, 0));
+    command.addCommands(intakeCommand(IntakeState.INTAKING));
+    // command.addCommands(shootIndex());
+
+    command.addCommands(getPathCommand(quick, 1));
+    command.addCommands(intakeCommand(IntakeState.IDLE));
+
+    command.addCommands(getPathCommand(quick, 2));
+    command.addCommands(getPathCommand(quick, 3));
+
+    command.addCommands(stopDrive());
+    // command.addCommands(Commands.waitSeconds(0.5));
+    Command com = Commands.parallel(indexCommand(IndexerState.INDEXING), shootAndOuttakeCommand());
+    command.addCommands(com);
+    command.addCommands(new WaitCommand(4));
+    command.addCommands(shootIndex());
+
+    command.addCommands(intakeCommand(IntakeState.INTAKING));
+    command.addCommands(getPathCommand(quick, 4));
+    command.addCommands(shootIndex());
+    command.addCommands(stopDrive());
+    command.addCommands(Commands.waitSeconds(1.5));
+    command.addCommands(intakeCommand(IntakeState.AGITATE));
+    // command.addCommands(new WaitCommand(1.5));
+    return command;
+  }
+
+  public Command getHumanSideAMA() {
+    String quick = "H_Partial_2PassAMA";
+
+    SequentialCommandGroup command = new SequentialCommandGroup();
+
+    command.addCommands(getPathCommand(quick, 0));
+    command.addCommands(intakeCommand(IntakeState.INTAKING));
+
+    command.addCommands(getPathCommand(quick, 1));
+    command.addCommands(intakeCommand(IntakeState.IDLE));
+
+    command.addCommands(getPathCommand(quick, 2));
+    // if (Robot.isSimulation()) {
+    //   command.addCommands(
+    //       Commands.runOnce(
+    //           () -> {
+    //             Pose2d current = drive.getPose()
+    //                 // .plus(new Transform2d(0.5, 0.5, Rotation2d.kZero))
+    //                 ;
+    //             double randomAngle = Math.random() * 2 * Math.PI;
+    //             drive.setPose(new Pose2d(current.getTranslation(), new Rotation2d(randomAngle)));
+    //           }));
+    // }
+    command.addCommands(getPathCommand(quick, 3));
+
+    command.addCommands(stopDrive());
+    command.addCommands(stopShootCommand());
+
+    Command com = Commands.parallel(indexCommand(IndexerState.INDEXING), shootAndOuttakeCommand());
+    command.addCommands(com);
+    command.addCommands(new WaitCommand(2.5));
+    command.addCommands(intakeCommand(IntakeState.INTAKING));
+    command.addCommands(getPathCommand(quick, 4));
+    command.addCommands(stopDrive());
     command.addCommands(intakeCommand(IntakeState.AGITATE));
     // command.addCommands(new WaitCommand(1.5));
     return command;
