@@ -51,6 +51,11 @@ public class ShooterFlywheelIOSim implements ShooterFlywheelIO {
   }
 
   @Override
+  public void coastOut() {
+    flywheelLeft.setInputVoltage(0);
+  }
+
+  @Override
   public void stop() {
     setVoltage(0.0);
   }

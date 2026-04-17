@@ -21,7 +21,7 @@ public class IntakeRollerIOTalonFX implements IntakeRollerIO {
   private final TalonFX leftRollerMotor;
   private final TalonFX rightRollerMotor;
 
-  private NeutralModeValue currentMode = NeutralModeValue.Brake;
+  private NeutralModeValue currentMode = NeutralModeValue.Coast;
 
   private TalonFXConfiguration motorConfiguration = new TalonFXConfiguration();
 

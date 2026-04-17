@@ -40,6 +40,7 @@ public interface ShooterFlywheelIO {
 
   public default void setGains(double p, double i, double d, double v, double a) {}
 
+  public default void coastOut() {}
   /**
    * Commands the hardware to stop. When using TalonFX, this commands the motors to a Neutral
    * control

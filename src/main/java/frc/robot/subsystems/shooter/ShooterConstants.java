@@ -77,7 +77,7 @@ public class ShooterConstants { // TODO: CLEANUP
   public static final FlywheelMotorConfiguration flywheelConfigs =
       new FlywheelMotorConfiguration(true, true, true, 80, 60, 12, -12, NeutralModeValue.Coast);
   public static final HoodMotorConfiguration hoodConfigs =
-      new HoodMotorConfiguration(true, false, false, 60, 50, 12, -12, NeutralModeValue.Brake);
+      new HoodMotorConfiguration(true, true, true, 60, 30, 12, -12, NeutralModeValue.Brake);
 
   public static final SimulationConfiguration shooterTurretSimConfig =
       new SimulationConfiguration(DCMotor.getKrakenX44(1), 0.002);

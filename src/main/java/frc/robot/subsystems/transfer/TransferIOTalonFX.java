@@ -80,7 +80,6 @@ public class TransferIOTalonFX implements TransferIO {
         velocity,
         appliedVolts,
         supplyAmps,
-        supplyAmps,
         statorAmps,
         temperatureCelsius);
 

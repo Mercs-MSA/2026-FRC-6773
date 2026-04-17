@@ -353,7 +353,16 @@ public class Shooter extends SubsystemBase {
       if (!useCustom.getAsBoolean()) {
         double value = hoodAngle.getRotations() + hoodBias;
         setHoodPosition(new Rotation2d(MathUtil.clamp(value, 0, 20d / 360d)));
-        setFlywheelVelocityRPS(flywheelVel + flywheelBias);
+        if (shooterState == ShooterState.STOW
+            || shooterState == ShooterState.IDLE_FIXED
+            || shooterState == ShooterState.IDLE_HUB
+            || shooterState == ShooterState.IDLE_L
+            || shooterState == ShooterState.IDLE_L
+            || shooterState == ShooterState.IDLE_R) {
+          flywheelHardware.coastOut();
+        } else {
+          setFlywheelVelocityRPS(flywheelVel + flywheelBias);
+        }
       } else {
         setHoodPosition(new Rotation2d(hoodAngleCust.getAsDouble()));
         setFlywheelVelocityRPS(flywheelVelCust.getAsDouble());
@@ -363,8 +372,17 @@ public class Shooter extends SubsystemBase {
         setTurretSetpoint(azimuthAngle, azimuthVelocity);
 
       if (!useCustom.getAsBoolean()) {
+        if (shooterState == ShooterState.STOW
+            || shooterState == ShooterState.IDLE_FIXED
+            || shooterState == ShooterState.IDLE_HUB
+            || shooterState == ShooterState.IDLE_L
+            || shooterState == ShooterState.IDLE_L
+            || shooterState == ShooterState.IDLE_R) {
+          flywheelHardware.coastOut();
+        } else {
+          setFlywheelVelocityRPS(flywheelVel);
+        }
         setHoodPosition(hoodAngle);
-        setFlywheelVelocityRPS(flywheelVel);
       } else {
         setHoodPosition(new Rotation2d(hoodAngleCust.getAsDouble()));
         setFlywheelVelocityRPS(flywheelVelCust.getAsDouble());

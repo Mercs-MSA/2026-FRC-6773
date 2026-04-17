@@ -238,6 +238,48 @@ public record ChoreoTraj(
         new Pose2d(2.36774, 5.4301, Rotation2d.fromRadians(2.11541)),
         new Pose2d(0.63915, 7.6357, Rotation2d.fromRadians(3.14159))
     );
+    public static final ChoreoTraj D_Partial_2Pass_Close2 = new ChoreoTraj(
+        "D_Partial_2Pass_Close2",
+        OptionalInt.empty(),
+        13.05632,
+        new Pose2d(3.51341, 5.61753, Rotation2d.fromRadians(-0.7854)),
+        new Pose2d(0.63915, 7.6357, Rotation2d.fromRadians(3.14159))
+    );
+    public static final ChoreoTraj D_Partial_2Pass_Close2$0 = new ChoreoTraj(
+        "D_Partial_2Pass_Close2",
+        OptionalInt.of(0),
+        1.75328,
+        new Pose2d(3.51341, 5.61753, Rotation2d.fromRadians(-0.7854)),
+        new Pose2d(6.16306, 6.91954, Rotation2d.fromRadians(-1.5708))
+    );
+    public static final ChoreoTraj D_Partial_2Pass_Close2$1 = new ChoreoTraj(
+        "D_Partial_2Pass_Close2",
+        OptionalInt.of(1),
+        4.45425,
+        new Pose2d(6.16306, 6.91954, Rotation2d.fromRadians(-1.5708)),
+        new Pose2d(5.82247, 5.38198, Rotation2d.fromRadians(3.13221))
+    );
+    public static final ChoreoTraj D_Partial_2Pass_Close2$2 = new ChoreoTraj(
+        "D_Partial_2Pass_Close2",
+        OptionalInt.of(2),
+        1.2468899999999996,
+        new Pose2d(5.82247, 5.38198, Rotation2d.fromRadians(3.13221)),
+        new Pose2d(3.13846, 5.41618, Rotation2d.fromRadians(3.13221))
+    );
+    public static final ChoreoTraj D_Partial_2Pass_Close2$3 = new ChoreoTraj(
+        "D_Partial_2Pass_Close2",
+        OptionalInt.of(3),
+        0.8121599999999995,
+        new Pose2d(3.13846, 5.41618, Rotation2d.fromRadians(3.13221)),
+        new Pose2d(2.36774, 5.4301, Rotation2d.fromRadians(2.11541))
+    );
+    public static final ChoreoTraj D_Partial_2Pass_Close2$4 = new ChoreoTraj(
+        "D_Partial_2Pass_Close2",
+        OptionalInt.of(4),
+        4.78974,
+        new Pose2d(2.36774, 5.4301, Rotation2d.fromRadians(2.11541)),
+        new Pose2d(0.63915, 7.6357, Rotation2d.fromRadians(3.14159))
+    );
     public static final ChoreoTraj D_Start_D_BUMP = new ChoreoTraj(
         "D_Start_D_BUMP",
         OptionalInt.empty(),
@@ -430,43 +472,43 @@ public record ChoreoTraj(
     public static final ChoreoTraj H_Partial_2Pass = new ChoreoTraj(
         "H_Partial_2Pass",
         OptionalInt.empty(),
-        11.90154,
+        15.11442,
         new Pose2d(3.51341, 2.45167, Rotation2d.fromRadians(0.7854)),
         new Pose2d(0.43624, 0.71547, Rotation2d.fromRadians(-1.59288))
     );
     public static final ChoreoTraj H_Partial_2Pass$0 = new ChoreoTraj(
         "H_Partial_2Pass",
         OptionalInt.of(0),
-        1.97933,
+        1.97934,
         new Pose2d(3.51341, 2.45167, Rotation2d.fromRadians(0.7854)),
         new Pose2d(6.93173, 0.74985, Rotation2d.fromRadians(1.5708))
     );
     public static final ChoreoTraj H_Partial_2Pass$1 = new ChoreoTraj(
         "H_Partial_2Pass",
         OptionalInt.of(1),
-        4.82098,
+        4.8213799999999996,
         new Pose2d(6.93173, 0.74985, Rotation2d.fromRadians(1.5708)),
         new Pose2d(5.79245, 2.65, Rotation2d.fromRadians(-3.13221))
     );
     public static final ChoreoTraj H_Partial_2Pass$2 = new ChoreoTraj(
         "H_Partial_2Pass",
         OptionalInt.of(2),
-        1.372630000000001,
+        1.3597800000000007,
         new Pose2d(5.79245, 2.65, Rotation2d.fromRadians(-3.13221)),
         new Pose2d(2.8317, 2.65302, Rotation2d.fromRadians(-3.13221))
     );
     public static final ChoreoTraj H_Partial_2Pass$3 = new ChoreoTraj(
         "H_Partial_2Pass",
         OptionalInt.of(3),
-        0.9577200000000001,
+        1.3841599999999996,
         new Pose2d(2.8317, 2.65302, Rotation2d.fromRadians(-3.13221)),
-        new Pose2d(1.88105, 2.54001, Rotation2d.fromRadians(-2.06702))
+        new Pose2d(1.88105, 2.54001, Rotation2d.fromRadians(-2.64494))
     );
     public static final ChoreoTraj H_Partial_2Pass$4 = new ChoreoTraj(
         "H_Partial_2Pass",
         OptionalInt.of(4),
-        2.77088,
-        new Pose2d(1.88105, 2.54001, Rotation2d.fromRadians(-2.06702)),
+        5.5697600000000005,
+        new Pose2d(1.88105, 2.54001, Rotation2d.fromRadians(-2.64494)),
         new Pose2d(0.43624, 0.71547, Rotation2d.fromRadians(-1.59288))
     );
     public static final ChoreoTraj H_Partial_2PassAMA = new ChoreoTraj(
@@ -511,12 +553,89 @@ public record ChoreoTraj(
         new Pose2d(2.77169, 2.44384, Rotation2d.fromRadians(-2.35619)),
         new Pose2d(0.64669, 0.55714, Rotation2d.fromRadians(-3.14159))
     );
-    public static final ChoreoTraj H_Partial_2Pass_copy1 = new ChoreoTraj(
-        "H_Partial_2Pass_copy1",
+    public static final ChoreoTraj H_Partial_2Pass_Close2 = new ChoreoTraj(
+        "H_Partial_2Pass_Close2",
         OptionalInt.empty(),
-        8.20601,
-        new Pose2d(3.51341, 2.43427, Rotation2d.fromRadians(0.7854)),
-        new Pose2d(3.51341, 5.537, Rotation2d.fromRadians(2.35619))
+        14.55906,
+        new Pose2d(3.51341, 2.45167, Rotation2d.fromRadians(0.7854)),
+        new Pose2d(0.43624, 0.71547, Rotation2d.fromRadians(-1.59288))
+    );
+    public static final ChoreoTraj H_Partial_2Pass_Close2$0 = new ChoreoTraj(
+        "H_Partial_2Pass_Close2",
+        OptionalInt.of(0),
+        1.75299,
+        new Pose2d(3.51341, 2.45167, Rotation2d.fromRadians(0.7854)),
+        new Pose2d(6.16306, 1.14966, Rotation2d.fromRadians(1.5708))
+    );
+    public static final ChoreoTraj H_Partial_2Pass_Close2$1 = new ChoreoTraj(
+        "H_Partial_2Pass_Close2",
+        OptionalInt.of(1),
+        4.4552,
+        new Pose2d(6.16306, 1.14966, Rotation2d.fromRadians(1.5708)),
+        new Pose2d(5.82247, 2.68722, Rotation2d.fromRadians(-3.13221))
+    );
+    public static final ChoreoTraj H_Partial_2Pass_Close2$2 = new ChoreoTraj(
+        "H_Partial_2Pass_Close2",
+        OptionalInt.of(2),
+        1.38638,
+        new Pose2d(5.82247, 2.68722, Rotation2d.fromRadians(-3.13221)),
+        new Pose2d(2.8317, 2.65302, Rotation2d.fromRadians(-3.13221))
+    );
+    public static final ChoreoTraj H_Partial_2Pass_Close2$3 = new ChoreoTraj(
+        "H_Partial_2Pass_Close2",
+        OptionalInt.of(3),
+        1.4578999999999995,
+        new Pose2d(2.8317, 2.65302, Rotation2d.fromRadians(-3.13221)),
+        new Pose2d(1.88105, 2.54001, Rotation2d.fromRadians(-2.63041))
+    );
+    public static final ChoreoTraj H_Partial_2Pass_Close2$4 = new ChoreoTraj(
+        "H_Partial_2Pass_Close2",
+        OptionalInt.of(4),
+        5.506590000000001,
+        new Pose2d(1.88105, 2.54001, Rotation2d.fromRadians(-2.63041)),
+        new Pose2d(0.43624, 0.71547, Rotation2d.fromRadians(-1.59288))
+    );
+    public static final ChoreoTraj H_Partial_2Pass_R = new ChoreoTraj(
+        "H_Partial_2Pass_R",
+        OptionalInt.empty(),
+        12.16244,
+        new Pose2d(3.51341, 2.45167, Rotation2d.fromRadians(0.7854)),
+        new Pose2d(0.43624, 0.71547, Rotation2d.fromRadians(-1.59288))
+    );
+    public static final ChoreoTraj H_Partial_2Pass_R$0 = new ChoreoTraj(
+        "H_Partial_2Pass_R",
+        OptionalInt.of(0),
+        2.02883,
+        new Pose2d(3.51341, 2.45167, Rotation2d.fromRadians(0.7854)),
+        new Pose2d(6.93173, 0.74985, Rotation2d.fromRadians(1.5708))
+    );
+    public static final ChoreoTraj H_Partial_2Pass_R$1 = new ChoreoTraj(
+        "H_Partial_2Pass_R",
+        OptionalInt.of(1),
+        5.06962,
+        new Pose2d(6.93173, 0.74985, Rotation2d.fromRadians(1.5708)),
+        new Pose2d(5.79245, 2.65, Rotation2d.fromRadians(-3.13221))
+    );
+    public static final ChoreoTraj H_Partial_2Pass_R$2 = new ChoreoTraj(
+        "H_Partial_2Pass_R",
+        OptionalInt.of(2),
+        1.3462899999999998,
+        new Pose2d(5.79245, 2.65, Rotation2d.fromRadians(-3.13221)),
+        new Pose2d(2.8317, 2.65302, Rotation2d.fromRadians(-3.13221))
+    );
+    public static final ChoreoTraj H_Partial_2Pass_R$3 = new ChoreoTraj(
+        "H_Partial_2Pass_R",
+        OptionalInt.of(3),
+        0.5433000000000003,
+        new Pose2d(2.8317, 2.65302, Rotation2d.fromRadians(-3.13221)),
+        new Pose2d(1.88105, 2.54001, Rotation2d.fromRadians(-2.64494))
+    );
+    public static final ChoreoTraj H_Partial_2Pass_R$4 = new ChoreoTraj(
+        "H_Partial_2Pass_R",
+        OptionalInt.of(4),
+        3.1744000000000003,
+        new Pose2d(1.88105, 2.54001, Rotation2d.fromRadians(-2.64494)),
+        new Pose2d(0.43624, 0.71547, Rotation2d.fromRadians(-1.59288))
     );
     public static final ChoreoTraj H_Shunt_Grab = new ChoreoTraj(
         "H_Shunt_Grab",
@@ -595,88 +714,39 @@ public record ChoreoTraj(
         new Pose2d(6.09608, 2.44126, Rotation2d.fromRadians(0.7854)),
         new Pose2d(2.61612, 2.60145, Rotation2d.fromRadians(-2.33398))
     );
-    public static final ChoreoTraj H_Partial_2Pass_Close = new ChoreoTraj(
-        "H_Partial_2Pass_Close",
+    public static final ChoreoTraj H_Disruptor = new ChoreoTraj(
+        "H_Disruptor",
         OptionalInt.empty(),
-        9.75298,
-        new Pose2d(3.51671, 2.2723, Rotation2d.fromRadians(0.7854)),
+        7.61996,
+        new Pose2d(3.51341, 2.45167, Rotation2d.fromRadians(0)),
         new Pose2d(0.43624, 0.71547, Rotation2d.fromRadians(-1.59288))
     );
-    public static final ChoreoTraj H_Partial_2Pass_Close$0 = new ChoreoTraj(
-        "H_Partial_2Pass_Close",
+    public static final ChoreoTraj H_Disruptor$0 = new ChoreoTraj(
+        "H_Disruptor",
         OptionalInt.of(0),
-        1.4356,
-        new Pose2d(3.51671, 2.2723, Rotation2d.fromRadians(0.7854)),
-        new Pose2d(5.74454, 2.26557, Rotation2d.fromRadians(1.5708))
+        2.49075,
+        new Pose2d(3.51341, 2.45167, Rotation2d.fromRadians(0)),
+        new Pose2d(5.79245, 2.65, Rotation2d.fromRadians(0.01352))
     );
-    public static final ChoreoTraj H_Partial_2Pass_Close$1 = new ChoreoTraj(
-        "H_Partial_2Pass_Close",
+    public static final ChoreoTraj H_Disruptor$1 = new ChoreoTraj(
+        "H_Disruptor",
         OptionalInt.of(1),
-        2.87136,
-        new Pose2d(5.74454, 2.26557, Rotation2d.fromRadians(1.5708)),
-        new Pose2d(6.55138, 2.64721, Rotation2d.fromRadians(-3.13221))
+        1.3461400000000001,
+        new Pose2d(5.79245, 2.65, Rotation2d.fromRadians(0.01352)),
+        new Pose2d(2.8317, 2.65302, Rotation2d.fromRadians(0.01352))
     );
-    public static final ChoreoTraj H_Partial_2Pass_Close$2 = new ChoreoTraj(
-        "H_Partial_2Pass_Close",
+    public static final ChoreoTraj H_Disruptor$2 = new ChoreoTraj(
+        "H_Disruptor",
         OptionalInt.of(2),
-        1.7175000000000002,
-        new Pose2d(6.55138, 2.64721, Rotation2d.fromRadians(-3.13221)),
-        new Pose2d(2.8317, 2.65302, Rotation2d.fromRadians(-3.13221))
+        0.5762800000000001,
+        new Pose2d(2.8317, 2.65302, Rotation2d.fromRadians(0.01352)),
+        new Pose2d(1.88105, 2.54001, Rotation2d.fromRadians(-2.64494))
     );
-    public static final ChoreoTraj H_Partial_2Pass_Close$3 = new ChoreoTraj(
-        "H_Partial_2Pass_Close",
+    public static final ChoreoTraj H_Disruptor$3 = new ChoreoTraj(
+        "H_Disruptor",
         OptionalInt.of(3),
-        0.9577199999999992,
-        new Pose2d(2.8317, 2.65302, Rotation2d.fromRadians(-3.13221)),
-        new Pose2d(1.88105, 2.54001, Rotation2d.fromRadians(-2.21004))
-    );
-    public static final ChoreoTraj H_Partial_2Pass_Close$4 = new ChoreoTraj(
-        "H_Partial_2Pass_Close",
-        OptionalInt.of(4),
-        2.7708000000000013,
-        new Pose2d(1.88105, 2.54001, Rotation2d.fromRadians(-2.21004)),
-        new Pose2d(0.43624, 0.71547, Rotation2d.fromRadians(-1.59288))
-    );
-    public static final ChoreoTraj H_Partial_2Pass_Close2 = new ChoreoTraj(
-        "H_Partial_2Pass_Close2",
-        OptionalInt.empty(),
-        13.49092,
-        new Pose2d(3.51341, 2.45167, Rotation2d.fromRadians(0.7854)),
-        new Pose2d(0.43624, 0.71547, Rotation2d.fromRadians(-1.59288))
-    );
-    public static final ChoreoTraj H_Partial_2Pass_Close2$0 = new ChoreoTraj(
-        "H_Partial_2Pass_Close2",
-        OptionalInt.of(0),
-        1.75299,
-        new Pose2d(3.51341, 2.45167, Rotation2d.fromRadians(0.7854)),
-        new Pose2d(6.16306, 1.14966, Rotation2d.fromRadians(1.5708))
-    );
-    public static final ChoreoTraj H_Partial_2Pass_Close2$1 = new ChoreoTraj(
-        "H_Partial_2Pass_Close2",
-        OptionalInt.of(1),
-        4.4552,
-        new Pose2d(6.16306, 1.14966, Rotation2d.fromRadians(1.5708)),
-        new Pose2d(5.82247, 2.68722, Rotation2d.fromRadians(-3.13221))
-    );
-    public static final ChoreoTraj H_Partial_2Pass_Close2$2 = new ChoreoTraj(
-        "H_Partial_2Pass_Close2",
-        OptionalInt.of(2),
-        1.38638,
-        new Pose2d(5.82247, 2.68722, Rotation2d.fromRadians(-3.13221)),
-        new Pose2d(2.8317, 2.65302, Rotation2d.fromRadians(-3.13221))
-    );
-    public static final ChoreoTraj H_Partial_2Pass_Close2$3 = new ChoreoTraj(
-        "H_Partial_2Pass_Close2",
-        OptionalInt.of(3),
-        1.45798,
-        new Pose2d(2.8317, 2.65302, Rotation2d.fromRadians(-3.13221)),
-        new Pose2d(1.88105, 2.54001, Rotation2d.fromRadians(-2.41009))
-    );
-    public static final ChoreoTraj H_Partial_2Pass_Close2$4 = new ChoreoTraj(
-        "H_Partial_2Pass_Close2",
-        OptionalInt.of(4),
-        4.438369999999999,
-        new Pose2d(1.88105, 2.54001, Rotation2d.fromRadians(-2.41009)),
+        3.20679,
+        new Pose2d(1.88105, 2.54001, Rotation2d.fromRadians(-2.64494)),
         new Pose2d(0.43624, 0.71547, Rotation2d.fromRadians(-1.59288))
     );
 
@@ -716,6 +786,12 @@ public record ChoreoTraj(
         Map.entry("D_Partial_2Pass$2", D_Partial_2Pass$2),
         Map.entry("D_Partial_2Pass$3", D_Partial_2Pass$3),
         Map.entry("D_Partial_2Pass$4", D_Partial_2Pass$4),
+        Map.entry("D_Partial_2Pass_Close2", D_Partial_2Pass_Close2),
+        Map.entry("D_Partial_2Pass_Close2$0", D_Partial_2Pass_Close2$0),
+        Map.entry("D_Partial_2Pass_Close2$1", D_Partial_2Pass_Close2$1),
+        Map.entry("D_Partial_2Pass_Close2$2", D_Partial_2Pass_Close2$2),
+        Map.entry("D_Partial_2Pass_Close2$3", D_Partial_2Pass_Close2$3),
+        Map.entry("D_Partial_2Pass_Close2$4", D_Partial_2Pass_Close2$4),
         Map.entry("D_Start_D_BUMP", D_Start_D_BUMP),
         Map.entry("D_Start_D_Depot", D_Start_D_Depot),
         Map.entry("H_BumpNeutralAlliance", H_BumpNeutralAlliance),
@@ -755,7 +831,18 @@ public record ChoreoTraj(
         Map.entry("H_Partial_2PassAMA$2", H_Partial_2PassAMA$2),
         Map.entry("H_Partial_2PassAMA$3", H_Partial_2PassAMA$3),
         Map.entry("H_Partial_2PassAMA$4", H_Partial_2PassAMA$4),
-        Map.entry("H_Partial_2Pass_copy1", H_Partial_2Pass_copy1),
+        Map.entry("H_Partial_2Pass_Close2", H_Partial_2Pass_Close2),
+        Map.entry("H_Partial_2Pass_Close2$0", H_Partial_2Pass_Close2$0),
+        Map.entry("H_Partial_2Pass_Close2$1", H_Partial_2Pass_Close2$1),
+        Map.entry("H_Partial_2Pass_Close2$2", H_Partial_2Pass_Close2$2),
+        Map.entry("H_Partial_2Pass_Close2$3", H_Partial_2Pass_Close2$3),
+        Map.entry("H_Partial_2Pass_Close2$4", H_Partial_2Pass_Close2$4),
+        Map.entry("H_Partial_2Pass_R", H_Partial_2Pass_R),
+        Map.entry("H_Partial_2Pass_R$0", H_Partial_2Pass_R$0),
+        Map.entry("H_Partial_2Pass_R$1", H_Partial_2Pass_R$1),
+        Map.entry("H_Partial_2Pass_R$2", H_Partial_2Pass_R$2),
+        Map.entry("H_Partial_2Pass_R$3", H_Partial_2Pass_R$3),
+        Map.entry("H_Partial_2Pass_R$4", H_Partial_2Pass_R$4),
         Map.entry("H_Shunt_Grab", H_Shunt_Grab),
         Map.entry("H_Shunt_Grab$0", H_Shunt_Grab$0),
         Map.entry("H_Shunt_Grab$1", H_Shunt_Grab$1),
@@ -767,18 +854,11 @@ public record ChoreoTraj(
         Map.entry("KrishIdea", KrishIdea),
         Map.entry("KrishIdea$0", KrishIdea$0),
         Map.entry("KrishIdea$1", KrishIdea$1),
-        Map.entry("H_Partial_2Pass_Close", H_Partial_2Pass_Close),
-        Map.entry("H_Partial_2Pass_Close$0", H_Partial_2Pass_Close$0),
-        Map.entry("H_Partial_2Pass_Close$1", H_Partial_2Pass_Close$1),
-        Map.entry("H_Partial_2Pass_Close$2", H_Partial_2Pass_Close$2),
-        Map.entry("H_Partial_2Pass_Close$3", H_Partial_2Pass_Close$3),
-        Map.entry("H_Partial_2Pass_Close$4", H_Partial_2Pass_Close$4),
-        Map.entry("H_Partial_2Pass_Close2", H_Partial_2Pass_Close2),
-        Map.entry("H_Partial_2Pass_Close2$0", H_Partial_2Pass_Close2$0),
-        Map.entry("H_Partial_2Pass_Close2$1", H_Partial_2Pass_Close2$1),
-        Map.entry("H_Partial_2Pass_Close2$2", H_Partial_2Pass_Close2$2),
-        Map.entry("H_Partial_2Pass_Close2$3", H_Partial_2Pass_Close2$3),
-        Map.entry("H_Partial_2Pass_Close2$4", H_Partial_2Pass_Close2$4)
+        Map.entry("H_Disruptor", H_Disruptor),
+        Map.entry("H_Disruptor$0", H_Disruptor$0),
+        Map.entry("H_Disruptor$1", H_Disruptor$1),
+        Map.entry("H_Disruptor$2", H_Disruptor$2),
+        Map.entry("H_Disruptor$3", H_Disruptor$3)
     );
 
     /**

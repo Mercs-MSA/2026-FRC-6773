@@ -81,10 +81,10 @@ public class IntakeConstants {
           true, // Enable stator current limiting
           true, // Enable supply current limiting
           80.0, // Stator limit
-          70.0, // Supply limit
+          40.0, // Supply limit
           12.0, // Peak forward voltage
           -12.0, // Peak reverse voltage
-          NeutralModeValue.Brake); // Idle mode
+          NeutralModeValue.Coast); // Idle mode
 
   public static final IntakeSimulationConfiguration pivotSimulationConfiguration =
       new IntakeSimulationConfiguration(DCMotor.getKrakenX60(1), 0.002);

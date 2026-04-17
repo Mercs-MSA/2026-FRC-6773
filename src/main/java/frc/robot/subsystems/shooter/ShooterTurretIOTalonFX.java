@@ -119,7 +119,6 @@ public class ShooterTurretIOTalonFX implements ShooterTurretIO {
         velocityRotationsPerSec,
         appliedVolts,
         supplyCurrentAmps,
-        supplyCurrentAmps,
         statorCurrentAmps,
         temperatureCelsius);
 

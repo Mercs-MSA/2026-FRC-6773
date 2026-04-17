@@ -4,6 +4,7 @@ import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import com.ctre.phoenix6.controls.CoastOut;
 import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.controls.NeutralOut;
 import com.ctre.phoenix6.controls.VelocityVoltage;
@@ -147,6 +148,11 @@ public class ShooterFlywheelIOTalonFX implements ShooterFlywheelIO {
   @Override
   public void stop() {
     flywheelMotorLeft.setControl(new NeutralOut());
+  }
+
+  @Override
+  public void coastOut() {
+    flywheelMotorLeft.setControl(new CoastOut());
   }
 
   @Override
