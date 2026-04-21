@@ -184,7 +184,15 @@ public class Intake extends SubsystemBase { // TODO: Tunable Numbers as needed
         break;
     }
 
-    setPivotPosition(pivotGoal);
+    if (intakeState != IntakeState.STOW && intakeState != IntakeState.AGITATE)
+    {
+      if (MathUtil.isNear(pivotGoal.getRotations(), new Rotation2d(pivotHardware.getPosition()).getRotations(), 0.05) && pivotGoal.getRotations() > 0.05) 
+        pivotHardware.stop();
+    }
+    else
+    {
+      setPivotPosition(pivotGoal);
+    }
     setRollerVoltage(intakeState.getRollerVol());
 
     Logger.recordOutput("agitate timer", (System.currentTimeMillis() - agitateTimestamp) / 1000);

@@ -40,7 +40,6 @@ import frc.robot.commands.TeleopCommands;
 // import frc.robot.commands.TeleopCommands;
 import frc.robot.constants.Constants;
 import frc.robot.constants.FieldConstants;
-import frc.robot.subsystems.climb.ClimbConstants;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.drive.Drive.DriveState;
 import frc.robot.subsystems.drive.DriveConstants;
@@ -85,7 +84,6 @@ import frc.robot.util.FuelSim;
 import frc.robot.util.geometry.AllianceFlipUtil;
 import java.util.ArrayList;
 import java.util.Optional;
-import java.util.function.DoubleSupplier;
 import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
@@ -643,20 +641,6 @@ public class RobotContainer {
   // manager.robotState = RobotScoringState.IDLE;
   // manager.intakeState = IntakeManagerState.IDLE;
   // }
-
-  public DoubleSupplier getClimbAdjustmentDoubleSupplier() {
-    return () -> {
-      double val = opController.getLeftY();
-      if (Math.abs(val) < 0.1) {
-        return 0.0;
-      }
-      if (val > 0.0) {
-        return val * 3.0 + ClimbConstants.climbVoltage;
-      } else {
-        return val * 3.0 + ClimbConstants.descendClimbVoltage;
-      }
-    };
-  }
 
   public void resetSubsystems() {
     shooter.setShooterState(ShooterState.STOW);
