@@ -72,12 +72,44 @@ public class ShooterConstants { // TODO: CLEANUP
 
   public static final ShooterTurretHardware turretHardware = new ShooterTurretHardware(53, 54, 10d);
 
+    // x44
   public static final TurretMotorConfiguration turretConfigs =
-      new TurretMotorConfiguration(false, true, true, 60, 50, 12, -12, NeutralModeValue.Brake);
+      new TurretMotorConfiguration(
+        false, 
+        true, // enable stator
+        true, // enable supply
+        60, // stator current limit
+        50, // supply current limit
+        12, // peak fwd volt
+        -12, // peak bwd volt
+        NeutralModeValue.Brake
+    );
+
+    // x60
   public static final FlywheelMotorConfiguration flywheelConfigs =
-      new FlywheelMotorConfiguration(true, true, true, 80, 60, 12, -12, NeutralModeValue.Coast);
+      new FlywheelMotorConfiguration(
+        true, // invert
+        true, // enable stator
+        true, // enable supply
+        80, // stator current limit 
+        60, // supply current limit
+        12, // peak fwd volt
+        -12,  // peak bwd volt
+        NeutralModeValue.Coast
+    );
+
+    // x44
   public static final HoodMotorConfiguration hoodConfigs =
-      new HoodMotorConfiguration(true, true, true, 60, 30, 12, -12, NeutralModeValue.Brake);
+      new HoodMotorConfiguration(
+        true, 
+        true, // enable stator
+        true, // enable supply
+        60, // stator current limit 
+        30, // supply current limit
+        12, // peak fwd volt
+        -12, // peak bwd volt
+        NeutralModeValue.Brake
+      );
 
   public static final SimulationConfiguration shooterTurretSimConfig =
       new SimulationConfiguration(DCMotor.getKrakenX44(1), 0.002);

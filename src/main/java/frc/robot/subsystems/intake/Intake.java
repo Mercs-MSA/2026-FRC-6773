@@ -184,13 +184,13 @@ public class Intake extends SubsystemBase { // TODO: Tunable Numbers as needed
         break;
     }
 
-    if (intakeState != IntakeState.STOW && intakeState != IntakeState.AGITATE)
-    {
-      if (MathUtil.isNear(pivotGoal.getRotations(), new Rotation2d(pivotHardware.getPosition()).getRotations(), 0.05) && pivotGoal.getRotations() > 0.05) 
-        pivotHardware.stop();
-    }
-    else
-    {
+    if (intakeState != IntakeState.STOW && intakeState != IntakeState.AGITATE) {
+      if (MathUtil.isNear(
+              pivotGoal.getRotations(),
+              new Rotation2d(pivotHardware.getPosition()).getRotations(),
+              0.05)
+          && pivotGoal.getRotations() > 0.05) pivotHardware.stop();
+    } else {
       setPivotPosition(pivotGoal);
     }
     setRollerVoltage(intakeState.getRollerVol());

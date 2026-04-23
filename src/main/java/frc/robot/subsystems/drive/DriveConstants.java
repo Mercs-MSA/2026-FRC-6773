@@ -65,6 +65,11 @@ public class DriveConstants {
   // This needs to be tuned to your individual robot
   private static final Current kSlipCurrent = Amps.of(90);
 
+  public static final double kDriveSupplyCurrent = 90.0; // TODO: TURN THESE UP TO SPEED UP DRIVE, RISK OF BROWNING OUT
+  public static final double kDriveStatorCurrent = 80.0; // TODO: TURN THESE UP TO SPEED UP DRIVE, RISK OF BROWNING OUT
+  public static final double kSteerStatorCurrent = 40.0; // TODO: TURN THESE UP TO SPEED UP STEER, RISK OF BROWNING OUT
+  public static final double kSteerSupplyCurrent = 20.0; // TODO: TURN THESE UP TO SPEED UP STEER, RISK OF BROWNING OUT
+
   // Initial configs for the drive and steer motors and the azimuth encoder; these cannot be null.
   // Some configs will be overwritten; check the `with*InitialConfigs()` API documentation.
   private static final TalonFXConfiguration driveInitialConfigs = new TalonFXConfiguration();
