@@ -123,7 +123,7 @@ public class ModuleIOTalonFXS implements ModuleIO {
           case TalonFXS_Brushed_BC -> BrushedMotorWiringValue.Leads_B_and_C;
           default -> BrushedMotorWiringValue.Leads_A_and_B;
         };
-    turnConfig.MotorOutput.NeutralMode = NeutralModeValue.Brake;
+    turnConfig.MotorOutput.NeutralMode = NeutralModeValue.Coast;
     turnConfig.Slot0 = constants.SteerMotorGains;
     turnConfig.ExternalFeedback.FeedbackRemoteSensorID = constants.EncoderId;
     turnConfig.ExternalFeedback.ExternalFeedbackSensorSource =

@@ -23,6 +23,8 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
+import edu.wpi.first.wpilibj.PowerDistribution;
+import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -119,6 +121,8 @@ public class RobotContainer {
 
   private Trigger rumbleTrigger;
 
+  private PowerDistribution pdh;
+
   public FuelSim fuelSim;
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
@@ -194,7 +198,7 @@ public class RobotContainer {
                     TransferConstants.transferGains,
                     TransferConstants.transferTalonFXConfiguration,
                     TransferConstants.statusSignalUpdateFrequencyHz));
-
+        pdh = new PowerDistribution(1, ModuleType.kRev);
         // climber =
         // new Climb(
         // new ClimbIOTalonFX(
@@ -254,7 +258,7 @@ public class RobotContainer {
                     0.02,
                     TransferConstants.transferHardware,
                     TransferConstants.transferSimulationConfiguration));
-
+        pdh = new PowerDistribution();
         // climber =
         // new Climb(
         // new ClimbIOSim(
@@ -751,5 +755,11 @@ public class RobotContainer {
 
   public void putPhaseTimeLeft(double timeLeft) {
     SmartDashboard.putNumber("Field/PhaseTimeLeft", timeLeft);
+  }
+
+  @AutoLogOutput(key = "TotalCurrent")
+  public double getTotalCurrent() {
+    pdh.clearStickyFaults();
+    return pdh.getTotalCurrent();
   }
 }
