@@ -1,6 +1,7 @@
 package frc.robot.subsystems.intake;
 
 import static edu.wpi.first.units.Units.Degrees;
+import static edu.wpi.first.units.Units.Rotations;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -65,7 +66,7 @@ public class Intake extends SubsystemBase { // TODO: Tunable Numbers as needed
   private final LoggedNetworkNumber agitateC = new LoggedNetworkNumber("/Intake/AgitateC", 0.75);
   // This value is a multiplier to make the overall sin function go faster.
   private final LoggedNetworkNumber agitateFreq =
-      new LoggedNetworkNumber("/Intake/AgitateFreq", 2.0);
+      new LoggedNetworkNumber("/Intake/AgitateFreq", 2.25);
 
   private final LoggedNetworkNumber amplitude = new LoggedNetworkNumber("/Intake/Amplitude", 1.0);
 
@@ -185,11 +186,12 @@ public class Intake extends SubsystemBase { // TODO: Tunable Numbers as needed
     }
 
     if (intakeState != IntakeState.STOW && intakeState != IntakeState.AGITATE) {
-      if (MathUtil.isNear(
-              pivotGoal.getRotations(),
-              new Rotation2d(pivotHardware.getPosition()).getRotations(),
-              0.05)
-          && pivotGoal.getRotations() > 0.05) pivotHardware.stop();
+      if (MathUtil.isNear(pivotGoal.getRotations(), pivotHardware.getPosition().in(Rotations), 0.01)
+          && pivotGoal.getRotations() > 0.05) {
+        pivotHardware.stop();
+      } else {
+        setPivotPosition(pivotGoal);
+      }
     } else {
       setPivotPosition(pivotGoal);
     }
@@ -266,5 +268,15 @@ public class Intake extends SubsystemBase { // TODO: Tunable Numbers as needed
   @AutoLogOutput(key = "States/IntakeState")
   public IntakeState getIntakeState() {
     return intakeState;
+  }
+
+  @AutoLogOutput(key = "Intake/Pivot/Rotations")
+  public double getIntakePosition() {
+    return pivotHardware.getPosition().in(Rotations);
+  }
+
+  @AutoLogOutput(key = "Intake/Pivot/Goal")
+  public double getIntakeGoal() {
+    return intakeState.getPivotPos().getRotations();
   }
 }
