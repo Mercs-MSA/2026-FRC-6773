@@ -49,6 +49,7 @@ public class IndexerConstants {
 
   public static final KickerGains kickerGains = new KickerGains(0, 0, 0, 0.105, 0);
 
+  // x44
   public static final SpindexerTalonFXConfiguration spindexerTalonFXConfiguration =
       new SpindexerTalonFXConfiguration(
           false, // Invert
@@ -60,13 +61,14 @@ public class IndexerConstants {
           -12.0, // Peak reverse voltage
           NeutralModeValue.Coast); // Idle mode
 
+  // x44
   public static final KickerTalonFXConfiguration kickerTalonFXConfiguration =
       new KickerTalonFXConfiguration(
           false, // Invert
           true, // Enable stator current limiting
           true, // Enable supply current limiting
-          80.0, // Stator limit
-          70.0, // Supply limit
+          80.0, // Stator limit TODO: POTENTIALLY LOWER THIS 80 AMPS, SEEMS TOO HIGH
+          70.0, // Supply limit TODO: POTENTIALLY LOWER THIS 70 AMPS, SEEMS TOO HIGH
           12.0, // Peak forward voltage
           -12.0, // Peak reverse voltage
           NeutralModeValue.Coast); // Idle mode

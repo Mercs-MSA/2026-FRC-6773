@@ -81,7 +81,7 @@ public class IntakeConstants {
           true, // Enable stator current limiting
           true, // Enable supply current limiting
           80.0, // Stator limit
-          40.0, // Supply limit
+          40.0, // Supply limit TODO: POTENTIALLY HIGHER THIS 40 AMPS, SEEMS TOO LOW FOR x60
           12.0, // Peak forward voltage
           -12.0, // Peak reverse voltage
           NeutralModeValue.Coast); // Idle mode
