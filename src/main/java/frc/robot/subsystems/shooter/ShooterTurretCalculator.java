@@ -46,6 +46,10 @@ public class ShooterTurretCalculator {
       new InterpolatingTreeMap<>(InverseInterpolator.forDouble(), ShotData::interpolate);
   public static final InterpolatingDoubleTreeMap TOF_MAP = new InterpolatingDoubleTreeMap();
 
+  public static final InterpolatingTreeMap<Double, ShotData> PASS_MAP =
+      new InterpolatingTreeMap<>(InverseInterpolator.forDouble(), ShotData::interpolate);
+  // public static final InterpolatingDoubleTreeMap TOF_MAP = new InterpolatingDoubleTreeMap();
+
   public static Pose2d lastLookAhead = new Pose2d();
   public static Timer timer = new Timer();
   public static Time sinceLastCalc = Seconds.of(0);
@@ -95,6 +99,22 @@ public class ShooterTurretCalculator {
 
     SHOT_MAP.put(1.253, new ShotData(RPM.of(50 * 60), Degrees.of(1)));
     TOF_MAP.put(1.253, 1.01);
+
+    PASS_MAP.put(7.2, new ShotData(RPM.of(100 * 60), Degrees.of(20)));
+    PASS_MAP.put(6.7, new ShotData(RPM.of(90 * 60), Degrees.of(20)));
+    PASS_MAP.put(6.3, new ShotData(RPM.of(80 * 60), Degrees.of(20)));
+    PASS_MAP.put(5.9, new ShotData(RPM.of(70 * 60), Degrees.of(20)));
+    PASS_MAP.put(5.6, new ShotData(RPM.of(60 * 60), Degrees.of(20)));
+    PASS_MAP.put(5.5, new ShotData(RPM.of(50 * 60), Degrees.of(20)));
+    PASS_MAP.put(5.18, new ShotData(RPM.of(40 * 60), Degrees.of(20)));
+    PASS_MAP.put(4.55, new ShotData(RPM.of(37 * 60), Degrees.of(20)));
+    PASS_MAP.put(4.082, new ShotData(RPM.of(36 * 60), Degrees.of(20)));
+    PASS_MAP.put(3.483, new ShotData(RPM.of(35 * 60), Degrees.of(20)));
+    PASS_MAP.put(3.022, new ShotData(RPM.of(35 * 60), Degrees.of(20)));
+    PASS_MAP.put(2.7, new ShotData(RPM.of(34 * 60), Degrees.of(20)));
+    PASS_MAP.put(2.58, new ShotData(RPM.of(33 * 60), Degrees.of(20)));
+    PASS_MAP.put(2.012, new ShotData(RPM.of(32 * 60), Degrees.of(20)));
+    PASS_MAP.put(1.253, new ShotData(RPM.of(30 * 60), Degrees.of(20)));
   }
 
   public static Distance getDistanceToTarget(Pose2d robot, Translation3d target) {
@@ -295,7 +315,7 @@ public class ShooterTurretCalculator {
   }
 
   public static ShotData iterativeMovingShotFromMap(
-      Pose2d robot, ChassisSpeeds fieldSpeeds, Translation3d target, int iterations) {
+      Pose2d robot, ChassisSpeeds fieldSpeeds, Translation3d target, int iterations, boolean pass) {
 
     sinceLastCalc = Seconds.of(timer.get());
     Logger.recordOutput("Shooter/Latency", sinceLastCalc);
@@ -303,7 +323,7 @@ public class ShooterTurretCalculator {
     target = AllianceFlipUtil.apply(target);
     Pose2d turretPose = (new Pose3d(robot).transformBy(robotToTurret)).toPose2d();
     double distance = getDistanceToTarget(turretPose, target).in(Meters);
-    ShotData shot = SHOT_MAP.get(distance);
+    ShotData shot = pass ? PASS_MAP.get(distance) : SHOT_MAP.get(distance);
     shot = new ShotData(shot.exitVelocity, shot.hoodAngle, target);
     Time timeOfFlight = Seconds.of(TOF_MAP.get(distance));
     Translation3d predictedTarget = target;

@@ -20,7 +20,7 @@ public class Intake extends SubsystemBase { // TODO: Tunable Numbers as needed
     IDLE(() -> Rotation2d.fromRotations(0.23), 0),
     BUMP(() -> Rotation2d.fromRotations(0.21), -12),
     AGITATE(() -> Rotation2d.fromRotations(0.2), -5),
-    INTAKING(() -> Rotation2d.fromRotations(0.23), -6),
+    INTAKING(() -> Rotation2d.fromRotations(0.23), -10),
     OUTTAKING(() -> Rotation2d.fromRotations(0.23), 7);
 
     private Supplier<Rotation2d> pivotPos;
@@ -185,16 +185,19 @@ public class Intake extends SubsystemBase { // TODO: Tunable Numbers as needed
         break;
     }
 
-    if (intakeState != IntakeState.STOW && intakeState != IntakeState.AGITATE) {
-      if (MathUtil.isNear(pivotGoal.getRotations(), pivotHardware.getPosition().in(Rotations), 0.01)
-          && pivotGoal.getRotations() > 0.05) {
-        pivotHardware.stop();
-      } else {
-        setPivotPosition(pivotGoal);
-      }
-    } else {
-      setPivotPosition(pivotGoal);
-    }
+    // if (intakeState != IntakeState.STOW
+    //     && intakeState != IntakeState.AGITATE
+    //     && intakeState != IntakeState.INTAKING) {
+    //   if (MathUtil.isNear(pivotGoal.getRotations(), pivotHardware.getPosition().in(Rotations),
+    // 0.01)
+    //       && pivotGoal.getRotations() > 0.05) {
+    //     pivotHardware.stop();
+    //   } else {
+    //     setPivotPosition(pivotGoal);
+    //   }
+    // } else {
+    setPivotPosition(pivotGoal);
+    // }
     setRollerVoltage(intakeState.getRollerVol());
 
     Logger.recordOutput("agitate timer", (System.currentTimeMillis() - agitateTimestamp) / 1000);

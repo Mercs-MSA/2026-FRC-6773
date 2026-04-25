@@ -7,6 +7,7 @@
 
 package frc.robot;
 
+import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.constants.Constants;
@@ -14,6 +15,7 @@ import frc.robot.constants.Constants.Mode;
 import frc.robot.subsystems.shooter.Shooter.ShooterState;
 import frc.robot.util.ZoneUtil;
 import org.littletonrobotics.junction.LogFileUtil;
+import org.littletonrobotics.junction.LoggedPowerDistribution;
 import org.littletonrobotics.junction.LoggedRobot;
 import org.littletonrobotics.junction.Logger;
 import org.littletonrobotics.junction.networktables.NT4Publisher;
@@ -53,6 +55,7 @@ public class Robot extends LoggedRobot {
         // Running on a real robot, log to a USB stick ("/U/logs")
         Logger.addDataReceiver(new WPILOGWriter());
         Logger.addDataReceiver(new NT4Publisher());
+        LoggedPowerDistribution.getInstance(1, ModuleType.kRev);
         break;
 
       case SIM:
@@ -70,6 +73,7 @@ public class Robot extends LoggedRobot {
     }
 
     // Start AdvantageKit logger
+
     Logger.start();
 
     // Instantiate our RobotContainer. This will perform all our button bindings,

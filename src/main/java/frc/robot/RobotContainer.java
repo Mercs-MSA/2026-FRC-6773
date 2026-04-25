@@ -23,8 +23,6 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
-import edu.wpi.first.wpilibj.PowerDistribution;
-import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -121,7 +119,7 @@ public class RobotContainer {
 
   private Trigger rumbleTrigger;
 
-  private PowerDistribution pdh;
+  // private PowerDistribution pdh;
 
   public FuelSim fuelSim;
 
@@ -198,7 +196,7 @@ public class RobotContainer {
                     TransferConstants.transferGains,
                     TransferConstants.transferTalonFXConfiguration,
                     TransferConstants.statusSignalUpdateFrequencyHz));
-        pdh = new PowerDistribution(1, ModuleType.kRev);
+        // pdh = new PowerDistribution(1, ModuleType.kRev);
         // climber =
         // new Climb(
         // new ClimbIOTalonFX(
@@ -258,7 +256,7 @@ public class RobotContainer {
                     0.02,
                     TransferConstants.transferHardware,
                     TransferConstants.transferSimulationConfiguration));
-        pdh = new PowerDistribution();
+        // pdh = new PowerDistribution();
         // climber =
         // new Climb(
         // new ClimbIOSim(
@@ -272,8 +270,8 @@ public class RobotContainer {
 
         // Register a robot for collision with fuel
         fuelSim.registerRobot(
-            DriveConstants.getDimensions()[0], // from left to right in meters
-            DriveConstants.getDimensions()[1], // from front to back in meters
+            27, // from left to right in meters
+            27, // from front to back in meters
             Meters.convertFrom(7.5, Inches), // from floor to top of bumpers in meters
             drive::getPose, // Supplier<Pose2d> of robot pose
             drive::getFieldVelocity); // Supplier<ChassisSpeeds> of field-centric chassis speeds
@@ -757,9 +755,9 @@ public class RobotContainer {
     SmartDashboard.putNumber("Field/PhaseTimeLeft", timeLeft);
   }
 
-  @AutoLogOutput(key = "TotalCurrent")
-  public double getTotalCurrent() {
-    pdh.clearStickyFaults();
-    return pdh.getTotalCurrent();
-  }
+  // @AutoLogOutput(key = "TotalCurrent")
+  // public double getTotalCurrent() {
+  //   pdh.clearStickyFaults();
+  //   return pdh.getTotalCurrent();
+  // }
 }
