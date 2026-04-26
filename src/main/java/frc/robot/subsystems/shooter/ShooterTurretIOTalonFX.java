@@ -213,7 +213,7 @@ public class ShooterTurretIOTalonFX implements ShooterTurretIO {
 
   @Override
   public Angle getTurretPosition() {
-    turretMotor.getIs
+    // turretMotor.getIs
     return turretMotor.getPosition().getValue();
   }
 }

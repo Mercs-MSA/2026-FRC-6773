@@ -2,12 +2,11 @@ package frc.robot.subsystems.transfer;
 
 import static edu.wpi.first.units.Units.InchesPerSecond;
 
-import java.util.function.BooleanSupplier;
-
 import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.LinearVelocity;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.Constants;
+import java.util.function.BooleanSupplier;
 import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.Logger;
 
@@ -41,8 +40,7 @@ public class Transfer extends SubsystemBase {
         stopTransfer();
         break;
       case TRANSFERRING:
-        if (wrapSupplier.getAsBoolean())
-        stopTransfer();
+        if (wrapSupplier.getAsBoolean()) stopTransfer();
         else setTangentialVelocity(Constants.fuelLaunchVelocity);
         break;
     }
