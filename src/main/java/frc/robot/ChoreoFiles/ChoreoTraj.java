@@ -70,6 +70,41 @@ public record ChoreoTraj(
         new Pose2d(3.575, 3.75, Rotation2d.fromRadians(3.14159)),
         new Pose2d(1.7, 3.3, Rotation2d.fromRadians(0))
     );
+    public static final ChoreoTraj Depot_Human_Middle = new ChoreoTraj(
+        "Depot_Human_Middle",
+        OptionalInt.empty(),
+        6.53289,
+        new Pose2d(3.51231, 4.04317, Rotation2d.fromRadians(3.14159)),
+        new Pose2d(0.63058, 0.64251, Rotation2d.fromRadians(3.14159))
+    );
+    public static final ChoreoTraj Depot_Human_Middle$0 = new ChoreoTraj(
+        "Depot_Human_Middle",
+        OptionalInt.of(0),
+        2.07745,
+        new Pose2d(3.51231, 4.04317, Rotation2d.fromRadians(3.14159)),
+        new Pose2d(1.00598, 6.94699, Rotation2d.fromRadians(-2.35619))
+    );
+    public static final ChoreoTraj Depot_Human_Middle$1 = new ChoreoTraj(
+        "Depot_Human_Middle",
+        OptionalInt.of(1),
+        1.44205,
+        new Pose2d(1.00598, 6.94699, Rotation2d.fromRadians(-2.35619)),
+        new Pose2d(1.85614, 5.13624, Rotation2d.fromRadians(-2.08101))
+    );
+    public static final ChoreoTraj Depot_Human_Middle$2 = new ChoreoTraj(
+        "Depot_Human_Middle",
+        OptionalInt.of(2),
+        2.2795000000000005,
+        new Pose2d(1.85614, 5.13624, Rotation2d.fromRadians(-2.08101)),
+        new Pose2d(1.91135, 0.65355, Rotation2d.fromRadians(3.14159))
+    );
+    public static final ChoreoTraj Depot_Human_Middle$3 = new ChoreoTraj(
+        "Depot_Human_Middle",
+        OptionalInt.of(3),
+        0.7338899999999997,
+        new Pose2d(1.91135, 0.65355, Rotation2d.fromRadians(3.14159)),
+        new Pose2d(0.63058, 0.64251, Rotation2d.fromRadians(3.14159))
+    );
     public static final ChoreoTraj D_BumpAllianceNeutral = new ChoreoTraj(
         "D_BumpAllianceNeutral",
         OptionalInt.empty(),
@@ -314,6 +349,41 @@ public record ChoreoTraj(
         0.197280000000001,
         new Pose2d(3.33846, 5.42163, Rotation2d.fromRadians(1.5708)),
         new Pose2d(3.13846, 5.42163, Rotation2d.fromRadians(1.5708))
+    );
+    public static final ChoreoTraj H_Partial_2Pass_copy1 = new ChoreoTraj(
+        "H_Partial_2Pass_copy1",
+        OptionalInt.empty(),
+        8.88211,
+        new Pose2d(3.51341, 2.45167, Rotation2d.fromRadians(0.7854)),
+        new Pose2d(3.13846, 2.64757, Rotation2d.fromRadians(-1.5708))
+    );
+    public static final ChoreoTraj H_Partial_2Pass_copy1$0 = new ChoreoTraj(
+        "H_Partial_2Pass_copy1",
+        OptionalInt.of(0),
+        1.61736,
+        new Pose2d(3.51341, 2.45167, Rotation2d.fromRadians(0.7854)),
+        new Pose2d(6.42707, 2.46122, Rotation2d.fromRadians(0.7854))
+    );
+    public static final ChoreoTraj H_Partial_2Pass_copy1$1 = new ChoreoTraj(
+        "H_Partial_2Pass_copy1",
+        OptionalInt.of(1),
+        1.3268600000000002,
+        new Pose2d(6.42707, 2.46122, Rotation2d.fromRadians(0.7854)),
+        new Pose2d(7.55373, 0.7916, Rotation2d.fromRadians(1.5708))
+    );
+    public static final ChoreoTraj H_Partial_2Pass_copy1$2 = new ChoreoTraj(
+        "H_Partial_2Pass_copy1",
+        OptionalInt.of(2),
+        5.74061,
+        new Pose2d(7.55373, 0.7916, Rotation2d.fromRadians(1.5708)),
+        new Pose2d(3.33846, 2.64757, Rotation2d.fromRadians(-1.5708))
+    );
+    public static final ChoreoTraj H_Partial_2Pass_copy1$3 = new ChoreoTraj(
+        "H_Partial_2Pass_copy1",
+        OptionalInt.of(3),
+        0.197280000000001,
+        new Pose2d(3.33846, 2.64757, Rotation2d.fromRadians(-1.5708)),
+        new Pose2d(3.13846, 2.64757, Rotation2d.fromRadians(-1.5708))
     );
     public static final ChoreoTraj D_Start_D_BUMP = new ChoreoTraj(
         "D_Start_D_BUMP",
@@ -797,6 +867,11 @@ public record ChoreoTraj(
         Map.entry("AutonStuff$3", AutonStuff$3),
         Map.entry("AutonStuff$4", AutonStuff$4),
         Map.entry("C_Climb", C_Climb),
+        Map.entry("Depot_Human_Middle", Depot_Human_Middle),
+        Map.entry("Depot_Human_Middle$0", Depot_Human_Middle$0),
+        Map.entry("Depot_Human_Middle$1", Depot_Human_Middle$1),
+        Map.entry("Depot_Human_Middle$2", Depot_Human_Middle$2),
+        Map.entry("Depot_Human_Middle$3", Depot_Human_Middle$3),
         Map.entry("D_BumpAllianceNeutral", D_BumpAllianceNeutral),
         Map.entry("D_BumpNeutralAlliance", D_BumpNeutralAlliance),
         Map.entry("D_BUMP_D_Intake_45", D_BUMP_D_Intake_45),
@@ -832,6 +907,11 @@ public record ChoreoTraj(
         Map.entry("D_Partial_2Pass_copy1$1", D_Partial_2Pass_copy1$1),
         Map.entry("D_Partial_2Pass_copy1$2", D_Partial_2Pass_copy1$2),
         Map.entry("D_Partial_2Pass_copy1$3", D_Partial_2Pass_copy1$3),
+        Map.entry("H_Partial_2Pass_copy1", H_Partial_2Pass_copy1),
+        Map.entry("H_Partial_2Pass_copy1$0", H_Partial_2Pass_copy1$0),
+        Map.entry("H_Partial_2Pass_copy1$1", H_Partial_2Pass_copy1$1),
+        Map.entry("H_Partial_2Pass_copy1$2", H_Partial_2Pass_copy1$2),
+        Map.entry("H_Partial_2Pass_copy1$3", H_Partial_2Pass_copy1$3),
         Map.entry("D_Start_D_BUMP", D_Start_D_BUMP),
         Map.entry("D_Start_D_Depot", D_Start_D_Depot),
         Map.entry("H_BumpNeutralAlliance", H_BumpNeutralAlliance),

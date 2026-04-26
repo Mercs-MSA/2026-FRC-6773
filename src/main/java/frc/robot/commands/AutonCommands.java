@@ -221,6 +221,9 @@ public class AutonCommands extends TeleopCommands {
       case "LEFT_ADAPTIVE":
         autonCommand.addCommands(getDepotSideAdaptive(Time.ofBaseUnits(1, Second)));
         break;
+      case "DEPOT_HUMAN_MIDDLE":
+        autonCommand.addCommands(depotHuman());
+        break;
       default:
         DriverStation.reportError("Big oops: Invalid Start Pos", false);
         break;
@@ -246,6 +249,24 @@ public class AutonCommands extends TeleopCommands {
   // Alliance.Blue));
   //                           });
   // }
+
+  public Command depotHuman()
+  {
+    String quick = "Depot_Human_Middle";
+
+    SequentialCommandGroup command = new SequentialCommandGroup();
+    command.addCommands(getPathCommand(quick, 0));
+    command.addCommands(stopDrive());
+    command.addCommands(intakeCommand(IntakeState.INTAKING));
+    command.addCommands(getPathCommand(quick, 1));
+    command.addCommands(intakeCommand(IntakeState.IDLE));
+    command.addCommands(shootCommand());
+    command.addCommands(getPathCommand(quick, 2));
+    command.addCommands(intakeCommand(IntakeState.INTAKING));
+    command.addCommands(getPathCommand(quick, 3));
+    command.addCommands(stopDrive());
+    return command;
+  }
 
   public Command getAutonCommandSegments(String overallName) {
     SequentialCommandGroup command = new SequentialCommandGroup();
