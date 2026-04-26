@@ -423,6 +423,7 @@ public class RobotContainer {
     autoChooser.addOption("Left", autonCommands.getAutonomousSequence("LEFT_NEW"));
     autoChooser.addOption("Left Close", autonCommands.getAutonomousSequence("LEFT_NEW_CLOSE"));
     autoChooser.addOption("Left AMA", autonCommands.getAutonomousSequence("LEFT_TEST"));
+    autoChooser.addOption("Left Adaptive", autonCommands.getAutonomousSequence("LEFT_ADAPTIVE"));
 
     // autoChooser.addOption("Do Auton Stuff",
     // autonCommands.getAutonomousSequence("Do_AUTON_STUFF"));

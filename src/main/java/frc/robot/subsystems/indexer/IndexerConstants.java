@@ -43,7 +43,7 @@ public class IndexerConstants {
 
   public static final KickerHardware kickerHardware =
       new KickerHardware( // TODO: Gearing
-          44, 24d / 18d, 2);
+          44, 36d / 24d, 2);
 
   public static final SpindexerGains spindexerGains = new SpindexerGains(0, 0, 0, 0.15, 0);
 

@@ -1,9 +1,12 @@
 package frc.robot.commands;
 
+import static edu.wpi.first.units.Units.Second;
+
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.path.PathPlannerPath;
 import com.pathplanner.lib.util.FlippingUtil;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.units.measure.Time;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.Timer;
@@ -214,6 +217,9 @@ public class AutonCommands extends TeleopCommands {
         break;
       case "LEFT_NEW_CLOSE":
         autonCommand.addCommands(getDepotSideNewClose());
+        break;
+      case "LEFT_ADAPTIVE":
+        autonCommand.addCommands(getDepotSideAdaptive(Time.ofBaseUnits(1, Second)));
         break;
       default:
         DriverStation.reportError("Big oops: Invalid Start Pos", false);
@@ -576,6 +582,48 @@ public class AutonCommands extends TeleopCommands {
 
     // command.addCommands(Commands.parallel(restOfCommand, runShootCheckCommand()));
 
+    // command.addCommands(new WaitCommand(1.5));
+    return command;
+  }
+
+  public Command getDepotSideAdaptive(Time timeDelay) {
+    String quick = "D_Partial_2Pass_copy1";
+
+    SequentialCommandGroup command = new SequentialCommandGroup();
+    // command.addCommands(
+    //     Commands.runOnce(
+    //         () -> {
+    //
+    // drive.setPose(AllianceFlipUtil.apply(ChoreoTraj.D_Partial_2Pass.initialPoseBlue()));
+    //         }));
+    command.addCommands(stopShootCommand());
+
+    command.addCommands(getPathCommand(quick, 0));
+    command.addCommands(stopDrive());
+    command.addCommands(new WaitCommand(timeDelay));
+    command.addCommands(getPathCommand(quick, 1));
+    command.addCommands(intakeCommand(IntakeState.INTAKING));
+    // command.addCommands(shootIndex());
+
+    // command.addCommands(getPathCommand(quick, 1));
+
+    command.addCommands(getPathCommand(quick, 2));
+    command.addCommands(getPathCommand(quick, 3));
+    command.addCommands(intakeCommand(IntakeState.IDLE));
+
+    command.addCommands(stopDrive());
+    // command.addCommands(Commands.waitSeconds(0.5));
+    Command com = Commands.parallel(indexCommand(IndexerState.INDEXING), shootCommand());
+    command.addCommands(com);
+    command.addCommands(new WaitCommand(3.5));
+    command.addCommands(shootIndex());
+
+    // command.addCommands(intakeCommand(IntakeState.INTAKING));
+    // command.addCommands(getPathCommand(quick, 4));
+    // command.addCommands(shootIndex());
+    // command.addCommands(stopDrive());
+    // command.addCommands(Commands.waitSeconds(1.5));
+    // command.addCommands(intakeCommand(IntakeState.AGITATE));
     // command.addCommands(new WaitCommand(1.5));
     return command;
   }

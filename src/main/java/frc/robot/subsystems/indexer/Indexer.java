@@ -64,8 +64,9 @@ public class Indexer extends SubsystemBase {
         stopSpindexer();
         break;
       case INDEXING:
-        setSpindexerAngularVelocity(RotationsPerSecond.of(100));
+        setSpindexerAngularVelocity(RotationsPerSecond.of(150));
         setKickerTangentialVelocity(Constants.fuelLaunchVelocity);
+        // setKickerAngularVelocity(RotationsPerSecond.of(60));
         break;
       case JAM:
         setKickerTangentialVelocity(Constants.fuelLaunchVelocity.times(-0.5));
