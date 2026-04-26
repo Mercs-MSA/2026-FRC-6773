@@ -91,6 +91,8 @@ public class Shooter extends SubsystemBase {
 
   private final Supplier<Alliance> isBlue;
 
+  private Angle turretSetPoint;
+
   /** Creates a new Shooter. */
   public Shooter(
       ShooterFlywheelIO flywheelHardwareIO,
@@ -158,6 +160,7 @@ public class Shooter extends SubsystemBase {
               }
             }));
     // TODO: visualizer
+    turretSetPoint = Angle.ofBaseUnits(0, Rotations);
   }
 
   @Override
@@ -350,6 +353,7 @@ public class Shooter extends SubsystemBase {
         break;
     }
 
+    turretSetPoint = azimuthAngle;
     if (useBiases.getAsBoolean()) {
       if (shooterState != ShooterState.TRENCH_MANUAL)
         setTurretSetpoint(
@@ -392,7 +396,7 @@ public class Shooter extends SubsystemBase {
         setFlywheelVelocityRPS(flywheelVelCust.getAsDouble());
       }
     }
-
+    Logger.recordOutput("FlywheelDebug/azimuthAngle", azimuthAngle);
     Logger.recordOutput("FlywheelDebug/targetFlywheelVelRPS", flywheelVel);
     Logger.recordOutput(
         "FlywheelDebug/flywheelRPS", getFlywheelVelocities()[0].in(RotationsPerSecond));
@@ -532,5 +536,32 @@ public class Shooter extends SubsystemBase {
                 .plus(Rotation2d.fromRotations(getTurretPosition()))
                 .plus(Rotation2d.kCCW_Pi_2));
     return turretPoseOut;
+  }
+
+  @AutoLogOutput(key="Shooter/isWrapping")
+  public boolean isWrapAround() {
+
+    Angle firstLimit = turretSetPoint.minus(turretHardware.getTurretPosition());
+    Angle secondLimit = turretHardware.getTurretPosition().minus(turretSetPoint);
+
+    Angle preferred = Angle.ofBaseUnits(0, Rotations);
+    if (Math.abs(firstLimit.baseUnitMagnitude()) > Math.abs(secondLimit.baseUnitMagnitude()))
+    {
+      preferred = secondLimit;
+    }
+    else
+    {
+      preferred = firstLimit;
+    }
+
+    if (Math.abs(preferred.in(Degrees)) > ShooterConstants.wrapAroundDegreesThreshold)
+    {
+      return true;
+    }
+    return false;
+  }
+
+  public BooleanSupplier wrapAroundSupplier() {
+    return this::isWrapAround;
   }
 }

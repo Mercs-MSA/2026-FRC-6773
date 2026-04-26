@@ -65,4 +65,9 @@ public class ShooterTurretIOSim implements ShooterTurretIO {
     turretMotor.setAngle(angle.in(Radians));
     turretMotor.setAngularVelocity(velocity.in(RadiansPerSecond));
   }
+
+  @Override
+  public Angle getTurretPosition() {
+    return turretMotor.getAngularPosition();
+  }
 }

@@ -188,14 +188,16 @@ public class RobotContainer {
                     IndexerConstants.kickerHardware,
                     IndexerConstants.kickerGains,
                     IndexerConstants.kickerTalonFXConfiguration,
-                    IndexerConstants.statusSignalUpdateFrequencyHz));
+                    IndexerConstants.statusSignalUpdateFrequencyHz),
+shooter.wrapAroundSupplier());
         transfer =
             new Transfer(
                 new TransferIOTalonFX(
                     TransferConstants.transferHardware,
                     TransferConstants.transferGains,
                     TransferConstants.transferTalonFXConfiguration,
-                    TransferConstants.statusSignalUpdateFrequencyHz));
+                    TransferConstants.statusSignalUpdateFrequencyHz),
+                    shooter.wrapAroundSupplier());
         // pdh = new PowerDistribution(1, ModuleType.kRev);
         // climber =
         // new Climb(
@@ -249,13 +251,15 @@ public class RobotContainer {
                 new IndexerKickerIOSim(
                     0.02,
                     IndexerConstants.kickerHardware,
-                    IndexerConstants.kickerSimulationConfiguration));
+                    IndexerConstants.kickerSimulationConfiguration),
+              () -> {return true;});
         transfer =
             new Transfer(
                 new TransferIOSim(
                     0.02,
                     TransferConstants.transferHardware,
-                    TransferConstants.transferSimulationConfiguration));
+                    TransferConstants.transferSimulationConfiguration),
+                    () -> {return true;});
         // pdh = new PowerDistribution();
         // climber =
         // new Climb(
@@ -347,8 +351,8 @@ public class RobotContainer {
                 drive::addVisionMeasurement, new VisionIO() {}, new VisionIO() {});
 
         intake = new Intake(null, null, null, null);
-        indexer = new Indexer(null, null);
-        transfer = new Transfer(null);
+        indexer = new Indexer(null, null, null);
+        transfer = new Transfer(null, null);
         shooter = new Shooter(null, null, null, null, null);
 
         // climber = new Climb(null, null);

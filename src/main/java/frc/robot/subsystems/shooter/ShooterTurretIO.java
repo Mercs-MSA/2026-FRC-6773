@@ -4,6 +4,8 @@
 
 package frc.robot.subsystems.shooter;
 
+import static edu.wpi.first.units.Units.Rotations;
+
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.AngularVelocity;
@@ -80,4 +82,8 @@ public interface ShooterTurretIO {
   public default void resetPosition() {}
 
   public default void setTurretSetpoint(Angle position, AngularVelocity velocity) {}
+
+  public default Angle getTurretPosition() {
+    return Angle.ofBaseUnits(0, Rotations);
+  }
 }

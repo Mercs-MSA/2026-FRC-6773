@@ -210,4 +210,10 @@ public class ShooterTurretIOTalonFX implements ShooterTurretIO {
   public void setTurretSetpoint(Angle position, AngularVelocity velocity) {
     turretMotor.setControl(kPositionControl.withPosition(position).withVelocity(velocity));
   }
+
+  @Override
+  public Angle getTurretPosition() {
+    turretMotor.getIs
+    return turretMotor.getPosition().getValue();
+  }
 }
