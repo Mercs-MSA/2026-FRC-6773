@@ -73,7 +73,7 @@ public class IntakeConstants {
           50.0, // Supply limit
           12.0, // Peak forward voltage
           -12.0, // Peak reverse voltage
-          NeutralModeValue.Coast); // Idle mode
+          NeutralModeValue.Brake); // Idle mode
 
   public static final RollerTalonFXConfiguration kRollerMotorConfiguration =
       new RollerTalonFXConfiguration(
