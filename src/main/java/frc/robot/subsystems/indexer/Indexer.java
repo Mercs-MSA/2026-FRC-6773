@@ -4,6 +4,8 @@ import static edu.wpi.first.units.Units.InchesPerSecond;
 import static edu.wpi.first.units.Units.RotationsPerSecond;
 import static edu.wpi.first.units.Units.Seconds;
 
+import java.util.function.BooleanSupplier;
+
 import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.LinearVelocity;
 import edu.wpi.first.wpilibj.Timer;
@@ -21,6 +23,7 @@ public class Indexer extends SubsystemBase {
   }
 
   public IndexerState indexerState;
+  public BooleanSupplier wrapSupplier;
 
   private final Timer jammedTimer = new Timer();
   private final Timer unJamTimer = new Timer();
@@ -34,10 +37,11 @@ public class Indexer extends SubsystemBase {
   private final IndexerKickerIOInputsAutoLogged kickerInputs =
       new IndexerKickerIOInputsAutoLogged();
 
-  public Indexer(IndexerSpindexerIO spindexerIO, IndexerKickerIO kickerIO) {
+  public Indexer(IndexerSpindexerIO spindexerIO, IndexerKickerIO kickerIO, BooleanSupplier wrapBooleanSupplier) {
     spindexerHardware = spindexerIO;
     kickerHardware = kickerIO;
     indexerState = IndexerState.IDLE;
+    wrapSupplier = wrapBooleanSupplier;
   }
 
   @Override
@@ -64,8 +68,16 @@ public class Indexer extends SubsystemBase {
         stopSpindexer();
         break;
       case INDEXING:
-        setSpindexerAngularVelocity(RotationsPerSecond.of(100));
-        setKickerTangentialVelocity(Constants.fuelLaunchVelocity);
+        if (wrapSupplier.getAsBoolean())
+        {
+          stopKicker();
+          stopSpindexer();
+        }
+        else
+        {
+          setSpindexerAngularVelocity(RotationsPerSecond.of(100));
+          setKickerTangentialVelocity(Constants.fuelLaunchVelocity);
+        }
         break;
       case JAM:
         setKickerTangentialVelocity(Constants.fuelLaunchVelocity.times(-0.5));

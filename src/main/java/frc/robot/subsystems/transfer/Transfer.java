@@ -2,6 +2,8 @@ package frc.robot.subsystems.transfer;
 
 import static edu.wpi.first.units.Units.InchesPerSecond;
 
+import java.util.function.BooleanSupplier;
+
 import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.LinearVelocity;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -19,10 +21,12 @@ public class Transfer extends SubsystemBase {
 
   private final TransferIO transferHardware;
   private final TransferIOInputsAutoLogged transferInputs = new TransferIOInputsAutoLogged();
+  private final BooleanSupplier wrapSupplier;
 
-  public Transfer(TransferIO transferIO) {
+  public Transfer(TransferIO transferIO, BooleanSupplier wrapAroundSupplier) {
     transferHardware = transferIO;
     transferState = TransferState.IDLE;
+    wrapSupplier = wrapAroundSupplier;
   }
 
   @Override
@@ -37,7 +41,9 @@ public class Transfer extends SubsystemBase {
         stopTransfer();
         break;
       case TRANSFERRING:
-        setTangentialVelocity(Constants.fuelLaunchVelocity);
+        if (wrapSupplier.getAsBoolean())
+        stopTransfer();
+        else setTangentialVelocity(Constants.fuelLaunchVelocity);
         break;
     }
   }
