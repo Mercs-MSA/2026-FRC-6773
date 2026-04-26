@@ -1,4 +1,5 @@
 // spotless:off
+// spotless:off
 package frc.robot.ChoreoFiles;
 
 import edu.wpi.first.math.geometry.Pose2d;
@@ -279,6 +280,41 @@ public record ChoreoTraj(
         4.78974,
         new Pose2d(2.36774, 5.4301, Rotation2d.fromRadians(2.11541)),
         new Pose2d(0.63915, 7.6357, Rotation2d.fromRadians(3.14159))
+    );
+    public static final ChoreoTraj D_Partial_2Pass_copy1 = new ChoreoTraj(
+        "D_Partial_2Pass_copy1",
+        OptionalInt.empty(),
+        8.88211,
+        new Pose2d(3.51341, 5.61753, Rotation2d.fromRadians(-0.7854)),
+        new Pose2d(3.13846, 5.42163, Rotation2d.fromRadians(1.5708))
+    );
+    public static final ChoreoTraj D_Partial_2Pass_copy1$0 = new ChoreoTraj(
+        "D_Partial_2Pass_copy1",
+        OptionalInt.of(0),
+        1.61736,
+        new Pose2d(3.51341, 5.61753, Rotation2d.fromRadians(-0.7854)),
+        new Pose2d(6.42707, 5.60798, Rotation2d.fromRadians(-0.7854))
+    );
+    public static final ChoreoTraj D_Partial_2Pass_copy1$1 = new ChoreoTraj(
+        "D_Partial_2Pass_copy1",
+        OptionalInt.of(1),
+        1.3268600000000002,
+        new Pose2d(6.42707, 5.60798, Rotation2d.fromRadians(-0.7854)),
+        new Pose2d(7.55373, 7.2776, Rotation2d.fromRadians(-1.5708))
+    );
+    public static final ChoreoTraj D_Partial_2Pass_copy1$2 = new ChoreoTraj(
+        "D_Partial_2Pass_copy1",
+        OptionalInt.of(2),
+        5.74061,
+        new Pose2d(7.55373, 7.2776, Rotation2d.fromRadians(-1.5708)),
+        new Pose2d(3.33846, 5.42163, Rotation2d.fromRadians(1.5708))
+    );
+    public static final ChoreoTraj D_Partial_2Pass_copy1$3 = new ChoreoTraj(
+        "D_Partial_2Pass_copy1",
+        OptionalInt.of(3),
+        0.197280000000001,
+        new Pose2d(3.33846, 5.42163, Rotation2d.fromRadians(1.5708)),
+        new Pose2d(3.13846, 5.42163, Rotation2d.fromRadians(1.5708))
     );
     public static final ChoreoTraj D_Start_D_BUMP = new ChoreoTraj(
         "D_Start_D_BUMP",
@@ -749,41 +785,6 @@ public record ChoreoTraj(
         new Pose2d(6.09608, 2.44126, Rotation2d.fromRadians(0.7854)),
         new Pose2d(2.61612, 2.60145, Rotation2d.fromRadians(-2.33398))
     );
-    public static final ChoreoTraj Depot_Human_Middle = new ChoreoTraj(
-        "Depot_Human_Middle",
-        OptionalInt.empty(),
-        6.53289,
-        new Pose2d(3.51231, 4.04317, Rotation2d.fromRadians(3.14159)),
-        new Pose2d(0.63058, 0.64251, Rotation2d.fromRadians(3.14159))
-    );
-    public static final ChoreoTraj Depot_Human_Middle$0 = new ChoreoTraj(
-        "Depot_Human_Middle",
-        OptionalInt.of(0),
-        2.07745,
-        new Pose2d(3.51231, 4.04317, Rotation2d.fromRadians(3.14159)),
-        new Pose2d(1.00598, 6.94699, Rotation2d.fromRadians(-2.35619))
-    );
-    public static final ChoreoTraj Depot_Human_Middle$1 = new ChoreoTraj(
-        "Depot_Human_Middle",
-        OptionalInt.of(1),
-        1.44205,
-        new Pose2d(1.00598, 6.94699, Rotation2d.fromRadians(-2.35619)),
-        new Pose2d(1.85614, 5.13624, Rotation2d.fromRadians(-2.08101))
-    );
-    public static final ChoreoTraj Depot_Human_Middle$2 = new ChoreoTraj(
-        "Depot_Human_Middle",
-        OptionalInt.of(2),
-        2.2795000000000005,
-        new Pose2d(1.85614, 5.13624, Rotation2d.fromRadians(-2.08101)),
-        new Pose2d(1.91135, 0.65355, Rotation2d.fromRadians(3.14159))
-    );
-    public static final ChoreoTraj Depot_Human_Middle$3 = new ChoreoTraj(
-        "Depot_Human_Middle",
-        OptionalInt.of(3),
-        0.7338899999999997,
-        new Pose2d(1.91135, 0.65355, Rotation2d.fromRadians(3.14159)),
-        new Pose2d(0.63058, 0.64251, Rotation2d.fromRadians(3.14159))
-    );
 
     /**
      * A map between trajectory names and their corresponding data.
@@ -899,6 +900,115 @@ public record ChoreoTraj(
         Map.entry("Depot_Human_Middle$1", Depot_Human_Middle$1),
         Map.entry("Depot_Human_Middle$2", Depot_Human_Middle$2),
         Map.entry("Depot_Human_Middle$3", Depot_Human_Middle$3)
+        Map.entry("AutonStuff", AutonStuff),
+        Map.entry("AutonStuff$0", AutonStuff$0),
+        Map.entry("AutonStuff$1", AutonStuff$1),
+        Map.entry("AutonStuff$2", AutonStuff$2),
+        Map.entry("AutonStuff$3", AutonStuff$3),
+        Map.entry("AutonStuff$4", AutonStuff$4),
+        Map.entry("C_Climb", C_Climb),
+        Map.entry("D_BumpAllianceNeutral", D_BumpAllianceNeutral),
+        Map.entry("D_BumpNeutralAlliance", D_BumpNeutralAlliance),
+        Map.entry("D_BUMP_D_Intake_45", D_BUMP_D_Intake_45),
+        Map.entry("D_Depot_D_BUMP", D_Depot_D_BUMP),
+        Map.entry("D_Full_1Pass", D_Full_1Pass),
+        Map.entry("D_Full_1Pass$0", D_Full_1Pass$0),
+        Map.entry("D_Full_1Pass$1", D_Full_1Pass$1),
+        Map.entry("D_Full_1Pass$2", D_Full_1Pass$2),
+        Map.entry("D_Full_1Pass$3", D_Full_1Pass$3),
+        Map.entry("D_Full_1Pass$4", D_Full_1Pass$4),
+        Map.entry("D_Intake_45_D_BUMP", D_Intake_45_D_BUMP),
+        Map.entry("D_Intake_45_H_BUMP", D_Intake_45_H_BUMP),
+        Map.entry("D_Partial_1Pass", D_Partial_1Pass),
+        Map.entry("D_Partial_1Pass$0", D_Partial_1Pass$0),
+        Map.entry("D_Partial_1Pass$1", D_Partial_1Pass$1),
+        Map.entry("D_Partial_1Pass$2", D_Partial_1Pass$2),
+        Map.entry("D_Partial_1Pass$3", D_Partial_1Pass$3),
+        Map.entry("D_Partial_1Pass$4", D_Partial_1Pass$4),
+        Map.entry("D_Partial_2Pass", D_Partial_2Pass),
+        Map.entry("D_Partial_2Pass$0", D_Partial_2Pass$0),
+        Map.entry("D_Partial_2Pass$1", D_Partial_2Pass$1),
+        Map.entry("D_Partial_2Pass$2", D_Partial_2Pass$2),
+        Map.entry("D_Partial_2Pass$3", D_Partial_2Pass$3),
+        Map.entry("D_Partial_2Pass$4", D_Partial_2Pass$4),
+        Map.entry("D_Partial_2Pass_Close2", D_Partial_2Pass_Close2),
+        Map.entry("D_Partial_2Pass_Close2$0", D_Partial_2Pass_Close2$0),
+        Map.entry("D_Partial_2Pass_Close2$1", D_Partial_2Pass_Close2$1),
+        Map.entry("D_Partial_2Pass_Close2$2", D_Partial_2Pass_Close2$2),
+        Map.entry("D_Partial_2Pass_Close2$3", D_Partial_2Pass_Close2$3),
+        Map.entry("D_Partial_2Pass_Close2$4", D_Partial_2Pass_Close2$4),
+        Map.entry("D_Partial_2Pass_copy1", D_Partial_2Pass_copy1),
+        Map.entry("D_Partial_2Pass_copy1$0", D_Partial_2Pass_copy1$0),
+        Map.entry("D_Partial_2Pass_copy1$1", D_Partial_2Pass_copy1$1),
+        Map.entry("D_Partial_2Pass_copy1$2", D_Partial_2Pass_copy1$2),
+        Map.entry("D_Partial_2Pass_copy1$3", D_Partial_2Pass_copy1$3),
+        Map.entry("D_Start_D_BUMP", D_Start_D_BUMP),
+        Map.entry("D_Start_D_Depot", D_Start_D_Depot),
+        Map.entry("H_BumpNeutralAlliance", H_BumpNeutralAlliance),
+        Map.entry("H_BUMP_H_Intake_45", H_BUMP_H_Intake_45),
+        Map.entry("H_Disruptor", H_Disruptor),
+        Map.entry("H_Disruptor$0", H_Disruptor$0),
+        Map.entry("H_Disruptor$1", H_Disruptor$1),
+        Map.entry("H_Disruptor$2", H_Disruptor$2),
+        Map.entry("H_Disruptor$3", H_Disruptor$3),
+        Map.entry("H_Full_1Pass", H_Full_1Pass),
+        Map.entry("H_Full_1Pass$0", H_Full_1Pass$0),
+        Map.entry("H_Full_1Pass$1", H_Full_1Pass$1),
+        Map.entry("H_Full_1Pass$2", H_Full_1Pass$2),
+        Map.entry("H_Full_1Pass$3", H_Full_1Pass$3),
+        Map.entry("H_Full_1Pass$4", H_Full_1Pass$4),
+        Map.entry("H_HumanPlayer_H_BUMP", H_HumanPlayer_H_BUMP),
+        Map.entry("H_Intake_4590_H_BUMP", H_Intake_4590_H_BUMP),
+        Map.entry("H_Intake_4590_H_BUMP$0", H_Intake_4590_H_BUMP$0),
+        Map.entry("H_Intake_4590_H_BUMP$1", H_Intake_4590_H_BUMP$1),
+        Map.entry("H_Intake_45_D_BUMP", H_Intake_45_D_BUMP),
+        Map.entry("H_Intake_45_H_BUMP", H_Intake_45_H_BUMP),
+        Map.entry("H_Partial_1Pass", H_Partial_1Pass),
+        Map.entry("H_Partial_1Pass$0", H_Partial_1Pass$0),
+        Map.entry("H_Partial_1Pass$1", H_Partial_1Pass$1),
+        Map.entry("H_Partial_1Pass$2", H_Partial_1Pass$2),
+        Map.entry("H_Partial_1Pass$3", H_Partial_1Pass$3),
+        Map.entry("H_Partial_1Pass_copy1", H_Partial_1Pass_copy1),
+        Map.entry("H_Partial_1Pass_copy1$0", H_Partial_1Pass_copy1$0),
+        Map.entry("H_Partial_1Pass_copy1$1", H_Partial_1Pass_copy1$1),
+        Map.entry("H_Partial_1Pass_copy1$2", H_Partial_1Pass_copy1$2),
+        Map.entry("H_Partial_1Pass_copy1$3", H_Partial_1Pass_copy1$3),
+        Map.entry("H_Partial_1Pass_copy1$4", H_Partial_1Pass_copy1$4),
+        Map.entry("H_Partial_2Pass", H_Partial_2Pass),
+        Map.entry("H_Partial_2Pass$0", H_Partial_2Pass$0),
+        Map.entry("H_Partial_2Pass$1", H_Partial_2Pass$1),
+        Map.entry("H_Partial_2Pass$2", H_Partial_2Pass$2),
+        Map.entry("H_Partial_2Pass$3", H_Partial_2Pass$3),
+        Map.entry("H_Partial_2Pass$4", H_Partial_2Pass$4),
+        Map.entry("H_Partial_2PassAMA", H_Partial_2PassAMA),
+        Map.entry("H_Partial_2PassAMA$0", H_Partial_2PassAMA$0),
+        Map.entry("H_Partial_2PassAMA$1", H_Partial_2PassAMA$1),
+        Map.entry("H_Partial_2PassAMA$2", H_Partial_2PassAMA$2),
+        Map.entry("H_Partial_2PassAMA$3", H_Partial_2PassAMA$3),
+        Map.entry("H_Partial_2PassAMA$4", H_Partial_2PassAMA$4),
+        Map.entry("H_Partial_2Pass_Close2", H_Partial_2Pass_Close2),
+        Map.entry("H_Partial_2Pass_Close2$0", H_Partial_2Pass_Close2$0),
+        Map.entry("H_Partial_2Pass_Close2$1", H_Partial_2Pass_Close2$1),
+        Map.entry("H_Partial_2Pass_Close2$2", H_Partial_2Pass_Close2$2),
+        Map.entry("H_Partial_2Pass_Close2$3", H_Partial_2Pass_Close2$3),
+        Map.entry("H_Partial_2Pass_Close2$4", H_Partial_2Pass_Close2$4),
+        Map.entry("H_Partial_2Pass_R", H_Partial_2Pass_R),
+        Map.entry("H_Partial_2Pass_R$0", H_Partial_2Pass_R$0),
+        Map.entry("H_Partial_2Pass_R$1", H_Partial_2Pass_R$1),
+        Map.entry("H_Partial_2Pass_R$2", H_Partial_2Pass_R$2),
+        Map.entry("H_Partial_2Pass_R$3", H_Partial_2Pass_R$3),
+        Map.entry("H_Partial_2Pass_R$4", H_Partial_2Pass_R$4),
+        Map.entry("H_Shunt_Grab", H_Shunt_Grab),
+        Map.entry("H_Shunt_Grab$0", H_Shunt_Grab$0),
+        Map.entry("H_Shunt_Grab$1", H_Shunt_Grab$1),
+        Map.entry("H_Shunt_Grab$2", H_Shunt_Grab$2),
+        Map.entry("H_Shunt_Grab$3", H_Shunt_Grab$3),
+        Map.entry("H_Shunt_Grab$4", H_Shunt_Grab$4),
+        Map.entry("H_Shunt_Grab$5", H_Shunt_Grab$5),
+        Map.entry("H_Start_H_BUMP", H_Start_H_BUMP),
+        Map.entry("KrishIdea", KrishIdea),
+        Map.entry("KrishIdea$0", KrishIdea$0),
+        Map.entry("KrishIdea$1", KrishIdea$1)
     );
 
     /**

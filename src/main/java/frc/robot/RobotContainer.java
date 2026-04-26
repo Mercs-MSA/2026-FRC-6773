@@ -189,7 +189,7 @@ public class RobotContainer {
                     IndexerConstants.kickerGains,
                     IndexerConstants.kickerTalonFXConfiguration,
                     IndexerConstants.statusSignalUpdateFrequencyHz),
-shooter.wrapAroundSupplier());
+                shooter.wrapAroundSupplier());
         transfer =
             new Transfer(
                 new TransferIOTalonFX(
@@ -197,7 +197,7 @@ shooter.wrapAroundSupplier());
                     TransferConstants.transferGains,
                     TransferConstants.transferTalonFXConfiguration,
                     TransferConstants.statusSignalUpdateFrequencyHz),
-                    shooter.wrapAroundSupplier());
+                shooter.wrapAroundSupplier());
         // pdh = new PowerDistribution(1, ModuleType.kRev);
         // climber =
         // new Climb(
@@ -252,14 +252,18 @@ shooter.wrapAroundSupplier());
                     0.02,
                     IndexerConstants.kickerHardware,
                     IndexerConstants.kickerSimulationConfiguration),
-              () -> {return true;});
+                () -> {
+                  return true;
+                });
         transfer =
             new Transfer(
                 new TransferIOSim(
                     0.02,
                     TransferConstants.transferHardware,
                     TransferConstants.transferSimulationConfiguration),
-                    () -> {return true;});
+                () -> {
+                  return true;
+                });
         // pdh = new PowerDistribution();
         // climber =
         // new Climb(
@@ -428,6 +432,7 @@ shooter.wrapAroundSupplier());
     autoChooser.addOption("Left Close", autonCommands.getAutonomousSequence("LEFT_NEW_CLOSE"));
     autoChooser.addOption("Middle Depot Human", autonCommands.getAutonomousSequence("DEPOT_HUMAN_MIDDLE"));
     autoChooser.addOption("Left AMA", autonCommands.getAutonomousSequence("LEFT_TEST"));
+    autoChooser.addOption("Left Adaptive", autonCommands.getAutonomousSequence("LEFT_ADAPTIVE"));
 
     // autoChooser.addOption("Do Auton Stuff",
     // autonCommands.getAutonomousSequence("Do_AUTON_STUFF"));

@@ -4,13 +4,12 @@ import static edu.wpi.first.units.Units.InchesPerSecond;
 import static edu.wpi.first.units.Units.RotationsPerSecond;
 import static edu.wpi.first.units.Units.Seconds;
 
-import java.util.function.BooleanSupplier;
-
 import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.LinearVelocity;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.Constants;
+import java.util.function.BooleanSupplier;
 import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.Logger;
 
@@ -37,7 +36,10 @@ public class Indexer extends SubsystemBase {
   private final IndexerKickerIOInputsAutoLogged kickerInputs =
       new IndexerKickerIOInputsAutoLogged();
 
-  public Indexer(IndexerSpindexerIO spindexerIO, IndexerKickerIO kickerIO, BooleanSupplier wrapBooleanSupplier) {
+  public Indexer(
+      IndexerSpindexerIO spindexerIO,
+      IndexerKickerIO kickerIO,
+      BooleanSupplier wrapBooleanSupplier) {
     spindexerHardware = spindexerIO;
     kickerHardware = kickerIO;
     indexerState = IndexerState.IDLE;
@@ -68,14 +70,11 @@ public class Indexer extends SubsystemBase {
         stopSpindexer();
         break;
       case INDEXING:
-        if (wrapSupplier.getAsBoolean())
-        {
+        if (wrapSupplier.getAsBoolean()) {
           stopKicker();
           stopSpindexer();
-        }
-        else
-        {
-          setSpindexerAngularVelocity(RotationsPerSecond.of(100));
+        } else {
+          setSpindexerAngularVelocity(RotationsPerSecond.of(150));
           setKickerTangentialVelocity(Constants.fuelLaunchVelocity);
         }
         break;

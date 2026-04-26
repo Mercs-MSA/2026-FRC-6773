@@ -538,24 +538,20 @@ public class Shooter extends SubsystemBase {
     return turretPoseOut;
   }
 
-  @AutoLogOutput(key="Shooter/isWrapping")
+  @AutoLogOutput(key = "Shooter/isWrapping")
   public boolean isWrapAround() {
 
     Angle firstLimit = turretSetPoint.minus(turretHardware.getTurretPosition());
     Angle secondLimit = turretHardware.getTurretPosition().minus(turretSetPoint);
 
     Angle preferred = Angle.ofBaseUnits(0, Rotations);
-    if (Math.abs(firstLimit.baseUnitMagnitude()) > Math.abs(secondLimit.baseUnitMagnitude()))
-    {
+    if (Math.abs(firstLimit.baseUnitMagnitude()) > Math.abs(secondLimit.baseUnitMagnitude())) {
       preferred = secondLimit;
-    }
-    else
-    {
+    } else {
       preferred = firstLimit;
     }
 
-    if (Math.abs(preferred.in(Degrees)) > ShooterConstants.wrapAroundDegreesThreshold)
-    {
+    if (Math.abs(preferred.in(Degrees)) > ShooterConstants.wrapAroundDegreesThreshold) {
       return true;
     }
     return false;
