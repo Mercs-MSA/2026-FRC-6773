@@ -8,6 +8,9 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.constants.Constants;
+import frc.robot.constants.Constants.Mode;
+
 import java.util.function.Supplier;
 import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.Logger;
@@ -201,6 +204,10 @@ public class Intake extends SubsystemBase { // TODO: Tunable Numbers as needed
     setRollerVoltage(intakeState.getRollerVol());
 
     Logger.recordOutput("agitate timer", (System.currentTimeMillis() - agitateTimestamp) / 1000);
+    if (Constants.currentMode == Mode.REAL)
+    {
+      Logger.recordOutput("Intake/RollerDiscrepancy", ((IntakeRollerIOTalonFX) rollerHardware).getDiscrepancy());
+    }
     // Logger.recordOutput("Intake/Position", pivotHardware.getPosition().);
   }
 
