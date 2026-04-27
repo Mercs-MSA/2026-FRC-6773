@@ -127,8 +127,8 @@ public class IntakeRollerIOTalonFX implements IntakeRollerIO {
     }
   }
 
-  public double getDiscrepancy()
-  {
-    return rightRollerMotor.getVelocity().getValueAsDouble() - leftRollerMotor.getVelocity().getValueAsDouble();
+  public double getDiscrepancy() {
+    return rightRollerMotor.getVelocity().getValueAsDouble()
+        - leftRollerMotor.getVelocity().getValueAsDouble();
   }
 }

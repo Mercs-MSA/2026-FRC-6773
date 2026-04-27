@@ -250,8 +250,7 @@ public class AutonCommands extends TeleopCommands {
   //                           });
   // }
 
-  public Command depotHuman()
-  {
+  public Command depotHuman() {
     String quick = "Depot_Human_Middle";
 
     SequentialCommandGroup command = new SequentialCommandGroup();

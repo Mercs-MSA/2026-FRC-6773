@@ -430,7 +430,8 @@ public class RobotContainer {
         "Right Scavenger", autonCommands.getAutonomousSequence("RIGHT_SCAVENGER"));
     autoChooser.addOption("Left", autonCommands.getAutonomousSequence("LEFT_NEW"));
     autoChooser.addOption("Left Close", autonCommands.getAutonomousSequence("LEFT_NEW_CLOSE"));
-    autoChooser.addOption("Middle Depot Human", autonCommands.getAutonomousSequence("DEPOT_HUMAN_MIDDLE"));
+    autoChooser.addOption(
+        "Middle Depot Human", autonCommands.getAutonomousSequence("DEPOT_HUMAN_MIDDLE"));
     autoChooser.addOption("Left AMA", autonCommands.getAutonomousSequence("LEFT_TEST"));
     autoChooser.addOption("Left Adaptive", autonCommands.getAutonomousSequence("LEFT_ADAPTIVE"));
 
