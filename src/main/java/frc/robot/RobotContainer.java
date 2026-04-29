@@ -176,7 +176,8 @@ public class RobotContainer {
                     IntakeConstants.kPivotMotorConfiguration,
                     IntakeConstants.kStatusSignalUpdateFrequencyHz),
                 drive::getPose,
-                drive::getFieldVelocity);
+                drive::getFieldVelocity,
+                () -> controller.leftTrigger().getAsBoolean());
         indexer =
             new Indexer(
                 new IndexerSpindexerIOTalonFX(
@@ -241,7 +242,8 @@ public class RobotContainer {
                     IntakeConstants.pivotHardware,
                     IntakeConstants.pivotSimulationConfiguration),
                 drive::getPose,
-                drive::getFieldVelocity);
+                drive::getFieldVelocity,
+                () -> controller.leftTrigger().getAsBoolean());
         indexer =
             new Indexer(
                 new IndexerSpindexerIOSim(
@@ -283,7 +285,8 @@ public class RobotContainer {
             Meters.convertFrom(7.5, Inches), // from floor to top of bumpers in meters
             drive::getPose, // Supplier<Pose2d> of robot pose
             drive::getFieldVelocity); // Supplier<ChassisSpeeds> of field-centric chassis speeds
-        // Register an intake to remove fuel from the field as a rectangular bounding box
+        // Register an intake to remove fuel from the field as a rectangular bounding
+        // box
         fuelSim.registerIntake(
             Meters.convertFrom(11, Inches),
             Meters.convertFrom(25, Inches), // robot-centric coordinates for bounding box in
@@ -324,13 +327,15 @@ public class RobotContainer {
         // (optional) BooleanSupplier for whether the intake should be active at a given
         // moment); // (optional) Runnable called whenever a fuel is intaked
 
-        // fuelSim.setSubticks(); // sets the number of physics iterations to perform per 20ms
+        // fuelSim.setSubticks(); // sets the number of physics iterations to perform
+        // per 20ms
         // loop.
         // Default = 5
 
         fuelSim.start(); // enables the simulation to run (updateSim must still be called
         // periodically)
-        // fuelSim.stop(); // stops the simulation running (updateSim will do nothing until start
+        // fuelSim.stop(); // stops the simulation running (updateSim will do nothing
+        // until start
         // is
         // called again)
 
@@ -354,7 +359,7 @@ public class RobotContainer {
                 // RobotState.getInstance()::addVisionObservation,
                 drive::addVisionMeasurement, new VisionIO() {}, new VisionIO() {});
 
-        intake = new Intake(null, null, null, null);
+        intake = new Intake(null, null, null, null, null);
         indexer = new Indexer(null, null, null);
         transfer = new Transfer(null, null);
         shooter = new Shooter(null, null, null, null, null);
@@ -365,7 +370,12 @@ public class RobotContainer {
     // manager = new RobotManager(drive, intake, indexer, transfer, shooter);
     teleopCommands =
         new TeleopCommands(
-            drive, intake, indexer, transfer, shooter, controller.rightTrigger()
+            drive,
+            intake,
+            indexer,
+            transfer,
+            shooter,
+            controller.rightTrigger().or(opController.rightBumper())
             // , climber
             );
     autonCommands =
@@ -508,23 +518,25 @@ public class RobotContainer {
                 }))
         .onFalse(Commands.runOnce(() -> drive.setDriveState(DriveState.DRIVING)));
 
-    /* CODE TO ADD ROBOT TURNING TOWARD ITS VELOCITY
-    controller
-        .leftStick()
-        .negate()
-        .and(() -> controller.rightStick().getAsBoolean())
-        .whileTrue(
-            DriveCommands.joystickDriveAtAngle(
-                drive,
-                () -> -1 * controller.getLeftY(),
-                () -> -1 * controller.getLeftX(),
-                () -> {
-                  return new Rotation2d(Math.atan2(controller.getLeftX(), controller.getLeftY()));
-                },
-                // drive::getFieldSpeedAngle,
-                32.0,
-                100));
-    */
+    /*
+     * CODE TO ADD ROBOT TURNING TOWARD ITS VELOCITY
+     * controller
+     * .leftStick()
+     * .negate()
+     * .and(() -> controller.rightStick().getAsBoolean())
+     * .whileTrue(
+     * DriveCommands.joystickDriveAtAngle(
+     * drive,
+     * () -> -1 * controller.getLeftY(),
+     * () -> -1 * controller.getLeftX(),
+     * () -> {
+     * return new Rotation2d(Math.atan2(controller.getLeftX(),
+     * controller.getLeftY()));
+     * },
+     * // drive::getFieldSpeedAngle,
+     * 32.0,
+     * 100));
+     */
     // Reset gyro to 0° when B button is pressed
     controller
         .b()
@@ -571,6 +583,20 @@ public class RobotContainer {
         .leftTrigger()
         .onTrue(teleopCommands.intakeCommand(IntakeState.INTAKING))
         .onFalse(teleopCommands.intakeCommand(IntakeState.IDLE));
+
+    opController
+        .rightBumper()
+        .whileTrue(teleopCommands.shootCommand())
+        .onFalse(
+            Commands.sequence(
+                    Commands.runOnce(
+                        () -> {
+                          indexer.setIndexerState(IndexerState.FLUSH);
+                        }),
+                    teleopCommands.stopAgitateCommand(),
+                    Commands.waitTime(Milliseconds.of(500)),
+                    teleopCommands.stopShootCommand())
+                .onlyWhile(opController.rightTrigger().negate()));
 
     controller
         .rightBumper()
@@ -707,7 +733,7 @@ public class RobotContainer {
     }
     // // At this point, if we're not teleop enabled, there is no hub.
     // if (!DriverStation.isTeleopEnabled()) {
-    //   return false;
+    // return false;
     // }
 
     // We're teleop enabled, compute.
@@ -768,7 +794,7 @@ public class RobotContainer {
 
   // @AutoLogOutput(key = "TotalCurrent")
   // public double getTotalCurrent() {
-  //   pdh.clearStickyFaults();
-  //   return pdh.getTotalCurrent();
+  // pdh.clearStickyFaults();
+  // return pdh.getTotalCurrent();
   // }
 }
