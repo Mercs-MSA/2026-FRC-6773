@@ -2,14 +2,18 @@ package frc.robot.subsystems.intake;
 
 import static edu.wpi.first.units.Units.Degrees;
 import static edu.wpi.first.units.Units.Rotations;
+import static edu.wpi.first.units.Units.Seconds;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.constants.Constants;
 import frc.robot.constants.Constants.Mode;
+import frc.robot.util.ZoneUtil;
 import java.util.function.Supplier;
 import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.Logger;
@@ -80,7 +84,11 @@ public class Intake extends SubsystemBase { // TODO: Tunable Numbers as needed
 
   private boolean resetAgitate = true;
 
-  // private Trigger bumpTrigger;
+  private Trigger bumpTrigger;
+
+  private Supplier<IntakeState> intakeStateSupplier;
+
+  private Supplier<IntakeState> oldIntakeStateSupplier;
 
   private final IntakeRollerIO rollerHardware;
   private final IntakeRollerIOInputsAutoLogged rollerInputs = new IntakeRollerIOInputsAutoLogged();
@@ -94,26 +102,34 @@ public class Intake extends SubsystemBase { // TODO: Tunable Numbers as needed
       IntakeRollerIO rollerIO,
       IntakePivotIO pivotIO,
       Supplier<Pose2d> poseSupplier,
-      Supplier<ChassisSpeeds> fieldSpeedsSupplier) {
+      Supplier<ChassisSpeeds> fieldSpeedsSupplier,
+      Supplier<Boolean> intakeButtonSupplier) {
     rollerHardware = rollerIO;
     pivotHardware = pivotIO;
     intakeState = IntakeState.STOW;
 
-    // bumpTrigger =
-    //     ZoneUtil.BUMP_ZONES.willContain(poseSupplier, fieldSpeedsSupplier, Seconds.of(0.3));
-    // bumpTrigger.onTrue(
-    //     Commands.runOnce(
-    //         () -> {
-    //           setIntakeState(IntakeState.BUMP);
-    //         }));
-    // bumpTrigger.onFalse(
-    //     Commands.runOnce(
-    //         () -> {
-    //           IntakeState newState = IntakeState.IDLE;
-    //           if (wasIntakingBefore) newState = IntakeState.INTAKING;
-    //           setIntakeState(newState);
-    //         }));
-    // bumpTrigger.debounce(0.5);
+    intakeStateSupplier = () -> getIntakeState();
+
+    oldIntakeStateSupplier = intakeStateSupplier;
+
+    bumpTrigger =
+        ZoneUtil.BUMP_ZONES.willContain(poseSupplier, fieldSpeedsSupplier, Seconds.of(0.1));
+    bumpTrigger.onTrue(
+        Commands.runOnce(
+            () -> {
+              if (intakeStateSupplier.get().equals(IntakeState.IDLE))
+                setIntakeState(IntakeState.BUMP);
+            }));
+    bumpTrigger.onFalse(
+        Commands.runOnce(
+            () -> {
+              if (intakeButtonSupplier.get()) {
+                setIntakeState(IntakeState.INTAKING);
+              } else if (intakeStateSupplier.get().equals(IntakeState.BUMP)) {
+                setIntakeState(IntakeState.IDLE);
+              }
+            }));
+    bumpTrigger.debounce(0.6);
   }
 
   @Override
@@ -128,21 +144,17 @@ public class Intake extends SubsystemBase { // TODO: Tunable Numbers as needed
 
     switch (intakeState) {
       case STOW:
-        wasIntakingBefore = false;
         resetAgitate = true;
         pivotGoal = intakeState.getPivotPos();
         break;
       case IDLE:
-        wasIntakingBefore = false;
         resetAgitate = true;
         pivotGoal = intakeState.getPivotPos();
         break;
-        // case BUMP:
-        //   resetAgitate = true;
-        //   pivotGoal = intakeState.getPivotPos();
-        //   break;
+      case BUMP:
+        resetAgitate = true;
+        break;
       case AGITATE: // https://www.desmos.com/calculator/ogflv9fvuk agitation visual
-        wasIntakingBefore = false;
         if (resetAgitate) {
           agitateTimestamp = System.currentTimeMillis();
           resetAgitate = false;
@@ -172,12 +184,10 @@ public class Intake extends SubsystemBase { // TODO: Tunable Numbers as needed
 
         break;
       case INTAKING:
-        wasIntakingBefore = true;
         resetAgitate = true;
         pivotGoal = intakeState.getPivotPos();
         break;
       case OUTTAKING:
-        wasIntakingBefore = false;
         resetAgitate = true;
         pivotGoal = intakeState.getPivotPos();
         break;

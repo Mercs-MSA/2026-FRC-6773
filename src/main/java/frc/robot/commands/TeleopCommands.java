@@ -79,7 +79,8 @@ public class TeleopCommands {
         shooter.startShooter(),
         Commands.run(
             () -> {
-              if (!intakeStateSupplier.get().equals(IntakeState.INTAKING))
+              if (!intakeStateSupplier.get().equals(IntakeState.INTAKING)
+                  && !intakeStateSupplier.get().equals(IntakeState.OUTTAKING))
                 intake.setIntakeState(IntakeState.AGITATE);
               transfer.setTransferState(TransferState.TRANSFERRING);
             }));

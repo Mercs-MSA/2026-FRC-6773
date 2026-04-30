@@ -234,42 +234,42 @@ public record ChoreoTraj(
     public static final ChoreoTraj D_Partial_2Pass = new ChoreoTraj(
         "D_Partial_2Pass",
         OptionalInt.empty(),
-        13.34039,
+        11.45145,
         new Pose2d(3.51341, 5.61753, Rotation2d.fromRadians(-0.7854)),
         new Pose2d(0.63915, 7.6357, Rotation2d.fromRadians(3.14159))
     );
     public static final ChoreoTraj D_Partial_2Pass$0 = new ChoreoTraj(
         "D_Partial_2Pass",
         OptionalInt.of(0),
-        2.07702,
+        2.1117,
         new Pose2d(3.51341, 5.61753, Rotation2d.fromRadians(-0.7854)),
-        new Pose2d(6.93173, 7.31935, Rotation2d.fromRadians(-1.5708))
+        new Pose2d(6.82959, 6.41912, Rotation2d.fromRadians(-0.06122))
     );
     public static final ChoreoTraj D_Partial_2Pass$1 = new ChoreoTraj(
         "D_Partial_2Pass",
         OptionalInt.of(1),
-        4.85237,
-        new Pose2d(6.93173, 7.31935, Rotation2d.fromRadians(-1.5708)),
-        new Pose2d(5.79245, 5.4192, Rotation2d.fromRadians(3.14159))
+        3.64483,
+        new Pose2d(6.82959, 6.41912, Rotation2d.fromRadians(-0.06122)),
+        new Pose2d(6.0513, 5.3972, Rotation2d.fromRadians(3.14159))
     );
     public static final ChoreoTraj D_Partial_2Pass$2 = new ChoreoTraj(
         "D_Partial_2Pass",
         OptionalInt.of(2),
-        1.2352100000000004,
-        new Pose2d(5.79245, 5.4192, Rotation2d.fromRadians(3.14159)),
+        1.3604700000000003,
+        new Pose2d(6.0513, 5.3972, Rotation2d.fromRadians(3.14159)),
         new Pose2d(3.13846, 5.42163, Rotation2d.fromRadians(3.14159))
     );
     public static final ChoreoTraj D_Partial_2Pass$3 = new ChoreoTraj(
         "D_Partial_2Pass",
         OptionalInt.of(3),
-        0.8120799999999999,
+        0.8120700000000003,
         new Pose2d(3.13846, 5.42163, Rotation2d.fromRadians(3.14159)),
         new Pose2d(2.36774, 5.4301, Rotation2d.fromRadians(2.11541))
     );
     public static final ChoreoTraj D_Partial_2Pass$4 = new ChoreoTraj(
         "D_Partial_2Pass",
         OptionalInt.of(4),
-        4.363709999999999,
+        3.522379999999999,
         new Pose2d(2.36774, 5.4301, Rotation2d.fromRadians(2.11541)),
         new Pose2d(0.63915, 7.6357, Rotation2d.fromRadians(3.14159))
     );
