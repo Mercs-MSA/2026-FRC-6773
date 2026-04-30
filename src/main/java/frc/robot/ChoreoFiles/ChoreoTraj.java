@@ -73,37 +73,37 @@ public record ChoreoTraj(
     public static final ChoreoTraj Depot_Human_Middle = new ChoreoTraj(
         "Depot_Human_Middle",
         OptionalInt.empty(),
-        6.53289,
+        7.48302,
         new Pose2d(3.51231, 4.04317, Rotation2d.fromRadians(3.14159)),
-        new Pose2d(0.63058, 0.64251, Rotation2d.fromRadians(3.14159))
+        new Pose2d(1.00598, 6.94699, Rotation2d.fromRadians(2.35619))
     );
     public static final ChoreoTraj Depot_Human_Middle$0 = new ChoreoTraj(
         "Depot_Human_Middle",
         OptionalInt.of(0),
-        2.07745,
+        1.98325,
         new Pose2d(3.51231, 4.04317, Rotation2d.fromRadians(3.14159)),
-        new Pose2d(1.00598, 6.94699, Rotation2d.fromRadians(-2.35619))
+        new Pose2d(1.91135, 0.65355, Rotation2d.fromRadians(3.14159))
     );
     public static final ChoreoTraj Depot_Human_Middle$1 = new ChoreoTraj(
         "Depot_Human_Middle",
         OptionalInt.of(1),
-        1.44205,
-        new Pose2d(1.00598, 6.94699, Rotation2d.fromRadians(-2.35619)),
-        new Pose2d(1.85614, 5.13624, Rotation2d.fromRadians(-2.08101))
+        1.34172,
+        new Pose2d(1.91135, 0.65355, Rotation2d.fromRadians(3.14159)),
+        new Pose2d(0.63058, 0.64251, Rotation2d.fromRadians(3.14159))
     );
     public static final ChoreoTraj Depot_Human_Middle$2 = new ChoreoTraj(
         "Depot_Human_Middle",
         OptionalInt.of(2),
-        2.2795000000000005,
-        new Pose2d(1.85614, 5.13624, Rotation2d.fromRadians(-2.08101)),
-        new Pose2d(1.91135, 0.65355, Rotation2d.fromRadians(3.14159))
+        2.33935,
+        new Pose2d(0.63058, 0.64251, Rotation2d.fromRadians(3.14159)),
+        new Pose2d(1.85614, 5.13624, Rotation2d.fromRadians(2.77515))
     );
     public static final ChoreoTraj Depot_Human_Middle$3 = new ChoreoTraj(
         "Depot_Human_Middle",
         OptionalInt.of(3),
-        0.7338899999999997,
-        new Pose2d(1.91135, 0.65355, Rotation2d.fromRadians(3.14159)),
-        new Pose2d(0.63058, 0.64251, Rotation2d.fromRadians(3.14159))
+        1.8186999999999998,
+        new Pose2d(1.85614, 5.13624, Rotation2d.fromRadians(2.77515)),
+        new Pose2d(1.00598, 6.94699, Rotation2d.fromRadians(2.35619))
     );
     public static final ChoreoTraj D_BumpAllianceNeutral = new ChoreoTraj(
         "D_BumpAllianceNeutral",
