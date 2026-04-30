@@ -492,12 +492,11 @@ public class AutonCommands extends TeleopCommands {
     String quick = "D_Partial_2Pass";
 
     SequentialCommandGroup command = new SequentialCommandGroup();
-    // command.addCommands(
-    //     Commands.runOnce(
-    //         () -> {
-    //
-    // drive.setPose(AllianceFlipUtil.apply(ChoreoTraj.D_Partial_2Pass.initialPoseBlue()));
-    //         }));
+    command.addCommands(
+        Commands.runOnce(
+            () -> {
+              drive.setPose(AllianceFlipUtil.apply(ChoreoTraj.D_Partial_2Pass.initialPoseBlue()));
+            }));
     command.addCommands(stopShootCommand());
     command.addCommands(getPathCommand(quick, 0));
     command.addCommands(intakeCommand(IntakeState.INTAKING));
@@ -610,12 +609,12 @@ public class AutonCommands extends TeleopCommands {
     String quick = "D_Partial_2Pass_copy1";
 
     SequentialCommandGroup command = new SequentialCommandGroup();
-    // command.addCommands(
-    //     Commands.runOnce(
-    //         () -> {
-    //
-    // drive.setPose(AllianceFlipUtil.apply(ChoreoTraj.D_Partial_2Pass.initialPoseBlue()));
-    //         }));
+    command.addCommands(
+        Commands.runOnce(
+            () -> {
+              drive.setPose(
+                  AllianceFlipUtil.apply(ChoreoTraj.D_Partial_2Pass_copy1.initialPoseBlue()));
+            }));
     command.addCommands(stopShootCommand());
 
     command.addCommands(getPathCommand(quick, 0));

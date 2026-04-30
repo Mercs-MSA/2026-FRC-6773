@@ -27,7 +27,7 @@ public class Intake extends SubsystemBase { // TODO: Tunable Numbers as needed
     BUMP(() -> Rotation2d.fromRotations(0.21), -12),
     AGITATE(() -> Rotation2d.fromRotations(0.2), -5),
     INTAKING(() -> Rotation2d.fromRotations(0.27), -12),
-    OUTTAKING(() -> Rotation2d.fromRotations(0.27), 7);
+    OUTTAKING(() -> Rotation2d.fromRotations(0.27), 12);
 
     private Supplier<Rotation2d> pivotPos;
     private double rollerVol;
