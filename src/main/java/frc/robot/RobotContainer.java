@@ -15,7 +15,6 @@ import static edu.wpi.first.units.Units.Milliseconds;
 import static edu.wpi.first.units.Units.Rotations;
 import static frc.robot.subsystems.vision.VisionConstants.*;
 
-import com.pathplanner.lib.auto.AutoBuilder;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -25,6 +24,7 @@ import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -85,7 +85,6 @@ import frc.robot.util.geometry.AllianceFlipUtil;
 import java.util.ArrayList;
 import java.util.Optional;
 import org.littletonrobotics.junction.AutoLogOutput;
-import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -113,7 +112,8 @@ public class RobotContainer {
   // private RobotManager manager;
 
   // Dashboard inputs
-  private final LoggedDashboardChooser<Command> autoChooser;
+
+  private final SendableChooser<Command> autoChooser;
   private Field2d field = new Field2d();
   private Field2d trajField = new Field2d();
 
@@ -409,8 +409,8 @@ public class RobotContainer {
             }));
 
     // Set up auto routines
-    autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
-
+    // autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
+    autoChooser = new SendableChooser<>();
     // autoChooser.addOption("LEFT_45",
     // autonCommands.getAutonomousSequence("LEFT_45"));
     // autoChooser.addOption("RIGHT_45",
@@ -436,7 +436,8 @@ public class RobotContainer {
 
     autoChooser.addOption("Right Close", autonCommands.getAutonomousSequence("RIGHT_CLOSE"));
     autoChooser.addOption("Right HP", autonCommands.getAutonomousSequence("RIGHT_TEST"));
-    autoChooser.addOption("Right No Shunt", autonCommands.getAutonomousSequence("RIGHT_NO_SHUNT"));
+    // autoChooser.addOption("Right No Shunt",
+    // autonCommands.getAutonomousSequence("RIGHT_NO_SHUNT"));
     autoChooser.addOption(
         "Right Scavenger", autonCommands.getAutonomousSequence("RIGHT_SCAVENGER"));
     autoChooser.addOption("Left", autonCommands.getAutonomousSequence("LEFT_NEW"));
@@ -470,7 +471,7 @@ public class RobotContainer {
         "Drive SysId (Dynamic Forward)", drive.sysIdDynamic(SysIdRoutine.Direction.kForward));
     autoChooser.addOption(
         "Drive SysId (Dynamic Reverse)", drive.sysIdDynamic(SysIdRoutine.Direction.kReverse));
-
+    SmartDashboard.putData("Auto Choices", autoChooser);
     // Configure the button bindings
     configureButtonBindings();
   }
@@ -667,7 +668,7 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    return autoChooser.get();
+    return autoChooser.getSelected();
   }
 
   public Drive getDrive() {

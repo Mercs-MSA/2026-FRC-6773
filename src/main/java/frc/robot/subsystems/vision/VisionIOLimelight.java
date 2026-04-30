@@ -36,7 +36,7 @@ public class VisionIOLimelight implements VisionIO {
   private final DoubleSubscriber tySubscriber;
   private final DoubleArraySubscriber megatag1Subscriber;
   private final DoubleArraySubscriber megatag2Subscriber;
-
+  private boolean isConnected;
   /**
    * Creates a new VisionIOLimelight.
    *
@@ -74,7 +74,7 @@ public class VisionIOLimelight implements VisionIO {
     // 250ms
     inputs.connected =
         ((RobotController.getFPGATime() - latencySubscriber.getLastChange()) / 1000) < 250;
-
+    isConnected = inputs.connected;
     // Update target observation
     inputs.latestTargetObservation =
         new TargetObservation(
@@ -180,5 +180,10 @@ public class VisionIOLimelight implements VisionIO {
             Units.degreesToRadians(rawLLArray[3]),
             Units.degreesToRadians(rawLLArray[4]),
             Units.degreesToRadians(rawLLArray[5])));
+  }
+
+  @Override
+  public boolean isConnected() {
+    return isConnected;
   }
 }
