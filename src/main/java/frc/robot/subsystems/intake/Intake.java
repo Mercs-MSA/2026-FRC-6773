@@ -24,7 +24,7 @@ public class Intake extends SubsystemBase { // TODO: Tunable Numbers as needed
     IDLE(() -> Rotation2d.fromRotations(0.23), 0),
     BUMP(() -> Rotation2d.fromRotations(0.21), -12),
     AGITATE(() -> Rotation2d.fromRotations(0.2), -5),
-    INTAKING(() -> Rotation2d.fromRotations(0.27), -9),
+    INTAKING(() -> Rotation2d.fromRotations(0.27), -12),
     OUTTAKING(() -> Rotation2d.fromRotations(0.27), 12);
 
     private Supplier<Rotation2d> pivotPos;
