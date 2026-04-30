@@ -54,8 +54,8 @@ public class IndexerConstants {
           false, // Invert
           true, // Enable stator current limiting
           true, // Enable supply current limiting
-          75.0, // Stator limit
-          65.0, // Supply limit
+          65.0, // Stator limit
+          55.0, // Supply limit
           12.0, // Peak forward voltage
           -12.0, // Peak reverse voltage
           NeutralModeValue.Coast); // Idle mode
@@ -65,8 +65,8 @@ public class IndexerConstants {
           false, // Invert
           true, // Enable stator current limiting
           true, // Enable supply current limiting
-          90.0, // Stator limit
-          80.0, // Supply limit
+          80.0, // Stator limit
+          70.0, // Supply limit
           12.0, // Peak forward voltage
           -12.0, // Peak reverse voltage
           NeutralModeValue.Coast); // Idle mode

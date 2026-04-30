@@ -11,8 +11,6 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-import frc.robot.constants.Constants;
-import frc.robot.constants.Constants.Mode;
 import frc.robot.util.ZoneUtil;
 import java.util.function.Supplier;
 import org.littletonrobotics.junction.AutoLogOutput;
@@ -26,7 +24,7 @@ public class Intake extends SubsystemBase { // TODO: Tunable Numbers as needed
     IDLE(() -> Rotation2d.fromRotations(0.23), 0),
     BUMP(() -> Rotation2d.fromRotations(0.21), -12),
     AGITATE(() -> Rotation2d.fromRotations(0.2), -5),
-    INTAKING(() -> Rotation2d.fromRotations(0.27), -12),
+    INTAKING(() -> Rotation2d.fromRotations(0.27), -9),
     OUTTAKING(() -> Rotation2d.fromRotations(0.27), 12);
 
     private Supplier<Rotation2d> pivotPos;
@@ -213,10 +211,10 @@ public class Intake extends SubsystemBase { // TODO: Tunable Numbers as needed
     setRollerVoltage(intakeState.getRollerVol());
 
     Logger.recordOutput("agitate timer", (System.currentTimeMillis() - agitateTimestamp) / 1000);
-    if (Constants.currentMode == Mode.REAL) {
-      Logger.recordOutput(
-          "Intake/RollerDiscrepancy", ((IntakeRollerIOTalonFX) rollerHardware).getDiscrepancy());
-    }
+    // if (Constants.currentMode == Mode.REAL) {
+    //   Logger.recordOutput(
+    //       "Intake/RollerDiscrepancy", ((IntakeRollerIOTalonFX) rollerHardware).getDiscrepancy());
+    // }
     // Logger.recordOutput("Intake/Position", pivotHardware.getPosition().);
   }
 

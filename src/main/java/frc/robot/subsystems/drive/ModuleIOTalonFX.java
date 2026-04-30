@@ -108,7 +108,7 @@ public class ModuleIOTalonFX implements ModuleIO {
     driveConfig.CurrentLimits.StatorCurrentLimit = constants.SlipCurrent;
     driveConfig.CurrentLimits.StatorCurrentLimitEnable = true;
     driveConfig.CurrentLimits.SupplyCurrentLimitEnable = true;
-    driveConfig.CurrentLimits.SupplyCurrentLimit = 100.0; // TODO: make a constant
+    driveConfig.CurrentLimits.SupplyCurrentLimit = 80.0; // TODO: make a constant
     driveConfig.MotorOutput.Inverted =
         constants.DriveMotorInverted
             ? InvertedValue.Clockwise_Positive
