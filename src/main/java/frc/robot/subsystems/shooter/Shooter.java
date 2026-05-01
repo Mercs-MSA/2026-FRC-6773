@@ -12,7 +12,6 @@ import static edu.wpi.first.units.Units.RadiansPerSecond;
 import static edu.wpi.first.units.Units.Rotations;
 import static edu.wpi.first.units.Units.RotationsPerSecond;
 
-import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -34,8 +33,6 @@ import java.util.function.BooleanSupplier;
 import java.util.function.Supplier;
 import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.Logger;
-import org.littletonrobotics.junction.networktables.LoggedNetworkBoolean;
-import org.littletonrobotics.junction.networktables.LoggedNetworkNumber;
 
 public class Shooter extends SubsystemBase {
 
@@ -53,15 +50,16 @@ public class Shooter extends SubsystemBase {
     TRENCH_MANUAL,
   }
 
-  public final LoggedNetworkNumber hoodAngleCust = new LoggedNetworkNumber("Shooter/HoodAngle", 0);
-  public final LoggedNetworkNumber flywheelVelCust =
-      new LoggedNetworkNumber("Shooter/FlywheelVel", 0);
-  public final LoggedNetworkBoolean useCustom;
-  public final LoggedNetworkBoolean useManual;
-  public final LoggedNetworkBoolean useBiases;
+  // public final LoggedNetworkNumber hoodAngleCust = new LoggedNetworkNumber("Shooter/HoodAngle",
+  // 0);
+  // public final LoggedNetworkNumber flywheelVelCust =
+  //     new LoggedNetworkNumber("Shooter/FlywheelVel", 0);
+  // public final LoggedNetworkBoolean useCustom;
+  // public final LoggedNetworkBoolean useManual;
+  // public final LoggedNetworkBoolean useBiases;
 
-  public final LoggedNetworkBoolean fixedShoot =
-      new LoggedNetworkBoolean("Shooter/Fixed Turret", false);
+  // public final LoggedNetworkBoolean fixedShoot =
+  //     new LoggedNetworkBoolean("Shooter/Fixed Turret", false);
 
   public ShooterState shooterState = ShooterState.STOW;
 
@@ -101,15 +99,18 @@ public class Shooter extends SubsystemBase {
       Supplier<Pose2d> poseSupplier,
       Supplier<ChassisSpeeds> fieldSpeedsSupplier) {
 
-    useCustom = new LoggedNetworkBoolean("Shooter/Use Customs", false);
-    useBiases = new LoggedNetworkBoolean("Shooter/Use Biases", false);
-    useManual = new LoggedNetworkBoolean("Shooter/Use Manual", false);
+    // useCustom = new LoggedNetworkBoolean("Shooter/Use Customs", false);
+    // useBiases = new LoggedNetworkBoolean("Shooter/Use Biases", false);
+    // useManual = new LoggedNetworkBoolean("Shooter/Use Manual", false);
     flywheelHardware = flywheelHardwareIO;
     turretHardware = turretHardwareIO;
     hoodHardware = hoodHardwareIO;
     this.poseSupplier = poseSupplier;
     this.fieldSpeedsSupplier = fieldSpeedsSupplier;
-    fixedShooter = () -> fixedShoot.getAsBoolean();
+    fixedShooter =
+        () -> {
+          return true;
+        } /*fixedShoot.getAsBoolean()*/;
     Trigger fixShooter = new Trigger(fixedShooter);
     fixShooter.onTrue(Commands.runOnce(() -> setShooterState(ShooterState.IDLE_FIXED)));
     fixShooter.onFalse(Commands.runOnce(() -> setShooterState(ShooterState.IDLE_HUB)));
@@ -173,7 +174,7 @@ public class Shooter extends SubsystemBase {
     Logger.processInputs("Shooter/Inputs/Turret", turretInputs);
     Logger.processInputs("Shooter/Inputs/Flywheel", flywheelInputs);
     Logger.processInputs("Shooter/Inputs/Hood", hoodInputs);
-    Logger.recordOutput("IsBlueSupplier", isBlue.get().toString());
+    // Logger.recordOutput("IsBlueSupplier", isBlue.get().toString());
 
     Pose2d turretBotPose =
         new Pose3d(poseSupplier.get()).transformBy(ShooterConstants.robotToTurret).toPose2d();
@@ -186,7 +187,7 @@ public class Shooter extends SubsystemBase {
                 .plus(Rotation2d.fromRotations(getTurretPosition()))
                 .plus(Rotation2d.kCCW_Pi_2));
 
-    Logger.recordOutput("Shooter/Turret/TurretPose", turretPoseOut);
+    // Logger.recordOutput("Shooter/Turret/TurretPose", turretPoseOut);
 
     ChassisSpeeds fieldSpeeds = fieldSpeedsSupplier.get();
     Pose2d robotPose = poseSupplier.get();
@@ -196,9 +197,9 @@ public class Shooter extends SubsystemBase {
     AngularVelocity azimuthVelocity;
     Rotation2d hoodAngle;
     double flywheelVel;
-    if (useManual.getAsBoolean()) {
-      shooterState = ShooterState.TRENCH_MANUAL;
-    }
+    // if (useManual.getAsBoolean()) {
+    //   shooterState = ShooterState.TRENCH_MANUAL;
+    // }
     switch (shooterState) {
       case STOW:
         azimuthAngle = Angle.ofBaseUnits(0, Radians);
@@ -354,53 +355,53 @@ public class Shooter extends SubsystemBase {
     }
 
     turretSetPoint = azimuthAngle;
-    if (useBiases.getAsBoolean()) {
-      if (shooterState != ShooterState.TRENCH_MANUAL)
-        setTurretSetpoint(
-            azimuthAngle.plus(Angle.ofBaseUnits(turretBias, Rotations)), azimuthVelocity);
-      if (!useCustom.getAsBoolean()) {
-        double value = hoodAngle.getRotations() + hoodBias;
-        setHoodPosition(new Rotation2d(MathUtil.clamp(value, 0, 20d / 360d)));
-        if (shooterState == ShooterState.STOW
-            || shooterState == ShooterState.IDLE_FIXED
-            || shooterState == ShooterState.IDLE_HUB
-            || shooterState == ShooterState.IDLE_L
-            || shooterState == ShooterState.IDLE_L
-            || shooterState == ShooterState.IDLE_R) {
-          flywheelHardware.coastOut();
-        } else {
-          setFlywheelVelocityRPS(flywheelVel + flywheelBias);
-        }
-      } else {
-        setHoodPosition(new Rotation2d(hoodAngleCust.getAsDouble()));
-        setFlywheelVelocityRPS(flywheelVelCust.getAsDouble());
-      }
-    } else {
-      if (shooterState != ShooterState.TRENCH_MANUAL)
-        setTurretSetpoint(azimuthAngle, azimuthVelocity);
+    // if (useBiases.getAsBoolean()) {
+    //   if (shooterState != ShooterState.TRENCH_MANUAL)
+    //     setTurretSetpoint(
+    //         azimuthAngle.plus(Angle.ofBaseUnits(turretBias, Rotations)), azimuthVelocity);
+    //   if (!useCustom.getAsBoolean()) {
+    //     double value = hoodAngle.getRotations() + hoodBias;
+    //     setHoodPosition(new Rotation2d(MathUtil.clamp(value, 0, 20d / 360d)));
+    //     if (shooterState == ShooterState.STOW
+    //         || shooterState == ShooterState.IDLE_FIXED
+    //         || shooterState == ShooterState.IDLE_HUB
+    //         || shooterState == ShooterState.IDLE_L
+    //         || shooterState == ShooterState.IDLE_L
+    //         || shooterState == ShooterState.IDLE_R) {
+    //       flywheelHardware.coastOut();
+    //     } else {
+    //       setFlywheelVelocityRPS(flywheelVel + flywheelBias);
+    //     }
+    //   } else {
+    //     setHoodPosition(new Rotation2d(0.0/*hoodAngleCust.getAsDouble()*/));
+    //     setFlywheelVelocityRPS(0.0/*flywheelVelCust.getAsDouble()*/);
+    //   }
+    // } else {
+    if (shooterState != ShooterState.TRENCH_MANUAL)
+      setTurretSetpoint(azimuthAngle, azimuthVelocity);
 
-      if (!useCustom.getAsBoolean()) {
-        if (shooterState == ShooterState.STOW
-            || shooterState == ShooterState.IDLE_FIXED
-            || shooterState == ShooterState.IDLE_HUB
-            || shooterState == ShooterState.IDLE_L
-            || shooterState == ShooterState.IDLE_L
-            || shooterState == ShooterState.IDLE_R) {
-          flywheelHardware.coastOut();
-        } else {
-          setFlywheelVelocityRPS(flywheelVel);
-        }
-        setHoodPosition(hoodAngle);
+    if (true /*!useCustom.getAsBoolean()*/) {
+      if (shooterState == ShooterState.STOW
+          || shooterState == ShooterState.IDLE_FIXED
+          || shooterState == ShooterState.IDLE_HUB
+          || shooterState == ShooterState.IDLE_L
+          || shooterState == ShooterState.IDLE_L
+          || shooterState == ShooterState.IDLE_R) {
+        flywheelHardware.coastOut();
       } else {
-        setHoodPosition(new Rotation2d(hoodAngleCust.getAsDouble()));
-        setFlywheelVelocityRPS(flywheelVelCust.getAsDouble());
+        setFlywheelVelocityRPS(flywheelVel);
       }
+      setHoodPosition(hoodAngle);
+    } else {
+      setHoodPosition(new Rotation2d(0.0 /*hoodAngleCust.getAsDouble()*/));
+      setFlywheelVelocityRPS(0.0 /*flywheelVelCust.getAsDouble()*/);
     }
-    Logger.recordOutput("FlywheelDebug/azimuthAngle", azimuthAngle);
-    Logger.recordOutput("FlywheelDebug/targetFlywheelVelRPS", flywheelVel);
-    Logger.recordOutput(
-        "FlywheelDebug/flywheelRPS", getFlywheelVelocities()[0].in(RotationsPerSecond));
-    Logger.recordOutput("FlywheelDebug/flwheelRamped?", isFlywheelAtThreshold());
+    // }
+    // Logger.recordOutput("FlywheelDebug/azimuthAngle", azimuthAngle);
+    // Logger.recordOutput("FlywheelDebug/targetFlywheelVelRPS", flywheelVel);
+    // Logger.recordOutput(
+    //     "FlywheelDebug/flywheelRPS", getFlywheelVelocities()[0].in(RotationsPerSecond));
+    // Logger.recordOutput("FlywheelDebug/flwheelRamped?", isFlywheelAtThreshold());
 
     Logger.recordOutput("States/ShooterState", shooterState);
   }
@@ -501,17 +502,17 @@ public class Shooter extends SubsystemBase {
     hoodHardware.setBrakeMode(value);
   }
 
-  @AutoLogOutput(key = "Shooter/Turret/MeasuredPositionRot")
+  // @AutoLogOutput(key = "Shooter/Turret/MeasuredPositionRot")
   public double getTurretPosition() {
     return turretInputs.position.getRotations();
   }
 
-  @AutoLogOutput(key = "Shooter/Turret/VelocityRadPerSec")
+  // @AutoLogOutput(key = "Shooter/Turret/VelocityRadPerSec")
   public double getTurretVelocity() {
     return turretInputs.velocityRotPerSec * 2.0 * Math.PI;
   }
 
-  @AutoLogOutput(key = "Shooter/Hood/HoodPosition")
+  // @AutoLogOutput(key = "Shooter/Hood/HoodPosition")
   public Rotation2d getHoodPosition() {
     return hoodInputs.position;
   }
@@ -538,7 +539,7 @@ public class Shooter extends SubsystemBase {
     return turretPoseOut;
   }
 
-  @AutoLogOutput(key = "Shooter/isWrapping")
+  // @AutoLogOutput(key = "Shooter/isWrapping")
   public boolean isWrapAround() {
 
     Angle firstLimit = turretSetPoint.minus(turretHardware.getTurretPosition());

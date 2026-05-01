@@ -1,7 +1,5 @@
 package frc.robot.subsystems.transfer;
 
-import static edu.wpi.first.units.Units.InchesPerSecond;
-
 import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.LinearVelocity;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -33,7 +31,8 @@ public class Transfer extends SubsystemBase {
     transferHardware.updateInputs(transferInputs);
     Logger.processInputs("Transfer/Inputs", transferInputs);
 
-    Logger.recordOutput("Transfer/VelocityIPS", transferInputs.linearVelocity.in(InchesPerSecond));
+    // Logger.recordOutput("Transfer/VelocityIPS",
+    // transferInputs.linearVelocity.in(InchesPerSecond));
 
     switch (transferState) {
       case IDLE:

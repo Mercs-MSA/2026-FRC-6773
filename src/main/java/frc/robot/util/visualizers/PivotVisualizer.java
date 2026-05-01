@@ -8,7 +8,6 @@ import edu.wpi.first.math.Pair;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj.util.Color8Bit;
-import org.littletonrobotics.junction.Logger;
 import org.littletonrobotics.junction.mechanism.LoggedMechanism2d;
 import org.littletonrobotics.junction.mechanism.LoggedMechanismLigament2d;
 import org.littletonrobotics.junction.mechanism.LoggedMechanismRoot2d;
@@ -82,7 +81,7 @@ public class PivotVisualizer {
     ligament.setLineWeight(lineWeight);
     ligament.setColor(color);
 
-    Logger.recordOutput(kLogKey, visualField);
+    // Logger.recordOutput(kLogKey, visualField);
   }
 
   /**
@@ -102,7 +101,7 @@ public class PivotVisualizer {
   public void updatePosition(Rotation2d position) {
     ligament.setAngle(position.minus(offset));
 
-    Logger.recordOutput(kLogKey, visualField);
+    // Logger.recordOutput(kLogKey, visualField);
   }
 
   /**

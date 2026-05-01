@@ -8,17 +8,17 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
-import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.constants.Constants;
 import frc.robot.constants.Constants.Mode;
 import frc.robot.subsystems.shooter.Shooter.ShooterState;
-import frc.robot.util.ZoneUtil;
 import org.littletonrobotics.junction.LogFileUtil;
 import org.littletonrobotics.junction.LoggedPowerDistribution;
+import org.littletonrobotics.junction.LoggedRobot;
 import org.littletonrobotics.junction.Logger;
 import org.littletonrobotics.junction.networktables.NT4Publisher;
+import org.littletonrobotics.junction.wpilog.WPILOGWriter;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -26,7 +26,7 @@ import org.littletonrobotics.junction.networktables.NT4Publisher;
  * the package after creating this project, you must also update the build.gradle file in the
  * project.
  */
-public class Robot extends TimedRobot {
+public class Robot extends LoggedRobot {
   private Command autonomousCommand;
   private RobotContainer robotContainer;
 
@@ -34,25 +34,25 @@ public class Robot extends TimedRobot {
 
   public Robot() {
     // Record metadata
-    Logger.recordMetadata("ProjectName", BuildConstants.MAVEN_NAME);
-    Logger.recordMetadata("BuildDate", BuildConstants.BUILD_DATE);
-    Logger.recordMetadata("GitSHA", BuildConstants.GIT_SHA);
-    Logger.recordMetadata("GitDate", BuildConstants.GIT_DATE);
-    Logger.recordMetadata("GitBranch", BuildConstants.GIT_BRANCH);
-    Logger.recordMetadata(
-        "GitDirty",
-        switch (BuildConstants.DIRTY) {
-          case 0 -> "All changes committed";
-          case 1 -> "Uncommitted changes";
-          default -> "Unknown";
-        });
+    // Logger.recordMetadata("ProjectName", BuildConstants.MAVEN_NAME);
+    // Logger.recordMetadata("BuildDate", BuildConstants.BUILD_DATE);
+    // Logger.recordMetadata("GitSHA", BuildConstants.GIT_SHA);
+    // Logger.recordMetadata("GitDate", BuildConstants.GIT_DATE);
+    // Logger.recordMetadata("GitBranch", BuildConstants.GIT_BRANCH);
+    // Logger.recordMetadata(
+    //     "GitDirty",
+    //     switch (BuildConstants.DIRTY) {
+    //       case 0 -> "All changes committed";
+    //       case 1 -> "Uncommitted changes";
+    //       default -> "Unknown";
+    //     });
 
     // Set up data receivers & replay source
     switch (Constants.currentMode) {
       case REAL:
         // Running on a real robot, log to a USB stick ("/U/logs")
-        // Logger.addDataReceiver(new WPILOGWriter());
-        // Logger.addDataReceiver(new NT4Publisher());
+        Logger.addDataReceiver(new WPILOGWriter());
+        Logger.addDataReceiver(new NT4Publisher());
         LoggedPowerDistribution.getInstance(1, ModuleType.kRev);
         break;
 
@@ -72,7 +72,7 @@ public class Robot extends TimedRobot {
 
     // Start AdvantageKit logger
 
-    // Logger.start();
+    Logger.start();
 
     // Instantiate our RobotContainer. This will perform all our button bindings,
     // and put our autonomous chooser on the dashboard.
@@ -154,11 +154,11 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopPeriodic() {
 
-    Logger.recordOutput("RED ALLIANCE ZONE", ZoneUtil.RED_ALLIANCE_ZONE.getCorners());
-    Logger.recordOutput("BLUE ALLIANCE ZONE", ZoneUtil.BLUE_ALLIANCE_ZONE.getCorners());
+    // Logger.recordOutput("RED ALLIANCE ZONE", ZoneUtil.RED_ALLIANCE_ZONE.getCorners());
+    // Logger.recordOutput("BLUE ALLIANCE ZONE", ZoneUtil.BLUE_ALLIANCE_ZONE.getCorners());
 
-    Logger.recordOutput("TRENCH ZONE1", ZoneUtil.BLUE_ALLIANCE_TRENCH_ZONE_RIGHT.getCorners());
-    Logger.recordOutput("TRENCH ZONE2", ZoneUtil.BLUE_ALLIANCE_TRENCH_ZONE_LEFT.getCorners());
+    // Logger.recordOutput("TRENCH ZONE1", ZoneUtil.BLUE_ALLIANCE_TRENCH_ZONE_RIGHT.getCorners());
+    // Logger.recordOutput("TRENCH ZONE2", ZoneUtil.BLUE_ALLIANCE_TRENCH_ZONE_LEFT.getCorners());
 
     // robotContainer.updateManager();
     // Logger.recordOutput(

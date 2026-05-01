@@ -15,7 +15,6 @@ import com.pathplanner.lib.config.PIDConstants;
 import com.pathplanner.lib.config.RobotConfig;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 import com.pathplanner.lib.pathfinding.Pathfinding;
-import com.pathplanner.lib.util.PathPlannerLogging;
 import edu.wpi.first.hal.FRCNetComm.tInstances;
 import edu.wpi.first.hal.FRCNetComm.tResourceType;
 import edu.wpi.first.hal.HAL;
@@ -167,14 +166,14 @@ public class Drive extends SubsystemBase {
         () -> DriverStation.getAlliance().orElse(Alliance.Blue) == Alliance.Red,
         this);
     Pathfinding.setPathfinder(new LocalADStarAK());
-    PathPlannerLogging.setLogActivePathCallback(
-        (activePath) -> {
-          Logger.recordOutput("Odometry/Trajectory", activePath.toArray(new Pose2d[0]));
-        });
-    PathPlannerLogging.setLogTargetPoseCallback(
-        (targetPose) -> {
-          Logger.recordOutput("Odometry/TrajectorySetpoint", targetPose);
-        });
+    // PathPlannerLogging.setLogActivePathCallback(
+    //     (activePath) -> {
+    //       Logger.recordOutput("Odometry/Trajectory", activePath.toArray(new Pose2d[0]));
+    //     });
+    // PathPlannerLogging.setLogTargetPoseCallback(
+    //     (targetPose) -> {
+    //       Logger.recordOutput("Odometry/TrajectorySetpoint", targetPose);
+    //     });
 
     // Configure SysId
     sysId =
@@ -183,7 +182,7 @@ public class Drive extends SubsystemBase {
                 null,
                 null,
                 null,
-                (state) -> Logger.recordOutput("Drive/SysIdState", state.toString())),
+                (state) -> {} /*Logger.recordOutput("Drive/SysIdState", state.toString())*/),
             new SysIdRoutine.Mechanism(
                 (voltage) -> runCharacterization(voltage.in(Volts)), null, this));
 
@@ -221,8 +220,8 @@ public class Drive extends SubsystemBase {
 
     // Log empty setpoint states when disabled
     if (DriverStation.isDisabled()) {
-      Logger.recordOutput("SwerveStates/Setpoints", new SwerveModuleState[] {});
-      Logger.recordOutput("SwerveStates/SetpointsOptimized", new SwerveModuleState[] {});
+      // Logger.recordOutput("SwerveStates/Setpoints", new SwerveModuleState[] {});
+      // Logger.recordOutput("SwerveStates/SetpointsOptimized", new SwerveModuleState[] {});
     }
 
     // Update odometry
@@ -277,17 +276,17 @@ public class Drive extends SubsystemBase {
           break;
       }
 
-      Logger.recordOutput("States/DriveState", driveState);
-      Logger.recordOutput("Speed Cap", speedCap);
+      // Logger.recordOutput("States/DriveState", driveState);
+      // Logger.recordOutput("Speed Cap", speedCap);
 
-      Logger.recordOutput(
-          "Drive/RobotSpeed",
-          Math.sqrt(
-              Math.pow(getFieldVelocity().vxMetersPerSecond, 2)
-                  + Math.pow(getFieldVelocity().vyMetersPerSecond, 2)));
-      Logger.recordOutput(
-          "Drive/RobotAcceleration",
-          Math.sqrt(Math.pow(accelerationX, 2) + Math.pow(accelerationY, 2)));
+      // Logger.recordOutput(
+      //     "Drive/RobotSpeed",
+      //     Math.sqrt(
+      //         Math.pow(getFieldVelocity().vxMetersPerSecond, 2)
+      //             + Math.pow(getFieldVelocity().vyMetersPerSecond, 2)));
+      // Logger.recordOutput(
+      //     "Drive/RobotAcceleration",
+      //     Math.sqrt(Math.pow(accelerationX, 2) + Math.pow(accelerationY, 2)));
     }
 
     // Calculate acceleration outside the odometry sample loop to avoid near-zero dT
@@ -346,8 +345,8 @@ public class Drive extends SubsystemBase {
         setpointStates, Math.min(speedCap, DriveConstants.kSpeedAt12Volts.in(MetersPerSecond)));
 
     // Log unoptimized setpoints and setpoint speeds
-    Logger.recordOutput("SwerveStates/Setpoints", setpointStates);
-    Logger.recordOutput("SwerveChassisSpeeds/Setpoints", discreteSpeeds);
+    // Logger.recordOutput("SwerveStates/Setpoints", setpointStates);
+    // Logger.recordOutput("SwerveChassisSpeeds/Setpoints", discreteSpeeds);
 
     // Send setpoints to modules
     for (int i = 0; i < 4; i++) {
@@ -355,7 +354,7 @@ public class Drive extends SubsystemBase {
     }
 
     // Log optimized setpoints (runSetpoint mutates each state)
-    Logger.recordOutput("SwerveStates/SetpointsOptimized", setpointStates);
+    // Logger.recordOutput("SwerveStates/SetpointsOptimized", setpointStates);
   }
 
   /** Runs the drive in a straight line with the specified drive output. */
@@ -396,7 +395,7 @@ public class Drive extends SubsystemBase {
   }
 
   /** Returns the module states (turn angles and drive velocities) for all of the modules. */
-  @AutoLogOutput(key = "SwerveStates/Measured")
+  // @AutoLogOutput(key = "SwerveStates/Measured")
   private SwerveModuleState[] getModuleStates() {
     SwerveModuleState[] states = new SwerveModuleState[4];
     for (int i = 0; i < 4; i++) {
@@ -415,7 +414,7 @@ public class Drive extends SubsystemBase {
   }
 
   /** Returns the measured chassis speeds of the robot. */
-  @AutoLogOutput(key = "SwerveChassisSpeeds/Measured")
+  // @AutoLogOutput(key = "SwerveChassisSpeeds/Measured")
   public ChassisSpeeds getChassisSpeeds() {
     return kinematics.toChassisSpeeds(getModuleStates());
   }
@@ -473,7 +472,7 @@ public class Drive extends SubsystemBase {
   }
 
   // Returns a Pose2d containing linear accelerations in meters and angular acceleration in radians
-  @AutoLogOutput(key = "Drive/Accels")
+  // @AutoLogOutput(key = "Drive/Accels")
   public Pose2d getAccelComponents() {
     return new Pose2d(
         accelerationX, accelerationY, Rotation2d.fromRadians(alpha.abs(DegreesPerSecondPerSecond)));

@@ -1,6 +1,5 @@
 package frc.robot.subsystems.indexer;
 
-import static edu.wpi.first.units.Units.InchesPerSecond;
 import static edu.wpi.first.units.Units.RotationsPerSecond;
 import static edu.wpi.first.units.Units.Seconds;
 
@@ -53,10 +52,10 @@ public class Indexer extends SubsystemBase {
     kickerHardware.updateInputs(kickerInputs);
     Logger.processInputs("Indexer/Inputs/Kicker", kickerInputs);
 
-    Logger.recordOutput(
-        "Indexer/SpindexerVelocityIPS", spindexerInputs.linearVelocity.in(InchesPerSecond));
-    Logger.recordOutput(
-        "Indexer/KickerVelocityIPS", kickerInputs.linearVelocity.in(InchesPerSecond));
+    // Logger.recordOutput(
+    //     "Indexer/SpindexerVelocityIPS", spindexerInputs.linearVelocity.in(InchesPerSecond));
+    // Logger.recordOutput(
+    //     "Indexer/KickerVelocityIPS", kickerInputs.linearVelocity.in(InchesPerSecond));
 
     // Check for jams first (can override state)
     if (indexerState == IndexerState.INDEXING) {

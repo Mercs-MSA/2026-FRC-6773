@@ -37,7 +37,6 @@ import edu.wpi.first.units.measure.Time;
 import edu.wpi.first.wpilibj.Timer;
 import frc.robot.constants.FieldConstants;
 import frc.robot.util.geometry.AllianceFlipUtil;
-import org.littletonrobotics.junction.Logger;
 
 /** Add your docs here. */
 public class ShooterTurretCalculator {
@@ -182,7 +181,7 @@ public class ShooterTurretCalculator {
 
     angle = MathUtil.clamp(angle, turretMinLimit.getRotations(), turretMaxLimit.getRotations());
 
-    Logger.recordOutput("Turret/DesiredAzimuthRad", angle);
+    // Logger.recordOutput("Turret/DesiredAzimuthRad", angle);
     return Rotations.of(angle);
   }
 
@@ -215,8 +214,8 @@ public class ShooterTurretCalculator {
     double predictedX = target.getX() - turretVelocity.vxMetersPerSecond * timeOfFlight.in(Seconds);
     double predictedY = target.getY() - turretVelocity.vyMetersPerSecond * timeOfFlight.in(Seconds);
 
-    Logger.recordOutput(
-        "Turret/lookAheadPose", new Pose2d(predictedX, predictedY, Rotation2d.kZero));
+    // Logger.recordOutput(
+    //     "Turret/lookAheadPose", new Pose2d(predictedX, predictedY, Rotation2d.kZero));
 
     return new Translation3d(predictedX, predictedY, target.getZ());
   }
@@ -248,8 +247,8 @@ public class ShooterTurretCalculator {
     double predictedX = target.getX() - fieldSpeeds.vxMetersPerSecond * timeOfFlight.in(Seconds);
     double predictedY = target.getY() - fieldSpeeds.vyMetersPerSecond * timeOfFlight.in(Seconds);
 
-    Logger.recordOutput(
-        "Turret/lookAheadPose", new Pose2d(predictedX, predictedY, Rotation2d.kZero));
+    // Logger.recordOutput(
+    //     "Turret/lookAheadPose", new Pose2d(predictedX, predictedY, Rotation2d.kZero));
 
     return new Translation3d(predictedX, predictedY, target.getZ());
   }
@@ -318,7 +317,7 @@ public class ShooterTurretCalculator {
       Pose2d robot, ChassisSpeeds fieldSpeeds, Translation3d target, int iterations, boolean pass) {
 
     sinceLastCalc = Seconds.of(timer.get());
-    Logger.recordOutput("Shooter/Latency", sinceLastCalc);
+    // Logger.recordOutput("Shooter/Latency", sinceLastCalc);
     timer.restart();
     target = AllianceFlipUtil.apply(target);
     Pose2d turretPose = (new Pose3d(robot).transformBy(robotToTurret)).toPose2d();

@@ -15,8 +15,6 @@ import frc.robot.util.ZoneUtil;
 import java.util.function.Supplier;
 import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.Logger;
-import org.littletonrobotics.junction.networktables.LoggedNetworkBoolean;
-import org.littletonrobotics.junction.networktables.LoggedNetworkNumber;
 
 public class Intake extends SubsystemBase { // TODO: Tunable Numbers as needed
   public enum IntakeState {
@@ -53,13 +51,13 @@ public class Intake extends SubsystemBase { // TODO: Tunable Numbers as needed
 
   // Piecewise agitation parameters (see Desmos:
   // https://www.desmos.com/calculator/ogflv9fvuk)
-  private final LoggedNetworkBoolean usePiecewiseAgitation =
-      new LoggedNetworkBoolean("/Intake/UsePiecewiseAgitation", false);
+  // private final LoggedNetworkBoolean usePiecewiseAgitation =
+  //     new LoggedNetworkBoolean("/Intake/UsePiecewiseAgitation", false);
 
   // This value represents what percent of time the intake will be at the bottom
   // position (0 to 1),
   // the rest of the time it will be going up and down
-  private final LoggedNetworkNumber agitateT = new LoggedNetworkNumber("/Intake/AgitateT", 0);
+  // private final LoggedNetworkNumber agitateT = new LoggedNetworkNumber("/Intake/AgitateT", 0);
   // This value represents how smooth the transition between the flat portions and
   // the sin portions
   // will be.
@@ -67,12 +65,13 @@ public class Intake extends SubsystemBase { // TODO: Tunable Numbers as needed
   // Non-zero values of C will cause the actual value of T to be higher than it is
   // here, higher
   // values = more T
-  private final LoggedNetworkNumber agitateC = new LoggedNetworkNumber("/Intake/AgitateC", 0.75);
+  // private final LoggedNetworkNumber agitateC = new LoggedNetworkNumber("/Intake/AgitateC", 0.75);
   // This value is a multiplier to make the overall sin function go faster.
-  private final LoggedNetworkNumber agitateFreq =
-      new LoggedNetworkNumber("/Intake/AgitateFreq", 2.25);
+  // private final LoggedNetworkNumber agitateFreq =
+  //     new LoggedNetworkNumber("/Intake/AgitateFreq", 2.25);
 
-  private final LoggedNetworkNumber amplitude = new LoggedNetworkNumber("/Intake/Amplitude", 1.0);
+  // private final LoggedNetworkNumber amplitude = new LoggedNetworkNumber("/Intake/Amplitude",
+  // 1.0);
 
   public IntakeState intakeState;
 
@@ -137,8 +136,8 @@ public class Intake extends SubsystemBase { // TODO: Tunable Numbers as needed
     Logger.processInputs("Intake/Inputs/Roller", rollerInputs);
     Logger.processInputs("Intake/Inputs/Pivot", pivotInputs);
 
-    Logger.recordOutput("Intake/RollerVelocityRotPerSec", rollerInputs.velocityRotPerSec);
-    Logger.recordOutput("Intake/PivotVelocityRotPerSec", pivotInputs.velocityRotPerSec);
+    // Logger.recordOutput("Intake/RollerVelocityRotPerSec", rollerInputs.velocityRotPerSec);
+    // Logger.recordOutput("Intake/PivotVelocityRotPerSec", pivotInputs.velocityRotPerSec);
 
     switch (intakeState) {
       case STOW:
@@ -172,12 +171,13 @@ public class Intake extends SubsystemBase { // TODO: Tunable Numbers as needed
         if (LINEAR_RETRACTION_TIME > 0.0 && x <= LINEAR_RETRACTION_TIME) {
           double m = (i - b) / LINEAR_RETRACTION_TIME;
           pivotGoal = Rotation2d.fromRotations(m * x + b);
-        } else if (usePiecewiseAgitation.get()) {
-          double hVal = piecewiseH(x * agitateFreq.get());
-          pivotGoal = Rotation2d.fromRotations(a * (2 * hVal - 1) + (i - a));
+        } else if (false /*usePiecewiseAgitation.get()*/) {
+          // double hVal = piecewiseH(x * agitateFreq.get());
+          // pivotGoal = Rotation2d.fromRotations(a * (2 * hVal - 1) + (i - a));
         } else {
           pivotGoal =
-              Rotation2d.fromRotations(a * Math.cos(agitateFreq.get() * Math.PI * x) + (i - a));
+              Rotation2d.fromRotations(
+                  a * Math.cos(2.25 /*agitateFreq.get()*/ * Math.PI * x) + (i - a));
         }
 
         break;
@@ -210,7 +210,7 @@ public class Intake extends SubsystemBase { // TODO: Tunable Numbers as needed
     // }
     setRollerVoltage(intakeState.getRollerVol());
 
-    Logger.recordOutput("agitate timer", (System.currentTimeMillis() - agitateTimestamp) / 1000);
+    // Logger.recordOutput("agitate timer", (System.currentTimeMillis() - agitateTimestamp) / 1000);
     // if (Constants.currentMode == Mode.REAL) {
     //   Logger.recordOutput(
     //       "Intake/RollerDiscrepancy", ((IntakeRollerIOTalonFX) rollerHardware).getDiscrepancy());
@@ -221,8 +221,8 @@ public class Intake extends SubsystemBase { // TODO: Tunable Numbers as needed
   /** Piecewise smooth agitation waveform H(x) */
   // @AutoLogOutput(key="INTAKE)
   private double piecewiseH(double x) {
-    double t = MathUtil.clamp(agitateT.get(), 0.0, 0.999);
-    double c = Math.max(agitateC.get(), 0.001);
+    double t = MathUtil.clamp(0 /*agitateT.get()*/, 0.0, 0.999);
+    double c = Math.max(0.75 /*agitateC.get()*/, 0.001);
     double epsilon = c * (1 - t);
     double sinVal = Math.sin(x);
     double z = sinVal * sinVal - t;
@@ -236,7 +236,7 @@ public class Intake extends SubsystemBase { // TODO: Tunable Numbers as needed
     } else {
       h = z / (1 - t);
     }
-    return 1.0 - amplitude.getAsDouble() * h;
+    return 1.0 - /*amplitude.getAsDouble()*/ 1.0 * h;
   }
 
   public void setIntakeState(IntakeState state) {
@@ -255,7 +255,7 @@ public class Intake extends SubsystemBase { // TODO: Tunable Numbers as needed
     rollerHardware.setVoltage(voltage);
   }
 
-  @AutoLogOutput(key = "Intake/POSITIONDEGREES")
+  // @AutoLogOutput(key = "Intake/POSITIONDEGREES")
   public double getPivotPositionDegrees() {
     return pivotHardware.getPosition().abs(Degrees);
   }
@@ -287,12 +287,12 @@ public class Intake extends SubsystemBase { // TODO: Tunable Numbers as needed
     return intakeState;
   }
 
-  @AutoLogOutput(key = "Intake/Pivot/Rotations")
+  // @AutoLogOutput(key = "Intake/Pivot/Rotations")
   public double getIntakePosition() {
     return pivotHardware.getPosition().in(Rotations);
   }
 
-  @AutoLogOutput(key = "Intake/Pivot/Goal")
+  // @AutoLogOutput(key = "Intake/Pivot/Goal")
   public double getIntakeGoal() {
     return intakeState.getPivotPos().getRotations();
   }

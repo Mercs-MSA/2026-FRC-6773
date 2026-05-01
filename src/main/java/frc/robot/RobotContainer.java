@@ -18,6 +18,7 @@ import static frc.robot.subsystems.vision.VisionConstants.*;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.GenericHID;
@@ -430,7 +431,8 @@ public class RobotContainer {
     // autoChooser.addOption("SHUNT_LEFT",
     // autonCommands.getAutonomousSequence("SHUNT_LEFT"));
 
-    autoChooser.addOption("Right Normal", autonCommands.getAutonomousSequence("RIGHT_NO_OUTPOST"));
+    autoChooser.setDefaultOption(
+        "Right Normal", autonCommands.getAutonomousSequence("RIGHT_NO_OUTPOST"));
     autoChooser.addOption(
         "Right Normal - AMA", autonCommands.getAutonomousSequence("RIGHT_NO_OUTPOST_AMA"));
 
@@ -472,6 +474,9 @@ public class RobotContainer {
     autoChooser.addOption(
         "Drive SysId (Dynamic Reverse)", drive.sysIdDynamic(SysIdRoutine.Direction.kReverse));
     SmartDashboard.putData("Auto Choices", autoChooser);
+    NetworkTableInstance.getDefault()
+        .getStringTopic("/SmartDashboard/Auto Choices/active")
+        .setPersistent(true);
     // Configure the button bindings
     configureButtonBindings();
   }
@@ -695,7 +700,7 @@ public class RobotContainer {
     return Math.copySign(value * value, value);
   }
 
-  @AutoLogOutput(key = "Drive/DistanceToHub")
+  // @AutoLogOutput(key = "Drive/DistanceToHub")
   public double getHubDist() {
     return ShooterTurretCalculator.getDistanceToTarget(
             shooter.getTurretFieldPose(), AllianceFlipUtil.apply(FieldConstants.Hub.topCenterPoint))
