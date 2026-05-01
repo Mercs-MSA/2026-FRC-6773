@@ -203,6 +203,9 @@ public class AutonCommands extends TeleopCommands {
       case "RIGHT_CLOSE":
         autonCommand.addCommands(getHumanSideClose());
         break;
+      case "RIGHT_CUT":
+        autonCommand.addCommands(getHumanSideCut());
+        break;
       case "LEFT_NEW":
         autonCommand.addCommands(getDepotSideNew());
         break;
@@ -210,13 +213,20 @@ public class AutonCommands extends TeleopCommands {
         autonCommand.addCommands(getDepotSideNewClose());
         break;
       case "LEFT_ADAPTIVE":
-        autonCommand.addCommands(getDepotSideAdaptive(Time.ofBaseUnits(1, Second)));
+        autonCommand.addCommands(getDepotSideAdaptive(Time.ofBaseUnits(4, Second)));
         break;
       case "DEPOT_HUMAN_MIDDLE":
         autonCommand.addCommands(depotHuman());
         break;
       case "LEFT_ADAPTIVE2":
-        autonCommand.addCommands(getDepotSideAdaptive2(Time.ofBaseUnits(1, Second)));
+        autonCommand.addCommands(
+            getDepotSideAdaptive2(Time.ofBaseUnits(1.5, Second), Time.ofBaseUnits(4, Second)));
+        break;
+      case "RIGHT_ADAPTIVE2":
+        autonCommand.addCommands(getHumanSideAdaptive2(Time.ofBaseUnits(6, Second)));
+        break;
+      case "DEPOT_PRELOAD":
+        autonCommand.addCommands(getDepotPreload());
         break;
       default:
         DriverStation.reportError("Big oops: Invalid Start Pos", false);
@@ -537,6 +547,44 @@ public class AutonCommands extends TeleopCommands {
     return command;
   }
 
+  public Command getHumanSideCut() {
+    String quick = "H_Partial_2Pass_Cut";
+
+    SequentialCommandGroup command = new SequentialCommandGroup();
+    command.addCommands(
+        Commands.runOnce(
+            () -> {
+              drive.setPose(
+                  AllianceFlipUtil.apply(ChoreoTraj.H_Partial_2Pass_Cut.initialPoseBlue()));
+            }));
+    command.addCommands(stopShootCommand());
+    command.addCommands(getPathCommand(quick, 0));
+    command.addCommands(intakeCommand(IntakeState.INTAKING));
+    // command.addCommands(shootIndex());
+
+    command.addCommands(getPathCommand(quick, 1));
+    command.addCommands(intakeCommand(IntakeState.IDLE));
+
+    command.addCommands(getPathCommand(quick, 2));
+    command.addCommands(getPathCommand(quick, 3));
+
+    command.addCommands(stopDrive());
+    // command.addCommands(Commands.waitSeconds(0.5));
+    Command com = Commands.parallel(indexCommand(IndexerState.INDEXING), shootAndOuttakeCommand());
+    command.addCommands(com);
+    command.addCommands(new WaitCommand(3.5));
+    command.addCommands(shootIndex());
+
+    command.addCommands(intakeCommand(IntakeState.INTAKING));
+    command.addCommands(getPathCommand(quick, 4));
+    command.addCommands(shootIndex());
+    command.addCommands(stopDrive());
+    command.addCommands(Commands.waitSeconds(1.5));
+    command.addCommands(intakeCommand(IntakeState.AGITATE));
+    // command.addCommands(new WaitCommand(1.5));
+    return command;
+  }
+
   public Command getDepotSideNewClose() {
     String quick = "D_Partial_2Pass_Close2";
 
@@ -663,7 +711,7 @@ public class AutonCommands extends TeleopCommands {
     return command;
   }
 
-  public Command getDepotSideAdaptive2(Time timeDelay) {
+  public Command getDepotSideAdaptive2(Time timeDelay, Time timeDelay2) {
     String quick = "D_Partial_2Pass_Adaptive2";
 
     SequentialCommandGroup command = new SequentialCommandGroup();
@@ -672,6 +720,134 @@ public class AutonCommands extends TeleopCommands {
             () -> {
               drive.setPose(
                   AllianceFlipUtil.apply(ChoreoTraj.D_Partial_2Pass_Adaptive2.initialPoseBlue()));
+            }));
+    command.addCommands(stopShootCommand());
+
+    command.addCommands(getPathCommand(quick, 0));
+    command.addCommands(stopDrive());
+    command.addCommands(new WaitCommand(timeDelay));
+    command.addCommands(getPathCommand(quick, 1));
+    command.addCommands(intakeCommand(IntakeState.INTAKING));
+    // command.addCommands(shootIndex());
+
+    // command.addCommands(getPathCommand(quick, 1));
+
+    command.addCommands(getPathCommand(quick, 2));
+    command.addCommands(stopDrive());
+    command.addCommands(new WaitCommand(timeDelay2));
+    command.addCommands(intakeCommand(IntakeState.IDLE));
+    command.addCommands(getPathCommand(quick, 3));
+    command.addCommands(getPathCommand(quick, 4));
+
+    command.addCommands(stopDrive());
+    // command.addCommands(Commands.waitSeconds(0.5));
+
+    Command com = Commands.parallel(indexCommand(IndexerState.INDEXING), shootAndOuttakeCommand());
+    command.addCommands(com);
+    command.addCommands(new WaitCommand(2));
+    command.addCommands(getPathCommand(quick, 5));
+    // command.addCommands(intakeCommand(IntakeState.INTAKING));
+    // command.addCommands(getPathCommand(quick, 4));
+    // command.addCommands(shootIndex());
+    // command.addCommands(stopDrive());
+    // command.addCommands(Commands.waitSeconds(1.5));
+    // command.addCommands(intakeCommand(IntakeState.AGITATE));
+    // command.addCommands(new WaitCommand(1.5));
+    return command;
+  }
+
+  // public Command getDepotSideAdaptivePickup2(Time timeDelay, Time timeDelay2) {
+  //   String quick = "D_Partial_2Pass_Adaptive2Pickup";
+
+  //   SequentialCommandGroup command = new SequentialCommandGroup();
+  //   command.addCommands(
+  //       Commands.runOnce(
+  //           () -> {
+  //             drive.setPose(
+  //
+  // AllianceFlipUtil.apply(ChoreoTraj.D_Partial_2Pass_Adaptive2.initialPoseBlue()));
+  //           }));
+  //   command.addCommands(stopShootCommand());
+
+  //   command.addCommands(getPathCommand(quick, 0));
+  //   command.addCommands(stopDrive());
+  //   command.addCommands(new WaitCommand(timeDelay));
+  //   command.addCommands(getPathCommand(quick, 1));
+  //   command.addCommands(intakeCommand(IntakeState.INTAKING));
+  //   // command.addCommands(shootIndex());
+
+  //   // command.addCommands(getPathCommand(quick, 1));
+
+  //   command.addCommands(getPathCommand(quick, 2));
+  //   command.addCommands(stopDrive());
+  //   command.addCommands(new WaitCommand(timeDelay2));
+  //   command.addCommands(intakeCommand(IntakeState.IDLE));
+  //   command.addCommands(getPathCommand(quick, 3));
+  //   command.addCommands(getPathCommand(quick, 4));
+
+  //   command.addCommands(stopDrive());
+  //   // command.addCommands(Commands.waitSeconds(0.5));
+
+  //   Command com = Commands.parallel(indexCommand(IndexerState.INDEXING),
+  // shootAndOuttakeCommand());
+  //   command.addCommands(com);
+  //   command.addCommands(new WaitCommand(2));
+  //   command.addCommands(getPathCommand(quick, 5));
+  //   // command.addCommands(intakeCommand(IntakeState.INTAKING));
+  //   // command.addCommands(getPathCommand(quick, 4));
+  //   // command.addCommands(shootIndex());
+  //   // command.addCommands(stopDrive());
+  //   // command.addCommands(Commands.waitSeconds(1.5));
+  //   // command.addCommands(intakeCommand(IntakeState.AGITATE));
+  //   // command.addCommands(new WaitCommand(1.5));
+  //   return command;
+  // }
+
+  public Command getDepotPreload() {
+    String quick = "D_PreloadDepot";
+
+    SequentialCommandGroup command = new SequentialCommandGroup();
+    command.addCommands(
+        Commands.runOnce(
+            () -> {
+              drive.setPose(AllianceFlipUtil.apply(ChoreoTraj.D_PreloadDepot.initialPoseBlue()));
+            }));
+    command.addCommands(shootCommand());
+
+    command.addCommands(getPathCommand(quick, 0));
+    command.addCommands(intakeCommand(IntakeState.INTAKING));
+    command.addCommands(getPathCommand(quick, 1));
+    command.addCommands(intakeCommand(IntakeState.AGITATE));
+    command.addCommands(stopDrive());
+    command.addCommands(new WaitCommand(2));
+    // command.addCommands(shootIndex());
+
+    // command.addCommands(getPathCommand(quick, 1));
+
+    command.addCommands(getPathCommand(quick, 2));
+    command.addCommands(getPathCommand(quick, 3));
+
+    command.addCommands(stopDrive());
+    // command.addCommands(Commands.waitSeconds(0.5));
+    // command.addCommands(intakeCommand(IntakeState.INTAKING));
+    // command.addCommands(getPathCommand(quick, 4));
+    // command.addCommands(shootIndex());
+    // command.addCommands(stopDrive());
+    // command.addCommands(Commands.waitSeconds(1.5));
+    // command.addCommands(intakeCommand(IntakeState.AGITATE));
+    // command.addCommands(new WaitCommand(1.5));
+    return command;
+  }
+
+  public Command getHumanSideAdaptive2(Time timeDelay) {
+    String quick = "H_Partial_2Pass_Adaptive2";
+
+    SequentialCommandGroup command = new SequentialCommandGroup();
+    command.addCommands(
+        Commands.runOnce(
+            () -> {
+              drive.setPose(
+                  AllianceFlipUtil.apply(ChoreoTraj.H_Partial_2Pass_Adaptive2.initialPoseBlue()));
             }));
     command.addCommands(stopShootCommand());
 

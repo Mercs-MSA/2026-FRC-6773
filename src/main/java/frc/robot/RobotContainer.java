@@ -25,7 +25,6 @@ import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
-import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -85,10 +84,7 @@ import frc.robot.util.FuelSim;
 import frc.robot.util.geometry.AllianceFlipUtil;
 import java.util.ArrayList;
 import java.util.Optional;
-import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
-
-import com.pathplanner.lib.auto.AutoBuilder;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -147,9 +143,8 @@ public class RobotContainer {
                 drive::addVisionMeasurement,
                 new VisionIOLimelight(camera0Name, drive::getRotation),
                 new VisionIOLimelight(camera1Name, drive::getRotation),
-                new VisionIOLimelight(camera2Name, drive::getRotation)
-                // ,new VisionIOLimelight(camera3Name, drive::getRotation)
-                );
+                new VisionIOLimelight(camera2Name, drive::getRotation),
+                new VisionIOLimelight(camera3Name, drive::getRotation));
         shooter =
             new Shooter(
                 new ShooterFlywheelIOTalonFX(
@@ -413,7 +408,7 @@ public class RobotContainer {
             }));
 
     // Set up auto routines
-    autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
+    autoChooser = new LoggedDashboardChooser<>("Auto Choices");
     // autoChooser = new SendableChooser<>();
     // autoChooser.addOption("LEFT_45",
     // autonCommands.getAutonomousSequence("LEFT_45"));
@@ -434,8 +429,8 @@ public class RobotContainer {
     // autoChooser.addOption("SHUNT_LEFT",
     // autonCommands.getAutonomousSequence("SHUNT_LEFT"));
 
-    // autoChooser.setDefaultOption(
-    //     "Right Normal", autonCommands.getAutonomousSequence("RIGHT_NO_OUTPOST"));
+    autoChooser.addDefaultOption(
+        "Right Normal", autonCommands.getAutonomousSequence("RIGHT_CUT"));
     autoChooser.addOption(
         "Right Normal - AMA", autonCommands.getAutonomousSequence("RIGHT_NO_OUTPOST_AMA"));
 
@@ -452,6 +447,8 @@ public class RobotContainer {
     autoChooser.addOption("Left AMA", autonCommands.getAutonomousSequence("LEFT_TEST"));
     autoChooser.addOption("Left Adaptive", autonCommands.getAutonomousSequence("LEFT_ADAPTIVE"));
     autoChooser.addOption("Left Follow", autonCommands.getAutonomousSequence("LEFT_ADAPTIVE2"));
+    autoChooser.addOption("Right Follow", autonCommands.getAutonomousSequence("RIGHT_ADAPTIVE2"));
+    // autoChooser.addOption("Preload Depot", autonCommands.getAutonomousSequence("DEPOT_PRELOAD"));
 
     // autoChooser.addOption("Do Auton Stuff",
     // autonCommands.getAutonomousSequence("Do_AUTON_STUFF"));

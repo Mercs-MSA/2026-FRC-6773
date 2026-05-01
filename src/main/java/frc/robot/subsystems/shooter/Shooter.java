@@ -31,7 +31,6 @@ import frc.robot.subsystems.shooter.ShooterTurretCalculator.ShotData;
 import frc.robot.util.ZoneUtil;
 import java.util.function.BooleanSupplier;
 import java.util.function.Supplier;
-import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.Logger;
 
 public class Shooter extends SubsystemBase {
@@ -109,7 +108,7 @@ public class Shooter extends SubsystemBase {
     this.fieldSpeedsSupplier = fieldSpeedsSupplier;
     fixedShooter =
         () -> {
-          return true;
+          return false;
         } /*fixedShoot.getAsBoolean()*/;
     Trigger fixShooter = new Trigger(fixedShooter);
     fixShooter.onTrue(Commands.runOnce(() -> setShooterState(ShooterState.IDLE_FIXED)));
@@ -403,7 +402,7 @@ public class Shooter extends SubsystemBase {
     //     "FlywheelDebug/flywheelRPS", getFlywheelVelocities()[0].in(RotationsPerSecond));
     // Logger.recordOutput("FlywheelDebug/flwheelRamped?", isFlywheelAtThreshold());
 
-    // Logger.recordOutput("States/ShooterState", shooterState);
+    Logger.recordOutput("States/ShooterState", shooterState);
   }
 
   public void setShooterState(ShooterState state) {
