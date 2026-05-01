@@ -84,7 +84,6 @@ import frc.robot.util.FuelSim;
 import frc.robot.util.geometry.AllianceFlipUtil;
 import java.util.ArrayList;
 import java.util.Optional;
-import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 /**
@@ -143,9 +142,8 @@ public class RobotContainer {
                 drive::addVisionMeasurement,
                 new VisionIOLimelight(camera0Name, drive::getRotation),
                 new VisionIOLimelight(camera1Name, drive::getRotation),
-                new VisionIOLimelight(camera2Name, drive::getRotation)
-                // ,new VisionIOLimelight(camera3Name, drive::getRotation)
-                );
+                new VisionIOLimelight(camera2Name, drive::getRotation),
+                new VisionIOLimelight(camera3Name, drive::getRotation));
         shooter =
             new Shooter(
                 new ShooterFlywheelIOTalonFX(
@@ -447,6 +445,8 @@ public class RobotContainer {
     autoChooser.addOption("Left AMA", autonCommands.getAutonomousSequence("LEFT_TEST"));
     autoChooser.addOption("Left Adaptive", autonCommands.getAutonomousSequence("LEFT_ADAPTIVE"));
     autoChooser.addOption("Left Follow", autonCommands.getAutonomousSequence("LEFT_ADAPTIVE2"));
+    autoChooser.addOption("Right Follow", autonCommands.getAutonomousSequence("RIGHT_ADAPTIVE2"));
+    // autoChooser.addOption("Preload Depot", autonCommands.getAutonomousSequence("DEPOT_PRELOAD"));
 
     // autoChooser.addOption("Do Auton Stuff",
     // autonCommands.getAutonomousSequence("Do_AUTON_STUFF"));

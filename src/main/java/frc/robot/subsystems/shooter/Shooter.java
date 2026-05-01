@@ -32,7 +32,6 @@ import frc.robot.subsystems.shooter.ShooterTurretCalculator.ShotData;
 import frc.robot.util.ZoneUtil;
 import java.util.function.BooleanSupplier;
 import java.util.function.Supplier;
-import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.Logger;
 import org.littletonrobotics.junction.networktables.LoggedNetworkBoolean;
 import org.littletonrobotics.junction.networktables.LoggedNetworkNumber;
@@ -109,7 +108,10 @@ public class Shooter extends SubsystemBase {
     hoodHardware = hoodHardwareIO;
     this.poseSupplier = poseSupplier;
     this.fieldSpeedsSupplier = fieldSpeedsSupplier;
-    fixedShooter = () -> fixedShoot.getAsBoolean();
+    fixedShooter =
+        () -> {
+          return false;
+        } /*fixedShoot.getAsBoolean()*/;
     Trigger fixShooter = new Trigger(fixedShooter);
     fixShooter.onTrue(Commands.runOnce(() -> setShooterState(ShooterState.IDLE_FIXED)));
     fixShooter.onFalse(Commands.runOnce(() -> setShooterState(ShooterState.IDLE_HUB)));

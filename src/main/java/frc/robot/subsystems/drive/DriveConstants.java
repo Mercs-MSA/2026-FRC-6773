@@ -75,7 +75,7 @@ public class DriveConstants {
                   .withStatorCurrentLimit(Amps.of(60))
                   .withStatorCurrentLimitEnable(true)
                   .withSupplyCurrentLimitEnable(true)
-                  .withStatorCurrentLimit(Amps.of(50)));
+                  .withSupplyCurrentLimit(Amps.of(50)));
   private static final CANcoderConfiguration encoderInitialConfigs = new CANcoderConfiguration();
   // Configs for the Pigeon 2; leave this null to skip applying Pigeon 2 configs
   private static final Pigeon2Configuration pigeonConfigs = null;
