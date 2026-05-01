@@ -63,7 +63,7 @@ public class Vision extends SubsystemBase {
   public void periodic() {
     for (int i = 0; i < io.length; i++) {
       io[i].updateInputs(inputs[i]);
-      Logger.processInputs("Vision/Camera" + Integer.toString(i), inputs[i]);
+      // Logger.processInputs("Vision/Camera" + Integer.toString(i), inputs[i]);
       SmartDashboard.putBoolean("Camera" + i + "/Connected", io[i].isConnected());
     }
 

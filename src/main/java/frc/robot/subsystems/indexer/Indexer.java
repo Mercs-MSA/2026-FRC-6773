@@ -48,9 +48,9 @@ public class Indexer extends SubsystemBase {
   @Override
   public void periodic() {
     spindexerHardware.updateInputs(spindexerInputs);
-    Logger.processInputs("Indexer/Inputs/Spindexer", spindexerInputs);
+    // Logger.processInputs("Indexer/Inputs/Spindexer", spindexerInputs);
     kickerHardware.updateInputs(kickerInputs);
-    Logger.processInputs("Indexer/Inputs/Kicker", kickerInputs);
+    // Logger.processInputs("Indexer/Inputs/Kicker", kickerInputs);
 
     // Logger.recordOutput(
     //     "Indexer/SpindexerVelocityIPS", spindexerInputs.linearVelocity.in(InchesPerSecond));
@@ -156,7 +156,7 @@ public class Indexer extends SubsystemBase {
     kickerHardware.stop();
   }
 
-  @AutoLogOutput(key = "States/IndexerState")
+  // @AutoLogOutput(key = "States/IndexerState")
   public IndexerState getIndexerState() {
     return indexerState;
   }

@@ -29,7 +29,7 @@ public class Transfer extends SubsystemBase {
   @Override
   public void periodic() {
     transferHardware.updateInputs(transferInputs);
-    Logger.processInputs("Transfer/Inputs", transferInputs);
+    // Logger.processInputs("Transfer/Inputs", transferInputs);
 
     // Logger.recordOutput("Transfer/VelocityIPS",
     // transferInputs.linearVelocity.in(InchesPerSecond));
@@ -65,7 +65,7 @@ public class Transfer extends SubsystemBase {
     transferHardware.stop();
   }
 
-  @AutoLogOutput(key = "States/TransferState")
+  // @AutoLogOutput(key = "States/TransferState")
   public TransferState getTransferState() {
     return transferState;
   }

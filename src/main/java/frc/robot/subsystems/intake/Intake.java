@@ -133,8 +133,8 @@ public class Intake extends SubsystemBase { // TODO: Tunable Numbers as needed
   public void periodic() {
     rollerHardware.updateInputs(rollerInputs);
     pivotHardware.updateInputs(pivotInputs);
-    Logger.processInputs("Intake/Inputs/Roller", rollerInputs);
-    Logger.processInputs("Intake/Inputs/Pivot", pivotInputs);
+    // Logger.processInputs("Intake/Inputs/Roller", rollerInputs);
+    // Logger.processInputs("Intake/Inputs/Pivot", pivotInputs);
 
     // Logger.recordOutput("Intake/RollerVelocityRotPerSec", rollerInputs.velocityRotPerSec);
     // Logger.recordOutput("Intake/PivotVelocityRotPerSec", pivotInputs.velocityRotPerSec);
@@ -282,7 +282,7 @@ public class Intake extends SubsystemBase { // TODO: Tunable Numbers as needed
     return wasIntakingBefore;
   }
 
-  @AutoLogOutput(key = "States/IntakeState")
+  // @AutoLogOutput(key = "States/IntakeState")
   public IntakeState getIntakeState() {
     return intakeState;
   }

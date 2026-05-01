@@ -171,9 +171,9 @@ public class Shooter extends SubsystemBase {
     turretHardware.updateInputs(turretInputs);
     flywheelHardware.updateInputs(flywheelInputs);
     hoodHardware.updateInputs(hoodInputs);
-    Logger.processInputs("Shooter/Inputs/Turret", turretInputs);
-    Logger.processInputs("Shooter/Inputs/Flywheel", flywheelInputs);
-    Logger.processInputs("Shooter/Inputs/Hood", hoodInputs);
+    // Logger.processInputs("Shooter/Inputs/Turret", turretInputs);
+    // Logger.processInputs("Shooter/Inputs/Flywheel", flywheelInputs);
+    // Logger.processInputs("Shooter/Inputs/Hood", hoodInputs);
     // Logger.recordOutput("IsBlueSupplier", isBlue.get().toString());
 
     Pose2d turretBotPose =
@@ -403,7 +403,7 @@ public class Shooter extends SubsystemBase {
     //     "FlywheelDebug/flywheelRPS", getFlywheelVelocities()[0].in(RotationsPerSecond));
     // Logger.recordOutput("FlywheelDebug/flwheelRamped?", isFlywheelAtThreshold());
 
-    Logger.recordOutput("States/ShooterState", shooterState);
+    // Logger.recordOutput("States/ShooterState", shooterState);
   }
 
   public void setShooterState(ShooterState state) {

@@ -86,6 +86,9 @@ import frc.robot.util.geometry.AllianceFlipUtil;
 import java.util.ArrayList;
 import java.util.Optional;
 import org.littletonrobotics.junction.AutoLogOutput;
+import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
+
+import com.pathplanner.lib.auto.AutoBuilder;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -114,7 +117,7 @@ public class RobotContainer {
 
   // Dashboard inputs
 
-  private final SendableChooser<Command> autoChooser;
+  private final LoggedDashboardChooser<Command> autoChooser;
   private Field2d field = new Field2d();
   private Field2d trajField = new Field2d();
 
@@ -410,8 +413,8 @@ public class RobotContainer {
             }));
 
     // Set up auto routines
-    // autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
-    autoChooser = new SendableChooser<>();
+    autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
+    // autoChooser = new SendableChooser<>();
     // autoChooser.addOption("LEFT_45",
     // autonCommands.getAutonomousSequence("LEFT_45"));
     // autoChooser.addOption("RIGHT_45",
@@ -431,8 +434,8 @@ public class RobotContainer {
     // autoChooser.addOption("SHUNT_LEFT",
     // autonCommands.getAutonomousSequence("SHUNT_LEFT"));
 
-    autoChooser.setDefaultOption(
-        "Right Normal", autonCommands.getAutonomousSequence("RIGHT_NO_OUTPOST"));
+    // autoChooser.setDefaultOption(
+    //     "Right Normal", autonCommands.getAutonomousSequence("RIGHT_NO_OUTPOST"));
     autoChooser.addOption(
         "Right Normal - AMA", autonCommands.getAutonomousSequence("RIGHT_NO_OUTPOST_AMA"));
 
@@ -473,7 +476,7 @@ public class RobotContainer {
         "Drive SysId (Dynamic Forward)", drive.sysIdDynamic(SysIdRoutine.Direction.kForward));
     autoChooser.addOption(
         "Drive SysId (Dynamic Reverse)", drive.sysIdDynamic(SysIdRoutine.Direction.kReverse));
-    SmartDashboard.putData("Auto Choices", autoChooser);
+    // SmartDashboard.putData("Auto Choices", autoChooser);
     NetworkTableInstance.getDefault()
         .getStringTopic("/SmartDashboard/Auto Choices/active")
         .setPersistent(true);
@@ -673,7 +676,7 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    return autoChooser.getSelected();
+    return autoChooser.get();
   }
 
   public Drive getDrive() {
