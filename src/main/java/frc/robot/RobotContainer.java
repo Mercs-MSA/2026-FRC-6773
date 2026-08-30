@@ -429,8 +429,7 @@ public class RobotContainer {
     // autoChooser.addOption("SHUNT_LEFT",
     // autonCommands.getAutonomousSequence("SHUNT_LEFT"));
 
-    autoChooser.addDefaultOption(
-        "Right Normal", autonCommands.getAutonomousSequence("RIGHT_CUT"));
+    autoChooser.addDefaultOption("Right Normal", autonCommands.getAutonomousSequence("RIGHT_CUT"));
     autoChooser.addOption(
         "Right Normal - AMA", autonCommands.getAutonomousSequence("RIGHT_NO_OUTPOST_AMA"));
 
