@@ -269,7 +269,7 @@ public class Drive extends SubsystemBase {
           speedCap = 3.0; // m / s
           break;
         case BUMP:
-          speedCap = 4.0; // m / s
+          speedCap = 2.5; // m / s
           break;
         case ALIGN:
           speedCap = 3.0; // m / s
