@@ -32,7 +32,6 @@ import frc.robot.subsystems.shooter.ShooterTurretCalculator.ShotData;
 import frc.robot.util.ZoneUtil;
 import java.util.function.BooleanSupplier;
 import java.util.function.Supplier;
-
 import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.Logger;
 import org.littletonrobotics.junction.networktables.LoggedNetworkBoolean;

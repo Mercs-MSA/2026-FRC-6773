@@ -32,7 +32,6 @@ public class AutonCommands extends TeleopCommands {
   private Shooter shooter;
   private Intake intake;
   private Transfer transfer;
-  private Indexer indexer;
   private Timer autonTimer;
 
   public AutonCommands(
@@ -42,7 +41,6 @@ public class AutonCommands extends TeleopCommands {
     this.shooter = shooter;
     this.intake = intake;
     this.transfer = transfer;
-    this.indexer = indexer;
     autonTimer = new Timer();
   }
 
@@ -881,50 +879,51 @@ public class AutonCommands extends TeleopCommands {
     return command;
   }
 
-  
-
   public Command testAuton() {
     String quick = "FirstTestAuton";
 
-    //A "SequentialCommandGroup" is a command that runs each command in the sequence one by one, waiting until
-    //each command is finished before moving to the next
+    // A "SequentialCommandGroup" is a command that runs each command in the sequence one by one,
+    // waiting until
+    // each command is finished before moving to the next
     SequentialCommandGroup command = new SequentialCommandGroup();
 
-    //The first "segment" of the FirstAuton path. The quick string is used so I don't have to write out a longer name again and again
-    //Just like arrays, these segments start off with index 0 and increase by 1
+    // The first "segment" of the FirstAuton path. The quick string is used so I don't have to write
+    // out a longer name again and again
+    // Just like arrays, these segments start off with index 0 and increase by 1
     command.addCommands(getPathCommand(quick, 0));
 
-    //Adding a stop drive command between segments you want a stop between helps ensure the drive doesn't drift
+    // Adding a stop drive command between segments you want a stop between helps ensure the drive
+    // doesn't drift
     command.addCommands(stopDrive());
 
-    //Use wait commands for delays between segments
+    // Use wait commands for delays between segments
     command.addCommands(new WaitCommand(0.5));
 
-    //Do the second segment of the path
+    // Do the second segment of the path
     command.addCommands(getPathCommand(quick, 1));
 
-    //Intaking command between segments. This command runs asynchrononously, meaning there is no real delay between segment 1 and 2
+    // Intaking command between segments. This command runs asynchrononously, meaning there is no
+    // real delay between segment 1 and 2
     command.addCommands(intakeCommand(IntakeState.INTAKING));
 
-    //Run the next segment, stop intaking, and seamlessly continue to segment 3
+    // Run the next segment, stop intaking, and seamlessly continue to segment 3
     command.addCommands(getPathCommand(quick, 2));
     command.addCommands(intakeCommand(IntakeState.IDLE));
     command.addCommands(getPathCommand(quick, 3));
 
     command.addCommands(stopDrive());
 
-    //Making smaller parallel commands can help to ensure commands happen at the exact same time.
+    // Making smaller parallel commands can help to ensure commands happen at the exact same time.
     Command com = Commands.parallel(indexCommand(IndexerState.INDEXING), shootAndOuttakeCommand());
     command.addCommands(com);
 
-    //Wait and final segment
+    // Wait and final segment
     command.addCommands(new WaitCommand(2));
     command.addCommands(getPathCommand(quick, 4));
 
-    //Return the whole sequential command group
+    // Return the whole sequential command group
     return command;
   }
-
 
   public Command humanPlayerAuton(String name) {
     SequentialCommandGroup command = new SequentialCommandGroup();
@@ -975,12 +974,8 @@ public class AutonCommands extends TeleopCommands {
     // command.addCommands(intakeCommand(IntakeState.STOW));
     // command.addCommands(stopShootCommand());
 
-  
     return command;
   }
-
-
-
 
   public Command humanCenterScavenger() {
     String c = "KrishIdea";
@@ -1010,9 +1005,6 @@ public class AutonCommands extends TeleopCommands {
 
     return command;
   }
-
-
-
 
   public Command stopDrive() {
     return Commands.runOnce(

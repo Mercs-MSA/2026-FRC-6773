@@ -86,8 +86,6 @@ public class Intake extends SubsystemBase { // TODO: Tunable Numbers as needed
 
   private Supplier<IntakeState> intakeStateSupplier;
 
-  private Supplier<IntakeState> oldIntakeStateSupplier;
-
   private final IntakeRollerIO rollerHardware;
   private final IntakeRollerIOInputsAutoLogged rollerInputs = new IntakeRollerIOInputsAutoLogged();
 
@@ -107,8 +105,6 @@ public class Intake extends SubsystemBase { // TODO: Tunable Numbers as needed
     intakeState = IntakeState.STOW;
 
     intakeStateSupplier = () -> getIntakeState();
-
-    oldIntakeStateSupplier = intakeStateSupplier;
 
     bumpTrigger =
         ZoneUtil.BUMP_ZONES.willContain(poseSupplier, fieldSpeedsSupplier, Seconds.of(0.1));
