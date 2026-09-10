@@ -75,6 +75,8 @@ task(replayWatch, type: JavaExec) {
 // Also defines JUnit 4.
 dependencies {
     annotationProcessor wpi.java.deps.wpilibAnnotations()
+    annotationProcessor project(':annotation-processor')
+    implementation project(':annotation-processor')
     implementation wpi.java.deps.wpilib()
     implementation wpi.java.vendor.java()
 
@@ -130,6 +132,7 @@ wpi.java.configureTestTasks(test)
 // Configure string concat to always inline compile
 tasks.withType(JavaCompile) {
     options.compilerArgs.add '-XDstringConcat=inline'
+    options.compilerArgs.add "-Aproject.src.dir=${projectDir}/src/main/java"
 }
 
 // Create version file

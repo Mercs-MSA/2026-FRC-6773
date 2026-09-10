@@ -44,6 +44,7 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
+import frc.robot.annotation.AutoLogMavs;
 import frc.robot.constants.Constants;
 import frc.robot.constants.Constants.Mode;
 import frc.robot.constants.FieldConstants;
@@ -450,6 +451,7 @@ public class Drive extends SubsystemBase {
   }
 
   /** Returns the current odometry rotation. */
+  @AutoLogMavs(key = "HELLO")
   public Rotation2d getRotation() {
     return getPose().getRotation();
   }
