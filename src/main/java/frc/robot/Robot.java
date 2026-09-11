@@ -10,6 +10,7 @@ package frc.robot;
 import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.annotation.AutoLogMAVSFINAL;
 import frc.robot.constants.Constants;
 import frc.robot.constants.Constants.Mode;
 import frc.robot.subsystems.shooter.Shooter.ShooterState;
@@ -95,7 +96,7 @@ public class Robot extends LoggedRobot {
     // the Command-based framework to work.
     CommandScheduler.getInstance().run();
     robotContainer.updateDisplays();
-
+    AutoLogMAVSFINAL.runMAVSLogging(robotContainer);
     // Return to non-RT thread priority (do not modify the first argument)
     // Threads.setCurrentThreadPriority(false, 10);
 

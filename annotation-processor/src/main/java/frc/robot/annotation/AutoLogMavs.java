@@ -16,6 +16,8 @@ public @interface AutoLogMavs {
    */
   public String key() default "";
 
+  public String overrideKey() default "";
+
   /**
    * Whether or not to force the Logger to use a serialized data method.
    *
